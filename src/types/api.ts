@@ -1,93 +1,93 @@
 // Blog
 export type Views = {
-  views: number
+    views: number
 }
 
 export type Likes = {
-  likes: number
-  currentUserLikes: number
+    likes: number
+    currentUserLikes: number
 }
 
 export type BlogData = Views & Pick<Likes, 'likes'>
 
 // Guestbook
 export type Messages = {
-  id: number
-  body: string
-  image: string
-  created_by: string
-  updated_at: string
+    id: number
+    body: string
+    image: string
+    created_by: string
+    updated_at: string
 }[]
 
 // Dashboard
 export type APIResponse = {
-  count: number
+    count: number
 }
 
 // Spotify
 export type Song = {
-  isPlaying?: boolean
-  name: string
-  artist: string
-  album: string
-  albumImage: string
-  songUrl: string
+    isPlaying?: boolean
+    name: string
+    artist: string
+    album: string
+    albumImage: string
+    songUrl: string
 }
 
 // YouTube
 export type YouTubeRes = {
-  kind: string
-  etag: string
-  pageInfo: {
-    totalResults: number
-    resultsPerPage: number
-  }
-  items: {
     kind: string
     etag: string
-    id: string
-    statistics: {
-      viewCount: string
-      subscriberCount: string
-      hiddenSubscriberCount: boolean
-      videoCount: string
+    pageInfo: {
+        totalResults: number
+        resultsPerPage: number
     }
-  }[]
+    items: {
+        kind: string
+        etag: string
+        id: string
+        statistics: {
+            viewCount: string
+            subscriberCount: string
+            hiddenSubscriberCount: boolean
+            videoCount: string
+        }
+    }[]
 }
 
 export type YouTubeData = {
-  subscribers: number
-  views: number
+    subscribers: number
+    views: number
 }
 
 // Github
 export type GithubData = {
-  stars: number
-  followers: number
+    stars: number
+    followers: number
 }
 
 // Wakatime
 export type WakatimeRes = {
-  data: {
-    decimal: string
-    digital: string
-    is_up_to_date: boolean
-    percent_calculated: number
-    range: {
-      end: string
-      end_date: string
-      end_text: string
-      start: string
-      start_date: string
-      start_text: string
-      timezone: string
+    data: {
+        decimal: string
+        digital: string
+        is_up_to_date: boolean
+        percent_calculated: number
+        range: {
+            end: string
+            end_date: string
+            end_text: string
+            start: string
+            start_date: string
+            start_text: string
+            timezone: string
+        }
+        text: string
+        timeout: number
+        total_seconds: number
     }
-    text: string
-    timeout: number
-    total_seconds: number
-  }
 }
 
 export type WakatimeData = {
-  seconds: number
+    seconds: number
 }

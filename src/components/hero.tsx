@@ -102,7 +102,7 @@ const Hero = () => {
                     ))}
                 </div> */}
             </div>
-            <div className="w-screen absolute bottom-0 left-0 right-0 top-0 max-h-screen">
+            <div className="absolute bottom-0 left-0 right-0 top-0 max-h-screen w-screen">
                 {/* Scroll down */}
                 <div className="absolute bottom-0 left-0 right-0 mb-4">
                     <button

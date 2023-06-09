@@ -1,7 +1,6 @@
 'use client'
 
 import { cx } from '@tszhong0411/utils'
-import { motion } from 'framer-motion'
 import party from 'party-js'
 import React from 'react'
 import { toast } from 'react-hot-toast'

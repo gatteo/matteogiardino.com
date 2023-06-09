@@ -15,7 +15,7 @@ const ItemGrid = (props: ItemGridProps) => {
     const { items } = props
 
     return (
-        <div className="grid mb-9 grid-cols-1 gap-4 sm:grid-cols-4">
+        <div className="mb-9 grid grid-cols-1 gap-4 sm:grid-cols-4">
             {items.map((item) => (
                 <a
                     key={item.name}
