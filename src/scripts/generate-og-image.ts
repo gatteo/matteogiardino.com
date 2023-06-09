@@ -9,6 +9,9 @@ const OG_IMAGE_PATH = './public/static/images/og/posts'
 const OG_IMAGE_WEBSITE = 'https://og-image.matteogiardino.com'
 
 const generateOGImage = async () => {
+    // Skip for now
+    return true
+
     for (let i = 0; i < allBlogPosts.length; i++) {
         const post = allBlogPosts[i]
 
