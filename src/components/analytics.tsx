@@ -1,11 +1,11 @@
 'use client'
 
 import { usePathname, useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 
 import analytics from '@/lib/analytics'
 
-export default function Analytics() {
+export function Analytics() {
     const pathname = usePathname()
     const searchParams = useSearchParams()
 
@@ -19,4 +19,12 @@ export default function Analytics() {
     }, [pathname, searchParams])
 
     return <></>
+}
+
+export default function SuspenseAnalytics() {
+    return (
+        <Suspense fallback={null}>
+            <Analytics />
+        </Suspense>
+    )
 }
