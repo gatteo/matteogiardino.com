@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["jsonProtocol"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // used for migrations
+}
+
+
+model guestbook {
+  id         BigInt   @id @default(autoincrement())
+  email      String   @db.VarChar(256)
+  image      String   @db.VarChar(256)
+  body       String   @db.VarChar(500)
+  created_by String   @db.VarChar(256)
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  slug      String   @unique
+  likes     Int      @default(0)
+  views     Int      @default(0)
+}
+
+model Session {
+  id        String   @id
+  createdAt DateTime @default(now())
+  likes     Int      @default(0)
+}

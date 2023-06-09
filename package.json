@@ -1,0 +1,114 @@
+{
+    "name": "matteogiardino.com",
+    "private": true,
+    "version": "0.0.0",
+    "license": "MIT",
+    "type": "module",
+    "description": "My personal website and blog built with TypeScript, Next.js, and Tailwind CSS",
+    "author": "Lai Tsz Hong <info@matteogiardino.com> (https://github.com/tszhong0411/)",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/tszhong0411/matteogiardino.com.git"
+    },
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "postbuild": "tsx ./src/scripts/generate-og-image.ts",
+        "start": "next start",
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "format": "prettier -w .",
+        "type-check": "tsc --noEmit",
+        "prepare": "husky install",
+        "postinstall": "node node_modules/puppeteer/install.js && prisma generate",
+        "studio": "prisma studio"
+    },
+    "dependencies": {
+        "@analytics/google-analytics": "^1.0.7",
+        "@giscus/react": "^2.2.8",
+        "@mdi/react": "^1.6.1",
+        "@octokit/rest": "^19.0.9",
+        "@prisma/client": "^4.15.0",
+        "@tabler/icons-react": "^2.19.0",
+        "@tszhong0411/ui": "1.0.6",
+        "@tszhong0411/utils": "^1.0.2",
+        "@vercel/analytics": "^1.0.1",
+        "analytics": "^0.8.7",
+        "colord": "^2.9.3",
+        "contentlayer": "^0.3.2",
+        "dayjs": "^1.11.7",
+        "framer-motion": "^10.12.16",
+        "gsap": "^3.11.5",
+        "hastscript": "^7.2.0",
+        "next": "13.4.3",
+        "next-auth": "^4.22.1",
+        "next-contentlayer": "^0.3.2",
+        "next-themes": "^0.2.1",
+        "party-js": "^2.2.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-hot-toast": "^2.4.1",
+        "react-share": "^4.4.1",
+        "react-use": "^17.4.0",
+        "rehype-autolink-headings": "^6.1.1",
+        "rehype-slug": "^5.1.0",
+        "remark-gfm": "^3.0.1",
+        "rss": "^1.2.2",
+        "sharp": "^0.32.1",
+        "swr": "^2.1.5"
+    },
+    "devDependencies": {
+        "@commitlint/cli": "^17.6.3",
+        "@commitlint/config-conventional": "^17.6.3",
+        "@octokit/types": "^9.2.3",
+        "@tailwindcss/typography": "^0.5.9",
+        "@tszhong0411/eslint-config": "^1.0.13",
+        "@tszhong0411/prettier-config": "^1.0.2",
+        "@tszhong0411/tsconfig": "^1.0.1",
+        "@types/node": "^20.2.1",
+        "@types/react": "^18.2.6",
+        "@types/react-dom": "^18.2.4",
+        "@types/rss": "^0.0.30",
+        "autoprefixer": "^10.4.14",
+        "chalk": "^5.2.0",
+        "cz-conventional-changelog": "^3.3.0",
+        "eslint": "^8.41.0",
+        "eslint-config-next": "13.4.3",
+        "husky": "^8.0.3",
+        "lint-staged": "^13.2.2",
+        "postcss": "^8.4.23",
+        "prettier": "^2.8.8",
+        "prisma": "^4.15.0",
+        "puppeteer": "^20.2.1",
+        "schema-dts": "^1.1.2",
+        "tailwindcss": "^3.3.2",
+        "tsx": "^3.12.7",
+        "typescript": "5.0.4"
+    },
+    "lint-staged": {
+        "*.{js,jsx,ts,tsx}": [
+            "eslint"
+        ],
+        "*.{json,css,scss,md,mdx,js,jsx,ts,tsx,cjs,mjs}": [
+            "prettier -c"
+        ]
+    },
+    "eslintConfig": {
+        "extends": [
+            "next/core-web-vitals",
+            "@tszhong0411/eslint-config"
+        ],
+        "parserOptions": {
+            "project": "./tsconfig.json",
+            "ecmaVersion": "latest"
+        }
+    },
+    "config": {
+        "commitizen": {
+            "path": "./node_modules/cz-conventional-changelog"
+        }
+    },
+    "engines": {
+        "node": "18.x"
+    }
+}
