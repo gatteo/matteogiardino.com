@@ -10,6 +10,8 @@ export const GET = async () => {
         const response = await getNowPlaying()
 
         if (response.status === 204 || response.status > 400 || response?.data?.item === null || !response.data) {
+            console.log('Spotify response error status', response.status)
+            console.log('Spotify response error data', response.data)
             return NextResponse.json({ isPlaying: false })
         }
 
