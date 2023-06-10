@@ -41,7 +41,7 @@ export default function Pictures() {
                         loading="lazy"
                         width={500}
                         height={500}
-                        className="m-auto -rotate-3 rounded-xl drop-shadow-2xl transition-all duration-200 hover:rotate-0"
+                        className="m-auto hidden -rotate-3 rounded-xl drop-shadow-2xl transition-all duration-200 hover:rotate-0 md:block"
                     />
 
                     <Image
@@ -66,7 +66,7 @@ export default function Pictures() {
                         loading="lazy"
                         width={500}
                         height={500}
-                        className="m-auto rounded-lg drop-shadow-2xl"
+                        className="m-auto hidden rounded-lg drop-shadow-2xl md:block"
                     />
                     <Image
                         src="/static/images/home/4.png"

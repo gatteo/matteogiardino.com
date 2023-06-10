@@ -75,8 +75,8 @@ const AboutSection = () => {
 
         const scrollTriggerInstance = ScrollTrigger.create({
             trigger: targetSection.current,
-            start: 'top center',
-            end: 'bottom 80%',
+            start: 'top 80%',
+            end: 'bottom 40%',
             scrub: 0,
             animation: timeline,
         })
@@ -135,7 +135,7 @@ const AboutSection = () => {
                         </span>{' '}
                     </strong>
                 </h2>
-                <p className="ml-2 mt-6 text-xl text-accent-5">
+                <p className="ml-2 mt-6 text-base text-accent-5 md:text-xl">
                     🎉 Ad oggi l'app di Westudents ha aiutato quasi{' '}
                     <strong className="underline underline-offset-4 ">500.000</strong> studenti 🎉
                 </p>
@@ -156,7 +156,7 @@ const AboutSection = () => {
                 </strong>
                 , con l'obiettivo di rivoluzionare il modo in cui si impara a{' '}
                 <strong className="underline decoration-lime-300 underline-offset-4">programmare</strong>
-                <p className="ml-2 mt-6 text-xl text-accent-5">
+                <p className="ml-2 mt-6 text-base text-accent-5 md:text-xl">
                     🎉 Più di <strong className="underline underline-offset-4 ">130.000</strong> persone mi seguono per
                     imparare a programmare 🎉
                 </p>
@@ -172,8 +172,10 @@ const AboutSection = () => {
     )
 
     return (
-        <section className={' section-container relative w-full select-none pb-16 pt-40'} ref={targetSection}>
-            {renderQuotes()}
+        <section className={'section-container relative my-16 w-full select-none md:pt-40'}>
+            <div className="" ref={targetSection}>
+                {renderQuotes()}
+            </div>
 
             <div className="mt-24 flex">
                 <Link
