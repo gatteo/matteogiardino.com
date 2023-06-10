@@ -42,6 +42,10 @@ const getAccessToken = async () => {
         }),
     })
 
+    console.log('Spotify access token data', { REFRESH_TOKEN, BASIC })
+    console.log('Spotify access token response status', response.status)
+    console.log('Spotify access token response', await response.json())
+
     return (await response.json()) as AccessToken
 }
 
