@@ -36,7 +36,9 @@ export const GET = async () => {
             albumImage,
             songUrl,
         })
-    } catch {
+    } catch (e) {
+        console.log('Spotify response error', e)
+
         return NextResponse.json(
             {
                 isPlaying: false,
