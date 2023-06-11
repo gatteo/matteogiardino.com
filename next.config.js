@@ -31,6 +31,16 @@ const nextConfig = {
 
         return config
     },
+
+    async redirects() {
+        return [
+            {
+                source: '/it',
+                destination: '/',
+                permanent: true,
+            },
+        ]
+    },
 }
 
 export default withContentlayer(nextConfig)
