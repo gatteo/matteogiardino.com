@@ -4,40 +4,42 @@ import Image from './mdx/image'
 
 const Testimonials = [
     {
-        name: 'Ryan Florence',
-        title: 'Co-author of React Router',
-        avatar: '/static/images/testimonials/ryan-florence.jpg',
-        testimonial: 'I feel like an idiot for not thinking of this myself.',
+        name: 'Simone Bresciani',
+        title: 'CEO & Founder @ Teachcorner',
+        avatar: '/static/images/testimonials/simone-bresciani.avif',
+        testimonial:
+            '"Ho avuto il modo e la fortuna di collaborare con Matteo nello sviluppo di tool e strumenti utili alla mia azienda. Matteo è molto preparato e disponibile, inoltre non solo ascolta le esigenze del cliente ma entra proprio nel vivo del progetto con consigli, spunti, e miglioramenti utilissimi alla crescita e allo sviluppo. Grazie per la professionalità, disponibilità sempre dimostrataci"',
     },
     {
-        name: 'Michael Chan',
-        title: 'Author of React Patterns',
-        avatar: '/static/images/testimonials/michael-chan.jpg',
-        testimonial: 'Holy crap, this is amazing!',
+        name: 'Andriy Klitsuk',
+        title: 'Senior Software Engineer @ Banca Sella',
+        avatar: '/static/images/testimonials/andriy-klitsuk.jpeg',
+        testimonial:
+            '"Matteo ha un’impressionante capacità di vedere chiaro l’obiettivo e di schivare tutto quello che è superfluo. Sono molto grato che le nostre strade si siano incrociate, lavorare con lui ha contribuito alla mia crescita personale e professionale"',
     },
     {
         name: 'Kent C. Dodds',
         title: 'Author of Testing JavaScript',
         avatar: '/static/images/testimonials/kent-c-dodds.jpg',
-        testimonial: 'This is the best thing since sliced bread!',
+        testimonial: 'Temporary missing testimonial',
     },
     {
         name: 'Eve Porcello',
         title: 'Author of Learning React',
         avatar: '/static/images/testimonials/eve-porcello.jpg',
-        testimonial: 'I love this so much!',
+        testimonial: 'Temporary missing testimonial',
     },
     {
         name: 'Chris Biscardi',
         title: 'Author of Learn Next.js',
         avatar: '/static/images/testimonials/chris-biscardi.jpg',
-        testimonial: 'This is exactly what I needed',
+        testimonial: 'Temporary missing testimonial',
     },
     {
         name: 'Jen Luker',
         title: 'Author of Build a Career in Tech',
         avatar: '/static/images/testimonials/jen-luker.jpg',
-        testimonial: 'This is exactly what I needed',
+        testimonial: 'Temporary missing testimonial',
     },
 ]
 
@@ -49,9 +51,11 @@ const TestimonialCard = ({ testimonial }: { testimonial: (typeof Testimonials)[0
                     <p>{testimonial.testimonial} </p>
                 </blockquote>
                 <figcaption className="flex items-center space-x-4">
-                    <img
-                        src="/static/images/projects/devv/icon.png"
+                    <Image
+                        src={testimonial.avatar}
                         alt=""
+                        width={60}
+                        height={60}
                         className="h-14 w-14 flex-none rounded-xl object-cover"
                         loading="lazy"
                         decoding="async"
