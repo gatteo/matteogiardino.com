@@ -53,7 +53,7 @@ export const generateMetadata = (props: Props): Metadata => {
             authors: site.url,
             images: [
                 {
-                    url: `${site.url}/static/images/blog/${post.slug}/og.png`,
+                    url: `${site.url}/images/blog/${post.slug}/og.png`,
                     width: 1200,
                     height: 630,
                     alt: post.summary,

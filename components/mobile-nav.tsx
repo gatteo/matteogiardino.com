@@ -9,7 +9,7 @@ import { HEADER_LINKS } from '@/config/links'
 import { Button } from './ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu'
 
-const MobileNav = () => {
+export function MobileNav() {
     const [open, setOpen] = React.useState(false)
 
     return (
@@ -37,5 +37,3 @@ const MobileNav = () => {
         </DropdownMenu>
     )
 }
-
-export default MobileNav

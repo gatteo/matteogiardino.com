@@ -8,7 +8,7 @@ import { Products } from '@/config/products'
 
 import NowPlaying from './now-playing'
 
-const Footer = () => {
+export function Footer() {
     return (
         <footer className='mx-auto flex max-w-5xl flex-col px-8 pb-8'>
             <NowPlaying />
@@ -94,5 +94,3 @@ const Footer = () => {
         </footer>
     )
 }
-
-export default Footer

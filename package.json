@@ -1,10 +1,10 @@
 {
-    "name": "my-app",
+    "name": "matteogiardino.com",
     "version": "0.1.0",
     "private": true,
     "type": "module",
     "scripts": {
-        "dev": "next dev",
+        "dev": "concurrently \"contentlayer dev\" \"next dev -p 3002\"",
         "build": "next build",
         "clean": "rm -rf .next .contentlayer tsconfig.tsbuildinfo",
         "start": "next start",
@@ -70,6 +70,7 @@
         "@types/react-dom": "^18",
         "@typescript-eslint/eslint-plugin": "^7.1.0",
         "autoprefixer": "^10.0.1",
+        "concurrently": "^8.2.2",
         "eslint": "^8.57.0",
         "eslint-config-next": "14.1.1",
         "eslint-config-prettier": "^9.1.0",

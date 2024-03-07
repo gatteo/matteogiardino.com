@@ -1,10 +1,10 @@
 import Image from 'next/image'
 
-import { getBlogPosts } from '@/lib/blog'
-import BlogPosts from '@/components/home/blog-posts'
+import { getAllBlogPosts } from '@/lib/blog'
+import { BlogPosts } from '@/components/home/blog-posts'
 
 export default async function HomePage() {
-    const posts = await getBlogPosts(4)
+    const posts = await getAllBlogPosts(4)
 
     return (
         <>

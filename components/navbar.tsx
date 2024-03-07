@@ -18,7 +18,7 @@ import {
     navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu'
 
-export default function NavigationMenuDemo() {
+export function Navbar() {
     const pathname = usePathname()
 
     return (
@@ -28,7 +28,7 @@ export default function NavigationMenuDemo() {
                 <NavigationMenuItem key='business-menu-item'>
                     <NavigationMenuTrigger>Per le aziende</NavigationMenuTrigger>
                     <NavigationMenuContent>
-                        <ul className='grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]'>
+                        <ul className='grid gap-2 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]'>
                             <li className='row-span-3'>
                                 <NavigationMenuLink asChild>
                                     <a
@@ -123,7 +123,7 @@ const ListItem = React.forwardRef<
                 <a
                     ref={ref}
                     className={cn(
-                        'focus:bg-accent focus:text-accent-foreground block select-none space-y-1 rounded-md bg-accent-1 p-3 leading-none no-underline outline-none transition-colors hover:bg-hover',
+                        'focus:bg-accent focus:text-accent-foreground block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent',
                         className,
                     )}
                     target={props.target || '_self'}
@@ -162,7 +162,7 @@ const ListItem = React.forwardRef<
                                     ) : null}
                                 </div>
                             </div>
-                            <p className='mt-2 line-clamp-2 text-sm leading-tight text-muted-foreground'>{children}</p>
+                            <p className='mt-1 line-clamp-2 text-sm leading-tight text-muted-foreground'>{children}</p>
                         </div>
                     </div>
                 </a>

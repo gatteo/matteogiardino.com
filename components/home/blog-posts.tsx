@@ -2,13 +2,13 @@ import Link from 'next/link'
 import { IconArrowRight } from '@tabler/icons-react'
 
 import { BlogPostPreview } from '@/types/blog'
-import PostCard from '@/components/blog/post-card'
+import { PostCard } from '@/components/blog/post-card'
 
-type BlogPostsProps = {
+type Props = {
     posts: BlogPostPreview[]
 }
 
-const BlogPosts = (props: BlogPostsProps) => {
+export function BlogPosts(props: Props) {
     const { posts } = props
 
     return (
@@ -33,11 +33,9 @@ const BlogPosts = (props: BlogPostsProps) => {
             </div>
             <div className='-mx-4 mt-4 grid sm:grid-cols-2'>
                 {posts.map((post) => (
-                    <PostCard key={post.id} {...post} />
+                    <PostCard key={post.id} post={post} />
                 ))}
             </div>
         </section>
     )
 }
-
-export default BlogPosts

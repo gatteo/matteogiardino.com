@@ -14,7 +14,7 @@ type Site = {
 
 export const site: Site = {
     url: process.env.NODE_ENV === 'production' ? 'https://matteogiardino.com' : 'http://localhost:3000',
-    logo: 'https://matteogiardino.com/static/images/mg-logo-white.png',
+    logo: 'https://matteogiardino.com/images/mg-logo-white.png',
     title: 'Matteo Giardino',
     name: 'Matteo Giardino',
     keywords: ['Matteo Giardino', 'Next.js', 'React', 'TypeScript', 'Node.js', 'TikTok', 'Programmazione'],

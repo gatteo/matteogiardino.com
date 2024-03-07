@@ -25,7 +25,7 @@ export const metadata: Metadata = {
         locale: 'it-IT',
         images: [
             {
-                url: `${site.url}/static/images/og/og.png`,
+                url: `${site.url}/images/og/og.png`,
                 width: 1200,
                 height: 630,
                 alt: description,
