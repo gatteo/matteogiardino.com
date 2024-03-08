@@ -1,4 +1,4 @@
-export const Products: Array<{
+export const products: Array<{
     title: string
     href: string
     description: string
@@ -7,32 +7,32 @@ export const Products: Array<{
     badge?: string
 }> = [
     {
-        title: 'Programmatore Leggendario',
+        title: 'programmatore leggendario',
         href: '/programmatore-leggendario',
-        description: 'Il migliore corso di programmazione adatto a tutti i livelli, al costo di una cena.',
+        description: 'il miglior corso italiano per imparare a programmare. al costo di una cena.',
         image: '/images/products/pl-logo-black.png',
         imageDark: '/images/products/pl-logo.png',
     },
     {
-        title: 'Tech Career Launch',
+        title: 'tech career launch',
         href: '/tech-career-launch',
         badge: 'New ✨',
-        description: 'Una mentorship 1-1 per prepararsi al colloquio e trovare il primo lavoro.',
+        description: 'una mentorship 1-1 per prepararsi al colloquio e trovare il primo lavoro.',
         image: '/images/products/tcl-logo-black.png',
         imageDark: '/images/products/tcl-logo.png',
     },
     {
-        title: 'Tech Career Boost',
+        title: 'tech career boost',
         href: '/tech-career-boost',
         badge: 'Coming soon',
-        description: 'Una mentorship 1-1 per programmatori che vogliono fare il salto di Seniority.',
+        description: 'una mentorship 1-1 per programmatori che vogliono fare il salto di carriera.',
         image: '/images/products/tcb-logo-black.png',
         imageDark: '/images/products/tcb-logo.png',
     },
     {
-        title: 'Devv',
+        title: 'devv',
         href: 'https://bit.ly/3KiQhBI',
-        description: 'Una Piattaforma interattiva per imparare nozioni di programmazione facendo pratica.',
+        description: 'una piattaforma interattiva per imparare nozioni di programmazione facendo pratica.',
         image: '/images/projects/devv/logo-extended-black.png',
         imageDark: '/images/projects/devv/logo-extended-white.png',
     },

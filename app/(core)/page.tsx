@@ -1,36 +1,34 @@
-import Image from 'next/image'
-
 import { getAllBlogPosts } from '@/lib/blog'
+import { About } from '@/components/home/about'
 import { BlogPosts } from '@/components/home/blog-posts'
+import { CtaBusiness } from '@/components/home/cta-business'
+import { Followers } from '@/components/home/followers'
+import { Hero } from '@/components/home/hero'
+import { Projects } from '@/components/home/projects'
+import { Services } from '@/components/home/services'
+import { Skills } from '@/components/home/skills'
+import { Testimonials } from '@/components/home/testimonials'
 
 export default async function HomePage() {
     const posts = await getAllBlogPosts(4)
 
     return (
         <>
-            <Image
-                src='/images/bg-1.jpg'
-                alt=''
-                className='fixed inset-x-0 top-0 -z-40 min-h-screen min-w-full opacity-0 dark:opacity-25'
-                width='1308'
-                height='1000'
-            />
+            <Hero />
 
-            {/* <Hero /> */}
+            <About />
 
-            {/* <About /> */}
+            <Services />
 
-            {/* <Pictures /> */}
+            <Followers />
 
-            {/* <Projects /> */}
+            <Testimonials />
 
-            {/* <FollowersStats /> */}
+            <Projects />
 
-            {/* <Services /> */}
+            <CtaBusiness />
 
-            {/* <Testimonials /> */}
-
-            {/* <Skills /> */}
+            <Skills />
 
             <BlogPosts posts={posts} />
         </>

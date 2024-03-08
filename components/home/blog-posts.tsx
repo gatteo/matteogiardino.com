@@ -2,35 +2,35 @@ import Link from 'next/link'
 import { IconArrowRight } from '@tabler/icons-react'
 
 import { BlogPostPreview } from '@/types/blog'
+import { Routes } from '@/config/routes'
 import { PostCard } from '@/components/blog/post-card'
+
+import { Button } from '../ui/button'
 
 type Props = {
     posts: BlogPostPreview[]
 }
 
-export function BlogPosts(props: Props) {
-    const { posts } = props
-
+export function BlogPosts({ posts }: Props) {
     return (
-        <section className='my-16 md:pt-16'>
+        <section className='mt-32'>
             <div className='flex flex-col items-start justify-between md:flex-row md:items-end'>
                 <div className='flex-auto'>
                     <h2 className='text-3xl font-bold'>
-                        Gli ultimi <strong className='underline decoration-sky-400 underline-offset-4'>articoli</strong>
+                        cose che ho scritto{' '}
+                        <strong className='underline decoration-sky-400 underline-offset-4'>per te</strong>
                     </h2>
-                    <p className='mt-2 text-muted-foreground md:max-w-[70%]'>
-                        Leggi gli articoli e pensieri che scritto
-                    </p>
+                    <p className='mt-2 text-muted-foreground'>leggi gli articoli e pensieri che scritto</p>
                 </div>
-                <div className='flex justify-end'>
-                    <Link
-                        href='/blog'
-                        className='hover:bg-hover group flex items-center gap-2 rounded py-3 text-sm font-medium transition-colors md:px-3'>
-                        <span>Tutti gli articoli</span>
-                        <IconArrowRight className='size-4 transition duration-200 group-hover:translate-x-2' />
+
+                <Button variant='ghost' className='group text-muted-foreground' size='sm' asChild>
+                    <Link href={Routes.Blog}>
+                        tutti gli articoli
+                        <IconArrowRight className='ml-2 inline-block size-5 transition-transform duration-200 group-hover:translate-x-1' />
                     </Link>
-                </div>
+                </Button>
             </div>
+
             <div className='-mx-4 mt-4 grid sm:grid-cols-2'>
                 {posts.map((post) => (
                     <PostCard key={post.id} post={post} />
