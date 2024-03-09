@@ -1,10 +1,40 @@
-import { IconDeviceDesktop, IconFlame, IconMessageCircle, IconPencil, IconSeeding } from '@tabler/icons-react'
+import { Icons } from '@/components/icon'
+
+import { Routes } from './routes'
 
 type HeaderLinks = {
-    icon: React.ReactNode
+    icon: keyof typeof Icons
     href: string
     text: string
 }[]
+
+export const HeaderLinks: HeaderLinks = [
+    {
+        icon: 'servicesPage',
+        href: Routes.Services,
+        text: 'Per le aziende',
+    },
+    {
+        icon: 'learningProductsPage',
+        href: Routes.LearningProducts,
+        text: 'Prodotti di formazione',
+    },
+    {
+        icon: 'projectsPage',
+        href: Routes.Projects,
+        text: 'Progetti',
+    },
+    {
+        icon: 'contactsPage',
+        href: Routes.Contact,
+        text: 'Contatti',
+    },
+    {
+        icon: 'blogPage',
+        href: Routes.Blog,
+        text: 'Articoli',
+    },
+]
 
 type FooterLinkGroups = {
     id: number
@@ -14,101 +44,98 @@ type FooterLinkGroups = {
     }[]
 }[]
 
-type FooterLinks = {
-    href: string
-    title: string
-}[]
-
-export const HEADER_LINKS: HeaderLinks = [
-    {
-        icon: <IconDeviceDesktop size={14} />,
-        href: '/services',
-        text: 'Per le aziende',
-    },
-    {
-        icon: <IconSeeding size={14} />,
-        href: '/learn-and-grow',
-        text: 'Prodotti di formazione',
-    },
-    {
-        icon: <IconFlame size={14} />,
-        href: '/projects',
-        text: 'Progetti',
-    },
-    {
-        icon: <IconMessageCircle size={14} />,
-        href: '/contacts',
-        text: 'Contatti',
-    },
-    {
-        icon: <IconPencil size={14} />,
-        href: '/blog',
-        text: 'Articoli',
-    },
-]
-
-export const FOOTER_CONTACTS: FooterLinks = [
-    {
-        href: 'mailto:matteo@devv.it',
-        title: 'matteo@devv.it',
-    },
-    {
-        href: 'mailto:matteo@wezard.it',
-        title: 'matteo@wezard.it',
-    },
-]
-
-export const FOOTER_LINKS: FooterLinkGroups = [
+export const FooterLinkGroups: FooterLinkGroups = [
     {
         id: 2,
         links: [
             {
-                href: '/services',
-                title: 'Servizi per le aziende',
+                href: Routes.Services,
+                title: 'servizi per le aziende',
             },
             {
-                href: '/learn-and-grow',
-                title: 'Prodotti di formazione',
+                href: Routes.LearningProducts,
+                title: 'prodotti di formazione',
             },
             {
-                href: '/projects',
-                title: 'Progetti',
+                href: Routes.Projects,
+                title: 'progetti',
             },
             {
-                href: '/contacts',
-                title: 'Contatti',
+                href: Routes.Contact,
+                title: 'contatti',
             },
             {
-                href: '/blog',
-                title: 'Articoli',
+                href: Routes.Blog,
+                title: 'articoli',
             },
         ],
     },
 ]
 
-export const FOOTER_SOCIAL_MEDIA: FooterLinks = [
+type SocialLinks = {
+    name: string
+    url: string
+    handle: string
+    icon: keyof typeof Icons
+}[]
+
+export const SocialLinks: SocialLinks = [
     {
-        href: 'https://www.instagram.com/mattegiardino',
-        title: 'Instagram',
+        name: 'instagram',
+        url: 'https://www.instagram.com/mattegiardino',
+        handle: '@mattegiardino',
+        icon: 'instagram',
     },
     {
-        href: 'https://www.tiktok.com/@mattegiardino',
-        title: 'TikTok',
+        name: 'tiktok',
+        url: 'https://www.tiktok.com/@mattegiardino',
+        handle: '@mattegiardino',
+        icon: 'tiktok',
     },
     {
-        href: 'https://github.com/gatteo',
-        title: 'GitHub',
+        name: 'github',
+        url: 'https://github.com/gatteo',
+        handle: '@gatteo',
+        icon: 'github',
     },
     {
-        href: 'https://www.linkedin.com/in/matteo-giardino',
-        title: 'LinkedIn',
+        name: 'linkedin',
+        url: 'https://www.linkedin.com/in/matteo-giardino',
+        handle: '@matteo-giardino',
+        icon: 'linkedin',
     },
     {
-        href: 'https://twitter.com/mattegiardino',
-        title: 'Twitter',
+        name: 'x',
+        url: 'https://twitter.com/mattegiardino',
+        handle: '@mattegiardino',
+        icon: 'twitter',
     },
     {
-        href: 'https://www.twitch.tv/matteogiardino',
-        title: 'Twitch',
+        name: 'twitch',
+        url: 'https://www.twitch.tv/matteogiardino',
+        handle: '@matteogiardino',
+        icon: 'twitch',
+    },
+]
+
+type ContactLinks = {
+    name: string
+    mailto: string
+    icon: keyof typeof Icons
+    logo: string
+}[]
+
+export const ContactLinks: ContactLinks = [
+    {
+        name: 'Personal',
+        mailto: 'hi@matteogiardino.com',
+        icon: 'email',
+        logo: '/images/mg-logo-white.png',
+    },
+    {
+        name: 'Wezard',
+        mailto: 'matteo@wezard.it',
+        icon: 'email',
+        logo: '/images/brands/wezard-icon.png',
     },
 ]

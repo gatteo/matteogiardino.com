@@ -1,15 +1,38 @@
 import React from 'react'
+import {
+    IconBrandGithub,
+    IconBrandInstagram,
+    IconBrandLinkedin,
+    IconBrandTiktok,
+    IconBrandTwitch,
+    IconBrandTwitter,
+    IconDeviceDesktop,
+    IconFlame,
+    IconMessageCircle,
+    IconPencil,
+    IconSeeding,
+} from '@tabler/icons-react'
 import { ChevronRightSquare, Shrub, Target, type LucideIcon } from 'lucide-react'
+import { EmailIcon } from 'react-share'
 
 export const Icons = {
     developmentService: ChevronRightSquare,
     productGrowthAdvisoryService: Shrub,
     ctoService: Target,
-}
 
-interface Props extends LucideIcon {
-    name: keyof typeof Icons
-    className?: string
+    instagram: IconBrandInstagram,
+    tiktok: IconBrandTiktok,
+    github: IconBrandGithub,
+    linkedin: IconBrandLinkedin,
+    twitter: IconBrandTwitter,
+    twitch: IconBrandTwitch,
+    email: EmailIcon,
+
+    servicesPage: IconDeviceDesktop,
+    learningProductsPage: IconSeeding,
+    projectsPage: IconFlame,
+    contactsPage: IconMessageCircle,
+    blogPage: IconPencil,
 }
 
 export const Icon = React.forwardRef<

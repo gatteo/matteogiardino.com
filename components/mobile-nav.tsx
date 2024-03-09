@@ -4,7 +4,7 @@ import React from 'react'
 import Link from 'next/link'
 import { IconMenu } from '@tabler/icons-react'
 
-import { HEADER_LINKS } from '@/config/links'
+import { HeaderLinks } from '@/config/links'
 
 import { Button } from './ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu'
@@ -25,7 +25,7 @@ export function MobileNav() {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end'>
-                {HEADER_LINKS.map((link) => (
+                {HeaderLinks.map((link) => (
                     <DropdownMenuItem key={link.text} asChild>
                         <Link href={link.href} className='flex items-center gap-4' onClick={() => setOpen(false)}>
                             {link.icon}

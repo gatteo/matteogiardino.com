@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { FOOTER_CONTACTS, FOOTER_LINKS, FOOTER_SOCIAL_MEDIA } from '@/config/links'
+import { ContactLinks, FooterLinkGroups, SocialLinks } from '@/config/links'
 import { products } from '@/config/products'
 
 import NowPlaying from './now-playing'
@@ -15,12 +15,12 @@ export function Footer() {
 
             <div className='mt-12 grid grid-cols-2 md:grid-cols-4'>
                 <div className='col-span-2 mb-10 flex flex-col items-start gap-4 sm:col-span-1'>
-                    {FOOTER_CONTACTS.map((link) => (
+                    {ContactLinks.map((link) => (
                         <Link
-                            key={link.title}
-                            href={link.href}
-                            className='hover:text-accent-fg text-muted-foreground transition-colors duration-150'>
-                            {link.title}
+                            key={link.name}
+                            href={`mailto:${link.mailto}`}
+                            className='text-muted-foreground transition-colors duration-150 hover:text-accent-foreground'>
+                            {link.mailto}
                         </Link>
                     ))}
                 </div>
@@ -50,27 +50,28 @@ export function Footer() {
                     </div>
                 </div>
 
-                {FOOTER_LINKS.map((list) => (
+                {FooterLinkGroups.map((list) => (
                     <div key={list.id} className='mb-10 flex flex-col items-start gap-4 pr-4'>
                         {list.links.map((link) => (
                             <Link
                                 key={link.title}
                                 href={link.href}
-                                className='hover:text-accent-fg text-muted-foreground transition-colors duration-150'>
+                                className='text-muted-foreground transition-colors duration-150 hover:text-accent-foreground'>
                                 {link.title}
                             </Link>
                         ))}
                     </div>
                 ))}
+
                 <div className='mb-10 flex flex-col items-start gap-4 pr-4'>
-                    {FOOTER_SOCIAL_MEDIA.map((link) => (
+                    {SocialLinks.map((link) => (
                         <a
-                            key={link.title}
-                            href={link.href}
-                            className='hover:text-accent-fg text-muted-foreground transition-colors duration-150'
+                            key={link.name}
+                            href={link.url}
+                            className='text-muted-foreground transition-colors duration-150 hover:text-accent-foreground'
                             target='_blank'
                             rel='noopener noreferrer'>
-                            {link.title}
+                            {link.name}
                         </a>
                     ))}
                 </div>

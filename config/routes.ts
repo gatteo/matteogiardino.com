@@ -6,7 +6,7 @@ export const Routes = {
     Home: '/',
     About: '/about',
     Blog: '/blog',
-    Contact: '/contact',
+    Contact: '/contacts',
     Projects: '/projects',
     Services: '/services',
     LearningProducts: '/learn',
