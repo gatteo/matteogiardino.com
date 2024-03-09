@@ -1,14 +1,16 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { absoluteUrl } from '@/utils/urls'
 import { allBlogPosts } from 'contentlayer/generated'
 import { type Article, type WithContext } from 'schema-dts'
 
 import { BlogPostSource } from '@/types/blog'
+import { Routes } from '@/config/routes'
 import { site } from '@/config/site'
 import { getLocalBlogPost } from '@/lib/blog'
-import { Content } from '@/components/blog/post-content'
 import { Footer } from '@/components/blog/post-footer'
 import { Header } from '@/components/blog/post-header'
+import { Content } from '@/components/mdx-content'
 import { ScrollIndicator } from '@/components/scroll-indicator'
 
 type Props = {
@@ -107,7 +109,7 @@ export default function Page({ params: { slug } }: Props) {
                 tags={post.tags}
             />
 
-            <Content title={post.title} slug={slug} body={post.body} />
+            <Content title={post.title} body={post.body} url={absoluteUrl(Routes.LocalBlogPost(slug))} />
 
             <Footer slug={slug} title={post.title} author={post.author} source={BlogPostSource.Local} />
 

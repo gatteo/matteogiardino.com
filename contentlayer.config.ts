@@ -27,7 +27,7 @@ const Project = defineDocumentType(() => ({
             description: 'The description of the project',
             required: true,
         },
-        homepage: {
+        url: {
             type: 'string',
             description: "The link to the project's homepage",
             required: false,

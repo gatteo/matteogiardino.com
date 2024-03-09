@@ -5,7 +5,7 @@ import matter from 'gray-matter'
 export type ProjectMetadata = {
     name: string
     description: string
-    homepage: string
+    url: string
     github: string
     techstack: Array<{ label: string }>
     selected: boolean

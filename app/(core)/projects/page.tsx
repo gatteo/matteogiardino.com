@@ -1,41 +1,24 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { IconArrowRight } from '@tabler/icons-react'
 import { allProjects } from 'contentlayer/generated'
 
 import { Routes } from '@/config/routes'
+import { PageTitle } from '@/components/page-title'
+import { ProjectCollabCard } from '@/components/project-collab-card'
 
-import { ProjectCollabCard } from '../project-collab-card'
-import { Button } from '../ui/button'
-
-export function Projects() {
+export default function Page() {
     return (
-        <section className='my-32 flex flex-col'>
-            {/* Title My Projects */}
-            <div className='flex flex-col items-start justify-between md:flex-row md:items-end'>
-                <div className='flex-auto'>
-                    <h2 className='text-3xl font-bold'>
-                        alcuni miei progetti di{' '}
-                        <strong className='underline decoration-sky-400 underline-offset-4'>spicco</strong>
-                    </h2>
-                    <p className='mt-2 text-muted-foreground'>
-                        alcuni dei progetti più importanti che ho ideato e sviluppato in questi anni
-                    </p>
-                </div>
+        <>
+            <PageTitle
+                title='i miei progetti'
+                description='esplora i progetti che ho realizzato in passato. Alcuni progetti sono nati da un mio bisogno personale, mentre altri sono frutto di collaborazioni con brillanti imprenditori motivati a trasformare le idee in realtà. Ogni lavoro però è stato guidato dalla stessa volontà di superare delle sfide e ottenere risultati straordinari.'
+                fromColor='from-sky-400'
+                toColor='to-purple-600'
+            />
 
-                <Button variant='ghost' className='group text-muted-foreground' size='sm' asChild>
-                    <Link href={Routes.Projects}>
-                        tutti i progetti
-                        <IconArrowRight className='ml-2 inline-block size-5 transition-transform duration-200 group-hover:translate-x-1' />
-                    </Link>
-                </Button>
-            </div>
-
-            {/* My Projects */}
-            <div className='-mx-4 mt-4 grid sm:grid-cols-2'>
+            <div className='-mx-4 mt-8 grid sm:grid-cols-2'>
                 {allProjects
-                    .filter((p) => !p.collab && p.featured)
-                    .slice(0, 4)
+                    .filter((p) => !p.collab)
                     .map(({ _id, name, image, description, slug }) => {
                         return (
                             <Link
@@ -71,24 +54,16 @@ export function Projects() {
                         i prodotti digitali più entusiasmanti in cui ho dato un contributo
                     </p>
                 </div>
-
-                <Button variant='ghost' className='group text-muted-foreground' size='sm' asChild>
-                    <Link href={Routes.Projects}>
-                        tutti i progetti
-                        <IconArrowRight className='ml-2 inline-block size-5 transition-transform duration-200 group-hover:translate-x-1' />
-                    </Link>
-                </Button>
             </div>
 
             {/* Collab Projects */}
             <div className='mt-6 grid gap-4 sm:grid-cols-2'>
                 {allProjects
                     .filter((p) => p.collab)
-                    .slice(0, 4)
                     .map((project) => (
                         <ProjectCollabCard key={project._id} project={project} />
                     ))}
             </div>
-        </section>
+        </>
     )
 }

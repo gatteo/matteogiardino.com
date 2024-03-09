@@ -52,7 +52,7 @@ export type Project = {
   /** The description of the project */
   description: string
   /** The link to the project's homepage */
-  homepage?: string | undefined
+  url?: string | undefined
   /** The url to the project's github page */
   github?: string | undefined
   /** The name of the icon to use */

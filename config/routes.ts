@@ -9,6 +9,7 @@ export const Routes = {
     Contact: '/contact',
     Projects: '/projects',
     Services: '/services',
+    LearningProducts: '/learn',
     Project: (slug: string) => `/projects/${slug}`,
     LocalBlogPost: (slug: string) => `/blog/${slug}`,
     SubstackBlogPost: (slug: string) => `/posts/${slug}`,

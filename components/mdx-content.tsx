@@ -1,15 +1,13 @@
 import React from 'react'
 
-import { BlogPostSource } from '@/types/blog'
-import { site } from '@/config/site'
-import { getTOC, getUrlFromSource } from '@/lib/blog'
+import { getTOC } from '@/lib/blog'
 import TableOfContents from '@/components/blog/post-toc'
 
-import Mdx from '../mdx/mdx'
-import { ShareIcons } from './share-icons'
+import { ShareIcons } from './blog/share-icons'
+import Mdx from './mdx/mdx'
 
 type Props = {
-    slug: string
+    url: string
     body: {
         code: string
         raw: string
@@ -17,7 +15,7 @@ type Props = {
     title: string
 }
 
-export async function Content({ title, body, slug }: Props) {
+export async function Content({ title, body, url }: Props) {
     const toc = await getTOC(body.raw)
 
     return (
@@ -30,10 +28,7 @@ export async function Content({ title, body, slug }: Props) {
                     <div className='sticky top-24 will-change-[transform,opacity]'>
                         {toc && toc.length > 0 && <TableOfContents toc={toc} />}
                         <div className='mt-6 flex justify-start'>
-                            <ShareIcons
-                                title={title}
-                                url={`${site.url}/${getUrlFromSource(BlogPostSource.Local, slug)}`}
-                            />
+                            <ShareIcons title={title} url={url} />
                         </div>
                     </div>
                 </aside>
