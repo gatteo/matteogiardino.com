@@ -47,7 +47,7 @@ export function Navbar() {
                                             tecnologia.
                                         </p>
                                         <p className='mt-4 text-sm underline underline-offset-2'>
-                                            scopri tutti i servizi <ArrowUpRight className='inline-block size-4' />
+                                            scopri tutti i servizi <ArrowUpRight className='ml-1 inline-block size-4' />
                                         </p>
                                     </Link>
                                 </NavigationMenuLink>
@@ -72,13 +72,19 @@ export function Navbar() {
                         <ul className='grid w-[400px] grid-cols-1 gap-2 p-4 md:w-[500px] lg:w-[500px]'>
                             {products.map((product) => (
                                 <React.Fragment key={product.title}>
-                                    <ListItem key={product.title} target='_blank' {...product} className='dark:hidden'>
+                                    <ListItem
+                                        {...product}
+                                        key={product.title}
+                                        href={product.url}
+                                        target='_blank'
+                                        className='dark:hidden'>
                                         {product.description}
                                     </ListItem>
                                     <ListItem
-                                        key={product.title + '-dark'}
-                                        target='_blank'
                                         {...product}
+                                        key={product.title + '-dark'}
+                                        href={product.url}
+                                        target='_blank'
                                         image={product.imageDark}
                                         className='hidden dark:block'>
                                         {product.description}

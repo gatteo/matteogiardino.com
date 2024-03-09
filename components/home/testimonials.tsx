@@ -2,6 +2,7 @@ import React from 'react'
 import Image from 'next/image'
 
 import { testimonials } from '@/config/testimonials'
+import { cn } from '@/lib/utils'
 
 const TestimonialCard = ({ testimonial }: { testimonial: (typeof testimonials)[0] }) => {
     return (
@@ -33,9 +34,13 @@ const TestimonialCard = ({ testimonial }: { testimonial: (typeof testimonials)[0
     )
 }
 
-export function Testimonials() {
+type Props = {
+    className?: string
+}
+
+export function Testimonials({ className }: Props) {
     return (
-        <section className='my-32'>
+        <section className={cn('my-32', className)}>
             {/* Testimonial expanded */}
             <div className='relative isolate overflow-hidden px-6 lg:px-8'>
                 <div className='mx-auto max-w-2xl lg:max-w-4xl'>

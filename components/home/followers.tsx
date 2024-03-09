@@ -109,11 +109,11 @@ export function Followers() {
             <div className='mt-6 grid auto-rows-fr grid-cols-2 gap-4'>
                 {products.map((product) => (
                     <LinkCard
-                        key={product.title}
+                        key={product.id}
                         title={product.title}
                         description={product.description}
                         image={product.imageDark}
-                        href={product.href}
+                        href={product.url}
                     />
                 ))}
             </div>
