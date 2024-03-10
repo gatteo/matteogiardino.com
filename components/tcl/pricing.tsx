@@ -7,9 +7,8 @@ import NetflixLogo from 'public/images/brands/netflix.svg'
 import WezardLogo from 'public/images/brands/wezard.svg'
 
 import { env } from '@/env.mjs'
+import { Button } from '@/components/ui/button'
 import { PayPalButton } from '@/components/marketing/paypal-button'
-
-import { Button } from './components/button'
 
 const paymentBulletPoints = [
     'Mentoring 1-1 con Matteo Giardino',
@@ -19,7 +18,7 @@ const paymentBulletPoints = [
     'Ottieni il lavoro e la paga che meriti',
 ]
 
-const Section: React.FC = () => {
+export function Pricing() {
     return (
         <section id='pricing' className='relative isolate py-24 md:pt-44'>
             <div
@@ -59,6 +58,7 @@ const Section: React.FC = () => {
                     </h2>
                 </div>
                 <div className='mt-12 md:mt-20'>
+                    {/* eslint-disable-next-line tailwindcss/no-contradicting-classname */}
                     <div className='animate-shine dark:accent-1 relative overflow-hidden rounded-3xl border border-slate-900 bg-zinc-950 bg-[linear-gradient(45deg,transparent_25%,rgba(68,68,68,.2)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%,100%_100%] bg-[position:-100%_0,0_0] bg-no-repeat shadow-2xl'>
                         <div className='flex flex-col gap-12 divide-y p-8 dark:divide-gray-800 sm:p-20 md:flex-row md:divide-x md:divide-y-0'>
                             <div className='text-center md:w-5/12'>
@@ -71,10 +71,7 @@ const Section: React.FC = () => {
                                 </span>
 
                                 <div className='flex-col justify-center'>
-                                    <Button
-                                        asChild
-                                        className='mb-2 w-full bg-gradient-to-br from-purple-600 to-indigo-500 '
-                                        size='sm'>
+                                    <Button asChild className='mb-2 w-full' size='sm'>
                                         <Link href={env.NEXT_PUBLIC_STRIPE_TCL_LINK as string}>Paga con carta</Link>
                                     </Button>
                                     <PayPalButton fundingType={'paypal'} productSKU='TCL' />
@@ -121,5 +118,3 @@ const Section: React.FC = () => {
         </section>
     )
 }
-
-export default Section

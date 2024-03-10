@@ -12,6 +12,7 @@ import {
     IconListDetails,
     IconMessageCircle,
     IconPencil,
+    IconSchool,
     IconSeeding,
     IconStars,
 } from '@tabler/icons-react'
@@ -41,6 +42,11 @@ export const Icons = {
     plIsForYouSection: IconFlame,
     plWhatIsIncludedSection: IconListDetails,
     plTestimonialsSection: IconStars,
+
+    tclWhatIsSection: IconInfoSquareRounded,
+    tclMentorSection: IconSchool,
+    tclIsForYouSection: IconFlame,
+    tclWhatIsIncludedSection: IconListDetails,
 }
 
 export const Icon = React.forwardRef<

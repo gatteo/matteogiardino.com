@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-const Section: React.FC = () => {
+export function Cta1() {
     return (
         <section id='cta-1' className='relative isolate py-16'>
             {/* Grid BG */}
@@ -69,5 +69,3 @@ const Section: React.FC = () => {
         </section>
     )
 }
-
-export default Section

@@ -1,6 +1,5 @@
 import * as React from 'react'
-
-import Image from '@/components/ui/image'
+import Image from 'next/image'
 
 import CrossImage from '/public/images/tcl/cross.webp'
 
@@ -14,7 +13,7 @@ const problemBulletPoints = [
     'Difficoltà ad esporre in modo efficace le proprie competenze',
 ]
 
-const Section: React.FC = () => {
+export function Problem() {
     return (
         <section id='problem' className='border-b border-gray-700 pb-16 md:pt-8 lg:pb-24'>
             <div className='max-w-3xl'>
@@ -70,5 +69,3 @@ const Section: React.FC = () => {
         </section>
     )
 }
-
-export default Section

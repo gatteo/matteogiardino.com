@@ -1,9 +1,9 @@
 import * as React from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 
-import Image from '@/components/ui/image'
+import { Button } from '@/components/ui/button'
 
-import { Button } from './components/button'
 import SectionImage from '/public/images/tcl/solution.webp'
 
 const solutionBulletPoints = [
@@ -17,13 +17,13 @@ const solutionBulletPoints = [
     'Lascia a bocca aperta i recruiter',
 ]
 
-const Section: React.FC = () => {
+export function Solution() {
     return (
         <section id='solution' className='pt-16 text-gray-400 sm:text-lg lg:pb-8 lg:pt-24'>
             <div className='max-w-3xl'>
                 <h2 className='text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white lg:text-5xl'>
                     Avvia la tua carriera da programmatore con{' '}
-                    <span className='underline decoration-purple-400 underline-offset-4'>successo</span>
+                    <span className='underline decoration-purple-400 underline-offset-4'>successo</span>.
                 </h2>
                 <p className='mt-4 font-light lg:text-xl'>
                     Attraverso a sessioni personalizzate e pratica, ti prepareremo a superare i colloqui di lavoro e a
@@ -67,5 +67,3 @@ const Section: React.FC = () => {
         </section>
     )
 }
-
-export default Section

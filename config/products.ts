@@ -18,7 +18,7 @@ export const products: Array<{
     {
         id: 'tech-career-launch',
         title: 'tech career launch',
-        url: '/tech-career-launch',
+        url: '/tcl',
         badge: 'New ✨',
         description: 'una mentorship 1-1 per prepararsi al colloquio e trovare il primo lavoro.',
         image: '/images/products/tcl-logo-black.webp',
@@ -27,7 +27,7 @@ export const products: Array<{
     {
         id: 'tech-career-boost',
         title: 'tech career boost',
-        url: '/tech-career-boost',
+        url: '/tcb',
         badge: 'Coming soon',
         description: 'una mentorship 1-1 per programmatori che vogliono fare il salto di carriera.',
         image: '/images/products/tcb-logo-black.webp',

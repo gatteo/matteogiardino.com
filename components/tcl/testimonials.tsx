@@ -1,9 +1,9 @@
 import React from 'react'
+import Image from 'next/image'
 
-import Image from '@/components/ui/image'
-import Rating from '@/components/marketing/rating'
+import { Rating } from '@/components/marketing/rating'
 
-const Testimonials = [
+const TestimonialsList = [
     {
         name: 'Luca Guglielmi',
         title: '1a edizione TCL',
@@ -48,7 +48,7 @@ const Testimonials = [
     },
 ]
 
-const TestimonialCard = ({ testimonial }: { testimonial: (typeof Testimonials)[0] }) => {
+const TestimonialCard = ({ testimonial }: { testimonial: (typeof TestimonialsList)[0] }) => {
     return (
         <li className='text-sm leading-6'>
             <figure className='dark:highlight-white/5 relative flex flex-col-reverse rounded-lg bg-slate-50 p-6 dark:bg-neutral-900'>
@@ -78,7 +78,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: (typeof Testimonials)[0
     )
 }
 
-export default function TestimonialsSection() {
+export function Testimonials() {
     return (
         <section id='testimonials' className=''>
             <Rating className='mb-8 md:flex md:items-center' average={4.98} count={26} />
@@ -97,7 +97,7 @@ export default function TestimonialsSection() {
 
             <div className='flex flex-col sm:hidden'>
                 <ul className='space-y-4'>
-                    {Testimonials.slice(0, 3).map((e) => (
+                    {TestimonialsList.slice(0, 3).map((e) => (
                         <TestimonialCard key={e.name} testimonial={e} />
                     ))}
                 </ul>
@@ -105,12 +105,12 @@ export default function TestimonialsSection() {
 
             <div className='hidden grid-cols-2 gap-4 sm:grid lg:hidden'>
                 <ul className='space-y-4'>
-                    {Testimonials.slice(0, 3).map((e) => (
+                    {TestimonialsList.slice(0, 3).map((e) => (
                         <TestimonialCard key={e.name} testimonial={e} />
                     ))}
                 </ul>
                 <ul className='space-y-4'>
-                    {Testimonials.slice(3, 6).map((e) => (
+                    {TestimonialsList.slice(3, 6).map((e) => (
                         <TestimonialCard key={e.name} testimonial={e} />
                     ))}
                 </ul>
@@ -118,17 +118,17 @@ export default function TestimonialsSection() {
 
             <div className='hidden grid-cols-3 gap-4 lg:grid'>
                 <ul className='space-y-4'>
-                    {Testimonials.slice(0, 2).map((e) => (
+                    {TestimonialsList.slice(0, 2).map((e) => (
                         <TestimonialCard key={e.name} testimonial={e} />
                     ))}
                 </ul>
                 <ul className='space-y-4'>
-                    {Testimonials.slice(2, 4).map((e) => (
+                    {TestimonialsList.slice(2, 4).map((e) => (
                         <TestimonialCard key={e.name} testimonial={e} />
                     ))}
                 </ul>
                 <ul className='space-y-4'>
-                    {Testimonials.slice(4, 6).map((e) => (
+                    {TestimonialsList.slice(4, 6).map((e) => (
                         <TestimonialCard key={e.name} testimonial={e} />
                     ))}
                 </ul>

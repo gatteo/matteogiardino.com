@@ -1,7 +1,5 @@
 import { type IconDescriptor } from 'next/dist/lib/metadata/types/metadata-types'
 
-import { env } from '@/env.mjs'
-
 type Site = {
     url: string
     logo: string
@@ -15,7 +13,7 @@ type Site = {
 }
 
 export const site: Site = {
-    url: env.NODE_ENV === 'production' ? 'https://matteogiardino.com' : 'http://localhost:3000',
+    url: process.env.NODE_ENV === 'production' ? 'https://matteogiardino.com' : 'http://localhost:3000',
     logo: 'https://matteogiardino.com/images/mg-logo-white.webp',
     title: 'Matteo Giardino',
     name: 'Matteo Giardino',

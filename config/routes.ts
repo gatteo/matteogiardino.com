@@ -2,6 +2,29 @@ export const ApiRoutes = {
     getSong: '/api/song',
 }
 
+export const PlRoutes = {
+    Home: '/programmatore-leggendario',
+    WhatIs: '/programmatore-leggendario#what-is',
+    IsForYou: '/programmatore-leggendario#is-for-you',
+    WhatIsIncluded: '/programmatore-leggendario#what-is-included',
+    Testimonials: '/programmatore-leggendario#testimonials',
+    Pricing: '/programmatore-leggendario#pricing',
+}
+
+export const TclRoutes = {
+    Home: '/tcl',
+    WhatIs: '/tcl#what-is',
+    Mentor: '/tcl#mentor',
+    IsForYou: '/tcl#is-for-you',
+    WhatIsIncluded: '/tcl#what-is-included',
+    Testimonials: '/tcl#testimonials',
+    Pricing: '/tcl#pricing',
+}
+
+export const TcbRoutes = {
+    Home: '/tcb',
+}
+
 export const Routes = {
     Home: '/',
     About: '/about',
@@ -13,13 +36,7 @@ export const Routes = {
     Project: (slug: string) => `/projects/${slug}`,
     LocalBlogPost: (slug: string) => `/blog/${slug}`,
     SubstackBlogPost: (slug: string) => `/posts/${slug}`,
-}
-
-export const PlRoutes = {
-    Home: '/programmatore-leggendario',
-    WhatIs: '/programmatore-leggendario#what-is',
-    IsForYou: '/programmatore-leggendario#is-for-you',
-    WhatIsIncluded: '/programmatore-leggendario#what-is-included',
-    Testimonials: '/programmatore-leggendario#testimonials',
-    Pricing: '/programmatore-leggendario#pricing',
+    tcl: TclRoutes,
+    tcb: TcbRoutes,
+    pl: PlRoutes,
 }

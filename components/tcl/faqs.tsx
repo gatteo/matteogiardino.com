@@ -1,8 +1,8 @@
 import * as React from 'react'
 
-import FAQ from '../../../components/marketing/FAQ'
+import { FAQ } from '@/components/marketing/FAQ'
 
-const FAQs = [
+const FAQList = [
     {
         question: 'Tech Career Launch  è un corso di programmazione?',
         answer: 'No, Tech Career Launch non è un corso di programmazione. È un percorso di mentorship personalizzato per studenti di informatica e aspiranti programmatori che desiderano avviare la propria carriera nel settore tech. Il percorso fornisce mentoring 1-1 con un mentore esperto, Matteo Giardino, che offre consigli pratici, orientamento strategico e supporto personalizzato per sviluppare le competenze richieste, creare un curriculum accattivante e affrontare i colloqui di lavoro con sicurezza.',
@@ -45,24 +45,22 @@ const FAQs = [
     },
 ]
 
-const Section: React.FC = () => {
+export function FAQs() {
     return (
-        <section id="faq" className="my-24 flex flex-col gap-12 lg:flex-row">
-            <div className="text-center lg:w-5/12 lg:text-left">
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-white md:text-3xl lg:text-4xl">
+        <section id='faq' className='my-24 flex flex-col gap-12 lg:flex-row'>
+            <div className='text-center lg:w-5/12 lg:text-left'>
+                <h2 className='text-2xl font-bold text-gray-800 dark:text-white md:text-3xl lg:text-4xl'>
                     Domande frequenti
                 </h2>
-                <p className="mt-4 text-gray-600 dark:text-gray-300">
-                    Trova le risposte alle domande comuni che ci vengono poste.
+                <p className='mt-4 text-gray-600 dark:text-gray-300'>
+                    Trova le risposte alle domande comuni che mi vengono poste.
                 </p>
             </div>
-            <div className="divide-y divide-gray-200 border-y border-gray-200 dark:divide-gray-800 dark:border-gray-800 lg:w-7/12">
-                {FAQs.map((faq, i) => (
+            <div className='divide-y divide-gray-200 border-y border-gray-200 dark:divide-gray-800 dark:border-gray-800 lg:w-7/12'>
+                {FAQList.map((faq, i) => (
                     <FAQ key={faq.question} question={faq.question} answer={faq.answer} index={i} />
                 ))}
             </div>
         </section>
     )
 }
-
-export default Section

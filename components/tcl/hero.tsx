@@ -6,14 +6,12 @@ import GoogleLogo from 'public/images/brands/google.svg'
 import NetflixLogo from 'public/images/brands/netflix.svg'
 import WestudentsLogo from 'public/images/brands/westudents-short.svg'
 import WezardLogo from 'public/images/brands/wezard.svg'
-import Logo from 'public/images/tcl/launch.png'
-import DecorativeImage from 'public/images/tcl/solution.png'
+import Logo from 'public/images/tcl/launch.webp'
+import DecorativeImage from 'public/images/tcl/solution.webp'
 
-import CustomImange from '@/components/ui/image'
+import { Button } from './button'
 
-import { Button } from './components/button'
-
-const Section: React.FC = () => {
+export function Hero() {
     return (
         <section id='hero' className='relative'>
             {/* Background blur */}
@@ -51,7 +49,7 @@ const Section: React.FC = () => {
                         </div>
                     </div>
                     <div className='relative m-auto mt-16 w-4/5 md:m-0 md:-mr-72 md:w-2/5 lg:mr-0 lg:w-3/5'>
-                        <CustomImange className='h-full object-cover' src={DecorativeImage} alt='TCL screenshot' />
+                        <Image className='h-full object-cover' src={DecorativeImage} alt='TCL screenshot' />
                     </div>
                 </div>
             </div>
@@ -72,5 +70,3 @@ const Section: React.FC = () => {
         </section>
     )
 }
-
-export default Section

@@ -1,10 +1,9 @@
 import * as React from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import SectionImage from 'public/images/tcl/includes.webp'
 
-import Image from '@/components/ui/image'
-
-import { Button } from './components/button'
+import { Button } from '@/components/ui/button'
 
 const included = [
     'Mentoring 1-1 con Matteo Giardino',
@@ -21,7 +20,7 @@ const included = [
     'BONUS: 4 migliori template di curriculum',
 ]
 
-const Section: React.FC = () => {
+export function WhatsIncluded() {
     return (
         <section id='what-is-included' className='space-y-12 py-16 text-gray-400 sm:text-lg lg:py-24'>
             <div className='max-w-3xl'>
@@ -68,5 +67,3 @@ const Section: React.FC = () => {
         </section>
     )
 }
-
-export default Section

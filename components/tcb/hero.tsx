@@ -2,7 +2,7 @@ import * as React from 'react'
 import Image from 'next/image'
 import Logo from 'public/images/tcb/boost.png'
 
-const Section: React.FC = () => {
+export function Hero() {
     return (
         <section
             id='hero'
@@ -58,5 +58,3 @@ const Section: React.FC = () => {
         </section>
     )
 }
-
-export default Section

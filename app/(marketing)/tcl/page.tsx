@@ -2,18 +2,17 @@ import * as React from 'react'
 import type { Metadata } from 'next'
 
 import { site } from '@/config/site'
-
-import AboutSection from './about'
-import CTA1Section from './cta-1'
-import FAQsSection from './faqs'
-import HeroSection from './hero'
-import IsForYouSection from './is-for-you'
-import MentorSection from './mentor'
-import PricingSection from './pricing'
-import ProblemSection from './problem'
-import SolutionSection from './solution'
-import TestimonialsSection from './testimonials'
-import WhatsIncludedSection from './whats-included'
+import { About } from '@/components/tcl/about'
+import { Cta1 } from '@/components/tcl/cta-1'
+import { FAQs } from '@/components/tcl/faqs'
+import { Hero } from '@/components/tcl/hero'
+import { IsForYou } from '@/components/tcl/is-for-you'
+import { Mentor } from '@/components/tcl/mentor'
+import { Pricing } from '@/components/tcl/pricing'
+import { Problem } from '@/components/tcl/problem'
+import { Solution } from '@/components/tcl/solution'
+import { Testimonials } from '@/components/tcl/testimonials'
+import { WhatsIncluded } from '@/components/tcl/whats-included'
 
 const title = 'Tech Career Launch'
 const description =
@@ -47,27 +46,27 @@ export const metadata: Metadata = {
 const Page = () => {
     return (
         <>
-            <HeroSection />
+            <Hero />
 
-            <AboutSection />
+            <About />
 
-            <ProblemSection />
+            <Problem />
 
-            <SolutionSection />
+            <Solution />
 
-            <CTA1Section />
+            <Cta1 />
 
-            <MentorSection />
+            <Mentor />
 
-            <IsForYouSection />
+            <IsForYou />
 
-            <WhatsIncludedSection />
+            <WhatsIncluded />
 
-            <TestimonialsSection />
+            <Testimonials />
 
-            <PricingSection />
+            <Pricing />
 
-            <FAQsSection />
+            <FAQs />
         </>
     )
 }

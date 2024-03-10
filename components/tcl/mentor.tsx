@@ -1,6 +1,4 @@
-import * as React from 'react'
-
-import Image from '@/components/ui/image'
+import Image from 'next/image'
 
 const personalAchievements = [
     { title: "Kangourou dell'Informatica", subtitle: 'Finalista Nazionale, 2016/2017' },
@@ -10,7 +8,7 @@ const personalAchievements = [
     { title: 'Fondatore di Westudents SRL, Oltre, Devv, Wezard, Testy', subtitle: 'Dal 2019 ad oggi' },
 ]
 
-const Section: React.FC = () => {
+export function Mentor() {
     return (
         <section id='mentor' className='lg:pt-8'>
             <div className='max-w-3xl'>
@@ -107,12 +105,12 @@ const Section: React.FC = () => {
                             className='m-auto hidden rounded-lg drop-shadow-2xl md:block'
                         />
                         <Image
-                            src='/images/tcl/mentor-3.png'
+                            src='/images/tcl/mentor-3.webp'
                             alt=''
                             loading='lazy'
                             width={1000}
                             height={500}
-                            className='col-span-2 m-auto rounded-lg drop-shadow-2xl transition-all duration-200 hover:rotate-0'
+                            className='col-span-2 m-auto rounded-lg drop-shadow-2xl transition-all duration-200'
                         />
                     </div>
                 </div>
@@ -140,5 +138,3 @@ const Section: React.FC = () => {
         </section>
     )
 }
-
-export default Section

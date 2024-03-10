@@ -1,16 +1,15 @@
 import * as React from 'react'
-
-import Image from '@/components/ui/image'
+import Image from 'next/image'
 
 import SectionImage from '/public/images/tcl/cosmico.webp'
 
-const Section: React.FC = () => {
+export function About() {
     return (
         <section id='what-is' className='pt-32' aria-label="Che cos'è Tech Career Launch">
             {/* Heading */}
             <div className='mx-auto max-w-2xl md:text-center'>
                 <h2 className='font-display mb-4 text-3xl font-bold tracking-tight lg:text-5xl'>
-                    Supera le sfide nell'avvio della tua carriera
+                    Ti aiuto a superare le sfide nell'avvio della tua carriera
                 </h2>
                 <p className='mb-8 text-gray-400 lg:text-xl'>
                     Tech Career Launch è un percorso di 4 settimane con Matteo Giardino, un mentore esperto che ti
@@ -140,5 +139,3 @@ const Section: React.FC = () => {
         </section>
     )
 }
-
-export default Section

@@ -2,8 +2,7 @@ import * as React from 'react'
 import type { Metadata } from 'next'
 
 import { site } from '@/config/site'
-
-import HeroSection from './hero'
+import { Hero } from '@/components/tcb/hero'
 
 const title = 'Tech Career Boost'
 const description =
@@ -13,10 +12,10 @@ export const metadata: Metadata = {
     title,
     description,
     alternates: {
-        canonical: `${site.url}/tech-career-boost`,
+        canonical: `${site.url}/tcb`,
     },
     openGraph: {
-        url: `${site.url}/tech-career-boost`,
+        url: `${site.url}/tcb`,
         type: 'website',
         title,
         siteName: site.title,
@@ -34,12 +33,10 @@ export const metadata: Metadata = {
     },
 }
 
-const Page = () => {
+export default function Page() {
     return (
         <>
-            <HeroSection />
+            <Hero />
         </>
     )
 }
-
-export default Page
