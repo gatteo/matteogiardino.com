@@ -95,6 +95,7 @@ export function Hero() {
                                 src='/images/home/1.gif'
                                 alt=''
                                 loading='lazy'
+                                unoptimized
                                 fill
                                 className='rounded-lg drop-shadow-2xl'
                             />

@@ -67,6 +67,7 @@ export function Mentor() {
                             src='/images/home/1.gif'
                             alt=''
                             loading='lazy'
+                            unoptimized
                             width={500}
                             height={500}
                             className='m-auto rounded-lg drop-shadow-2xl'

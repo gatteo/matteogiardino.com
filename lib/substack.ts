@@ -1,4 +1,5 @@
 import { BlogPostSource, type BlogPostPreview } from '@/types/blog'
+import { BlogAuthors } from '@/config/blog'
 import { Routes } from '@/config/routes'
 
 type SubstackPostPreview = {
@@ -177,7 +178,13 @@ type SubstackPost = {
     longer_truncated_body_html: unknown
     truncated_body_text: string
     wordcount: number
-    postTags: unknown[]
+    postTags: {
+        id: string
+        pubblication_id: string
+        name: string
+        slug: string
+        hidden: boolean
+    }[]
     publishedBylines: Array<{
         id: number
         name: string
@@ -275,6 +282,8 @@ export async function getSubstackPost(slug: string) {
             originalUrl: rawPost.canonical_url,
             reactionsCount: rawPost.reaction_count,
             body: rawPost.body_html,
+            tags: rawPost.postTags.map((tag) => tag.name),
+            author: BlogAuthors[0],
         }
     } catch (error) {
         console.error(error)

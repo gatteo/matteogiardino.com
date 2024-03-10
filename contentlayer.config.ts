@@ -1,16 +1,8 @@
 import { MDXOptions } from 'contentlayer/core'
 import { defineDocumentType, makeSource } from 'contentlayer/source-files'
 
+import { BlogAuthors } from './config/blog'
 import { rehypePlugins, remarkPlugins } from './lib/mdx/plugins'
-
-const BlogAuthors = [
-    {
-        id: 'matteo',
-        name: 'Matteo Giardino',
-        url: 'https://matteogiardino.com',
-        image: 'https://github.com/gatteo.png',
-    },
-]
 
 const Project = defineDocumentType(() => ({
     name: 'Project',

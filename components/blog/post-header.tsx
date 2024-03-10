@@ -3,11 +3,11 @@
 import React from 'react'
 import Image from 'next/image'
 import { formatDate } from '@/utils/dates'
+import { absoluteUrl } from '@/utils/urls'
 import { AspectRatio } from '@radix-ui/react-aspect-ratio'
 import { motion } from 'framer-motion'
 
 import { BlogPostAuthor, BlogPostSource } from '@/types/blog'
-import { site } from '@/config/site'
 import { getUrlFromSource } from '@/lib/blog'
 
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
@@ -56,17 +56,21 @@ export function Header({ createdAt, title, slug, summary, image, source, author,
 
                         <div>{formatDate(createdAt)}</div>
 
-                        <div className='text-muted-foreground'>•</div>
+                        {tags.length > 0 && (
+                            <>
+                                <div className='text-muted-foreground'>•</div>
 
-                        <div className='flex flex-wrap gap-1'>
-                            {tags.map((t) => (
-                                <Badge key={t} variant={'outline'}>
-                                    {t}
-                                </Badge>
-                            ))}
-                        </div>
+                                <div className='flex flex-wrap gap-1'>
+                                    {tags.map((t) => (
+                                        <Badge key={t} variant={'outline'}>
+                                            {t}
+                                        </Badge>
+                                    ))}
+                                </div>
+                            </>
+                        )}
                     </div>
-                    <ShareIcons title={title} url={`${site.url}/${getUrlFromSource(source, slug)}`} />
+                    <ShareIcons title={title} url={absoluteUrl(getUrlFromSource(source, slug))} />
                 </div>
             </motion.div>
 
