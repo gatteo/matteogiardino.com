@@ -58,6 +58,23 @@
     }
 }
 
+/* Shine animation */
+
+@keyframes shine {
+    0% {
+        background-position: -100% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.animate-shine {
+    animation: shine 2s infinite;
+}
+
+/* Text bg fill animation */
+
 .text-highlight {
     background: linear-gradient(90deg, #ffffff 0%, #ffffff 50%, #6dd5ed 51%, #2193b0 100%);
     background-size: 200% 100%;

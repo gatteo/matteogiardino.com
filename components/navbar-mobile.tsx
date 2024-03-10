@@ -5,11 +5,11 @@ import Link from 'next/link'
 import { IconMenu } from '@tabler/icons-react'
 
 import { HeaderLinks } from '@/config/links'
+import { Button } from '@/components/ui/button'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Icon } from '@/components/icon'
 
-import { Button } from './ui/button'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu'
-
-export function MobileNav() {
+export function NavbarMobile() {
     const [open, setOpen] = React.useState(false)
 
     return (
@@ -28,7 +28,7 @@ export function MobileNav() {
                 {HeaderLinks.map((link) => (
                     <DropdownMenuItem key={link.text} asChild>
                         <Link href={link.href} className='flex items-center gap-4' onClick={() => setOpen(false)}>
-                            {link.icon}
+                            <Icon name={link.icon} className='size-4' />
                             <div>{link.text}</div>
                         </Link>
                     </DropdownMenuItem>

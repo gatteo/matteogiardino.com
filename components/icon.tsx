@@ -8,9 +8,12 @@ import {
     IconBrandTwitter,
     IconDeviceDesktop,
     IconFlame,
+    IconInfoSquareRounded,
+    IconListDetails,
     IconMessageCircle,
     IconPencil,
     IconSeeding,
+    IconStars,
 } from '@tabler/icons-react'
 import { ChevronRightSquare, Shrub, Target, type LucideIcon } from 'lucide-react'
 import { EmailIcon } from 'react-share'
@@ -33,6 +36,11 @@ export const Icons = {
     projectsPage: IconFlame,
     contactsPage: IconMessageCircle,
     blogPage: IconPencil,
+
+    plWhatIsSection: IconInfoSquareRounded,
+    plIsForYouSection: IconFlame,
+    plWhatIsIncludedSection: IconListDetails,
+    plTestimonialsSection: IconStars,
 }
 
 export const Icon = React.forwardRef<

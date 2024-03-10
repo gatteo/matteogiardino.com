@@ -2,8 +2,8 @@ import * as React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { MobileNav } from '@/components/mobile-nav'
 import { Navbar } from '@/components/navbar'
+import { NavbarMobile } from '@/components/navbar-mobile'
 
 export function Header() {
     return (
@@ -25,7 +25,7 @@ export function Header() {
                 </Link>
                 <div className='flex items-center gap-2'>
                     <Navbar />
-                    <MobileNav />
+                    <NavbarMobile />
                 </div>
             </div>
         </header>

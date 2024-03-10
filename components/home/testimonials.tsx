@@ -23,7 +23,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: (typeof testimonials)[0
                             <span className='absolute inset-0' />
                             {testimonial.name}
                         </div>
-                        <div className='dark:text-accent-5 mt-0.5 leading-tight'>{testimonial.title}</div>
+                        <div className='mt-0.5 leading-tight dark:text-muted-foreground'>{testimonial.title}</div>
                     </div>
                 </figcaption>
                 <blockquote className='mt-6 text-muted-foreground'>
