@@ -46,7 +46,7 @@ export function Testimonials({ className }: Props) {
                 <div className='mx-auto max-w-2xl lg:max-w-4xl'>
                     <Image
                         className='mx-auto'
-                        src='/images/testimonials/revenue-farm-blue.png'
+                        src='/images/testimonials/revenue-farm-blue.webp'
                         alt='revenue farm logo'
                         width={200}
                         height={40}
@@ -70,7 +70,7 @@ export function Testimonials({ className }: Props) {
                         <figcaption className='mt-10'>
                             <Image
                                 className='mx-auto size-10 rounded-full'
-                                src='/images/testimonials/pietro-campanella.jpeg'
+                                src='/images/testimonials/pietro-campanella.webp'
                                 width={40}
                                 height={40}
                                 alt='Pietro campanella'

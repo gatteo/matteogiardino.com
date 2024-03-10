@@ -7,42 +7,42 @@ const TestimonialsList = [
     {
         name: 'Maria Reale',
         title: 'Social Media Manager',
-        avatar: '/images/pl/testimonial-avatars/1.jpeg',
+        avatar: '/images/pl/testimonial-avatars/1.webp',
         testimonial:
             '"Non avevo mai programmato prima e temevo di non capire niente... Ma grazie a Matteo e al corso Programmatore Leggendario ho imparato passo dopo passo e ora sono in grado di scrivere il mio codice JavaScript"',
     },
     {
         name: 'Elena Marina',
         title: 'Ora lavora per Notion',
-        avatar: '/images/pl/testimonial-avatars/2.jpeg',
+        avatar: '/images/pl/testimonial-avatars/2.webp',
         testimonial:
             '"Grazie Matteo, prima di conoscerti avevo provato ad imparare da sola ma mi sentivo persa. Mi hai aiutato a superare i miei timori e dopo pochi mesi lavoro come sviluppatrice per Notion!"',
     },
     {
         name: 'Luca De Santis',
         title: 'Studente Politecnico di Milano',
-        avatar: '/images/pl/testimonial-avatars/3.jpeg',
+        avatar: '/images/pl/testimonial-avatars/3.webp',
         testimonial:
             '"Sapevo già qualcosina di programmazione ma volevo migliorare le mie competenze in JavaScript. Il corso mi ha stupito con la sua struttura completa e gli esercizi interattivi. Ora ho una comprensione più profonda del linguaggio e posso affrontare progetti più sfidanti!!"',
     },
     {
         name: 'Chiara Lorenzi',
         title: 'Mamma e Geologa',
-        avatar: '/images/pl/testimonial-avatars/4.jpeg',
+        avatar: '/images/pl/testimonial-avatars/4.webp',
         testimonial:
             '"Come madre lavoratrice, avevo poco tempo libero per imparare la programmazione. Questo corso è stato perfetto per me, poiché ho potuto seguire le lezioni quando avevo il tempo e lavorare sugli esercizi interattivi. Ora ho una nuova competenza che potrebbe persino migliorare le mie prospettive di carriera."',
     },
     {
         name: 'Mario Lorenzo Tedesco',
         title: 'Programmatore Freelance',
-        avatar: '/images/pl/testimonial-avatars/5.jpeg',
+        avatar: '/images/pl/testimonial-avatars/5.webp',
         testimonial:
             '"Mi ha parlato di Matteo un amico. All’inizio avevo qualche dubbio che potesse realmente aiutarmi, ma ora non posso che consigliare questo corso a chiunque!. Spiegazioni chiarissime, anche per me che non avevo mai programmato prima. Grazie Matteo!"',
     },
     {
         name: 'Marco Santoro',
         title: 'Studente di Enologia a UniPisa',
-        avatar: '/images/pl/testimonial-avatars/6.jpeg',
+        avatar: '/images/pl/testimonial-avatars/6.webp',
         testimonial:
             '"Ho provato altri corsi online, ma questo è il migliore in assoluto! Gli esercizi pratici mi hanno aiutato a mettere in pratica subito ciò che ho imparato. Ora ho creato piccole applicazioni e sono incredibilmente soddisfatto dei progressi che ho fatto grazie a Programmatore Leggendario."',
     },
@@ -150,7 +150,7 @@ export function Testimonials() {
                 {Testimonialslayout.map((e) =>
                     e.type === 'image' ? (
                         <Image
-                            src={'/images/pl/testimonial-chats/' + e.index + '.jpg'}
+                            src={'/images/pl/testimonial-chats/' + e.index + '.webp'}
                             alt=''
                             key={e.index}
                             width={300}

@@ -4,8 +4,8 @@ import { HeaderLinks } from '@/config/pl'
 import Footer from '@/components/marketing/footer'
 import Header from '@/components/marketing/header'
 
-import LogoForLightMode from '/public/images/products/pl-logo-black.png'
-import LogoForDarkMode from '/public/images/products/pl-logo.png'
+import LogoForLightMode from '/public/images/products/pl-logo-black.webp'
+import LogoForDarkMode from '/public/images/products/pl-logo.webp'
 
 type LayoutProps = {
     children: React.ReactNode

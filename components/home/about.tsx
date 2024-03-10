@@ -8,8 +8,8 @@ import { gsap, Linear } from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
 import GoogleLogo from 'public/images/brands/google.svg'
 import WezardLogo from 'public/images/brands/wezard-icon.png'
-import DevvLogo from 'public/images/projects/devv/icon.png'
-import WestudentsLogo from 'public/images/projects/westudents/icon.png'
+import DevvLogo from 'public/images/projects/devv/icon.webp'
+import WestudentsLogo from 'public/images/projects/westudents/icon.webp'
 
 import { Routes } from '@/config/routes'
 

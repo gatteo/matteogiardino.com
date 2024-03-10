@@ -130,12 +130,12 @@ export const ContactLinks: ContactLinks = [
         name: 'Personal',
         mailto: 'hi@matteogiardino.com',
         icon: 'email',
-        logo: '/images/mg-logo-white.png',
+        logo: '/images/mg-logo-white.webp',
     },
     {
         name: 'Wezard',
         mailto: 'matteo@wezard.it',
         icon: 'email',
-        logo: '/images/brands/wezard-icon.png',
+        logo: '/images/brands/wezard-icon.webp',
     },
 ]

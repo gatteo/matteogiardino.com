@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Image from 'next/image'
-import SectionImageMobile from 'public/images/pl/includes-mobile.png'
-import SectionImage from 'public/images/pl/includes.png'
+import SectionImageMobile from 'public/images/pl/includes-mobile.webp'
+import SectionImage from 'public/images/pl/includes.webp'
 
 import { CtaButton } from './cta-button'
 

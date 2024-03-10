@@ -6,7 +6,7 @@ import GoogleLogo from 'public/images/brands/google.svg'
 import NetflixLogo from 'public/images/brands/netflix.svg'
 import WestudentsLogo from 'public/images/brands/westudents-short.svg'
 import WezardLogo from 'public/images/brands/wezard.svg'
-import Logo from 'public/images/pl/leggendario.png'
+import Logo from 'public/images/pl/leggendario.webp'
 
 import { Button } from '@/components/ui/button'
 

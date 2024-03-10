@@ -82,7 +82,7 @@ export function Mentor() {
                         />
 
                         <Image
-                            src='/images/tcl/me-1.jpg'
+                            src='/images/tcl/me-1.webp'
                             alt=''
                             loading='lazy'
                             width={500}
@@ -106,7 +106,7 @@ export function Mentor() {
                         />
 
                         <Image
-                            src='/images/tcl/me-1.jpg'
+                            src='/images/tcl/me-1.webp'
                             alt=''
                             loading='lazy'
                             width={500}
@@ -114,7 +114,7 @@ export function Mentor() {
                             className='m-auto hidden rounded-lg drop-shadow-2xl md:block'
                         />
                         <Image
-                            src='/images/tcl/mentor-3.png'
+                            src='/images/tcl/mentor-3.webp'
                             alt=''
                             loading='lazy'
                             width={1000}

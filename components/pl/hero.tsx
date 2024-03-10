@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import Logo from 'public/images/pl/leggendario.png'
+import Logo from 'public/images/pl/leggendario.webp'
 
 import { PlRoutes } from '@/config/routes'
 import { Button } from '@/components/ui/button'

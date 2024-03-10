@@ -2,7 +2,7 @@ import * as React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import LogoImage from '/public/images/products/tcb-logo.png'
+import LogoImage from '/public/images/products/tcb-logo.webp'
 
 const Header = () => {
     return (

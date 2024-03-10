@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import Image from '@/components/ui/image'
 
-import SectionImage from '/public/images/tcl/cosmico.jpg'
+import SectionImage from '/public/images/tcl/cosmico.webp'
 
 const Section: React.FC = () => {
     return (

@@ -7,42 +7,42 @@ const Testimonials = [
     {
         name: 'Luca Guglielmi',
         title: '1a edizione TCL',
-        avatar: '/images/tcl/avatar-3.jpeg',
+        avatar: '/images/tcl/avatar-3.webp',
         testimonial:
             '"Durante il percorso Matteo mi ha fatto partecipare come spettatore ad un colloquio reale ed è stato ILLUMINANTE. Veramente non so come ringraziarlo abbastanza di questa occasione incredibile.”',
     },
     {
         name: 'Giulia Merchi',
         title: '1a edizione TCL',
-        avatar: '/images/tcl/avatar-7.jpeg',
+        avatar: '/images/tcl/avatar-7.webp',
         testimonial:
             '"Grazie Matteo, prima di conoscerti mi sentivo persa. Non avevo idea di cosa aspettarmi da un colloquio e questo mi metteva paura. Mi hai aiutato a superare i miei timori e ora lavoro come sviluppatrice per Alkemy!"',
     },
     {
         name: 'Federica Martini',
         title: '1a edizione TCL',
-        avatar: '/images/tcl/avatar-6.jpeg',
+        avatar: '/images/tcl/avatar-6.webp',
         testimonial:
             '"Matteo mi ha compreso sin da subito. Durante le chiamate insieme abbiamo lavorato sulle mie insicurezze e strategia di gestione ansia e ora riesco ad affrontare a testa alta le interview!"',
     },
     {
         name: 'Paolo Difranco',
         title: '1a edizione TCL',
-        avatar: '/images/tcl/avatar-4.jpeg',
+        avatar: '/images/tcl/avatar-4.webp',
         testimonial:
             '"Tech Career Launch mi ha fornito le competenze e la fiducia necessarie per affrontare i colloqui di lavoro nel settore tech."',
     },
     {
         name: 'Mario Lorenzo Tedesco',
         title: '1a edizione TCL',
-        avatar: '/images/tcl/avatar-1.jpeg',
+        avatar: '/images/tcl/avatar-1.webp',
         testimonial:
             'Ho conosciuto Matteo su tiktok. All’inizio avevo qualche dubbio che potesse realmente aiutarmi, ma ora non ho dubbi. Mi ha fornito una preparazione inestimabile, soprattutto sui problemi logico algoritmici…',
     },
     {
         name: 'Miriam Esposito',
         title: '1a edizione TCL',
-        avatar: '/images/tcl/avatar-5.jpeg',
+        avatar: '/images/tcl/avatar-5.webp',
         testimonial:
             '"Grazie al supporto di Matteo, ho imparato a creare un curriculum accattivante e a presentarmi in modo efficace durante i colloqui. Sono grata per questa opportunità e lo consiglio a tutti coloro che desiderano avviare una carriera nel mondo della programmazione"',
     },

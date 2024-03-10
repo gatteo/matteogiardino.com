@@ -3,8 +3,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import WezardIcon from 'public/images/brands/wezard-icon.png'
-import DevvIcon from 'public/images/projects/devv/icon.png'
-import WestudentsIcon from 'public/images/projects/westudents/icon.png'
+import DevvIcon from 'public/images/projects/devv/icon.webp'
+import WestudentsIcon from 'public/images/projects/westudents/icon.webp'
 
 import { Button } from '../ui/button'
 

@@ -11,12 +11,12 @@ export function Header() {
             <div className='mx-auto flex h-[60px] max-w-5xl items-center justify-between px-8'>
                 <Link href='/' className='flex items-center justify-center gap-1' aria-label='Homepage'>
                     <div className='hidden dark:block'>
-                        <Image src={'/images/mg-logo-white.png'} height={28} width={28} alt='Logo' />
+                        <Image src={'/images/mg-logo-white.webp'} height={28} width={28} alt='Logo' />
                     </div>
                     <div className='dark:hidden'>
                         <Image
                             className='rounded-lg'
-                            src={'/images/mg-logo-black.png'}
+                            src={'/images/mg-logo-black.webp'}
                             height={28}
                             width={28}
                             alt='Logo'

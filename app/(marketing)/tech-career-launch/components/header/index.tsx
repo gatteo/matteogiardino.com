@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 import MobileNav from './mobile-nav'
 import Navbar from './navbar'
-import LogoImage from '/public/images/tcl/tcl-v1.png'
+import LogoImage from '/public/images/tcl/tcl-v1.webp'
 
 const Header = () => {
     return (

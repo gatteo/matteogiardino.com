@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Image from '@/components/ui/image'
 
 import { Button } from './components/button'
-import SectionImage from '/public/images/tcl/solution.png'
+import SectionImage from '/public/images/tcl/solution.webp'
 
 const solutionBulletPoints = [
     'Supera con successo il colloquio tecnico',

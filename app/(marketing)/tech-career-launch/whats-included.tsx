@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Link from 'next/link'
-import SectionImage from 'public/images/tcl/includes.png'
+import SectionImage from 'public/images/tcl/includes.webp'
 
 import Image from '@/components/ui/image'
 

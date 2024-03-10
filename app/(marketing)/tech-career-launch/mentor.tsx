@@ -75,7 +75,7 @@ const Section: React.FC = () => {
                         />
 
                         <Image
-                            src='/images/tcl/me-1.jpg'
+                            src='/images/tcl/me-1.webp'
                             alt=''
                             loading='lazy'
                             width={500}
@@ -99,7 +99,7 @@ const Section: React.FC = () => {
                         />
 
                         <Image
-                            src='/images/tcl/me-1.jpg'
+                            src='/images/tcl/me-1.webp'
                             alt=''
                             loading='lazy'
                             width={500}
