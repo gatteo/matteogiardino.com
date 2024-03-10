@@ -102,7 +102,7 @@ export function About() {
     }, [quoteRef, targetSection])
 
     return (
-        <section className='about my-32 w-full select-none md:pt-24'>
+        <section id='about' className='about my-32 w-full select-none scroll-m-10 md:pt-24'>
             <div ref={targetSection}>
                 <div ref={quoteRef} className='space-y-24 text-2xl sm:text-4xl md:text-5xl'>
                     <h2 className='about-1 leading-tight'>

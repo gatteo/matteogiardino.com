@@ -11,11 +11,11 @@ import { Button } from '../ui/button'
 export function Hero() {
     return (
         <>
-            <div className='mt-12'>
+            <section id='hero' className=''>
                 <Background />
 
-                <div className='flex flex-col gap-8'>
-                    <div className='flex flex-col items-center'>
+                <div className='flex flex-col'>
+                    <div className='mt-12 flex flex-col items-center'>
                         {/* Name */}
                         <h1 className='bg-gradient-to-b from-black via-black/90 to-black/70 to-90% bg-clip-text text-center text-4xl font-bold text-transparent dark:from-white dark:via-white/80 dark:to-white/60 md:text-7xl'>
                             Matteo Giardino
@@ -74,9 +74,11 @@ export function Hero() {
                         </div>
 
                         {/* CTA */}
-                        <Button variant={'ghost'} className='-ml-4'>
-                            <p className='mr-2'>ti racconto chi sono, in 30 secondi </p>
-                            <p className='inline-block animate-bounce'> ↓ </p>
+                        <Button variant={'ghost'} className='-ml-4' asChild>
+                            <Link href='#about'>
+                                <p className='mr-2'>ti racconto chi sono, in 30 secondi </p>
+                                <p className='inline-block animate-bounce'> ↓ </p>
+                            </Link>
                         </Button>
                     </div>
 
@@ -110,8 +112,17 @@ export function Hero() {
                             />
                         </div>
                     </div>
+
+                    <div className='mx-auto mt-12'>
+                        <Button variant='secondary' size={'sm'} className='border bg-muted px-2' asChild>
+                            <Link href='https://matteogiardino.com'>
+                                wezard, la mia agenzia di sviluppo, è stata acquisita 🎉{' '}
+                                <span className='ml-1 underline underline-offset-2'> leggi l'annuncio</span>
+                            </Link>
+                        </Button>
+                    </div>
                 </div>
-            </div>
+            </section>
         </>
     )
 }

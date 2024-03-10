@@ -17,7 +17,7 @@ const stats = [
 
 export function Followers() {
     return (
-        <section className='relative my-32'>
+        <section id='followers' className='relative my-32'>
             {/* Background */}
             <div className='absolute inset-0 -z-10'>
                 <svg

@@ -37,7 +37,7 @@ yarn-error.log*
 next-env.d.ts
 
 # contentlayer
-.contentlayer
+/.contentlayer/
 
 # unlighthouse
-.unlighthouse
+/.unlighthouse/

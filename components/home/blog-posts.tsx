@@ -13,7 +13,7 @@ type Props = {
 
 export function BlogPosts({ posts }: Props) {
     return (
-        <section className='mt-32'>
+        <section id='blog-posts' className='mt-32'>
             <div className='flex flex-col items-start justify-between md:flex-row md:items-end'>
                 <div className='flex-auto'>
                     <h2 className='text-3xl font-bold'>

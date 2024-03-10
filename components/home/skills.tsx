@@ -74,7 +74,7 @@ export const hexToRgb = (hex?: string | null, alpha?: number, numbersOnly?: bool
 
 export function Skills() {
     return (
-        <section className='flex flex-wrap justify-center gap-4'>
+        <section id='skills' className='flex flex-wrap justify-center gap-4'>
             {skills
                 .filter((skill) => !skill.hide)
                 .map((skill) => {

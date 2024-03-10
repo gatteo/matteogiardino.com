@@ -9,7 +9,7 @@ import { Button } from '../ui/button'
 
 export function Services() {
     return (
-        <section className='my-32'>
+        <section id='services' className='my-32'>
             <div className='flex flex-col items-start justify-between md:flex-row md:items-end'>
                 <div className='flex-auto'>
                     <h2 className='text-3xl font-bold'>

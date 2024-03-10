@@ -10,7 +10,7 @@ import { Button } from '../ui/button'
 
 export function Projects() {
     return (
-        <section className='my-32 flex flex-col'>
+        <section id='projects' className='my-32 flex flex-col'>
             {/* Title My Projects */}
             <div className='flex flex-col items-start justify-between md:flex-row md:items-end'>
                 <div className='flex-auto'>
