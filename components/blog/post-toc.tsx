@@ -18,7 +18,7 @@ const TableOfContents = (props: TableOfContentsProps) => {
     )
 
     return (
-        <div className='hidden lg:block'>
+        <div className=''>
             <div className='mb-4 flex items-center gap-4'>On this page</div>
             <div>
                 {toc.map((item) => {

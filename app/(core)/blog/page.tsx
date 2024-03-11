@@ -41,8 +41,8 @@ export default async function Page() {
     return (
         <>
             <PageTitle
-                title='Articoli. Storie. Guide.'
-                description='Sono onesto, la scrittura non è il mio punto forte. Non è che non mi piaccia, ma spesso mi spaventa affrontare una pagina bianca da riempire con parole. Proprio per questo, ho deciso di sfidare me stesso creando questo piccolo angolo del web, un posto dove allenarmi a scrivere. Tanto chi legge i blog nel 2024?'
+                title='articoli. storie. guide.'
+                description='sarò onesto, la scrittura non è il mio punto forte. Non è che non mi piaccia, ma spesso mi spaventa affrontare una pagina bianca da riempire con parole. Proprio per questo, ho deciso di sfidare me stesso creando questo piccolo angolo del web, un posto dove allenarmi a scrivere. Tanto chi legge i blog nel 2024?'
                 fromColor='from-purple-400'
                 toColor='to-pink-600'
             />

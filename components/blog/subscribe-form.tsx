@@ -12,8 +12,8 @@ export function SubscribeForm({ className }: { className?: string }) {
                 {`
                      window.CustomSubstackWidget = {
                         substackUrl: "matteogiardino.substack.com",
-                        placeholder: "example@gmail.com",
-                        buttonText: "Iscriviti",
+                        placeholder: "la tua email",
+                        buttonText: "iscriviti",
                         theme: "custom",
                         colors: {
                             primary: "#FFFFFF",

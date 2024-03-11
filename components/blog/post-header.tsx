@@ -42,7 +42,7 @@ export function Header({ createdAt, title, slug, summary, image, source, author,
             <motion.div initial={animation.hide} animate={animation.show}>
                 <h1 className='text-5xl font-bold'>{title}</h1>
                 <div className='mt-2 text-muted-foreground'>{summary}</div>
-                <div className='mt-8 flex flex-col items-center justify-between gap-4 lg:flex-row'>
+                <div className='mt-8 flex flex-col items-center justify-between gap-8 md:flex-row'>
                     <div className='flex flex-wrap items-center gap-2 text-xs sm:text-sm'>
                         <div className='flex flex-row items-center gap-2'>
                             <Avatar className='size-6'>

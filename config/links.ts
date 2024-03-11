@@ -136,6 +136,6 @@ export const ContactLinks: ContactLinks = [
         name: 'Wezard',
         mailto: 'matteo@wezard.it',
         icon: 'email',
-        logo: '/images/brands/wezard-icon.webp',
+        logo: '/images/brands/wezard-icon.png',
     },
 ]

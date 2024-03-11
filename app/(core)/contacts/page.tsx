@@ -16,8 +16,8 @@ export default function Page() {
                 toColor='to-blue-500'
             />
 
-            <h2 className='mt-16 text-2xl font-bold'>Email</h2>
-            <div className='mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2'>
+            <h2 className='mt-16 text-xl font-bold md:text-2xl'>Email</h2>
+            <div className='mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:mt-6'>
                 {ContactLinks.map((link) => {
                     return (
                         <Link
@@ -43,8 +43,8 @@ export default function Page() {
                 })}
             </div>
 
-            <h2 className='mt-16 text-2xl font-bold'>Social</h2>
-            <div className='mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3'>
+            <h2 className='mt-16 text-xl font-bold md:text-2xl'>Social</h2>
+            <div className='mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3 md:mt-6'>
                 {SocialLinks.map((link) => {
                     return (
                         <Link
