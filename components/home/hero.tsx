@@ -11,7 +11,7 @@ import { Button } from '../ui/button'
 export function Hero() {
     return (
         <>
-            <section id='hero' className=''>
+            <section id='hero'>
                 <Background />
 
                 <div className='flex flex-col'>
@@ -23,7 +23,7 @@ export function Hero() {
 
                         {/* Occupation and description */}
                         <div className='my-6 space-y-2'>
-                            <h2 className='flex flex-wrap items-center gap-x-4 text-sm font-medium leading-8 md:text-base'>
+                            <h2 className='flex flex-wrap items-center justify-center gap-4 text-sm font-medium leading-8 md:text-base'>
                                 founder & cto @
                                 <Button variant='secondary' size={'sm'} className='border bg-muted px-2' asChild>
                                     <Link href='https://westudents.it'>
@@ -66,9 +66,6 @@ export function Hero() {
                                             exit 🎉
                                         </Link>
                                     </Button>
-                                    {/* <Badge variant='secondary' className='ml-2'>
-                                        exit 🎉
-                                    </Badge> */}
                                 </div>
                             </h2>
                         </div>
@@ -83,16 +80,16 @@ export function Hero() {
                     </div>
 
                     <div className='mt-12 flex flex-col gap-10 md:grid md:grid-cols-4 md:grid-rows-1'>
-                        <div className='relative col-span-2'>
+                        <div className='relative col-span-2 aspect-video md:aspect-auto'>
                             <Image
                                 src='/images/home/wide-computer.webp'
                                 alt=''
                                 loading='lazy'
                                 fill
-                                className='col-span-2 rounded-lg object-cover drop-shadow-2xl'
+                                className='rounded-lg object-cover drop-shadow-2xl'
                             />
                         </div>
-                        <div className='relative aspect-square'>
+                        <div className='relative hidden aspect-square md:block'>
                             <Image
                                 src='/images/home/1.gif'
                                 alt=''
@@ -102,7 +99,7 @@ export function Hero() {
                                 className='rounded-lg drop-shadow-2xl'
                             />
                         </div>
-                        <div className='relative aspect-square'>
+                        <div className='relative hidden aspect-square md:block'>
                             <Image
                                 src='/images/home/4.webp'
                                 alt=''
@@ -114,12 +111,12 @@ export function Hero() {
                     </div>
 
                     <div className='mx-auto mt-12'>
-                        <Button variant='secondary' size={'sm'} className='border bg-muted px-2' asChild>
+                        <div className='rounded-md border bg-muted p-4 text-sm md:p-2'>
                             <Link href='https://matteogiardino.com'>
-                                wezard, la mia agenzia di sviluppo, è stata acquisita 🎉{' '}
+                                wezard, la mia agenzia di sviluppo, è stata acquisita 🎉
                                 <span className='ml-1 underline underline-offset-2'> leggi l'annuncio</span>
                             </Link>
-                        </Button>
+                        </div>
                     </div>
                 </div>
             </section>

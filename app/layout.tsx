@@ -7,6 +7,7 @@ import '../styles/globals.css'
 import { Toaster } from 'sonner'
 
 import { cn } from '@/lib/utils'
+import { TailwindIndicator } from '@/components/tailwind-indicator'
 import { ThemeProvider } from '@/components/theme-provider'
 
 const inter = Inter({
@@ -50,6 +51,7 @@ export default function RootLayout({
                 <ThemeProvider attribute='class' defaultTheme='dark' enableSystem={false}>
                     {children}
                     <Toaster />
+                    <TailwindIndicator />
                 </ThemeProvider>
             </body>
         </html>

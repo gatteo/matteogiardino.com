@@ -86,18 +86,18 @@ export function Followers() {
             </div>
 
             {/* Products title */}
-            <div className='mt-24 flex flex-col items-start justify-between md:flex-row md:items-end'>
-                <div className='flex-auto'>
-                    <h2 className='text-3xl font-bold'>
+            <div className='mt-24 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end'>
+                <div className='flex-auto '>
+                    <h2 className='text-balance text-3xl font-bold '>
                         i miei prodotti di{' '}
                         <strong className='underline decoration-sky-400 underline-offset-4'>formazione</strong>
                     </h2>
-                    <p className='mt-2 text-muted-foreground'>
+                    <p className='mt-2 text-balance text-muted-foreground '>
                         posso insegnarti a programmare o trasformarti in un vero professionista
                     </p>
                 </div>
 
-                <Button variant='ghost' className='group text-muted-foreground' size='sm' asChild>
+                <Button variant='ghost' className='group -mx-3 text-muted-foreground md:mx-0' size='sm' asChild>
                     <Link href={Routes.Contact}>
                         tutti i servizi
                         <IconArrowRight className='ml-2 inline-block size-5 transition-transform duration-200 group-hover:translate-x-1' />
@@ -106,7 +106,7 @@ export function Followers() {
             </div>
 
             {/* Products */}
-            <div className='mt-6 grid auto-rows-fr grid-cols-2 gap-4'>
+            <div className='mt-6 grid auto-rows-fr gap-4 md:grid-cols-2'>
                 {products.map((product) => (
                     <LinkCard
                         key={product.id}

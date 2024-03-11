@@ -15,7 +15,7 @@ export function CtaBusiness({ className }: Props) {
             <section className={cn('relative py-16', className)}>
                 <Background />
 
-                <div className='relative isolate overflow-hidden rounded-3xl border bg-muted px-6 pt-16 shadow-2xl sm:px-16 md:pt-24 lg:flex lg:gap-x-20 lg:px-24 lg:pt-0'>
+                <div className='relative isolate overflow-hidden rounded-3xl border bg-muted px-6 pt-8 shadow-2xl sm:px-16 md:pt-24 lg:flex lg:gap-x-20 lg:px-24 lg:pt-0'>
                     <svg
                         viewBox='0 0 1024 1024'
                         className=' absolute left-1/2 top-1/2 -z-10 size-[64rem] -translate-y-1/2 opacity-25 [mask-image:radial-gradient(closest-side,white,transparent)] sm:left-full sm:-ml-80 lg:left-1/2 lg:ml-0 lg:-translate-x-1/2 lg:translate-y-0'

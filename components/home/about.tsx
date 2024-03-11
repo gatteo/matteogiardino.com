@@ -221,7 +221,18 @@ export function About() {
                 <Background />
 
                 <div className='flex flex-col gap-10 md:grid md:grid-cols-3 md:grid-rows-1'>
-                    <div className='relative col-span-2'>
+                    <div className='relative aspect-square md:hidden'>
+                        <Image
+                            src='/images/home/1.gif'
+                            alt=''
+                            loading='lazy'
+                            unoptimized
+                            fill
+                            className='rounded-lg drop-shadow-2xl'
+                        />
+                    </div>
+
+                    <div className='relative col-span-2 hidden md:block'>
                         <Image
                             src='/images/home/13.webp'
                             alt=''
@@ -231,7 +242,7 @@ export function About() {
                         />
                     </div>
 
-                    <div className='relative aspect-square'>
+                    <div className='relative aspect-square '>
                         <Image
                             src='/images/home/3.webp'
                             alt=''
@@ -241,7 +252,7 @@ export function About() {
                         />
                     </div>
 
-                    <div className='relative aspect-square'>
+                    <div className='relative hidden aspect-square md:block'>
                         <Image
                             src='/images/home/2.webp'
                             alt=''
@@ -251,7 +262,7 @@ export function About() {
                         />
                     </div>
 
-                    <div className='relative aspect-square'>
+                    <div className='relative hidden aspect-square md:block'>
                         <Image
                             src='/images/home/6.webp'
                             alt=''
@@ -267,7 +278,7 @@ export function About() {
                             alt=''
                             loading='lazy'
                             fill
-                            className='m-auto rounded-lg object-cover drop-shadow-2xl'
+                            className='m-auto -rotate-3 rounded-lg object-cover drop-shadow-2xl md:rotate-0'
                         />
                     </div>
                 </div>
