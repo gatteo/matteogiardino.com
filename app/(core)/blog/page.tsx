@@ -1,38 +1,43 @@
-import type { Metadata } from 'next'
+import type { Metadata, ResolvingMetadata } from 'next'
+import { absoluteUrl } from '@/utils/urls'
 
-import { site } from '@/config/site'
+import { Routes } from '@/config/routes'
 import { getAllBlogPosts } from '@/lib/blog'
 import { FilteredPosts } from '@/components/blog/filtered-posts'
 import { SubscribeForm } from '@/components/blog/subscribe-form'
 import { PageTitle } from '@/components/page-title'
 
-const title = 'Articoli'
+const title = 'articoli'
 const description =
-    'Sono onesto, la scrittura non è il mio punto forte. Proprio per questo, ho deciso di sfidare me stesso creando questo piccolo angolo del web, un posto dove allenarmi a scrivere. Tanto chi legge i blog nel 2023?'
+    'un remoto angolo del web che posso riempire di articoli, storie e guide. Tanto chi legge i blog nel 2024?'
 
-export const metadata: Metadata = {
-    title,
-    description,
-    alternates: {
-        canonical: `${site.url}/blog`,
-    },
-    openGraph: {
-        url: `${site.url}/blog`,
-        type: 'website',
+type Props = {
+    params: Record<string, never>
+    searchParams: Record<string, never>
+}
+
+export async function generateMetadata(_: Props, parent: ResolvingMetadata): Promise<Metadata> {
+    const previousOpenGraph = (await parent)?.openGraph ?? {}
+    const previousTwitter = (await parent)?.twitter ?? {}
+
+    return {
         title,
-        siteName: site.title,
         description,
-        locale: 'it-IT',
-        images: [
-            {
-                url: `${site.url}/images/og/og.png`,
-                width: 1200,
-                height: 630,
-                alt: description,
-                type: 'image/png',
-            },
-        ],
-    },
+        alternates: {
+            canonical: absoluteUrl(Routes.Blog),
+        },
+        openGraph: {
+            ...previousOpenGraph,
+            url: absoluteUrl(Routes.Blog),
+            title,
+            description,
+        },
+        twitter: {
+            ...previousTwitter,
+            title,
+            description,
+        },
+    }
 }
 
 export default async function Page() {

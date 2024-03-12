@@ -1,4 +1,6 @@
+import { Metadata, ResolvingMetadata } from 'next'
 import Link from 'next/link'
+import { absoluteUrl } from '@/utils/urls'
 
 import { Routes } from '@/config/routes'
 import { services } from '@/config/services'
@@ -7,6 +9,39 @@ import { CtaBusiness } from '@/components/cta-business'
 import { Testimonials } from '@/components/home/testimonials'
 import { Icon } from '@/components/icon'
 import { PageTitle } from '@/components/page-title'
+
+const title = 'servizi'
+const description =
+    'esplora i servizi che offro per aziende e imprenditori. Voglio dare la direzione necessaria per aiutare un imprenditore a raggiungere qualsiasi tipo di successo'
+
+type Props = {
+    params: Record<string, never>
+    searchParams: Record<string, never>
+}
+
+export async function generateMetadata(_: Props, parent: ResolvingMetadata): Promise<Metadata> {
+    const previousOpenGraph = (await parent)?.openGraph ?? {}
+    const previousTwitter = (await parent)?.twitter ?? {}
+
+    return {
+        title,
+        description,
+        alternates: {
+            canonical: absoluteUrl(Routes.Services),
+        },
+        openGraph: {
+            ...previousOpenGraph,
+            url: absoluteUrl(Routes.Services),
+            title,
+            description,
+        },
+        twitter: {
+            ...previousTwitter,
+            title,
+            description,
+        },
+    }
+}
 
 export default function Page() {
     return (

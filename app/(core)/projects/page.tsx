@@ -1,10 +1,45 @@
+import { Metadata, ResolvingMetadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import { absoluteUrl } from '@/utils/urls'
 import { allProjects } from 'contentlayer/generated'
 
 import { Routes } from '@/config/routes'
 import { PageTitle } from '@/components/page-title'
 import { ProjectCollabCard } from '@/components/project-collab-card'
+
+const title = 'progetti'
+const description =
+    'esplora i progetti che ho realizzato in passato. Alcuni progetti sono nati da un mio bisogno personale, mentre altri sono frutto di collaborazioni con brillanti imprenditori motivati a trasformare le idee in realtà.'
+
+type Props = {
+    params: Record<string, never>
+    searchParams: Record<string, never>
+}
+
+export async function generateMetadata(_: Props, parent: ResolvingMetadata): Promise<Metadata> {
+    const previousOpenGraph = (await parent)?.openGraph ?? {}
+    const previousTwitter = (await parent)?.twitter ?? {}
+
+    return {
+        title,
+        description,
+        alternates: {
+            canonical: absoluteUrl(Routes.Projects),
+        },
+        openGraph: {
+            ...previousOpenGraph,
+            url: absoluteUrl(Routes.Projects),
+            title,
+            description,
+        },
+        twitter: {
+            ...previousTwitter,
+            title,
+            description,
+        },
+    }
+}
 
 export default function Page() {
     return (

@@ -26,8 +26,7 @@ export const TcbRoutes = {
 }
 
 export const Routes = {
-    Home: '/',
-    About: '/about',
+    Home: '',
     Blog: '/blog',
     Contact: '/contacts',
     Projects: '/projects',

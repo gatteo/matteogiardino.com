@@ -1,11 +1,47 @@
+import { Metadata, ResolvingMetadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import { absoluteUrl } from '@/utils/urls'
 import { ArrowUpRight } from 'lucide-react'
 
 import { products } from '@/config/products'
+import { Routes } from '@/config/routes'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { PageTitle } from '@/components/page-title'
+
+const title = 'formazione'
+const description =
+    'ho creato strumenti e risorse che aiutano centinaia di persone ad imparare a programmare e lanciare la loro carriera.'
+
+type Props = {
+    params: Record<string, never>
+    searchParams: Record<string, never>
+}
+
+export async function generateMetadata(_: Props, parent: ResolvingMetadata): Promise<Metadata> {
+    const previousOpenGraph = (await parent)?.openGraph ?? {}
+    const previousTwitter = (await parent)?.twitter ?? {}
+
+    return {
+        title,
+        description,
+        alternates: {
+            canonical: absoluteUrl(Routes.LearningProducts),
+        },
+        openGraph: {
+            ...previousOpenGraph,
+            url: absoluteUrl(Routes.LearningProducts),
+            title,
+            description,
+        },
+        twitter: {
+            ...previousTwitter,
+            title,
+            description,
+        },
+    }
+}
 
 export default function Page() {
     return (

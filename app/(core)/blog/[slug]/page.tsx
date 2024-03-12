@@ -1,13 +1,12 @@
-import { Metadata } from 'next'
+import { Metadata, ResolvingMetadata } from 'next'
 import { notFound } from 'next/navigation'
 import { absoluteUrl } from '@/utils/urls'
-import { allBlogPosts } from 'contentlayer/generated'
 import { type Article, type WithContext } from 'schema-dts'
 
 import { BlogPostSource } from '@/types/blog'
 import { Routes } from '@/config/routes'
 import { site } from '@/config/site'
-import { getLocalBlogPost } from '@/lib/blog'
+import { getLocalBlogPost, getLocalBlogPosts } from '@/lib/blog'
 import { Footer } from '@/components/blog/post-footer'
 import { Header } from '@/components/blog/post-header'
 import { Content } from '@/components/mdx-content'
@@ -19,20 +18,19 @@ type Props = {
     }
 }
 
-export const generateStaticParams = () => {
-    return allBlogPosts.map((post) => ({
+export function generateStaticParams() {
+    const posts = getLocalBlogPosts()
+    return posts.map((post) => ({
         slug: post.slug,
     }))
 }
 
-export const generateMetadata = (props: Props): Metadata => {
-    const { params } = props
+export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
+    const previousOpenGraph = (await parent)?.openGraph ?? {}
+    const previousTwitter = (await parent)?.twitter ?? {}
 
-    const post = allBlogPosts.find((p) => p.slug === params.slug)
-
-    if (!post) {
-        return {}
-    }
+    const post = getLocalBlogPost(params.slug)
+    if (!post) return {}
 
     const ISOPublishedTime = new Date(post.createdAt).toISOString()
     const ISOModifiedTime = new Date(post.modifiedAt).toISOString()
@@ -41,13 +39,14 @@ export const generateMetadata = (props: Props): Metadata => {
         title: post.title,
         description: post.summary,
         alternates: {
-            canonical: `${site.url}/blog/${params.slug}`,
+            canonical: absoluteUrl(Routes.LocalBlogPost(params.slug)),
         },
         openGraph: {
-            url: `${site.url}/blog/${params.slug}`,
+            ...previousOpenGraph,
+            url: absoluteUrl(Routes.LocalBlogPost(params.slug)),
             type: 'article',
             title: post.title,
-            siteName: site.name,
+            siteName: site.title,
             description: post.summary,
             locale: 'it-IT',
             publishedTime: ISOPublishedTime,
@@ -60,6 +59,19 @@ export const generateMetadata = (props: Props): Metadata => {
                     height: 630,
                     alt: post.summary,
                     type: 'image/png',
+                },
+            ],
+        },
+        twitter: {
+            ...previousTwitter,
+            title: post.title,
+            description: post.summary,
+            images: [
+                {
+                    url: `${site.url}/images/blog/${post.slug}/og.png`,
+                    alt: post.summary,
+                    width: 1200,
+                    height: 630,
                 },
             ],
         },

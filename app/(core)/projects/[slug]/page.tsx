@@ -34,18 +34,18 @@ export const generateMetadata = (props: Props): Metadata => {
         title: project.name,
         description: project.description,
         alternates: {
-            canonical: `${site.url}/projects/${params.slug}`,
+            canonical: absoluteUrl(Routes.Project(params.slug)),
         },
         openGraph: {
-            url: `${site.url}/projects/${params.slug}`,
+            url: absoluteUrl(Routes.Project(params.slug)),
             type: 'website',
             title: project.name,
-            siteName: site.name,
+            siteName: site.title,
             description: project.description,
             locale: 'it-IT',
             images: [
                 {
-                    url: `${site.url}${project.image}`,
+                    url: absoluteUrl(project.image ?? '/images/og/og.png'),
                     width: 1200,
                     height: 630,
                     alt: project.description,

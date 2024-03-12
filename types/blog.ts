@@ -34,6 +34,7 @@ export type BlogPostPreview = {
     source: BlogPostSource
     url: string
     tags?: string[]
+    author: BlogPostAuthor
 }
 
 export type TOC = {

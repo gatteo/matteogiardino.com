@@ -1,6 +1,8 @@
 import * as React from 'react'
+import { Metadata, ResolvingMetadata } from 'next'
+import { absoluteUrl } from '@/utils/urls'
 
-import { TclRoutes } from '@/config/routes'
+import { PlRoutes, TclRoutes } from '@/config/routes'
 import { HeaderLinks } from '@/config/tcl'
 import Footer from '@/components/marketing/footer'
 import Header from '@/components/marketing/header'
@@ -8,11 +10,57 @@ import Header from '@/components/marketing/header'
 import LogoForLightMode from '/public/images/products/tcl-logo-black.webp'
 import LogoForDarkMode from '/public/images/products/tcl-logo.webp'
 
-type LayoutProps = {
+const title = 'Tech Career Launch'
+const description =
+    'Un percorso di 4 settimane con Matteo Giardino, un mentore esperto che ti fornirà una preparazione a 360° e personalizzata per superare i colloqui di lavoro.'
+
+type Props = {
     children: React.ReactNode
 }
 
-const Layout = ({ children }: LayoutProps) => {
+export async function generateMetadata(_: Props, parent: ResolvingMetadata): Promise<Metadata> {
+    const previousOpenGraph = (await parent)?.openGraph ?? {}
+    const previousTwitter = (await parent)?.twitter ?? {}
+
+    return {
+        title,
+        description,
+        alternates: {
+            canonical: absoluteUrl(PlRoutes.Home),
+        },
+        openGraph: {
+            ...previousOpenGraph,
+            url: absoluteUrl(PlRoutes.Home),
+            title,
+            description,
+            images: [
+                {
+                    url: absoluteUrl('/images/og/tcl.png'),
+                    width: 1200,
+                    height: 630,
+                    alt: description,
+                    type: 'image/png',
+                },
+            ],
+        },
+        twitter: {
+            ...previousTwitter,
+            title,
+            description,
+            images: [
+                {
+                    url: absoluteUrl('/images/og/tcl.png'),
+                    width: 1200,
+                    height: 630,
+                    alt: description,
+                    type: 'image/png',
+                },
+            ],
+        },
+    }
+}
+
+const Layout = ({ children }: Props) => {
     return (
         <>
             <Header

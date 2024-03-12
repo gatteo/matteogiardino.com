@@ -1,12 +1,79 @@
+import { Metadata, ResolvingMetadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { absoluteUrl } from '@/utils/urls'
+import { Article, WithContext } from 'schema-dts'
 
 import { BlogPostSource } from '@/types/blog'
-import { getSubstackPost } from '@/lib/substack'
+import { Routes } from '@/config/routes'
+import { site } from '@/config/site'
+import { getSubstackPost, getSubstackPosts } from '@/lib/substack'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Footer } from '@/components/blog/post-footer'
 import { Header } from '@/components/blog/post-header'
 import { ScrollIndicator } from '@/components/scroll-indicator'
+
+type Props = {
+    params: {
+        slug: string
+    }
+}
+
+export async function generateStaticParams() {
+    const posts = await getSubstackPosts()
+    return posts.map((post) => ({
+        slug: post.slug,
+    }))
+}
+
+export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
+    const previousOpenGraph = (await parent)?.openGraph ?? {}
+    const previousTwitter = (await parent)?.twitter ?? {}
+
+    const post = await getSubstackPost(params.slug)
+    if (!post) return {}
+
+    const ISOPublishedTime = new Date(post.date).toISOString()
+    const ISOModifiedTime = new Date(post.date).toISOString()
+
+    return {
+        title: post.title,
+        description: post.summary,
+        alternates: {
+            canonical: absoluteUrl(Routes.SubstackBlogPost(params.slug)),
+        },
+        openGraph: {
+            ...previousOpenGraph,
+            url: absoluteUrl(Routes.SubstackBlogPost(params.slug)),
+            type: 'article',
+            title: post.title,
+            siteName: site.title,
+            description: post.summary,
+            locale: 'it-IT',
+            publishedTime: ISOPublishedTime,
+            modifiedTime: ISOModifiedTime,
+            authors: site.url,
+            images: [
+                {
+                    url: post.image,
+                    alt: post.summary,
+                    type: 'image/png',
+                },
+            ],
+        },
+        twitter: {
+            ...previousTwitter,
+            title: post.title,
+            description: post.summary,
+            images: [
+                {
+                    url: post.image,
+                    alt: post.summary,
+                },
+            ],
+        },
+    }
+}
 
 export default async function BlogPostPage({ params: { slug } }: { params: { slug: string } }) {
     const post = await getSubstackPost(slug)
@@ -15,8 +82,31 @@ export default async function BlogPostPage({ params: { slug } }: { params: { slu
         notFound()
     }
 
+    const jsonLd: WithContext<Article> = {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+
+        'headline': post.title,
+        'description': post.summary,
+        'datePublished': post.date.toISOString(),
+        'dateModified': post.date.toISOString(),
+        'image': post.image,
+        'author': {
+            '@type': 'Person',
+            'name': post.author.name,
+            'url': post.author.url,
+        },
+        'publisher': {
+            '@type': 'Person',
+            'name': post.author.name,
+            'url': post.author.url,
+        },
+    }
+
     return (
         <>
+            <script type='application/ld+json' dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
             <Header
                 createdAt={post.date}
                 title={post.title}

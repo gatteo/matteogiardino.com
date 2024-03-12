@@ -1,10 +1,46 @@
+import { Metadata, ResolvingMetadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import { absoluteUrl } from '@/utils/urls'
 import { IconExternalLink } from '@tabler/icons-react'
 
 import { ContactLinks, SocialLinks } from '@/config/links'
+import { Routes } from '@/config/routes'
 import { Icon } from '@/components/icon'
 import { PageTitle } from '@/components/page-title'
+
+const title = 'contatti'
+const description =
+    'che tu voglia conoscermi, parlarmi di un progetto o una collaborazione, scrivimi. Nasce sempre qualcosa di bello da un messaggio.'
+
+type Props = {
+    params: Record<string, never>
+    searchParams: Record<string, never>
+}
+
+export async function generateMetadata(_: Props, parent: ResolvingMetadata): Promise<Metadata> {
+    const previousOpenGraph = (await parent)?.openGraph ?? {}
+    const previousTwitter = (await parent)?.twitter ?? {}
+
+    return {
+        title,
+        description,
+        alternates: {
+            canonical: absoluteUrl(Routes.Contact),
+        },
+        openGraph: {
+            ...previousOpenGraph,
+            url: absoluteUrl(Routes.Contact),
+            title,
+            description,
+        },
+        twitter: {
+            ...previousTwitter,
+            title,
+            description,
+        },
+    }
+}
 
 export default function Page() {
     return (

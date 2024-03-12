@@ -29,6 +29,7 @@ export function getLocalBlogPosts({ limit }: Options = {}): BlogPostPreview[] {
             source: BlogPostSource.Local,
             url: Routes.LocalBlogPost(post.slug),
             tags: post.tags,
+            author: post.author,
         }))
 }
 

@@ -54,7 +54,13 @@ type SubstackPostPreview = {
     longer_truncated_body_html: unknown
     truncated_body_text: string
     wordcount: number
-    postTags: unknown[]
+    postTags: {
+        id: string
+        pubblication_id: string
+        name: string
+        slug: string
+        hidden: boolean
+    }[]
     publishedBylines: Array<{
         id: number
         name: string
@@ -118,6 +124,8 @@ export async function getSubstackPosts(): Promise<BlogPostPreview[]> {
             source: BlogPostSource.Substack,
             url: Routes.SubstackBlogPost(post.slug),
             reactionsCount: post.reaction_count,
+            tags: post.postTags.map((tag) => tag.name),
+            author: BlogAuthors[0],
         }))
     } catch (error) {
         console.error(error)
