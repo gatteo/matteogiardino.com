@@ -112,7 +112,7 @@ export const siteBaseMetadata: Metadata = {
             },
         ],
     },
-    manifest: '/static/favicon/manifest.json',
+    manifest: '/images/favicon/manifest.json',
     twitter: {
         card: 'summary_large_image',
         title: site.title,

@@ -68,6 +68,7 @@ export default function RootLayout({
     return (
         <html lang='it-IT'>
             <body className={cn(inter.className, biotif.className)}>
+                <GTM />
                 <ThemeProvider attribute='class' defaultTheme='dark' enableSystem={false}>
                     <ProgressProvider>
                         {children}
@@ -75,7 +76,6 @@ export default function RootLayout({
                         <TailwindIndicator />
                     </ProgressProvider>
                 </ThemeProvider>
-                <GTM />
             </body>
         </html>
     )
