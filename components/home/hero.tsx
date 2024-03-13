@@ -7,6 +7,9 @@ import DevvIcon from 'public/images/projects/devv/icon.webp'
 import WestudentsIcon from 'public/images/projects/westudents/icon.webp'
 
 import { Button } from '../ui/button'
+import GridGifImage from '/public/images/home/1.gif'
+import GridIconThree from '/public/images/home/4.webp'
+import GridWideImage from '/public/images/home/wide-computer.webp'
 
 export function Hero() {
     return (
@@ -81,30 +84,15 @@ export function Hero() {
 
                     <div className='mt-12 flex flex-col gap-10 md:grid md:grid-cols-4 md:grid-rows-1'>
                         <div className='relative col-span-2 aspect-video md:aspect-auto'>
-                            <Image
-                                src='/images/home/wide-computer.webp'
-                                alt=''
-                                loading='lazy'
-                                fill
-                                className='rounded-lg object-cover drop-shadow-2xl'
-                            />
+                            <Image src={GridWideImage} alt='' className='rounded-lg object-cover drop-shadow-2xl' />
+                        </div>
+                        <div className='relative hidden aspect-square md:block'>
+                            <Image src={GridGifImage} alt='' unoptimized className='rounded-lg drop-shadow-2xl' />
                         </div>
                         <div className='relative hidden aspect-square md:block'>
                             <Image
-                                src='/images/home/1.gif'
+                                src={GridIconThree}
                                 alt=''
-                                loading='lazy'
-                                unoptimized
-                                fill
-                                className='rounded-lg drop-shadow-2xl'
-                            />
-                        </div>
-                        <div className='relative hidden aspect-square md:block'>
-                            <Image
-                                src='/images/home/4.webp'
-                                alt=''
-                                loading='lazy'
-                                fill
                                 className='rotate-3 rounded-lg drop-shadow-2xl transition-all duration-200 hover:rotate-0'
                             />
                         </div>
