@@ -112,16 +112,6 @@ export const siteBaseMetadata: Metadata = {
             },
         ],
     },
-    themeColor: [
-        {
-            media: '(prefers-color-scheme: light)',
-            color: '#ffffff',
-        },
-        {
-            media: '(prefers-color-scheme: dark)',
-            color: '#000000',
-        },
-    ],
     manifest: '/static/favicon/manifest.json',
     twitter: {
         card: 'summary_large_image',

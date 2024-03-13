@@ -8,6 +8,7 @@ import { Toaster } from 'sonner'
 
 import { site, siteBaseMetadata } from '@/config/site'
 import { cn } from '@/lib/utils'
+import { GTM } from '@/components/gtm'
 import { ProgressProvider } from '@/components/progress-provider'
 import { TailwindIndicator } from '@/components/tailwind-indicator'
 import { ThemeProvider } from '@/components/theme-provider'
@@ -74,6 +75,7 @@ export default function RootLayout({
                         <TailwindIndicator />
                     </ProgressProvider>
                 </ThemeProvider>
+                <GTM />
             </body>
         </html>
     )

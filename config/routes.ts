@@ -1,5 +1,7 @@
 export const ApiRoutes = {
-    getSong: '/api/song',
+    GetSong: '/api/song',
+    CreatePayPalOrder: '/api/paypal/orders',
+    CapturePayPalOrder: (orderId: string) => `/api/paypal/orders/${orderId}/capture`,
 }
 
 export const PlRoutes = {

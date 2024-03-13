@@ -42,3 +42,15 @@ export const products: Array<{
         imageDark: '/images/projects/devv/logo-extended-white.webp',
     },
 ]
+
+export enum ProductSKU {
+    PL = 'programmatore-leggendario',
+    TCL = 'tech-career-launch',
+    TCB = 'tech-career-boost',
+}
+
+export const ProductPrices = {
+    [ProductSKU.PL]: '59.00',
+    [ProductSKU.TCL]: '249.00',
+    [ProductSKU.TCB]: '449.00',
+}
