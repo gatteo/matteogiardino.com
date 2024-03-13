@@ -7,6 +7,7 @@ import NetflixLogo from 'public/images/brands/netflix.svg'
 import WezardLogo from 'public/images/brands/wezard.svg'
 
 import { env } from '@/env.mjs'
+import { ProductSKU } from '@/config/products'
 import { Button } from '@/components/ui/button'
 import { PayPalButton } from '@/components/marketing/paypal-button'
 
@@ -74,8 +75,8 @@ export function Pricing() {
                                     <Button asChild className='mb-2 w-full' size='sm'>
                                         <Link href={env.NEXT_PUBLIC_STRIPE_TCL_LINK as string}>Paga con carta</Link>
                                     </Button>
-                                    <PayPalButton fundingType={'paypal'} productSKU='TCL' />
-                                    <PayPalButton fundingType={'paylater'} productSKU='TCL' />
+                                    <PayPalButton fundingType={'paypal'} productSKU={ProductSKU.TCL} />
+                                    <PayPalButton fundingType={'paylater'} productSKU={ProductSKU.TCL} />
                                 </div>
 
                                 <p className='mt-2 text-xs text-gray-500 dark:text-gray-400'>

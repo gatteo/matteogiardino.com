@@ -6,5 +6,6 @@ import { rehypeInlineCode } from './rehype/rehype-inline-code'
 import { remarkCode } from './remark/remark-code'
 import { remarkHeading } from './remark/remark-heading'
 
+// @ts-ignore
 export const remarkPlugins: PluggableList = [remarkGfm, remarkHeading, remarkCode]
 export const rehypePlugins: PluggableList = [rehypeCode, rehypeInlineCode]

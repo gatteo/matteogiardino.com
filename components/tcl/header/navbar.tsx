@@ -1,8 +1,7 @@
 import Link from 'next/link'
 
-import { HeaderLinks } from '@/config/tcl/links'
-
-import { Button } from '../button'
+import { HeaderLinks } from '@/config/tcl'
+import { Button } from '@/components/ui/button'
 
 const Navbar = () => {
     return (

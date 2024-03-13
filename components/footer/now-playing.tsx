@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import useSWR from 'swr'
 
-import { ApiResponseSuccess, Song } from '@/types/api'
+import { ApiResponseSuccess, GetSongResponse } from '@/types/api'
 import { ApiRoutes } from '@/config/routes'
 import { fetcher } from '@/lib/fetcher'
 
@@ -48,7 +48,7 @@ function AnimatedBars() {
 }
 
 const NowPlaying = () => {
-    const { data: response } = useSWR<ApiResponseSuccess<Song>>(ApiRoutes.GetSong, fetcher)
+    const { data: response } = useSWR<ApiResponseSuccess<GetSongResponse>>(ApiRoutes.GetSong, fetcher)
 
     return (
         <div className='flex items-center gap-4'>
