@@ -1,36 +1,93 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<p align="center">
+  <img alt="" src="https://matteogiardino.com/images/og/og.png">
+</p>
 
-## Getting Started
+<h1 align="center">
+  matteogiardino.com
+</h1>
 
-First, run the development server:
+
+
+This repository houses the code for my personal website and blog, where I share my thoughts, projects, and insights. Feel free to explore and get inspired.
+
+## ✨ Features
+
+- ⚡️ Next.js 14 with App Router (Turbo)
+- 📝 MDX
+- 🎨 Tailwind CSS - for styling
+- 🌈 shadcn/ui & Radix UI - UI components
+- 🛡 Strict TypeScript and ESLint configuration
+- 📱 Responsive design
+- 🌗 Light / Dark mode
+- 📈 SEO optimized with meta tags and JSON-LD
+- 📰 RSS feed
+- 🗺 Sitemap
+- 📊 Google Analytics
+- 📖 Table of contents for blog posts
+- 📷 Image zoom - zoom in on images in blog posts
+- 📝 Code syntax highlighting - using Shiki
+- 🎨 Animation - using Framer Motion
+- 🤖 GitHub Actions for CI/CD
+- 🏠 LightHouse score of nearly 100
+- 💄 Prettier - code formatting
+- 〰️ Prisma - ORM
+- 👷🏻‍♂️ t3-env - validate environment variables before building
+
+## 🔨 Requirements
+
+- Node, recommended `20.x`
+- pnpm, recommended `8.14.0`
+- PostgreSQL, recommended `14.x` (optional if you don't need all the functionalities)
+- [Visual Studio Code](https://code.visualstudio.com/) with [recommended extensions](.vscode/extensions.json)
+- Optionally [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
+
+## 👋 Getting Started
+
+Follow these steps to run the project locally on your machine:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/gatteo/matteogiardino.com.git
+cd matteogiardino.com
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Create a `.env.local` file based on the provided `.env.example` file and fill in the necessary variables.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+OR you can skip this by modifying `apps/web/src/env.ts`:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+```ts
+export const env = createEnv({
+  skipValidation: true,
 
-## Learn More
+  server: {
+    // ...
+  }
+})
+```
 
-To learn more about Next.js, take a look at the following resources:
+You may notice that some functionalities will not work properly. But it's okay for learning.
 
--   [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
--   [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+To run the app in development mode:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+```bash
+pnpm dev
+```
 
-## Deploy on Vercel
+The app will be available at `localhost:3000`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## ✍🏻 Author
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+[@gatteo](https://github.com/gatteo)
+
+## ❤️ Credits
+
+This project has been has been heavly inspired by [@tszhong0411 personal website](https://github.com/tszhong0411/honghong.me)
+
+## 🪪 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+<hr>
+<p align="center">
+Made with ❤️ in Turin (Italy)
+</p>

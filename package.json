@@ -4,7 +4,7 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "dev": "concurrently \"contentlayer dev\" \"next dev -p 3002\"",
+        "dev": "concurrently \"contentlayer dev\" \"next dev\"",
         "build": "next build",
         "clean": "rm -rf .next .contentlayer tsconfig.tsbuildinfo",
         "start": "next start",
