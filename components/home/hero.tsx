@@ -84,7 +84,12 @@ export function Hero() {
 
                     <div className='mt-12 flex flex-col gap-10 md:grid md:grid-cols-4 md:grid-rows-1'>
                         <div className='relative col-span-2 aspect-video md:aspect-auto'>
-                            <Image src={GridWideImage} alt='' className='rounded-lg object-cover drop-shadow-2xl' />
+                            <Image
+                                src={GridWideImage}
+                                alt=''
+                                placeholder='blur'
+                                className='rounded-lg object-cover drop-shadow-2xl'
+                            />
                         </div>
                         <div className='relative hidden aspect-square md:block'>
                             <Image src={GridGifImage} alt='' unoptimized className='rounded-lg drop-shadow-2xl' />
@@ -93,6 +98,7 @@ export function Hero() {
                             <Image
                                 src={GridIconThree}
                                 alt=''
+                                placeholder='blur'
                                 className='rotate-3 rounded-lg drop-shadow-2xl transition-all duration-200 hover:rotate-0'
                             />
                         </div>
