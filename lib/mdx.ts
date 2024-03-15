@@ -35,8 +35,6 @@ const readMDXFile = <T>(filePath: string) => {
 export const getPage = <T>(filePath: string) => {
     const fullPath = path.join(mdxFilesRootDirectory, `${filePath}.mdx`)
 
-    console.log(fullPath, 'fullPath')
-
     if (!fs.existsSync(fullPath)) {
         return null
     }

@@ -32,13 +32,13 @@ export const services: Service[] = [
         min_price: '€ 750 al mese',
     },
     {
-        id: 'cto-as-a-service',
-        title: 'cto as a service',
+        id: 'fractional-cto',
+        title: 'fractional cto',
         short_desctiption: 'gestisco le sfide tecniche del tuo prodotto.',
         description:
             'collaborerò a stretto contatto con te e con il tuo team per definire la visione tecnologica, pianificare lo sviluppo del prodotto e gestire le sfide tecniche.',
         icon: 'ctoService',
-        url: '/services#cto-as-a-service',
+        url: '/services#fractional-cto',
         min_price: '€ 750 al mese',
     },
 ]
