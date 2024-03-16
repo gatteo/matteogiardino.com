@@ -10,7 +10,8 @@ import { unified } from 'unified'
 import { BlogPostSource } from '@/types/blog'
 import { Routes } from '@/config/routes'
 import { site } from '@/config/site'
-import { rehypeTransformGrid } from '@/lib/mdx/plugins/rehype/rehype-substack-grid'
+import { rehypeGridImages } from '@/lib/mdx/plugins/rehype/rehype-substack-grid-images'
+import { rehypeRoundedImages } from '@/lib/mdx/plugins/rehype/rehype-substack-rounded-images'
 import { getSubstackPost, getSubstackPosts } from '@/lib/substack'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Footer } from '@/components/blog/post-footer'
@@ -88,7 +89,8 @@ export default async function BlogPostPage({ params: { slug } }: { params: { slu
 
     const postBody = await unified()
         .use(rehypeParse, { fragment: true })
-        .use(rehypeTransformGrid)
+        .use(rehypeGridImages)
+        .use(rehypeRoundedImages)
         .use(rehypeStringify)
         .process(post.body)
 
