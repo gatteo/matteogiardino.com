@@ -2,11 +2,15 @@ import { Metadata, ResolvingMetadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { absoluteUrl } from '@/utils/urls'
+import rehypeParse from 'rehype-parse'
+import rehypeStringify from 'rehype-stringify'
 import { Article, WithContext } from 'schema-dts'
+import { unified } from 'unified'
 
 import { BlogPostSource } from '@/types/blog'
 import { Routes } from '@/config/routes'
 import { site } from '@/config/site'
+import { rehypeTransformGrid } from '@/lib/mdx/plugins/rehype/rehype-substack-grid'
 import { getSubstackPost, getSubstackPosts } from '@/lib/substack'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Footer } from '@/components/blog/post-footer'
@@ -82,6 +86,12 @@ export default async function BlogPostPage({ params: { slug } }: { params: { slu
         notFound()
     }
 
+    const postBody = await unified()
+        .use(rehypeParse, { fragment: true })
+        .use(rehypeTransformGrid)
+        .use(rehypeStringify)
+        .process(post.body)
+
     const jsonLd: WithContext<Article> = {
         '@context': 'https://schema.org',
         '@type': 'Article',
@@ -129,9 +139,14 @@ export default async function BlogPostPage({ params: { slug } }: { params: { slu
                 </AlertDescription>
             </Alert>
 
+            {/* <div className='grid grid-cols-3 gap-4'>
+                <img src={image1} alt={post.title} className='col-span-1 rounded-lg' />
+                // other images
+        </div> */}
+
             <article
                 className='prose max-w-[100vw] overflow-hidden dark:prose-invert'
-                dangerouslySetInnerHTML={{ __html: post.body }}
+                dangerouslySetInnerHTML={{ __html: String(postBody) }}
             />
 
             <Footer slug={slug} title={post.title} source={BlogPostSource.Substack} author={post.author} />
