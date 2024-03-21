@@ -1,5 +1,7 @@
 import * as React from 'react'
 
+import { PlRoutes } from '@/config/routes'
+
 import { CtaButton } from './cta-button'
 
 export function CTA1() {
@@ -60,7 +62,7 @@ export function CTA1() {
                             programmazione.
                         </p>
                         <div className='mt-10 flex items-center justify-center gap-x-6'>
-                            <CtaButton href='/programmatore-leggendario#pricing' text='Inizia oggi stesso' />
+                            <CtaButton href={PlRoutes.Pricing} text='Inizia oggi stesso' />
                         </div>
                     </div>
                 </div>

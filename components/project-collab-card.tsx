@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { UtmUrl } from '@/utils/urls'
 import { IconExternalLink } from '@tabler/icons-react'
 
 import { Routes } from '@/config/routes'
@@ -9,7 +10,9 @@ import { Button } from './ui/button'
 export function ProjectCollabCard({ project }: { project: any }) {
     return (
         <Link
-            href={Routes.Project(project.slug)}
+            href={UtmUrl(Routes.Project(project.slug), {
+                content: 'project_card',
+            })}
             target='_blank'
             className='group relative flex flex-row space-x-4 rounded-md border bg-muted p-4 transition-all duration-150 hover:bg-accent'>
             {project.icon && (

@@ -1,6 +1,8 @@
 import * as React from 'react'
 import Image from 'next/image'
 
+import { PlRoutes } from '@/config/routes'
+
 import { CtaButton } from './cta-button'
 import Section2Image from '/public/images/pl/creare-app-siti.webp'
 import Section1Image from '/public/images/pl/ti-trasformo.webp'
@@ -60,7 +62,7 @@ export function Solution() {
                                 </li>
                             ))}
                         </ul>
-                        <CtaButton href='/programmatore-leggendario#pricing' text='Impara a programmare' />
+                        <CtaButton href={PlRoutes.Pricing} text='Impara a programmare' />
                     </div>
                     <Image
                         className='m-auto flex max-h-[350px] object-contain lg:mb-0'
@@ -104,7 +106,7 @@ export function Solution() {
                                 </li>
                             ))}
                         </ul>
-                        <CtaButton href='/programmatore-leggendario#pricing' text='Cosa aspetti? Inizia subito' />
+                        <CtaButton href={PlRoutes.Pricing} text='Cosa aspetti? Inizia subito' />
                     </div>
                     <Image
                         className='m-auto flex max-h-[350px] object-contain lg:mb-0'

@@ -1,6 +1,8 @@
 import Link from 'next/link'
+import { UtmUrl } from '@/utils/urls'
 import { IconArrowRight } from '@tabler/icons-react'
 
+import { UtmMediums } from '@/types/links'
 import { Routes } from '@/config/routes'
 import { services } from '@/config/services'
 
@@ -22,7 +24,11 @@ export function Services() {
                 </div>
 
                 <Button variant='ghost' className='group -mx-3 text-muted-foreground md:mx-0' size='sm' asChild>
-                    <Link href={Routes.Contact}>
+                    <Link
+                        href={UtmUrl(Routes.Services, {
+                            medium: UtmMediums.Homepage,
+                            content: 'services',
+                        })}>
                         tutti i servizi
                         <IconArrowRight className='ml-2 inline-block size-5 transition-transform duration-200 group-hover:translate-x-1 ' />
                     </Link>
@@ -36,7 +42,10 @@ export function Services() {
                         title={service.title}
                         description={service.description}
                         icon={service.icon}
-                        href={service.url}
+                        href={UtmUrl(service.url, {
+                            medium: UtmMediums.Homepage,
+                            content: 'services',
+                        })}
                     />
                 ))}
             </div>

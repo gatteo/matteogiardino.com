@@ -2,7 +2,9 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { UtmUrl } from '@/utils/urls'
 
+import { UtmMediums } from '@/types/links'
 import { PlRoutes } from '@/config/routes'
 
 import { Button } from './ui/button'
@@ -30,7 +32,13 @@ export function NotificationPopup() {
                             non ora
                         </Button>
                         <Button size='sm' asChild>
-                            <Link href={PlRoutes.Home}>dimmi di più</Link>
+                            <Link
+                                href={UtmUrl(PlRoutes.Home, {
+                                    medium: UtmMediums.NotificationPopup,
+                                    content: 'notification_popup',
+                                })}>
+                                dimmi di più
+                            </Link>
                         </Button>
                     </CardFooter>
                 </Card>

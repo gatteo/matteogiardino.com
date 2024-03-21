@@ -2,8 +2,10 @@
 
 import React from 'react'
 import Link from 'next/link'
+import { UtmUrl } from '@/utils/urls'
 import { IconMenu } from '@tabler/icons-react'
 
+import { UtmMediums } from '@/types/links'
 import { HeaderLinks } from '@/config/links'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
@@ -27,7 +29,12 @@ export function NavbarMobile() {
             <DropdownMenuContent align='end'>
                 {HeaderLinks.map((link) => (
                     <DropdownMenuItem key={link.text} asChild>
-                        <Link href={link.href} className='flex items-center gap-4' onClick={() => setOpen(false)}>
+                        <Link
+                            href={UtmUrl(link.href, {
+                                medium: UtmMediums.Navbar,
+                            })}
+                            className='flex items-center gap-4'
+                            onClick={() => setOpen(false)}>
                             <Icon name={link.icon} className='size-4' />
                             <div>{link.text}</div>
                         </Link>

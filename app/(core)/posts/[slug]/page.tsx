@@ -1,13 +1,14 @@
 import { Metadata, ResolvingMetadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { absoluteUrl } from '@/utils/urls'
+import { absoluteUrl, UtmUrl } from '@/utils/urls'
 import rehypeParse from 'rehype-parse'
 import rehypeStringify from 'rehype-stringify'
 import { Article, WithContext } from 'schema-dts'
 import { unified } from 'unified'
 
 import { BlogPostSource } from '@/types/blog'
+import { UtmMediums } from '@/types/links'
 import { Routes } from '@/config/routes'
 import { site } from '@/config/site'
 import { rehypeGridImages } from '@/lib/mdx/plugins/rehype/rehype-substack-grid-images'
@@ -134,7 +135,14 @@ export default async function BlogPostPage({ params: { slug } }: { params: { slu
                 <AlertTitle>⚠️ leggi questo avviso!</AlertTitle>
                 <AlertDescription>
                     il post che stai per leggere è stato originariamente pubblicato nella mia{' '}
-                    <Link href={post.originalUrl} target='_blank' rel='noopener noreferrer' className='underline'>
+                    <Link
+                        href={UtmUrl(post.originalUrl, {
+                            medium: UtmMediums.Blog,
+                            content: 'alert_original_post',
+                        })}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        className='underline'>
                         newsletter su substack
                     </Link>
                     . Se incontri problemi, puoi leggerlo direttamente li.

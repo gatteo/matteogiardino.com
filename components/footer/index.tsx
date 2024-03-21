@@ -2,7 +2,9 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { UtmUrl } from '@/utils/urls'
 
+import { UtmMediums } from '@/types/links'
 import { ContactLinks, FooterLinkGroups, SocialLinks } from '@/config/links'
 import { products } from '@/config/products'
 
@@ -28,7 +30,12 @@ export function Footer() {
                 <div className='col-span-2 mb-10 flex flex-col items-start gap-4 pr-4 md:hidden'>
                     <div className='grid w-full grid-cols-2 gap-2 sm:grid-cols-4'>
                         {products.map((p) => (
-                            <Link key={p.id} href={p.url} target='_blank'>
+                            <Link
+                                key={p.id}
+                                href={UtmUrl(p.url, {
+                                    medium: UtmMediums.Footer,
+                                })}
+                                target='_blank'>
                                 <Image src={p.image} height={80} width={100} alt={p.title} className='hidden' />
                                 <Image
                                     src={p.imageDark}
@@ -47,7 +54,9 @@ export function Footer() {
                         {list.links.map((link) => (
                             <Link
                                 key={link.title}
-                                href={link.href}
+                                href={UtmUrl(link.href, {
+                                    medium: UtmMediums.Footer,
+                                })}
                                 className='text-muted-foreground transition-colors duration-150 hover:text-accent-foreground'>
                                 {link.title}
                             </Link>
@@ -69,7 +78,12 @@ export function Footer() {
                 </div>
                 <div className='mb-10 hidden flex-col items-start gap-4 pr-4 md:flex'>
                     {products.map((p) => (
-                        <Link key={p.id} href={p.url} target='_blank'>
+                        <Link
+                            key={p.id}
+                            href={UtmUrl(p.url, {
+                                medium: UtmMediums.Footer,
+                            })}
+                            target='_blank'>
                             <Image src={p.image} height={80} width={100} alt={p.title} className='dark:hidden' />
                             <Image
                                 src={p.imageDark}

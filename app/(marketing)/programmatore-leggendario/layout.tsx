@@ -67,7 +67,7 @@ const Layout = ({ children }: Props) => {
                 logoForDarkMode={LogoForDarkMode}
                 logoForLightMode={LogoForLightMode}
                 links={HeaderLinks}
-                ctaHref='/programmatore-leggendario#pricing'
+                ctaHref={PlRoutes.Pricing}
                 ctaText='Inizia ora!'
                 ctaClassName='bg-gradient-to-br tracking-wider from-yellow-300 to-amber-600 font-semibold text-neutral-50 dark:text-neutral-900'
             />

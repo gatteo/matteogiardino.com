@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { formatDate } from '@/utils/dates'
+import { UtmUrl } from '@/utils/urls'
 
 import { BlogPostPreview } from '@/types/blog'
 
@@ -12,7 +13,9 @@ export function PostCard({ post }: { post: BlogPostPreview }) {
     return (
         <Link
             key={post.id}
-            href={post.url}
+            href={UtmUrl(post.url, {
+                content: 'post_card',
+            })}
             className='flex flex-col rounded-lg p-4 transition-all duration-150 hover:bg-muted'>
             <Image
                 src={post.image ?? '/images/blog-post-placeholder.webp'}

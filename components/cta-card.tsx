@@ -1,5 +1,7 @@
 import Link from 'next/link'
+import { UtmUrl } from '@/utils/urls'
 
+import { UtmMediums } from '@/types/links'
 import { cn, shineAnimation } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Card, CardDescription, CardTitle } from '@/components/ui/card'
@@ -40,13 +42,16 @@ export function CtaCard({
                     <div className='flex gap-4'>
                         {secondaryButtonText && secondaryButtonUrl && (
                             <Button variant='outline' asChild>
-                                <Link href={`${secondaryButtonUrl}?utm_source=blog&utm_medium=cta`}>
+                                <Link
+                                    href={UtmUrl(secondaryButtonUrl, { medium: UtmMediums.Blog, content: 'card_cta' })}>
                                     {secondaryButtonText}
                                 </Link>
                             </Button>
                         )}
                         <Button asChild>
-                            <Link href={`${primaryButtonUrl}?utm_source=blog&utm_medium=cta`}>{primaryButtonText}</Link>
+                            <Link href={UtmUrl(primaryButtonUrl, { medium: UtmMediums.Blog, content: 'card_cta' })}>
+                                {primaryButtonText}
+                            </Link>
                         </Button>
                     </div>
                 </div>

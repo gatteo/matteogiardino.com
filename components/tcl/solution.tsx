@@ -2,6 +2,7 @@ import * as React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
+import { TclRoutes } from '@/config/routes'
 import { Button } from '@/components/ui/button'
 
 import SectionImage from '/public/images/tcl/solution.webp'
@@ -55,7 +56,7 @@ export function Solution() {
                         ))}
                     </ul>
                     <Button asChild>
-                        <Link href='/tech-career-launch#pricing'>Inizia il tuo percorso</Link>
+                        <Link href={TclRoutes.Pricing}>Inizia il tuo percorso</Link>
                     </Button>
                 </div>
                 <Image

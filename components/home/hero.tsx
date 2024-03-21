@@ -2,9 +2,12 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { UtmUrl } from '@/utils/urls'
 import WezardIcon from 'public/images/brands/wezard-icon.png'
 import DevvIcon from 'public/images/projects/devv/icon.webp'
 import WestudentsIcon from 'public/images/projects/westudents/icon.webp'
+
+import { UtmMediums } from '@/types/links'
 
 import { Button } from '../ui/button'
 import GridGifImage from '/public/images/home/1.gif'
@@ -29,7 +32,11 @@ export function Hero() {
                             <h2 className='flex flex-wrap items-center justify-center gap-4 text-sm font-medium leading-8 md:text-base'>
                                 founder & cto @
                                 <Button variant='secondary' size={'sm'} className='border bg-muted px-2' asChild>
-                                    <Link href='https://westudents.it'>
+                                    <Link
+                                        href={UtmUrl('https://westudents.it', {
+                                            medium: UtmMediums.Homepage,
+                                            content: 'hero',
+                                        })}>
                                         <Image
                                             src={WestudentsIcon}
                                             alt='Westudents logo'
@@ -41,7 +48,12 @@ export function Hero() {
                                     </Link>
                                 </Button>
                                 <Button variant='secondary' size={'sm'} className='border bg-muted px-2' asChild>
-                                    <Link href='https://devv.it'>
+                                    <Link
+                                        href={UtmUrl('https://devv.it', {
+                                            source: 'matteogiardino.com',
+                                            medium: UtmMediums.Homepage,
+                                            content: 'hero',
+                                        })}>
                                         <Image
                                             src={DevvIcon}
                                             alt='Devv logo'
@@ -54,7 +66,11 @@ export function Hero() {
                                 </Button>
                                 <div className='flex items-center'>
                                     <Button variant='secondary' size={'sm'} className='border bg-muted px-2' asChild>
-                                        <Link href='https://wezard.it'>
+                                        <Link
+                                            href={UtmUrl('https://wezard.it', {
+                                                medium: UtmMediums.Homepage,
+                                                content: 'hero',
+                                            })}>
                                             <Image
                                                 src={WezardIcon}
                                                 alt='Wezard logo'
@@ -106,7 +122,11 @@ export function Hero() {
 
                     <div className='mx-auto mt-12'>
                         <div className='rounded-md border bg-muted p-4 text-sm md:p-2'>
-                            <Link href='https://matteogiardino.com'>
+                            <Link
+                                href={UtmUrl('/posts/ho-fatto-exit-ma-non-per-i-soldi-623', {
+                                    medium: UtmMediums.Homepage,
+                                    content: 'hero',
+                                })}>
                                 wezard, la mia agenzia di sviluppo, è stata acquisita 🎉
                                 <span className='ml-1 underline underline-offset-2'> leggi l'annuncio</span>
                             </Link>

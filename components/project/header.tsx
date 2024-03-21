@@ -2,9 +2,12 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { UtmUrl } from '@/utils/urls'
 import { AspectRatio } from '@radix-ui/react-aspect-ratio'
 import { IconBrandGithub, IconHome } from '@tabler/icons-react'
 import { motion } from 'framer-motion'
+
+import { UtmMediums } from '@/types/links'
 
 const animation = {
     hide: {
@@ -52,7 +55,14 @@ export function Header({ title, description, icon, url, github, image }: Props) 
                     animate={animation.show}
                     transition={{ delay: 0.1 }}>
                     {url && (
-                        <Link target='_blank' rel='noopener noreferrer' href={url} className='flex items-center'>
+                        <Link
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            href={UtmUrl(url, {
+                                medium: UtmMediums.Projects,
+                                content: 'header',
+                            })}
+                            className='flex items-center'>
                             <IconHome size={20} className='-mt-1 mr-2 inline-block' />
                             {url}
                         </Link>

@@ -1,9 +1,10 @@
 import { Metadata, ResolvingMetadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { absoluteUrl } from '@/utils/urls'
+import { absoluteUrl, UtmUrl } from '@/utils/urls'
 import { allProjects } from 'contentlayer/generated'
 
+import { UtmMediums } from '@/types/links'
 import { Routes } from '@/config/routes'
 import { PageTitle } from '@/components/page-title'
 import { ProjectCollabCard } from '@/components/project-collab-card'
@@ -58,7 +59,10 @@ export default function Page() {
                         return (
                             <Link
                                 key={_id}
-                                href={Routes.Project(slug)}
+                                href={UtmUrl(Routes.Project(slug), {
+                                    medium: UtmMediums.Projects,
+                                    content: 'product_card',
+                                })}
                                 className='flex flex-col rounded-lg p-4 transition-colors duration-300 hover:bg-muted'>
                                 <Image
                                     src={image as string}

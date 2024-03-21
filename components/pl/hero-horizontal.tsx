@@ -8,6 +8,7 @@ import WestudentsLogo from 'public/images/brands/westudents-short.svg'
 import WezardLogo from 'public/images/brands/wezard.svg'
 import Logo from 'public/images/pl/leggendario.webp'
 
+import { PlRoutes } from '@/config/routes'
 import { Button } from '@/components/ui/button'
 
 const Section: React.FC = () => {
@@ -38,10 +39,10 @@ const Section: React.FC = () => {
                             </p>
                             <div className='mt-12 flex justify-center gap-2 md:justify-start'>
                                 <Button asChild className='font-semibold leading-7 dark:bg-amber-400'>
-                                    <Link href='/programmatore-leggendario#pricing'>Inizia ora</Link>
+                                    <Link href={PlRoutes.Pricing}>Inizia ora</Link>
                                 </Button>
                                 <Button asChild variant='secondary'>
-                                    <Link href='/programmatore-leggendario#what-is'>Scopri di più</Link>
+                                    <Link href={PlRoutes.WhatIs}>Scopri di più</Link>
                                 </Button>
                             </div>
                         </div>

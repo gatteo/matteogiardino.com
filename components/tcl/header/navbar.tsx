@@ -1,5 +1,6 @@
 import Link from 'next/link'
 
+import { TclRoutes } from '@/config/routes'
 import { HeaderLinks } from '@/config/tcl'
 import { Button } from '@/components/ui/button'
 
@@ -20,7 +21,7 @@ const Navbar = () => {
             </ul>
 
             <Button asChild className='bg-gradient-to-br from-purple-600 to-indigo-500 font-semibold' size='sm'>
-                <Link href='/tech-career-launch#pricing'>Lancia la tua carriera </Link>
+                <Link href={TclRoutes.Pricing}>Lancia la tua carriera </Link>
             </Button>
         </>
     )

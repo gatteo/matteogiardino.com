@@ -1,7 +1,8 @@
 import { Metadata, ResolvingMetadata } from 'next'
 import Link from 'next/link'
-import { absoluteUrl } from '@/utils/urls'
+import { absoluteUrl, UtmUrl } from '@/utils/urls'
 
+import { UtmMediums } from '@/types/links'
 import { Routes } from '@/config/routes'
 import { services } from '@/config/services'
 import { Button } from '@/components/ui/button'
@@ -82,7 +83,13 @@ export default function Page() {
                                     <p className='text-right font-semibold leading-tight'> {service.min_price}</p>
                                 </div>
                                 <Button asChild size={'sm'} className='mt-2 md:mt-4'>
-                                    <Link href={Routes.Contact}>contattami</Link>
+                                    <Link
+                                        href={UtmUrl(Routes.Contact, {
+                                            medium: UtmMediums.Services,
+                                            content: 'service_card',
+                                        })}>
+                                        contattami
+                                    </Link>
                                 </Button>
                             </div>
                         </div>
@@ -92,7 +99,7 @@ export default function Page() {
 
             <Testimonials />
 
-            <CtaBusiness />
+            <CtaBusiness medium={UtmMediums.Services} />
         </>
     )
 }

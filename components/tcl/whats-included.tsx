@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import SectionImage from 'public/images/tcl/includes.webp'
 
+import { TclRoutes } from '@/config/routes'
 import { Button } from '@/components/ui/button'
 
 const included = [
@@ -55,7 +56,7 @@ export function WhatsIncluded() {
                         ))}
                     </ul>
                     <Button asChild>
-                        <Link href='/tech-career-launch#pricing'>Inizia ora</Link>
+                        <Link href={TclRoutes.Pricing}>Inizia ora</Link>
                     </Button>
                 </div>
                 <Image

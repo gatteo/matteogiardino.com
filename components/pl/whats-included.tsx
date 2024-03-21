@@ -3,6 +3,8 @@ import Image from 'next/image'
 import SectionImageMobile from 'public/images/pl/includes-mobile.webp'
 import SectionImage from 'public/images/pl/includes.webp'
 
+import { PlRoutes } from '@/config/routes'
+
 import { CtaButton } from './cta-button'
 
 const included = [
@@ -50,7 +52,7 @@ export function WhatsIncluded() {
                             </li>
                         ))}
                     </ul>
-                    <CtaButton href='/programmatore-leggendario#pricing' text='Voglio iniziare ora!' />
+                    <CtaButton href={PlRoutes.Pricing} text='Voglio iniziare ora!' />
                 </div>
                 <Image
                     className='m-auto mb-4 hidden max-h-[500px] rounded-lg object-contain md:flex lg:mb-0 lg:flex'

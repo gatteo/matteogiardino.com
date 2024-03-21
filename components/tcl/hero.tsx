@@ -9,6 +9,8 @@ import WezardLogo from 'public/images/brands/wezard.svg'
 import Logo from 'public/images/tcl/launch.webp'
 import DecorativeImage from 'public/images/tcl/solution.webp'
 
+import { TclRoutes } from '@/config/routes'
+
 import { Button } from './button'
 
 export function Hero() {
@@ -40,10 +42,10 @@ export function Hero() {
                             </p>
                             <div className='mt-12 flex justify-center gap-2 md:justify-start'>
                                 <Button asChild>
-                                    <Link href='/tech-career-launch#pricing'>Inizia ora</Link>
+                                    <Link href={TclRoutes.Pricing}>Inizia ora</Link>
                                 </Button>
                                 <Button asChild variant='secondary'>
-                                    <Link href='/tech-career-launch#what-is'>Scopri di più</Link>
+                                    <Link href={TclRoutes.WhatIs}>Scopri di più</Link>
                                 </Button>
                             </div>
                         </div>

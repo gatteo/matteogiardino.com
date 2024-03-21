@@ -6,40 +6,38 @@
   matteogiardino.com
 </h1>
 
-
-
 This repository houses the code for my personal website and blog, where I share my thoughts, projects, and insights. Feel free to explore and get inspired.
 
 ## ✨ Features
 
-- ⚡️ Next.js 14 with App Router (Turbo)
-- 📝 MDX
-- 🎨 Tailwind CSS - for styling
-- 🌈 shadcn/ui & Radix UI - UI components
-- 🛡 Strict TypeScript and ESLint configuration
-- 📱 Responsive design
-- 🌗 Light / Dark mode
-- 📈 SEO optimized with meta tags and JSON-LD
-- 📰 RSS feed
-- 🗺 Sitemap
-- 📊 Google Analytics
-- 📖 Table of contents for blog posts
-- 📷 Image zoom - zoom in on images in blog posts
-- 📝 Code syntax highlighting - using Shiki
-- 🎨 Animation - using Framer Motion
-- 🤖 GitHub Actions for CI/CD
-- 🏠 LightHouse score of nearly 100
-- 💄 Prettier - code formatting
-- 〰️ Prisma - ORM
-- 👷🏻‍♂️ t3-env - validate environment variables before building
+-   ⚡️ Next.js 14 with App Router (Turbo)
+-   📝 MDX
+-   🎨 Tailwind CSS - for styling
+-   🌈 shadcn/ui & Radix UI - UI components
+-   🛡 Strict TypeScript and ESLint configuration
+-   📱 Responsive design
+-   🌗 Light / Dark mode
+-   📈 SEO optimized with meta tags and JSON-LD
+-   📰 RSS feed
+-   🗺 Sitemap
+-   📊 Google Analytics
+-   📖 Table of contents for blog posts
+-   📷 Image zoom - zoom in on images in blog posts
+-   📝 Code syntax highlighting - using Shiki
+-   🎨 Animation - using Framer Motion
+-   🤖 GitHub Actions for CI/CD
+-   🏠 LightHouse score of nearly 100
+-   💄 Prettier - code formatting
+-   〰️ Prisma - ORM
+-   👷🏻‍♂️ t3-env - validate environment variables before building
 
 ## 🔨 Requirements
 
-- Node, recommended `20.x`
-- pnpm, recommended `8.14.0`
-- PostgreSQL, recommended `14.x` (optional if you don't need all the functionalities)
-- [Visual Studio Code](https://code.visualstudio.com/) with [recommended extensions](.vscode/extensions.json)
-- Optionally [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
+-   Node, recommended `20.x`
+-   pnpm, recommended `8.14.0`
+-   PostgreSQL, recommended `14.x` (optional if you don't need all the functionalities)
+-   [Visual Studio Code](https://code.visualstudio.com/) with [recommended extensions](.vscode/extensions.json)
+-   Optionally [React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en)
 
 ## 👋 Getting Started
 
@@ -57,11 +55,11 @@ OR you can skip this by modifying `apps/web/src/env.ts`:
 
 ```ts
 export const env = createEnv({
-  skipValidation: true,
+    skipValidation: true,
 
-  server: {
-    // ...
-  }
+    server: {
+        // ...
+    },
 })
 ```
 

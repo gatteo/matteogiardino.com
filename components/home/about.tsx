@@ -3,6 +3,7 @@
 import React, { MutableRefObject, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { UtmUrl } from '@/utils/urls'
 import { IconArrowRight } from '@tabler/icons-react'
 import { gsap, Linear } from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
@@ -11,6 +12,7 @@ import WezardLogo from 'public/images/brands/wezard-icon.png'
 import DevvLogo from 'public/images/projects/devv/icon.webp'
 import WestudentsLogo from 'public/images/projects/westudents/icon.webp'
 
+import { UtmMediums } from '@/types/links'
 import { Routes } from '@/config/routes'
 
 import { Button } from '../ui/button'
@@ -147,7 +149,10 @@ export function About() {
                                 className='-mt-1 mr-2 inline-block size-7 rounded md:-mt-2 md:mr-3 md:size-12 md:rounded-xl'
                             />
                             <Link
-                                href='https://westudents.it'
+                                href={UtmUrl('https://westudents.it', {
+                                    medium: UtmMediums.Homepage,
+                                    content: 'about',
+                                })}
                                 className='bg-gradient-to-l from-red-400 to-orange-400 bg-clip-text text-transparent decoration-orange-400 underline-offset-8 hover:underline'>
                                 westudents
                             </Link>{' '}
@@ -169,7 +174,10 @@ export function About() {
                                 className='border-accent-3 -mt-1 mr-2 inline-block size-7 rounded border md:-mt-2 md:mr-3 md:size-12 md:rounded-xl'
                             />
                             <Link
-                                href='https://devv.it'
+                                href={UtmUrl('https://devv.it', {
+                                    medium: UtmMediums.Homepage,
+                                    content: 'about',
+                                })}
                                 className='bg-gradient-to-l from-purple-300 to-purple-500 bg-clip-text text-transparent decoration-purple-400 underline-offset-8 hover:underline'>
                                 devv
                             </Link>
@@ -194,7 +202,10 @@ export function About() {
                                     className='border-accent-3 -mt-1 mr-2 inline-block size-7 rounded border md:-mt-2 md:mr-3 md:size-12 md:rounded-xl'
                                 />
                                 <Link
-                                    href='https://devv.it'
+                                    href={UtmUrl('https://wezard.it', {
+                                        medium: UtmMediums.Homepage,
+                                        content: 'about',
+                                    })}
                                     className='bg-gradient-to-l from-lime-200 to-lime-300 bg-clip-text text-transparent decoration-lime-400 underline-offset-8 hover:underline'>
                                     wezard
                                 </Link>
@@ -207,7 +218,11 @@ export function About() {
                         </h2>
 
                         <Button variant={'ghost'} className='group -ml-4 mt-6 text-muted-foreground md:text-xl' asChild>
-                            <Link href={Routes.Contact}>
+                            <Link
+                                href={UtmUrl(Routes.Contact, {
+                                    medium: UtmMediums.Homepage,
+                                    content: 'about',
+                                })}>
                                 💡 vuoi realizzare un progetto con me?
                                 <strong className='mx-2 underline underline-offset-4'>scrivimi</strong>
                                 <IconArrowRight className='inline-block size-5 transition-transform duration-200 group-hover:translate-x-1' />

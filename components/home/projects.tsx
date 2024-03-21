@@ -1,8 +1,10 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { UtmUrl } from '@/utils/urls'
 import { IconArrowRight } from '@tabler/icons-react'
 import { allProjects } from 'contentlayer/generated'
 
+import { UtmMediums } from '@/types/links'
 import { Routes } from '@/config/routes'
 
 import { ProjectCollabCard } from '../project-collab-card'
@@ -24,7 +26,11 @@ export function Projects() {
                 </div>
 
                 <Button variant='ghost' className='group -mx-3 text-muted-foreground md:mx-0' size='sm' asChild>
-                    <Link href={Routes.Projects}>
+                    <Link
+                        href={UtmUrl(Routes.Projects, {
+                            medium: UtmMediums.Homepage,
+                            content: 'projects',
+                        })}>
                         tutti i progetti
                         <IconArrowRight className='ml-2 inline-block size-5 transition-transform duration-200 group-hover:translate-x-1' />
                     </Link>
@@ -40,7 +46,10 @@ export function Projects() {
                         return (
                             <Link
                                 key={_id}
-                                href={Routes.Project(slug)}
+                                href={UtmUrl(Routes.Project(slug), {
+                                    medium: UtmMediums.Homepage,
+                                    content: 'projects',
+                                })}
                                 className='flex flex-col rounded-lg p-4 transition-colors duration-300 hover:bg-muted'>
                                 <Image
                                     src={image as string}

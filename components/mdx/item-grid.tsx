@@ -3,6 +3,9 @@
  */
 
 import Image from 'next/image'
+import { UtmUrl } from '@/utils/urls'
+
+import { UtmMediums } from '@/types/links'
 
 export type Items = Array<{
     image: string
@@ -23,7 +26,10 @@ export const ItemGrid = (props: ItemGridProps) => {
             {items.map((item) => (
                 <a
                     key={item.name}
-                    href={item.url}
+                    href={UtmUrl(item.url, {
+                        medium: UtmMediums.Blog,
+                        content: 'item_grid',
+                    })}
                     target='_blank'
                     rel='noopener noreferrer'
                     className='flex gap-6 rounded-lg border bg-muted p-4 no-underline transition-colors duration-200 hover:bg-accent sm:flex-col sm:gap-3'>

@@ -6,7 +6,7 @@ import { allProjects } from 'contentlayer/generated'
 import { Routes } from '@/config/routes'
 import { site } from '@/config/site'
 import { Content } from '@/components/mdx-content'
-import Header from '@/components/projects/header'
+import Header from '@/components/project/header'
 import { ScrollIndicator } from '@/components/scroll-indicator'
 
 type Props = {

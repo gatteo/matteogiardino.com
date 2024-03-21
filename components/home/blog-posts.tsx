@@ -1,7 +1,9 @@
 import Link from 'next/link'
+import { UtmUrl } from '@/utils/urls'
 import { IconArrowRight } from '@tabler/icons-react'
 
 import { BlogPostPreview } from '@/types/blog'
+import { UtmMediums } from '@/types/links'
 import { Routes } from '@/config/routes'
 import { PostCard } from '@/components/blog/post-card'
 
@@ -24,7 +26,11 @@ export function BlogPosts({ posts }: Props) {
                 </div>
 
                 <Button variant='ghost' className='group -mx-3 text-muted-foreground md:mx-0' size='sm' asChild>
-                    <Link href={Routes.Blog}>
+                    <Link
+                        href={UtmUrl(Routes.Blog, {
+                            medium: UtmMediums.Homepage,
+                            content: 'all_posts_cta',
+                        })}>
                         tutti gli articoli
                         <IconArrowRight className='ml-2 inline-block size-5 transition-transform duration-200 group-hover:translate-x-1' />
                     </Link>

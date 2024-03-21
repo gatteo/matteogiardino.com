@@ -4,8 +4,10 @@ import * as React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { UtmUrl } from '@/utils/urls'
 import { ArrowUpRight } from 'lucide-react'
 
+import { UtmMediums } from '@/types/links'
 import { products } from '@/config/products'
 import { Routes } from '@/config/routes'
 import { services } from '@/config/services'
@@ -38,7 +40,9 @@ export function Navbar() {
                                 <NavigationMenuLink asChild>
                                     <Link
                                         className='flex size-full select-none flex-col justify-end rounded-md bg-opacity-20 bg-gradient-to-b from-sky-700 to-sky-950 p-3 no-underline outline-none focus:shadow-md'
-                                        href='/services'>
+                                        href={UtmUrl(Routes.Services, {
+                                            medium: UtmMediums.Navbar,
+                                        })}>
                                         <div className='text-lg font-semibold leading-tight'>
                                             servizi per le aziende
                                         </div>
@@ -55,7 +59,9 @@ export function Navbar() {
                             {services.map((service) => (
                                 <ListItem
                                     key={service.title}
-                                    href={service.url}
+                                    href={UtmUrl(service.url, {
+                                        medium: UtmMediums.Navbar,
+                                    })}
                                     title={service.title}
                                     icon={service.icon}>
                                     {service.short_desctiption}
@@ -75,7 +81,9 @@ export function Navbar() {
                                     <ListItem
                                         {...product}
                                         key={product.title}
-                                        href={product.url}
+                                        href={UtmUrl(product.url, {
+                                            medium: UtmMediums.Navbar,
+                                        })}
                                         target='_blank'
                                         className='dark:hidden'>
                                         {product.description}
@@ -83,7 +91,9 @@ export function Navbar() {
                                     <ListItem
                                         {...product}
                                         key={product.title + '-dark'}
-                                        href={product.url}
+                                        href={UtmUrl(product.url, {
+                                            medium: UtmMediums.Navbar,
+                                        })}
                                         target='_blank'
                                         image={product.imageDark}
                                         className='hidden dark:block'>
@@ -96,7 +106,12 @@ export function Navbar() {
                 </NavigationMenuItem>
 
                 <NavigationMenuItem key='projects-menu-item'>
-                    <Link href={Routes.Projects} legacyBehavior passHref>
+                    <Link
+                        href={UtmUrl(Routes.Projects, {
+                            medium: UtmMediums.Navbar,
+                        })}
+                        legacyBehavior
+                        passHref>
                         <NavigationMenuLink
                             active={pathname === Routes.Projects}
                             className={navigationMenuTriggerStyle()}>
@@ -106,7 +121,12 @@ export function Navbar() {
                 </NavigationMenuItem>
 
                 <NavigationMenuItem key='contacts-menu-item'>
-                    <Link href={Routes.Contact} legacyBehavior passHref>
+                    <Link
+                        href={UtmUrl(Routes.Contact, {
+                            medium: UtmMediums.Navbar,
+                        })}
+                        legacyBehavior
+                        passHref>
                         <NavigationMenuLink
                             active={pathname === Routes.Contact}
                             className={navigationMenuTriggerStyle()}>
@@ -128,7 +148,7 @@ const ListItem = React.forwardRef<
         badge?: string
         icon?: keyof typeof Icons
     }
->(({ className, title, image, icon, children, ...props }, ref) => {
+>(({ className, title, image, children, ...props }, _ref) => {
     return (
         <li key={props.key}>
             <NavigationMenuLink asChild>

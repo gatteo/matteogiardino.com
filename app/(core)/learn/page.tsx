@@ -1,9 +1,10 @@
 import { Metadata, ResolvingMetadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { absoluteUrl } from '@/utils/urls'
+import { absoluteUrl, UtmUrl } from '@/utils/urls'
 import { ArrowUpRight } from 'lucide-react'
 
+import { UtmMediums } from '@/types/links'
 import { products } from '@/config/products'
 import { Routes } from '@/config/routes'
 import { Badge } from '@/components/ui/badge'
@@ -88,7 +89,11 @@ export default function Page() {
                             </div>
                             <div className='flex flex-none flex-col'>
                                 <Button asChild size={'sm'} className='mt-2 md:mt-4'>
-                                    <Link href={product.url}>
+                                    <Link
+                                        href={UtmUrl(product.url, {
+                                            medium: UtmMediums.LearningProducts,
+                                            content: 'product_card',
+                                        })}>
                                         scopri di più <ArrowUpRight className='ml-1 inline-block size-4' />
                                     </Link>
                                 </Button>

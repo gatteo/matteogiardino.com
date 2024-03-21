@@ -1,15 +1,18 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { UtmUrl } from '@/utils/urls'
 
+import { UtmMediums } from '@/types/links'
 import { Routes } from '@/config/routes'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 
 type Props = {
+    medium: UtmMediums
     className?: string
 }
 
-export function CtaBusiness({ className }: Props) {
+export function CtaBusiness({ medium, className }: Props) {
     return (
         <>
             <section className={cn('relative py-16', className)}>
@@ -45,7 +48,13 @@ export function CtaBusiness({ className }: Props) {
                         </p>
                         <div className='mt-10 flex items-center justify-start gap-x-6 sm:justify-center lg:justify-start'>
                             <Button asChild>
-                                <Link href={Routes.Contact}>contattami</Link>
+                                <Link
+                                    href={UtmUrl(Routes.Contact, {
+                                        medium: medium,
+                                        content: 'business_cta',
+                                    })}>
+                                    contattami
+                                </Link>
                             </Button>
                         </div>
                     </div>

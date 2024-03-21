@@ -1,5 +1,7 @@
 import * as React from 'react'
 
+import { TclRoutes } from '@/config/routes'
+
 export function Cta1() {
     return (
         <section id='cta-1' className='relative isolate py-16'>
@@ -58,7 +60,7 @@ export function Cta1() {
                         </p>
                         <div className='mt-10 flex items-center justify-center gap-x-6'>
                             <a
-                                href='/tech-career-launch#pricing'
+                                href={TclRoutes.Pricing}
                                 className='hover:bg-accent-3 rounded-md bg-accent px-3.5 py-2.5 text-sm font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100'>
                                 Inizia oggi stesso
                             </a>

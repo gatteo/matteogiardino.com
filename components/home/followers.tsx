@@ -1,7 +1,9 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { UtmUrl } from '@/utils/urls'
 import { IconArrowRight } from '@tabler/icons-react'
 
+import { UtmMediums } from '@/types/links'
 import { products } from '@/config/products'
 import { Routes } from '@/config/routes'
 
@@ -98,8 +100,12 @@ export function Followers() {
                 </div>
 
                 <Button variant='ghost' className='group -mx-3 text-muted-foreground md:mx-0' size='sm' asChild>
-                    <Link href={Routes.Contact}>
-                        tutti i servizi
+                    <Link
+                        href={UtmUrl(Routes.LearningProducts, {
+                            medium: UtmMediums.Homepage,
+                            content: 'followers',
+                        })}>
+                        tutti i prodotti
                         <IconArrowRight className='ml-2 inline-block size-5 transition-transform duration-200 group-hover:translate-x-1' />
                     </Link>
                 </Button>
@@ -113,7 +119,10 @@ export function Followers() {
                         title={product.title}
                         description={product.description}
                         image={product.imageDark}
-                        href={product.url}
+                        href={UtmUrl(product.url, {
+                            medium: UtmMediums.Homepage,
+                            content: 'followers',
+                        })}
                     />
                 ))}
             </div>

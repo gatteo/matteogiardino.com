@@ -1,3 +1,4 @@
+import { UtmMediums } from '@/types/links'
 import { CtaBusiness } from '@/components/cta-business'
 
 export function Business() {
@@ -21,7 +22,7 @@ export function Business() {
                 </div>
             </section>
 
-            <CtaBusiness className='' />
+            <CtaBusiness medium={UtmMediums.Homepage} />
         </>
     )
 }
