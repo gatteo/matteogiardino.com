@@ -32,16 +32,14 @@ export function PostCard({ post }: { post: BlogPostPreview }) {
 
             <div className='mt-3 flex flex-wrap items-center gap-2 text-xs sm:text-sm'>
                 <div>{formatDate(post.date)}</div>
-                {post.tags && (
+                {post.tags && post.tags.length > 0 && (
                     <>
                         <div className='text-muted-foreground'>•</div>
-                        <div className='flex gap-1'>
-                            {post.tags.map((t) => (
-                                <Badge key={t} variant={'outline'}>
-                                    {t}
-                                </Badge>
-                            ))}
-                        </div>
+                        {post.tags.map((t) => (
+                            <Badge key={t} variant={'outline'}>
+                                {t}
+                            </Badge>
+                        ))}
                     </>
                 )}
             </div>
