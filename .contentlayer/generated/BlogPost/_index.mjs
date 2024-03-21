@@ -4,5 +4,6 @@ import blog__guidaPerLanciareUnProdottoDigitaleMdx from './blog__guida-per-lanci
 import blog__tecnologieEssenzialiSitoWeb_2024Mdx from './blog__tecnologie-essenziali-sito-web-2024.mdx.json' assert { type: 'json' }
 import blog__testMdx from './blog__test.mdx.json' assert { type: 'json' }
 import blog__validareUnIdeaDiBusinessMdx from './blog__validare-un-idea-di-business.mdx.json' assert { type: 'json' }
+import blog__nextjsCoseEComeMaiECosiPopolareNel_2024Mdx from './blog__nextjs-cose-e-come-mai-e-cosi-popolare-nel-2024.mdx.json' assert { type: 'json' }
 
-export const allBlogPosts = [blog__guidaPerLanciareUnProdottoDigitaleMdx, blog__tecnologieEssenzialiSitoWeb_2024Mdx, blog__testMdx, blog__validareUnIdeaDiBusinessMdx]
+export const allBlogPosts = [blog__guidaPerLanciareUnProdottoDigitaleMdx, blog__tecnologieEssenzialiSitoWeb_2024Mdx, blog__testMdx, blog__validareUnIdeaDiBusinessMdx, blog__nextjsCoseEComeMaiECosiPopolareNel_2024Mdx]
