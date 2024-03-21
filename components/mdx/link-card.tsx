@@ -7,7 +7,7 @@ type LinkCardProps = {
     title: string
 }
 
-const LinkCard = (props: LinkCardProps) => {
+export const LinkCard = (props: LinkCardProps) => {
     const { href, hostname, title } = props
 
     return (
@@ -33,5 +33,3 @@ const LinkCard = (props: LinkCardProps) => {
         </div>
     )
 }
-
-export default LinkCard

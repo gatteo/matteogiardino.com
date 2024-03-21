@@ -21,8 +21,8 @@ export function FilteredPosts({ posts }: { posts: BlogPostPreview[] }) {
                     type='text'
                     value={searchValue}
                     onChange={(e) => setSearchValue(e.target.value)}
-                    placeholder='Cerca un articolo'
-                    aria-label='Cerca un articolo'
+                    placeholder='cerca un articolo'
+                    aria-label='cerca un articolo'
                     className='w-full pl-12'
                     id='search'
                 />

@@ -6,7 +6,7 @@ type TableProps = {
     rows: string[][]
 }
 
-const Table = (props: TableProps) => {
+export const Table = (props: TableProps) => {
     const { headers, rows } = props
 
     return (
@@ -30,5 +30,3 @@ const Table = (props: TableProps) => {
         </UITable>
     )
 }
-
-export default Table

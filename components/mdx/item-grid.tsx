@@ -15,7 +15,7 @@ type ItemGridProps = {
     items: Items
 }
 
-const ItemGrid = (props: ItemGridProps) => {
+export const ItemGrid = (props: ItemGridProps) => {
     const { items } = props
 
     return (
@@ -43,5 +43,3 @@ const ItemGrid = (props: ItemGridProps) => {
         </div>
     )
 }
-
-export default ItemGrid

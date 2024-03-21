@@ -6,3 +6,5 @@ export const BlogAuthors = [
         image: 'https://github.com/gatteo.png',
     },
 ]
+
+export const BlogCategories = ['business', 'imprenditoria', 'startup', 'sviluppo', 'tecnologia']

@@ -44,7 +44,7 @@ const getLanguageIcon = (lang: string): React.ReactNode => {
     }
 }
 
-const Pre = (props: PreProps) => {
+export const Pre = (props: PreProps) => {
     const { children, className, title, 'data-lang': lang, ...rest } = props
 
     const textInput = React.useRef<HTMLPreElement>(null)
@@ -91,5 +91,3 @@ const CopyButton = (props: CopyButtonProps) => {
         </Button>
     )
 }
-
-export default Pre

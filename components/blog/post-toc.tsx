@@ -19,7 +19,7 @@ const TableOfContents = (props: TableOfContentsProps) => {
 
     return (
         <div className=''>
-            <div className='mb-4 flex items-center gap-4'>On this page</div>
+            <div className='mb-4 flex items-center gap-4'>Indice</div>
             <div>
                 {toc.map((item) => {
                     const { title, url, depth } = item

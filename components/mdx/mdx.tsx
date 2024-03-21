@@ -6,15 +6,16 @@ import { useMDXComponent } from 'next-contentlayer/hooks'
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 
+import { CtaCard } from '../cta-card'
 import { Link } from '../ui/link'
-import Heading from './heading'
-import ImageZoom from './image-zoom'
-import ItemGrid from './item-grid'
-import LinkCard from './link-card'
-import Pre from './pre'
-import Table from './table'
-import Tree from './tree'
-import Video from './video'
+import { Heading } from './heading'
+import { ImageZoom } from './image-zoom'
+import { ItemGrid } from './item-grid'
+import { LinkCard } from './link-card'
+import { Pre } from './pre'
+import { Table } from './table'
+import { Tree } from './tree'
+import { Video } from './video'
 
 type MdxProps = {
     code: string
@@ -52,6 +53,7 @@ const components: MDXComponents = {
     Tree,
     Video,
     LinkCard,
+    CtaCard,
 }
 
 const Mdx = ({ code }: MdxProps) => {

@@ -10,7 +10,7 @@ type ImageZoomProps = {
     children: React.ReactNode
 } & React.ComponentPropsWithoutRef<typeof Zoom>
 
-const ImageZoom = (props: ImageZoomProps) => {
+export const ImageZoom = (props: ImageZoomProps) => {
     const { children, ...rest } = props
 
     return (
@@ -19,5 +19,3 @@ const ImageZoom = (props: ImageZoomProps) => {
         </Zoom>
     )
 }
-
-export default ImageZoom

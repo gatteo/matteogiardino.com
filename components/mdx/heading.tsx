@@ -11,7 +11,7 @@ type HeadingProps<T extends Types> = Omit<React.ComponentPropsWithoutRef<T>, 'as
     as?: T
 }
 
-const Heading = <T extends Types = 'h1'>(props: HeadingProps<T>) => {
+export const Heading = <T extends Types = 'h1'>(props: HeadingProps<T>) => {
     const { as, className, children, id, ...rest } = props
     const Component = as || 'h1'
 
@@ -27,5 +27,3 @@ const Heading = <T extends Types = 'h1'>(props: HeadingProps<T>) => {
         </Component>
     )
 }
-
-export default Heading

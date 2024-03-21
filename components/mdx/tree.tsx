@@ -15,7 +15,7 @@ type InnerType = {
     level: number
 }
 
-const Tree = (props: TreeProps) => {
+export const Tree = (props: TreeProps) => {
     return (
         <div className='rounded-lg border bg-muted px-6 py-4'>
             <Inner {...props} level={0} />
@@ -55,5 +55,3 @@ const Inner = (props: InnerType) => {
         </>
     )
 }
-
-export default Tree
