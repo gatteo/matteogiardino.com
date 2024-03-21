@@ -4,6 +4,7 @@ import localFont from 'next/font/local'
 
 import '../styles/globals.css'
 
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Toaster } from 'sonner'
 
 import { site, siteBaseMetadata } from '@/config/site'
@@ -68,6 +69,7 @@ export default function RootLayout({
     return (
         <html lang='it-IT'>
             <body className={cn(inter.className, biotif.className)}>
+                <SpeedInsights />
                 <GTM />
                 <ThemeProvider attribute='class' defaultTheme='dark' enableSystem={false}>
                     <ProgressProvider>

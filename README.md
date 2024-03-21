@@ -81,7 +81,7 @@ The app will be available at `localhost:3000`.
 
 ## ❤️ Credits
 
-This project has been has been heavly inspired by [@tszhong0411 personal website](https://github.com/tszhong0411/honghong.me)
+This project has been has been heavly inspired by [@tszhong0411](https://github.com/tszhong0411) personal website.
 
 ## 🪪 License
 
