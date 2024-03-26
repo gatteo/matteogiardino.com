@@ -37,9 +37,10 @@ export async function getAllBlogPosts(limit?: number): Promise<BlogPostPreview[]
     const localPosts = getLocalBlogPosts()
     const substackPosts = await getSubstackPosts()
 
-    return [...localPosts, ...substackPosts]
-        .sort((a, b) => Number(new Date(b.date)) - Number(new Date(a.date)))
-        .slice(0, limit)
+    const sortedLocalPosts = localPosts.sort((a, b) => Number(new Date(b.date)) - Number(new Date(a.date)))
+    const sortedSubstackPosts = substackPosts.sort((a, b) => Number(new Date(b.date)) - Number(new Date(a.date)))
+
+    return [...sortedSubstackPosts, ...sortedLocalPosts].slice(0, limit)
 }
 
 export function getUrlFromSource(source: BlogPostSource, slug: string) {
