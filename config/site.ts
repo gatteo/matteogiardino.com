@@ -133,9 +133,9 @@ export const siteBaseMetadata: Metadata = {
     // },
     alternates: {
         canonical: site.url,
-        languages: {
-            'en-US': 'https://matteogiardino.com/en-US',
-        },
+        // languages: {
+        //     'en-US': 'https://matteogiardino.com/en-US',
+        // },
         types: {
             'application/rss+xml': `${site.url}/rss.xml`,
         },
