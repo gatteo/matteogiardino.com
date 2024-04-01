@@ -25,4 +25,6 @@ export const BlogCategories = [
     'aws',
     'cloud',
     'web design',
+    'cto',
+    'freelance',
 ]
