@@ -1,4 +1,3 @@
-import { getAllBlogPosts } from '@/lib/blog'
 import { About } from '@/components/home/about'
 import { BlogPosts } from '@/components/home/blog-posts'
 import { Business } from '@/components/home/business'
@@ -9,9 +8,7 @@ import { Services } from '@/components/home/services'
 import { Skills } from '@/components/home/skills'
 import { Testimonials } from '@/components/home/testimonials'
 
-export default async function HomePage() {
-    const posts = await getAllBlogPosts(4)
-
+export default function HomePage() {
     return (
         <>
             <Hero />
@@ -30,7 +27,7 @@ export default async function HomePage() {
 
             <Skills />
 
-            <BlogPosts posts={posts} />
+            <BlogPosts />
         </>
     )
 }

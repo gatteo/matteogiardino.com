@@ -2,18 +2,16 @@ import Link from 'next/link'
 import { UtmUrl } from '@/utils/urls'
 import { IconArrowRight } from '@tabler/icons-react'
 
-import { BlogPostPreview } from '@/types/blog'
 import { UtmMediums } from '@/types/links'
 import { Routes } from '@/config/routes'
+import { getAllBlogPosts } from '@/lib/blog'
 import { PostCard } from '@/components/blog/post-card'
 
 import { Button } from '../ui/button'
 
-type Props = {
-    posts: BlogPostPreview[]
-}
+export async function BlogPosts() {
+    const posts = await getAllBlogPosts(4)
 
-export function BlogPosts({ posts }: Props) {
     return (
         <section id='blog-posts' className='mt-32'>
             <div className='flex flex-col items-start justify-between gap-4 md:flex-row md:items-end'>
