@@ -6,6 +6,7 @@ import { UtmUrl } from '@/utils/urls'
 
 import { UtmMediums } from '@/types/links'
 import { PlRoutes } from '@/config/routes'
+import { cn, shineAnimation } from '@/lib/utils'
 
 import { Button } from './ui/button'
 import { Card, CardDescription, CardFooter, CardHeader } from './ui/card'
@@ -16,8 +17,7 @@ export function NotificationPopup() {
     return (
         isVisibile && (
             <div className='fixed bottom-4 right-4 '>
-                {/* eslint-disable-next-line tailwindcss/no-contradicting-classname */}
-                <Card className='animate-shine w-[350px] bg-[linear-gradient(45deg,transparent_25%,rgba(68,68,68,.2)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%,100%_100%] bg-[position:-100%_0,0_0] bg-no-repeat'>
+                <Card className={cn('w-[350px]', shineAnimation)}>
                     <CardHeader>
                         <div className='font-bold'>
                             ✨ ho riaperto le iscrizioni al corso programmatore leggendario ✨
