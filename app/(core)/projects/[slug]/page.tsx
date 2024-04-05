@@ -21,17 +21,13 @@ export const generateStaticParams = () => {
     }))
 }
 
-export const generateMetadata = (props: Props): Metadata => {
-    const { params } = props
-
+export const generateMetadata = ({ params }: Props): Metadata => {
     const project = allProjects.find((project) => project.slug === params.slug)
 
-    if (!project) {
-        return {}
-    }
+    if (!project) return {}
 
     return {
-        title: project.name,
+        title: project.title ?? project.name,
         description: project.description,
         alternates: {
             canonical: absoluteUrl(Routes.Project(params.slug)),
