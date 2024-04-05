@@ -39,7 +39,7 @@ export const generateMetadata = (props: Props): Metadata => {
         openGraph: {
             url: absoluteUrl(Routes.Project(params.slug)),
             type: 'website',
-            title: project.name,
+            title: project.title ?? project.name,
             siteName: site.title,
             description: project.description,
             locale: 'it-IT',
@@ -66,6 +66,7 @@ export default function Page({ params: { slug } }: Props) {
     return (
         <>
             <Header
+                slug={slug}
                 title={project.name}
                 description={project.description}
                 icon={project.icon}

@@ -1,29 +1,14 @@
-'use client'
-
-import React from 'react'
 import Image from 'next/image'
 import { formatDate } from '@/utils/dates'
 import { absoluteUrl } from '@/utils/urls'
-import { AspectRatio } from '@radix-ui/react-aspect-ratio'
-import { motion } from 'framer-motion'
 
 import { BlogPostAuthor, BlogPostSource } from '@/types/blog'
 import { getUrlFromSource } from '@/lib/blog'
 
+import { AspectRatio } from '../ui/aspect-ratio'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Badge } from '../ui/badge'
 import { ShareIcons } from './share-icons'
-
-const animation = {
-    hide: {
-        y: 10,
-        opacity: 0.2,
-    },
-    show: {
-        y: 0,
-        opacity: 1,
-    },
-}
 
 type Props = {
     title: string
@@ -39,27 +24,26 @@ type Props = {
 export function Header({ createdAt, title, slug, summary, image, source, author, tags }: Props) {
     return (
         <>
-            <motion.div initial={animation.hide} animate={animation.show}>
-                <h1 className='text-5xl font-bold'>{title}</h1>
+            <div>
+                <h1 className='text-3xl font-bold md:text-5xl'>{title}</h1>
                 <div className='mt-2 text-muted-foreground'>{summary}</div>
-                <div className='mt-8 flex flex-col items-center justify-between gap-8 md:flex-row'>
+                <div className='mt-8 flex flex-col justify-between gap-8 md:flex-row md:items-center'>
                     <div className='flex flex-wrap items-center gap-2 text-xs sm:text-sm'>
                         <div className='flex flex-row items-center gap-2'>
                             <Avatar className='size-6'>
                                 <AvatarImage src={author.image} />
                                 <AvatarFallback>CN</AvatarFallback>
                             </Avatar>
-                            <div>{author.name}</div>
+                            <p>{author.name}</p>
                         </div>
 
                         <div className='text-muted-foreground'>•</div>
 
-                        <div>{formatDate(createdAt)}</div>
+                        <p>{formatDate(createdAt)}</p>
 
                         {tags.length > 0 && (
                             <>
                                 <div className='text-muted-foreground'>•</div>
-
                                 <div className='flex flex-wrap gap-1'>
                                     {tags.map((t) => (
                                         <Badge key={t} variant={'outline'}>
@@ -70,9 +54,13 @@ export function Header({ createdAt, title, slug, summary, image, source, author,
                             </>
                         )}
                     </div>
-                    <ShareIcons title={title} url={absoluteUrl(getUrlFromSource(source, slug))} />
+                    <ShareIcons
+                        title={title}
+                        url={absoluteUrl(getUrlFromSource(source, slug))}
+                        className='justify-start'
+                    />
                 </div>
-            </motion.div>
+            </div>
 
             {image && (
                 <div className='my-6'>

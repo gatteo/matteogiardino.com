@@ -49,6 +49,8 @@ export type Project = {
   type: 'Project'
   /** The name of the project */
   name: string
+  /** The meta title of the project */
+  title?: string | undefined
   /** The description of the project */
   description: string
   /** The link to the project's homepage */

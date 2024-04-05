@@ -1,26 +1,16 @@
-'use client'
-
 import Image from 'next/image'
 import Link from 'next/link'
-import { UtmUrl } from '@/utils/urls'
-import { AspectRatio } from '@radix-ui/react-aspect-ratio'
+import { absoluteUrl, UtmUrl } from '@/utils/urls'
 import { IconBrandGithub, IconHome } from '@tabler/icons-react'
-import { motion } from 'framer-motion'
 
 import { UtmMediums } from '@/types/links'
+import { Routes } from '@/config/routes'
 
-const animation = {
-    hide: {
-        y: 10,
-        opacity: 0.2,
-    },
-    show: {
-        y: 0,
-        opacity: 1,
-    },
-}
+import { ShareIcons } from '../blog/share-icons'
+import { AspectRatio } from '../ui/aspect-ratio'
 
 type Props = {
+    slug: string
     title: string
     description: string
     icon: string
@@ -29,52 +19,49 @@ type Props = {
     image?: string
 }
 
-export function Header({ title, description, icon, url, github, image }: Props) {
+export function Header({ title, description, icon, url, github, image, slug }: Props) {
     return (
         <>
             <div className='space-y-4'>
-                <motion.div className='flex items-center gap-3' initial={animation.hide} animate={animation.show}>
-                    <Link href={url as string} className='flex flex-col'>
-                        <div className='flex'>
-                            <Image
-                                src={icon}
-                                alt='null'
-                                height={40}
-                                width={40}
-                                className='mr-2 size-10 rounded-xl border border-accent md:mr-3'
-                            />
-                            <h1 className='flex text-5xl font-bold'>{title}</h1>
-                        </div>
-                        <div className='text-muted-foreground'>{description}</div>
-                    </Link>
-                </motion.div>
+                <Link href={url as string} className='flex flex-col gap-4'>
+                    <div className='flex'>
+                        <Image
+                            src={icon}
+                            alt='Project Icon'
+                            height={40}
+                            width={40}
+                            className='mr-2 size-10 rounded-xl border border-accent md:mr-3'
+                        />
+                        <h1 className='flex text-4xl font-bold md:text-5xl'>{title}</h1>
+                    </div>
+                    <p className='text-muted-foreground'>{description}</p>
+                </Link>
 
-                <motion.div
-                    className='flex flex-col items-start gap-2 sm:flex-row sm:gap-4'
-                    initial={animation.hide}
-                    animate={animation.show}
-                    transition={{ delay: 0.1 }}>
-                    {url && (
-                        <Link
-                            target='_blank'
-                            rel='noopener noreferrer'
-                            href={UtmUrl(url, {
-                                medium: UtmMediums.Projects,
-                                content: 'header',
-                            })}
-                            className='flex items-center'>
-                            <IconHome size={20} className='-mt-1 mr-2 inline-block' />
-                            {url}
-                        </Link>
-                    )}
+                <div className='mt-8 flex flex-col justify-between gap-8 md:flex-row md:items-center'>
+                    <div className='flex flex-col items-start gap-2 sm:flex-row sm:gap-4'>
+                        {url && (
+                            <Link
+                                target='_blank'
+                                rel='noopener noreferrer'
+                                href={UtmUrl(url, {
+                                    medium: UtmMediums.Projects,
+                                    content: 'header',
+                                })}
+                                className='flex items-center'>
+                                <IconHome size={20} className='-mt-1 mr-2 inline-block' />
+                                {url}
+                            </Link>
+                        )}
 
-                    {github && (
-                        <Link target='_blank' rel='noopener noreferrer' href={github} className='flex items-center'>
-                            <IconBrandGithub size={20} className='-mt-1 mr-2 inline-block' />
-                            {title}'s GitHub
-                        </Link>
-                    )}
-                </motion.div>
+                        {github && (
+                            <Link target='_blank' rel='noopener noreferrer' href={github} className='flex items-center'>
+                                <IconBrandGithub size={20} className='-mt-1 mr-2 inline-block' />
+                                {title}'s GitHub
+                            </Link>
+                        )}
+                    </div>
+                    <ShareIcons title={title} url={absoluteUrl(Routes.Project(slug))} className='justify-start' />
+                </div>
             </div>
 
             {image && (

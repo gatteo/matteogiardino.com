@@ -14,6 +14,11 @@ const Project = defineDocumentType(() => ({
             description: 'The name of the project',
             required: true,
         },
+        title: {
+            type: 'string',
+            description: 'The meta title of the project',
+            required: false,
+        },
         description: {
             type: 'string',
             description: 'The description of the project',

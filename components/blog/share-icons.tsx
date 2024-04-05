@@ -15,11 +15,13 @@ import {
     WhatsappShareButton,
 } from 'react-share'
 
+import { cn } from '@/lib/utils'
+
 import { buttonVariants } from '../ui/button'
 
-export function ShareIcons({ url, title }: { url: string; title: string }) {
+export function ShareIcons({ url, title, className }: { url: string; title: string; className?: string }) {
     return (
-        <div className='flex justify-center gap-2'>
+        <div className={cn('flex justify-center gap-2', className)}>
             <EmailShareButton url={url} subject={title} body={'Leggi questo post di Matteo Giardino, ne vale la pena!'}>
                 <div className={buttonVariants({ size: 'icon', variant: 'outline' })}>
                     <IconMail className='size-4' />
