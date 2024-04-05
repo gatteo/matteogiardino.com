@@ -67,7 +67,7 @@ export default function Page({ params: { slug } }: Props) {
         <>
             <Header
                 slug={slug}
-                title={project.name}
+                title={project.title ?? project.name}
                 description={project.description}
                 icon={project.icon}
                 url={project.url}

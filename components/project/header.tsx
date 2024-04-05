@@ -24,16 +24,7 @@ export function Header({ title, description, icon, url, github, image, slug }: P
         <>
             <div className='space-y-4'>
                 <Link href={url as string} className='flex flex-col gap-4'>
-                    <div className='flex'>
-                        <Image
-                            src={icon}
-                            alt='Project Icon'
-                            height={40}
-                            width={40}
-                            className='mr-2 size-10 rounded-xl border border-accent md:mr-3'
-                        />
-                        <h1 className='flex text-4xl font-bold md:text-5xl'>{title}</h1>
-                    </div>
+                    <h1 className='flex text-4xl font-bold md:text-5xl'>{title}</h1>
                     <p className='text-muted-foreground'>{description}</p>
                 </Link>
 
@@ -66,7 +57,7 @@ export function Header({ title, description, icon, url, github, image, slug }: P
 
             {image && (
                 <div className='my-6'>
-                    <AspectRatio ratio={16 / 9} className='overflow-hidden rounded-lg shadow-2xl'>
+                    <AspectRatio ratio={16 / 9} className='overflow-hidden rounded-lg border shadow-2xl'>
                         <Image src={image} alt={title} fill className='object-cover' />
                     </AspectRatio>
                 </div>
