@@ -12,27 +12,27 @@ export const HeaderLinks: HeaderLinks = [
     {
         icon: 'servicesPage',
         href: Routes.Services,
-        text: 'Per le aziende',
+        text: 'per le aziende',
     },
     {
         icon: 'learningProductsPage',
         href: Routes.LearningProducts,
-        text: 'Prodotti di formazione',
+        text: 'prodotti di formazione',
     },
     {
         icon: 'projectsPage',
         href: Routes.Projects,
-        text: 'Progetti',
+        text: 'progetti',
     },
     {
         icon: 'contactsPage',
         href: Routes.Contact,
-        text: 'Contatti',
+        text: 'contatti',
     },
     {
         icon: 'blogPage',
         href: Routes.Blog,
-        text: 'Articoli',
+        text: 'articoli',
     },
 ]
 

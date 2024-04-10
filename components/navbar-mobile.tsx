@@ -11,6 +11,8 @@ import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Icon } from '@/components/icon'
 
+import { CalendarButton } from './calendar-button'
+
 export function NavbarMobile() {
     const [open, setOpen] = React.useState(false)
 
@@ -33,13 +35,15 @@ export function NavbarMobile() {
                             href={UtmUrl(link.href, {
                                 medium: UtmMediums.Navbar,
                             })}
-                            className='flex items-center gap-4'
+                            className='m-2 flex items-center gap-3'
                             onClick={() => setOpen(false)}>
                             <Icon name={link.icon} className='size-4' />
                             <div>{link.text}</div>
                         </Link>
                     </DropdownMenuItem>
                 ))}
+
+                <CalendarButton className='m-2' size={'sm'} />
             </DropdownMenuContent>
         </DropdownMenu>
     )

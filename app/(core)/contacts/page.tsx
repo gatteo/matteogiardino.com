@@ -6,6 +6,7 @@ import { IconExternalLink } from '@tabler/icons-react'
 
 import { ContactLinks, SocialLinks } from '@/config/links'
 import { Routes } from '@/config/routes'
+import { CalendarEmbed } from '@/components/calendar-embed'
 import { Icon } from '@/components/icon'
 import { PageTitle } from '@/components/page-title'
 
@@ -79,7 +80,12 @@ export default function Page() {
                 })}
             </div>
 
-            <h2 className='mt-16 text-xl font-bold md:text-2xl'>Social</h2>
+            <h2 className='mt-16 text-xl font-bold md:text-2xl'>Facciamo due chiacchiere</h2>
+            <div className='mt-4'>
+                <CalendarEmbed />
+            </div>
+
+            <h2 className='mt-8 text-xl font-bold md:text-2xl'>Social</h2>
             <div className='mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3 md:mt-6'>
                 {SocialLinks.map((link) => {
                     return (

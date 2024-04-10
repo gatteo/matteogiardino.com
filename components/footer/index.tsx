@@ -8,6 +8,7 @@ import { UtmMediums } from '@/types/links'
 import { ContactLinks, FooterLinkGroups, SocialLinks } from '@/config/links'
 import { products } from '@/config/products'
 
+import { CalendarButton } from '../calendar-button'
 import NowPlaying from './now-playing'
 
 export function Footer() {
@@ -25,6 +26,7 @@ export function Footer() {
                             {link.mailto}
                         </Link>
                     ))}
+                    <CalendarButton />
                 </div>
 
                 <div className='col-span-2 mb-10 flex flex-col items-start gap-4 pr-4 md:hidden'>
@@ -76,6 +78,7 @@ export function Footer() {
                         </a>
                     ))}
                 </div>
+
                 <div className='mb-10 hidden flex-col items-start gap-4 pr-4 md:flex'>
                     {products.map((p) => (
                         <Link
@@ -96,6 +99,7 @@ export function Footer() {
                     ))}
                 </div>
             </div>
+
             <div className='mt-20 text-sm'>&copy; Matteo Giardino, {new Date().getFullYear()}</div>
         </footer>
     )

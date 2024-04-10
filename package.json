@@ -16,6 +16,7 @@
         "check-updates": "pnpm dlx npm-check-updates --interactive --format group"
     },
     "dependencies": {
+        "@calcom/embed-react": "^1.3.2",
         "@icons-pack/react-simple-icons": "^9.3.0",
         "@mdi/react": "^1.6.1",
         "@paypal/paypal-js": "^8.0.2",

@@ -22,6 +22,7 @@ import {
     navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu'
 
+import { CalendarButton } from './calendar-button'
 import { Icons } from './icon'
 import { Badge } from './ui/badge'
 
@@ -133,6 +134,10 @@ export function Navbar() {
                             contatti
                         </NavigationMenuLink>
                     </Link>
+                </NavigationMenuItem>
+
+                <NavigationMenuItem key='calendar-menu-item'>
+                    <CalendarButton variant='ghost' />
                 </NavigationMenuItem>
             </NavigationMenuList>
         </NavigationMenu>
