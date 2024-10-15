@@ -4,36 +4,6 @@ import Image from 'next/image'
 import { testimonials } from '@/config/testimonials'
 import { cn } from '@/lib/utils'
 
-const TestimonialCard = ({ testimonial }: { testimonial: (typeof testimonials)[0] }) => {
-    return (
-        <li className='text-sm leading-6'>
-            <figure className='relative flex flex-col rounded-lg border bg-muted p-6'>
-                <figcaption className='flex items-center space-x-4'>
-                    <Image
-                        src={testimonial.avatar}
-                        alt={testimonial.name}
-                        width={60}
-                        height={60}
-                        className='size-14 flex-none rounded-xl object-cover'
-                        loading='lazy'
-                        decoding='async'
-                    />
-                    <div className='flex-auto'>
-                        <div className='text-base font-semibold'>
-                            <span className='absolute inset-0' />
-                            {testimonial.name}
-                        </div>
-                        <div className='mt-0.5 leading-tight dark:text-muted-foreground'>{testimonial.title}</div>
-                    </div>
-                </figcaption>
-                <blockquote className='mt-6 text-muted-foreground'>
-                    <p>{testimonial.testimonial} </p>
-                </blockquote>
-            </figure>
-        </li>
-    )
-}
-
 type Props = {
     className?: string
 }
@@ -111,5 +81,35 @@ export function Testimonials({ className }: Props) {
                 </ul>
             </div>
         </section>
+    )
+}
+
+const TestimonialCard = ({ testimonial }: { testimonial: (typeof testimonials)[0] }) => {
+    return (
+        <li className='text-sm leading-6'>
+            <figure className='relative flex flex-col rounded-lg border bg-muted p-6'>
+                <figcaption className='flex items-center space-x-4'>
+                    <Image
+                        src={testimonial.avatar}
+                        alt={testimonial.name}
+                        width={60}
+                        height={60}
+                        className='size-14 flex-none rounded-xl object-cover'
+                        loading='lazy'
+                        decoding='async'
+                    />
+                    <div className='flex-auto'>
+                        <div className='text-base font-semibold'>
+                            <span className='absolute inset-0' />
+                            {testimonial.name}
+                        </div>
+                        <div className='mt-0.5 leading-tight dark:text-muted-foreground'>{testimonial.title}</div>
+                    </div>
+                </figcaption>
+                <blockquote className='mt-6 text-muted-foreground'>
+                    <p>{testimonial.testimonial} </p>
+                </blockquote>
+            </figure>
+        </li>
     )
 }

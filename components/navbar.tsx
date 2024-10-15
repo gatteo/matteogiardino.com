@@ -96,7 +96,7 @@ export function Navbar() {
                                             medium: UtmMediums.Navbar,
                                         })}
                                         target='_blank'
-                                        image={product.imageDark}
+                                        image={product.pictogramDark}
                                         className='hidden dark:block'>
                                         {product.description}
                                     </ListItem>
@@ -171,16 +171,16 @@ const ListItem = React.forwardRef<
                                 height={40}
                                 width={80}
                                 alt='Logo'
-                                className='h-fit w-[80px] opacity-70'
+                                className='h-fit w-[80px] rounded-sm opacity-70'
                             />
                         ) : null}
 
                         <div className='flex flex-1 flex-col'>
                             <div className='flex flex-row gap-1'>
-                                <div className='items-center text-sm font-semibold leading-tight'>
+                                <div className=' flex items-center text-sm font-semibold leading-tight'>
                                     {title}{' '}
                                     {props.badge && (
-                                        <Badge className='ml-2' variant={'secondary'}>
+                                        <Badge className='mb-1 ml-2 p-1 px-2' variant={'secondary'}>
                                             {props.badge}
                                         </Badge>
                                     )}

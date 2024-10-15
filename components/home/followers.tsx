@@ -118,7 +118,7 @@ export function Followers() {
                         key={product.id}
                         title={product.title}
                         description={product.description}
-                        image={product.imageDark}
+                        image={product.pictogramDark}
                         href={UtmUrl(product.url, {
                             medium: UtmMediums.Homepage,
                             content: 'followers',

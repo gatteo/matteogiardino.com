@@ -53,7 +53,7 @@ export function ToProve() {
                             />
 
                             <div className='space-y-2'>
-                                <h3 className='text-xl font-semibold text-neutral-700 transition group-hover:text-secondary dark:text-white'>
+                                <h3 className='text-xl font-semibold text-neutral-700 transition dark:text-white'>
                                     {feature.title}
                                 </h3>
                                 <p className='text-sm text-neutral-700 dark:text-neutral-400'>{feature.body}</p>

@@ -17,8 +17,10 @@ const TableOfContents = (props: TableOfContentsProps) => {
         { rootMargin: '0% 0% -80% 0%' },
     )
 
+    const minDepth = toc.reduce((min, item) => Math.min(min, item.depth), toc[0].depth)
+
     return (
-        <div className=''>
+        <div className='max-h-[calc(100vh-10rem)] overflow-y-auto'>
             <div className='mb-4 flex items-center gap-4'>Indice</div>
             <div>
                 {toc.map((item) => {
@@ -33,7 +35,7 @@ const TableOfContents = (props: TableOfContentsProps) => {
                                 url === activeId && 'text-foreground border-foreground',
                             )}
                             style={{
-                                paddingLeft: depth * 16,
+                                paddingLeft: (depth - minDepth + 1) * 16,
                             }}>
                             {title}
                         </a>

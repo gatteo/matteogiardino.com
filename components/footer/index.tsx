@@ -38,9 +38,9 @@ export function Footer() {
                                     medium: UtmMediums.Footer,
                                 })}
                                 target='_blank'>
-                                <Image src={p.image} height={80} width={100} alt={p.title} className='hidden' />
+                                <Image src={p.logo} height={80} width={100} alt={p.title} className='hidden' />
                                 <Image
-                                    src={p.imageDark}
+                                    src={p.logoDark}
                                     height={80}
                                     width={100}
                                     alt={p.title}
@@ -79,7 +79,7 @@ export function Footer() {
                     ))}
                 </div>
 
-                <div className='mb-10 hidden flex-col items-start gap-4 pr-4 md:flex'>
+                <div className='mb-10 hidden flex-col items-start gap-8 pr-4 md:flex'>
                     {products.map((p) => (
                         <Link
                             key={p.id}
@@ -87,9 +87,9 @@ export function Footer() {
                                 medium: UtmMediums.Footer,
                             })}
                             target='_blank'>
-                            <Image src={p.image} height={80} width={100} alt={p.title} className='dark:hidden' />
+                            <Image src={p.logo} height={80} width={100} alt={p.title} className='dark:hidden' />
                             <Image
-                                src={p.imageDark}
+                                src={p.logoDark}
                                 height={80}
                                 width={100}
                                 alt={p.title}

@@ -16,10 +16,13 @@ import {
     IconSeeding,
     IconStars,
 } from '@tabler/icons-react'
-import { ChevronRightSquare, Shrub, Target, type LucideIcon } from 'lucide-react'
+import { ChevronRight, ChevronRightSquare, Shrub, Target, X, type LucideIcon } from 'lucide-react'
 import { EmailIcon } from 'react-share'
 
 export const Icons = {
+    close: X,
+    chevronRight: ChevronRight,
+
     developmentService: ChevronRightSquare,
     productGrowthAdvisoryService: Shrub,
     ctoService: Target,

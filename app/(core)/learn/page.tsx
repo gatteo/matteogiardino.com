@@ -59,18 +59,18 @@ export default function Page() {
                     <div key={product.id} id={product.id} className='scroll-m-12 pt-10'>
                         <div className='flex flex-col gap-8 rounded-lg border bg-muted p-8 md:flex-row'>
                             <Image
-                                src={product.image}
+                                src={product.pictogram}
                                 height={40}
                                 width={80}
                                 alt='Logo'
-                                className='h-fit w-[100px] dark:hidden'
+                                className='h-fit w-[100px] rounded-sm dark:hidden'
                             />
                             <Image
-                                src={product.imageDark}
+                                src={product.pictogramDark}
                                 height={40}
                                 width={80}
                                 alt='Logo'
-                                className='hidden h-fit w-[100px] dark:block'
+                                className='hidden h-fit w-[100px] rounded-sm dark:block'
                             />
                             <div className='flex flex-auto flex-col'>
                                 <div className='max-w-lg'>

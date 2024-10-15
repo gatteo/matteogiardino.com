@@ -8,5 +8,6 @@ import projects__unlimitedMdx from './projects__unlimited.mdx.json' assert { typ
 import projects__utravelMdx from './projects__utravel.mdx.json' assert { type: 'json' }
 import projects__weschoolMdx from './projects__weschool.mdx.json' assert { type: 'json' }
 import projects__westudentsMdx from './projects__westudents.mdx.json' assert { type: 'json' }
+import projects__devv_30Mdx from './projects__devv-30.mdx.json' assert { type: 'json' }
 
-export const allProjects = [projects__builtdifferentMdx, projects__devvMdx, projects__oltreMdx, projects__testyMdx, projects__unlimitedMdx, projects__utravelMdx, projects__weschoolMdx, projects__westudentsMdx]
+export const allProjects = [projects__builtdifferentMdx, projects__devvMdx, projects__oltreMdx, projects__testyMdx, projects__unlimitedMdx, projects__utravelMdx, projects__weschoolMdx, projects__westudentsMdx, projects__devv_30Mdx]

@@ -15,10 +15,30 @@ type Props = {
     }
 }
 
-export const generateStaticParams = () => {
-    return allProjects.map((project) => ({
-        slug: project.slug,
-    }))
+export default function Page({ params: { slug } }: Props) {
+    const project = allProjects.find((project) => project.slug === slug)
+
+    if (!project) {
+        notFound()
+    }
+
+    return (
+        <>
+            <Header
+                slug={slug}
+                title={project.title ?? project.name}
+                description={project.description}
+                icon={project.icon}
+                url={project.url}
+                github={project.github}
+                image={project.image}
+            />
+
+            <Content title={project.name} body={project.body} url={absoluteUrl(Routes.Project(slug))} />
+
+            <ScrollIndicator />
+        </>
+    )
 }
 
 export const generateMetadata = ({ params }: Props): Metadata => {
@@ -52,28 +72,8 @@ export const generateMetadata = ({ params }: Props): Metadata => {
     }
 }
 
-export default function Page({ params: { slug } }: Props) {
-    const project = allProjects.find((project) => project.slug === slug)
-
-    if (!project) {
-        notFound()
-    }
-
-    return (
-        <>
-            <Header
-                slug={slug}
-                title={project.title ?? project.name}
-                description={project.description}
-                icon={project.icon}
-                url={project.url}
-                github={project.github}
-                image={project.image}
-            />
-
-            <Content title={project.name} body={project.body} url={absoluteUrl(Routes.LocalBlogPost(slug))} />
-
-            <ScrollIndicator />
-        </>
-    )
+export const generateStaticParams = () => {
+    return allProjects.map((project) => ({
+        slug: project.slug,
+    }))
 }

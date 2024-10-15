@@ -138,4 +138,25 @@ export const ContactLinks: ContactLinks = [
         icon: 'email',
         logo: '/images/brands/wezard-icon.png',
     },
+    {
+        name: 'Devv',
+        mailto: 'matteo@devv.it',
+        icon: 'email',
+        logo: '/images/projects/devv/icon.webp',
+    },
 ]
+
+export const DevvMaxLinks = {
+    homepage: 'https://devv.it',
+}
+
+export const Devv30Links = {
+    homepage: 'https://devv.it/30',
+    appStoreUrl: 'https://go.devv.it/devv-30-ios',
+    googlePlayUrl: 'https://go.devv.it/devv-30-android',
+}
+
+export const DevvClubLinks = {
+    homepage: 'https://devv.it/club',
+    discordInviteUrl: 'https://go.devv.it/devv-club',
+}

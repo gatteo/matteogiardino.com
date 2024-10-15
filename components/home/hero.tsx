@@ -3,18 +3,39 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { UtmUrl } from '@/utils/urls'
+import Autoplay from 'embla-carousel-autoplay'
 import WezardIcon from 'public/images/brands/wezard-icon.png'
 import DevvIcon from 'public/images/projects/devv/icon.webp'
 import WestudentsIcon from 'public/images/projects/westudents/icon.webp'
 
 import { UtmMediums } from '@/types/links'
+import { Devv30Links } from '@/config/links'
+import { Button } from '@/components/ui/button'
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
 
-import { Button } from '../ui/button'
 import GridGifImage from '/public/images/home/1.gif'
 import GridIconThree from '/public/images/home/4.webp'
 import GridWideImage from '/public/images/home/wide-computer.webp'
 
 export function Hero() {
+    const announcements = [
+        {
+            text: 'wezard, la mia agenzia di sviluppo, è stata acquisita 🎉',
+            link: '/posts/ho-fatto-exit-ma-non-per-i-soldi-623',
+            linkText: "leggi l'annuncio",
+        },
+        {
+            text: "L'app devv 30 è disponibile! 🚀",
+            link: Devv30Links.appStoreUrl,
+            linkText: 'scopri di più',
+        },
+        {
+            text: 'Diventa programmatore in 30 giorni!',
+            link: Devv30Links.appStoreUrl,
+            linkText: 'inizia ora',
+        },
+    ]
+
     return (
         <>
             <section id='hero'>
@@ -33,22 +54,6 @@ export function Hero() {
                                 founder & cto @
                                 <Button variant='secondary' size={'sm'} className='border bg-muted px-2' asChild>
                                     <Link
-                                        href={UtmUrl('https://westudents.it', {
-                                            medium: UtmMediums.Homepage,
-                                            content: 'hero',
-                                        })}>
-                                        <Image
-                                            src={WestudentsIcon}
-                                            alt='Westudents logo'
-                                            width={24}
-                                            height={24}
-                                            className='mr-2 inline-block rounded-sm'
-                                        />
-                                        westudents
-                                    </Link>
-                                </Button>
-                                <Button variant='secondary' size={'sm'} className='border bg-muted px-2' asChild>
-                                    <Link
                                         href={UtmUrl('https://devv.it', {
                                             source: 'matteogiardino.com',
                                             medium: UtmMediums.Homepage,
@@ -62,6 +67,22 @@ export function Hero() {
                                             className='mr-2 inline-block rounded-sm'
                                         />
                                         devv
+                                    </Link>
+                                </Button>
+                                <Button variant='secondary' size={'sm'} className='border bg-muted px-2' asChild>
+                                    <Link
+                                        href={UtmUrl('https://westudents.it', {
+                                            medium: UtmMediums.Homepage,
+                                            content: 'hero',
+                                        })}>
+                                        <Image
+                                            src={WestudentsIcon}
+                                            alt='Westudents logo'
+                                            width={24}
+                                            height={24}
+                                            className='mr-2 inline-block rounded-sm'
+                                        />
+                                        westudents
                                     </Link>
                                 </Button>
                                 <div className='flex items-center'>
@@ -120,17 +141,41 @@ export function Hero() {
                         </div>
                     </div>
 
-                    <div className='mx-auto mt-12'>
-                        <div className='rounded-md border bg-muted p-4 text-sm md:p-2'>
-                            <Link
-                                href={UtmUrl('/posts/ho-fatto-exit-ma-non-per-i-soldi-623', {
-                                    medium: UtmMediums.Homepage,
-                                    content: 'hero',
-                                })}>
-                                wezard, la mia agenzia di sviluppo, è stata acquisita 🎉
-                                <span className='ml-1 underline underline-offset-2'> leggi l'annuncio</span>
-                            </Link>
-                        </div>
+                    {/* Carousel of Announcements */}
+                    <div className='mx-auto mt-12 w-full max-w-xs md:max-w-lg'>
+                        <Carousel
+                            opts={{
+                                align: 'start',
+                                loop: true,
+                            }}
+                            plugins={[
+                                Autoplay({
+                                    delay: 4000,
+                                }),
+                            ]}>
+                            <CarouselContent className='items-center'>
+                                {announcements.map((announcement) => (
+                                    <CarouselItem key={announcement.link}>
+                                        <Link
+                                            href={UtmUrl(announcement.link, {
+                                                medium: UtmMediums.Homepage,
+                                                content: 'hero',
+                                            })}>
+                                            <div className='rounded-md border bg-muted p-4 text-sm transition-all duration-200 hover:scale-95 md:p-4'>
+                                                <div className='flex items-center justify-between'>
+                                                    <span className='text-balance'>{announcement.text}</span>
+                                                    <span className='ml-2 shrink-0 underline underline-offset-2'>
+                                                        {announcement.linkText}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    </CarouselItem>
+                                ))}
+                            </CarouselContent>
+                            <CarouselPrevious />
+                            <CarouselNext />
+                        </Carousel>
                     </div>
                 </div>
             </section>

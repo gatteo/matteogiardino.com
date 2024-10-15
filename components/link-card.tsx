@@ -22,7 +22,13 @@ export function LinkCard({ title, description, icon, image, href }: Props) {
             {icon && <Icon name={icon} className='size-7' />}
 
             {image && (
-                <Image src={image} height={40} width={80} alt='Logo' className='mt-2 h-fit w-[80px] opacity-70' />
+                <Image
+                    src={image}
+                    height={40}
+                    width={80}
+                    alt='Logo'
+                    className='mt-2 h-fit w-[80px] rounded-sm opacity-70'
+                />
             )}
 
             <div className='flex-1 flex-row'>
