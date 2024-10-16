@@ -12,11 +12,11 @@ import { Heading } from './heading'
 import { ImageZoom } from './image-zoom'
 import { ItemGrid } from './item-grid'
 import { LinkCard } from './link-card'
+import { List } from './list'
 import { Pre } from './pre'
 import { Table } from './table'
 import { Tree } from './tree'
 import { Video } from './video'
-import { List } from './list'
 
 type MdxProps = {
     code: string
@@ -43,7 +43,7 @@ const components: MDXComponents = {
     ),
     pre: Pre,
     ul: (props: React.ComponentPropsWithoutRef<'ul'>) => <List {...props} />,
-    ol: (props: React.ComponentPropsWithoutRef<'ol'>) => <List typo="ol" {...props} />,
+    ol: (props: React.ComponentPropsWithoutRef<'ol'>) => <List typo='ol' {...props} />,
 
     // Custom components
     Alert: (props: React.ComponentPropsWithoutRef<typeof Alert>) => <Alert {...props} />,
@@ -70,5 +70,3 @@ const Mdx = ({ code }: MdxProps) => {
 }
 
 export default Mdx
-
-

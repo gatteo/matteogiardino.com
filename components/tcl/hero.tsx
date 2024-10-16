@@ -33,7 +33,7 @@ export function Hero() {
                         </p>
                         <h1 className='mt-6 text-5xl font-black dark:text-white md:text-6xl xl:text-7xl'>
                             Tech Career
-                            <Image src={Logo} alt='logo' className='inline-block h-full w-[80%] fill-current' />
+                            <Image src={Logo} alt='logo' className='inline-block h-full w-4/5 fill-current' />
                         </h1>
                         <div className=''>
                             <p className='mt-8 text-lg text-gray-100'>

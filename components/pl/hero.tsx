@@ -52,7 +52,7 @@ export function Hero() {
                         </p>
                         <h1 className='mt-6 text-5xl font-black dark:text-white md:text-6xl xl:text-6xl'>
                             Programmatore
-                            <Image src={Logo} alt='logo' className='inline-block h-full w-[60%] fill-current' />
+                            <Image src={Logo} alt='logo' className='inline-block h-full w-3/5 fill-current' />
                         </h1>
                         <div className=''>
                             <p className='m-auto mt-8 text-lg text-gray-100 sm:max-w-[80%]'>
