@@ -17,7 +17,7 @@ export function CalendarEmbed() {
 
     return (
         <Cal
-            calLink='matteo-giardino/19min'
+            calLink='matteo-giardino/speedy'
             style={{ width: '100%', height: '100%', overflow: 'scroll' }}
             config={{ layout: 'month_view' }}
         />

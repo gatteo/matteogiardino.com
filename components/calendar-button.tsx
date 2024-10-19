@@ -20,7 +20,7 @@ export function CalendarButton(props: ButtonProps) {
     return (
         <Button
             data-cal-namespace=''
-            data-cal-link='matteo-giardino/19min'
+            data-cal-link='matteo-giardino/speedy'
             data-cal-config='{"layout":"month_view"}'
             {...props}>
             fissa una call
