@@ -123,18 +123,24 @@ export function Hero() {
                         <div className='relative col-span-2 aspect-video md:aspect-auto'>
                             <Image
                                 src={GridWideImage}
-                                alt=''
+                                alt='Matteo Giardino workspace and setup'
                                 placeholder='blur'
+                                priority
                                 className='rounded-lg object-cover drop-shadow-2xl'
                             />
                         </div>
                         <div className='relative hidden aspect-square md:block'>
-                            <Image src={GridGifImage} alt='' unoptimized className='rounded-lg drop-shadow-2xl' />
+                            <Image
+                                src={GridGifImage}
+                                alt='Matteo Giardino working'
+                                unoptimized
+                                className='rounded-lg drop-shadow-2xl'
+                            />
                         </div>
                         <div className='relative hidden aspect-square md:block'>
                             <Image
                                 src={GridIconThree}
-                                alt=''
+                                alt='Matteo at event'
                                 placeholder='blur'
                                 className='rotate-3 rounded-lg drop-shadow-2xl transition-all duration-200 hover:rotate-0'
                             />

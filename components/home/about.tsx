@@ -239,7 +239,7 @@ export function About() {
                     <div className='relative aspect-square md:hidden'>
                         <Image
                             src='/images/home/1.gif'
-                            alt=''
+                            alt='Matteo Giardino working on projects'
                             loading='lazy'
                             unoptimized
                             fill
@@ -250,7 +250,7 @@ export function About() {
                     <div className='relative col-span-2 hidden md:block'>
                         <Image
                             src='/images/home/13.webp'
-                            alt=''
+                            alt='Matteo speaking at a tech conference'
                             loading='lazy'
                             fill
                             className='rounded-lg object-cover drop-shadow-2xl'
@@ -260,7 +260,7 @@ export function About() {
                     <div className='relative aspect-square '>
                         <Image
                             src='/images/home/3.webp'
-                            alt=''
+                            alt='Matteo Giardino portrait'
                             loading='lazy'
                             fill
                             className='m-auto aspect-square rounded-lg object-cover drop-shadow-2xl'
@@ -270,7 +270,7 @@ export function About() {
                     <div className='relative hidden aspect-square md:block'>
                         <Image
                             src='/images/home/2.webp'
-                            alt=''
+                            alt='Matteo working on laptop'
                             loading='lazy'
                             fill
                             className='m-auto rotate-3 rounded-lg drop-shadow-2xl transition-all duration-200 hover:rotate-0'
@@ -280,7 +280,7 @@ export function About() {
                     <div className='relative hidden aspect-square md:block'>
                         <Image
                             src='/images/home/6.webp'
-                            alt=''
+                            alt='Matteo teaching programming'
                             loading='lazy'
                             fill
                             className='m-auto aspect-square rounded-lg object-cover drop-shadow-2xl'
@@ -290,7 +290,7 @@ export function About() {
                     <div className='relative aspect-square'>
                         <Image
                             src='/images/home/9.webp'
-                            alt=''
+                            alt='Matteo with Devv community members'
                             loading='lazy'
                             fill
                             className='m-auto -rotate-3 rounded-lg object-cover drop-shadow-2xl md:rotate-0'
