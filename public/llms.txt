@@ -1,0 +1,108 @@
+# Matteo Giardino
+
+> Personal website and portfolio of Matteo Giardino, Italian developer and entrepreneur
+
+## About
+
+Matteo Giardino is a developer and entrepreneur based in Turin, Italy. Born in 1998, he discovered programming at age 16 and has since built multiple successful ventures:
+
+- **Westudents**: Created at age 18, this educational app has helped nearly 500,000 students
+- **Devv**: Founded in 2022, a platform revolutionizing how people learn to code, with over 130,000 followers
+- **Wezard**: A digital products agency sold in January 2024
+
+Notable: At 18, Matteo dropped out of university and declined a job offer from Google to pursue entrepreneurship.
+
+## Main Sections
+
+### Home (/)
+Personal introduction, about section with journey timeline, featured projects, services overview, testimonials, and latest blog posts.
+
+### Blog (/blog)
+Technical articles and insights about programming, web development, entrepreneurship, and technology. Includes both local posts and Substack content.
+
+### Projects (/projects)
+Portfolio of significant projects including:
+- Devv: Programming education platform
+- Westudents: Educational app for students
+- Oltre: Digital project
+- Testy: Testing/QA project
+- Unlimited: Digital product
+- Built Different: Project initiative
+- uTravel: Travel application
+- WeSchool: Educational technology
+
+### Services (/services)
+Professional services offered including web development, app development, consulting, and technical mentorship.
+
+### Contact (/contacts)
+Get in touch for collaboration opportunities, consulting, or project inquiries. Includes calendar integration for booking appointments.
+
+### Learning Products (/learn)
+Educational offerings and courses:
+
+#### Programmatore Leggendario (/programmatore-leggendario)
+Comprehensive programming course in Italian ("Legendary Programmer"). Includes what's covered, who it's for, testimonials, and pricing information.
+
+#### The Coder Lab (TCL) (/tcl)
+Advanced coding laboratory program with mentorship. Features course details, mentor information, target audience, included content, testimonials, and pricing.
+
+#### The Coder Boost (TCB) (/tcb)
+Accelerated coding program for skill enhancement.
+
+## Site Features
+
+- Built with Next.js 14 (App Router)
+- Content managed through MDX
+- Responsive design with dark/light mode
+- SEO optimized with meta tags and JSON-LD
+- RSS feed available
+- Sitemap for search engines
+- Code syntax highlighting with Shiki
+- Table of contents for blog posts
+- Image zoom functionality
+
+## Technology Stack
+
+- Framework: Next.js 14
+- Styling: Tailwind CSS
+- UI Components: shadcn/ui, Radix UI
+- Content: MDX with Contentlayer
+- Animation: Framer Motion, GSAP
+- Language: TypeScript
+
+## Key URLs
+
+- Homepage: https://matteogiardino.com
+- Blog: https://matteogiardino.com/blog
+- Projects: https://matteogiardino.com/projects
+- Services: https://matteogiardino.com/services
+- Contact: https://matteogiardino.com/contacts
+- Learning: https://matteogiardino.com/learn
+
+## External Links
+
+- Westudents: https://westudents.it
+- Devv: https://devv.it
+- Wezard: https://wezard.it
+
+## Social Media
+
+Matteo has a significant following in the Italian developer community with 130,000+ people learning programming through his content.
+
+## Languages
+
+Primary language: Italian (Italiano)
+Content also available in: English (selected articles)
+
+## Expertise
+
+- Full-stack web development
+- Mobile app development
+- Programming education and mentorship
+- Entrepreneurship and startup building
+- Product development
+- Technical consulting
+
+## Last Updated
+
+This llms.txt file represents the site structure and content as of November 2025.
