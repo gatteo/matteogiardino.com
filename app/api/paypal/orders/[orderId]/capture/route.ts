@@ -9,9 +9,10 @@ const CapturePaymentSchema = z.object({
     orderId: z.string(),
 })
 
-export const POST = async (req: NextRequest, { params }: { params: { orderId: string } }) => {
+export const POST = async (req: NextRequest, { params }: { params: Promise<{ orderId: string }> }) => {
     try {
-        const safeParams = CapturePaymentSchema.parse(params)
+        const resolvedParams = await params
+        const safeParams = CapturePaymentSchema.parse(resolvedParams)
 
         const order = await capturePayPalPayment(safeParams.orderId)
 

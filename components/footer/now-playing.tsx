@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useTranslations } from 'next-intl'
 import useSWR from 'swr'
 
 import { ApiResponseSuccess, GetSongResponse } from '@/types/api'
@@ -11,7 +12,6 @@ function AnimatedBars() {
     return (
         <div className='flex w-auto items-end overflow-hidden'>
             <motion.span
-                className='mr-[3px] h-2 w-1 rounded-t-sm bg-gray-300 opacity-75 dark:bg-gray-500'
                 animate={{
                     transform: [
                         'scaleY(1.0) translateY(0rem)',
@@ -20,6 +20,7 @@ function AnimatedBars() {
                     ],
                 }}
                 transition={{ duration: 1.5, repeat: Infinity }}
+                className='mr-[3px] h-2 w-1 rounded-t-sm bg-gray-300 opacity-75 dark:bg-gray-500'
             />
             <motion.span
                 animate={{
@@ -49,6 +50,7 @@ function AnimatedBars() {
 
 const NowPlaying = () => {
     const { data: response } = useSWR<ApiResponseSuccess<GetSongResponse>>(ApiRoutes.GetSong, fetcher)
+    const t = useTranslations('footer.nowPlaying')
 
     return (
         <div className='flex items-center gap-4'>
@@ -73,13 +75,13 @@ const NowPlaying = () => {
                                 href='https://open.spotify.com/user/1189222906'
                                 target='_blank'
                                 rel='noopener noreferrer'>
-                                <span className='text-muted-foreground'>In questo momento sto ascoltando </span>
+                                <span className='text-muted-foreground'>{t('listening')} </span>
                                 {response.data.name}
                                 <span className='text-muted-foreground'> - {response.data.artist}</span>
                             </a>
                         </>
                     ) : (
-                        'In questo momento non sto ascoltando musica.'
+                        t('notListening')
                     )}
                 </p>
             </div>

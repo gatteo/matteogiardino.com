@@ -6,7 +6,7 @@ interface ListProps {
 }
 
 export function List({ children, typo = 'ul' }: ListProps) {
-    const ListTag = typo as keyof JSX.IntrinsicElements
+    const ListTag = typo as keyof React.JSX.IntrinsicElements
 
     return (
         <ListTag className='space-y-2 pl-2 [&>li]:relative [&>li]:pl-4 '>

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { UtmUrl } from '@/utils/urls'
+import { useTranslations } from 'next-intl'
 import Devv30Icon from 'public/images/projects/devv-30/icon.webp'
 
 import { UtmMediums } from '@/types/links'
@@ -18,6 +19,7 @@ import { Card, CardDescription, CardFooter, CardHeader } from './ui/card'
 
 export function NotificationPopup() {
     const [isVisibile, setIsVisible] = useState(true)
+    const t = useTranslations('notificationPopup')
 
     return (
         isVisibile && (
@@ -25,7 +27,7 @@ export function NotificationPopup() {
                 <button
                     onClick={() => setIsVisible(false)}
                     className='absolute right-2 top-2 text-muted-foreground transition-colors duration-200 hover:text-foreground'
-                    aria-label='Close popup'>
+                    aria-label={t('closeAriaLabel')}>
                     <Icons.close className='size-4 md:size-5' />
                 </button>
                 <Card className={cn('w-[350px]', shineAnimation)}>
@@ -44,21 +46,18 @@ export function NotificationPopup() {
                                 <h3 className='mb-1 flex items-start text-xl font-bold text-primary md:text-2xl'>
                                     Devv 30{' '}
                                     <Badge className='ml-2 p-1 px-2' variant={'secondary'}>
-                                        novità 🎉
+                                        {t('badge')}
                                     </Badge>
                                 </h3>
                                 <p className='hidden text-balance text-sm text-muted-foreground md:block md:text-base'>
-                                    sfida programmatore in 30 giorni.
+                                    {t('titleShort')}
                                 </p>
                                 <p className='text-balance text-sm text-muted-foreground md:hidden md:text-base'>
-                                    diventa un programmatore in soli 30 giorni, accetti la sfida?
+                                    {t('titleMobile')}
                                 </p>
                             </div>
                         </div>
-                        <CardDescription className='hidden md:block'>
-                            Con l'app Devv 30 puoi diventare un programmatore in soli 30 giorni, bastano pochi minuti al
-                            giorno. Accetti la sfida?
-                        </CardDescription>
+                        <CardDescription className='hidden md:block'>{t('description')}</CardDescription>
                     </CardHeader>
                     <CardFooter className='flex gap-4'>
                         <Button variant='secondary' size='sm' className='hidden pr-1.5 md:flex' asChild>
@@ -69,7 +68,7 @@ export function NotificationPopup() {
                                     content: 'notification_popup',
                                 })}>
                                 <>
-                                    Scopri di più <Icons.chevronRight className='inline-block size-4 pr-0 ' />
+                                    {t('learnMore')} <Icons.chevronRight className='inline-block size-4 pr-0 ' />
                                 </>
                             </Link>
                         </Button>

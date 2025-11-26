@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Image from 'next/image'
 
-import SectionImage from '/public/images/tcl/cosmico.webp'
+import SectionImage from 'public/images/tcl/cosmico.webp'
 
 export function About() {
     return (

@@ -4,7 +4,11 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { UtmUrl } from '@/utils/urls'
 import Autoplay from 'embla-carousel-autoplay'
+import { useTranslations } from 'next-intl'
 import WezardIcon from 'public/images/brands/wezard-icon.png'
+import GridGifImage from 'public/images/home/1.gif'
+import GridIconThree from 'public/images/home/4.webp'
+import GridWideImage from 'public/images/home/wide-computer.webp'
 import DevvIcon from 'public/images/projects/devv/icon.webp'
 import WestudentsIcon from 'public/images/projects/westudents/icon.webp'
 
@@ -13,26 +17,24 @@ import { Devv30Links } from '@/config/links'
 import { Button } from '@/components/ui/button'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
 
-import GridGifImage from '/public/images/home/1.gif'
-import GridIconThree from '/public/images/home/4.webp'
-import GridWideImage from '/public/images/home/wide-computer.webp'
-
 export function Hero() {
+    const t = useTranslations('hero')
+
     const announcements = [
         {
-            text: 'wezard, la mia agenzia di sviluppo, è stata acquisita 🎉',
+            text: t('announcements.wezardExit.text'),
             link: '/posts/ho-fatto-exit-ma-non-per-i-soldi-623',
-            linkText: "leggi l'annuncio",
+            linkText: t('announcements.wezardExit.linkText'),
         },
         {
-            text: "L'app devv 30 è disponibile! 🚀",
+            text: t('announcements.devv30Launch.text'),
             link: Devv30Links.appStoreUrl,
-            linkText: 'scopri di più',
+            linkText: t('announcements.devv30Launch.linkText'),
         },
         {
-            text: 'Diventa programmatore in 30 giorni!',
+            text: t('announcements.devv30CTA.text'),
             link: Devv30Links.appStoreUrl,
-            linkText: 'inizia ora',
+            linkText: t('announcements.devv30CTA.linkText'),
         },
     ]
 
@@ -51,7 +53,7 @@ export function Hero() {
                         {/* Occupation and description */}
                         <div className='my-6 space-y-2'>
                             <h2 className='flex flex-wrap items-center justify-center gap-4 text-sm font-medium leading-8 md:text-base'>
-                                founder & cto @
+                                {t('occupation')}
                                 <Button variant='secondary' size={'sm'} className='border bg-muted px-2' asChild>
                                     <Link
                                         href={UtmUrl('https://devv.it', {
@@ -103,7 +105,7 @@ export function Hero() {
                                             <span className='mx-2 text-muted-foreground'>
                                                 {''}·{''}
                                             </span>
-                                            exit 🎉
+                                            {t('exitBadge')}
                                         </Link>
                                     </Button>
                                 </div>
@@ -113,7 +115,7 @@ export function Hero() {
                         {/* CTA */}
                         <Button variant={'ghost'} className='-ml-4' asChild>
                             <Link href='#about'>
-                                <p className='mr-2'>ti racconto chi sono, in 30 secondi </p>
+                                <p className='mr-2'>{t('cta')} </p>
                                 <p className='inline-block animate-bounce'> ↓ </p>
                             </Link>
                         </Button>
@@ -160,8 +162,8 @@ export function Hero() {
                                 }),
                             ]}>
                             <CarouselContent className='items-center'>
-                                {announcements.map((announcement) => (
-                                    <CarouselItem key={announcement.link}>
+                                {announcements.map((announcement, index) => (
+                                    <CarouselItem key={`${announcement.link}-${index}`}>
                                         <Link
                                             href={UtmUrl(announcement.link, {
                                                 medium: UtmMediums.Homepage,

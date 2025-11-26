@@ -112,6 +112,7 @@ export async function getSubstackPosts(): Promise<BlogPostPreview[]> {
     try {
         const rawPosts: SubstackPostPreview[] = await fetch(
             'https://matteogiardino.substack.com/api/v1/archive?sort=new',
+            { next: { revalidate: 3600 } }, // Cache for 1 hour to enable static generation
         ).then((res) => res.json())
 
         return rawPosts.map((post) => ({
@@ -275,9 +276,9 @@ type SubstackPost = {
 
 export async function getSubstackPost(slug: string) {
     try {
-        const rawPost: SubstackPost = await fetch(`https://matteogiardino.substack.com/api/v1/posts/${slug}`).then(
-            (res) => res.json(),
-        )
+        const rawPost: SubstackPost = await fetch(`https://matteogiardino.substack.com/api/v1/posts/${slug}`, {
+            next: { revalidate: 3600 },
+        }).then((res) => res.json())
 
         return {
             id: rawPost.id.toString(),

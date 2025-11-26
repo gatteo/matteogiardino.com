@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Image from 'next/image'
 
-import CrossImage from '/public/images/pl/cross.webp'
+import CrossImage from 'public/images/pl/cross.webp'
 
 const problemBulletPoints = [
     'Paura sia troppo difficile',

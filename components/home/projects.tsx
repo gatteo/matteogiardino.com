@@ -1,7 +1,10 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
 import { UtmUrl } from '@/utils/urls'
 import { IconArrowRight } from '@tabler/icons-react'
+import { useTranslations } from 'next-intl'
 import { allProjects } from 'contentlayer/generated'
 
 import { UtmMediums } from '@/types/links'
@@ -11,17 +14,17 @@ import { ProjectCollabCard } from '../project-collab-card'
 import { Button } from '../ui/button'
 
 export function Projects() {
+    const t = useTranslations('projects')
     return (
         <section id='projects' className='my-32 flex flex-col'>
             {/* Title My Projects */}
             <div className='flex flex-col items-start justify-between gap-4 md:flex-row md:items-end'>
                 <div className='flex-auto'>
                     <h2 className='text-balance text-3xl font-bold'>
-                        alcuni miei progetti di{' '}
-                        <strong className='underline decoration-sky-400 underline-offset-4'>spicco</strong>
+                        {t('myProjectsTitle')}
                     </h2>
                     <p className='mt-2 text-balance text-muted-foreground'>
-                        alcuni dei progetti più importanti che ho ideato e sviluppato in questi anni
+                        {t('myProjectsDescription')}
                     </p>
                 </div>
 
@@ -31,7 +34,7 @@ export function Projects() {
                             medium: UtmMediums.Homepage,
                             content: 'projects',
                         })}>
-                        tutti i progetti
+                        {t('viewAllProjects')}
                         <IconArrowRight className='ml-2 inline-block size-5 transition-transform duration-200 group-hover:translate-x-1' />
                     </Link>
                 </Button>
@@ -73,17 +76,16 @@ export function Projects() {
             <div className='mt-24 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end'>
                 <div className='flex-auto'>
                     <h2 className='text-3xl font-bold'>
-                        progetti su cui ho{' '}
-                        <strong className='underline decoration-sky-400 underline-offset-4'>collaborato</strong>
+                        {t('collabProjectsTitle')}
                     </h2>
                     <p className='mt-2 text-muted-foreground'>
-                        i prodotti digitali più entusiasmanti in cui ho dato un contributo
+                        {t('collabProjectsDescription')}
                     </p>
                 </div>
 
                 <Button variant='ghost' className='group -mx-3 text-muted-foreground md:mx-0' size='sm' asChild>
                     <Link href={Routes.Projects}>
-                        tutti i progetti
+                        {t('viewAllProjects')}
                         <IconArrowRight className='ml-2 inline-block size-5 transition-transform duration-200 group-hover:translate-x-1' />
                     </Link>
                 </Button>

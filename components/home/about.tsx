@@ -7,6 +7,7 @@ import { UtmUrl } from '@/utils/urls'
 import { IconArrowRight } from '@tabler/icons-react'
 import { gsap, Linear } from 'gsap'
 import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
+import { useTranslations } from 'next-intl'
 import GoogleLogo from 'public/images/brands/google.svg'
 import WezardLogo from 'public/images/brands/wezard-icon.png'
 import DevvLogo from 'public/images/projects/devv/icon.webp'
@@ -18,6 +19,7 @@ import { Routes } from '@/config/routes'
 import { Button } from '../ui/button'
 
 export function About() {
+    const t = useTranslations('about')
     gsap.registerPlugin(ScrollTrigger)
     gsap.config({ nullTargetWarn: false })
 
@@ -108,27 +110,23 @@ export function About() {
             <div ref={targetSection}>
                 <div ref={quoteRef} className='space-y-24 text-2xl sm:text-4xl md:text-5xl'>
                     <h2 className='about-1 leading-tight'>
-                        👶 sono nato a{' '}
-                        <strong className='underline decoration-yellow-400 underline-offset-8'>Torino</strong>, nel 1998
+                        {t('section1')}
                     </h2>
 
                     <h2 className='about-2 leading-tight'>
-                        fin da piccolo, ho sempre cercato{' '}
-                        <span className='t2 text-highlight font-bold'>modi originali</span> per esprimere la mia
-                        creatività
+                        {t('section2').split(t('section2Highlight'))[0]}
+                        <span className='t2 text-highlight font-bold'>{t('section2Highlight')}</span>
+                        {t('section2').split(t('section2Highlight'))[1]}
                     </h2>
 
                     <h2 className='about-3 leading-tight'>
-                        a 16 anni, ho scoperto la 💻{' '}
-                        <span className='text-highlight t3 font-bold'> programmazione </span>
+                        {t('section3').split(t('section3Highlight'))[0]}
+                        <span className='text-highlight t3 font-bold'>{t('section3Highlight')}</span>
+                        {t('section3').split(t('section3Highlight'))[1]}
                     </h2>
 
                     <h2 className='about-4 leading-tight'>
-                        a 18 anni, ho {''}
-                        <strong className='underline decoration-red-400 underline-offset-8'>abbandonato</strong>
-                        {''} gli studi e {''}
-                        <strong className='underline decoration-red-400 underline-offset-8'>rifiutato</strong>
-                        {''} un lavoro da {''}
+                        {t('section4')}{' '}
                         <Image
                             className='inline-block h-12 md:h-16'
                             src={GoogleLogo}
@@ -139,7 +137,7 @@ export function About() {
                     </h2>
 
                     <h2 className='about-5 leading-tight'>
-                        deluso dal sistema scolastico, ho creato la mia prima azienda:{' '}
+                        {t('section5')}{' '}
                         <strong className='inline-block'>
                             <Image
                                 src={WestudentsLogo}
@@ -158,13 +156,12 @@ export function About() {
                             </Link>{' '}
                         </strong>
                         <p className='ml-2 mt-6 text-base text-muted-foreground md:text-xl'>
-                            🎉 ad oggi l'app di westudents ha aiutato quasi{' '}
-                            <strong className='underline underline-offset-4 '>500.000</strong> studenti 🎉
+                            {t('section5Stats')}
                         </p>
                     </h2>
 
                     <h2 className='about-6 leading-tight'>
-                        nel 2022 ho fondato{' '}
+                        {t('section6')}{' '}
                         <strong className='inline-block'>
                             <Image
                                 src={DevvLogo}
@@ -182,21 +179,19 @@ export function About() {
                                 devv
                             </Link>
                         </strong>
-                        , con l'obiettivo di rivoluzionare il modo in cui si impara a{' '}
-                        <strong className='underline decoration-purple-400 underline-offset-8'>programmare</strong>
+                        {t('section6Description')}
                         <p className='ml-2 mt-6 text-base text-muted-foreground md:text-xl'>
-                            🎉 più di <strong className='underline underline-offset-4 '>130.000</strong> persone mi
-                            seguono per imparare a programmare 🎉
+                            {t('section6Stats')}
                         </p>
                     </h2>
 
                     <div>
                         <h2 className={'about-7 leading-tight'}>
-                            a gennaio 2024 ho venduto{' '}
+                            {t('section7')}{' '}
                             <strong className='inline-block'>
                                 <Image
                                     src={WezardLogo}
-                                    alt='Devv logo'
+                                    alt='Wezard logo'
                                     height={48}
                                     width={48}
                                     className='border-accent-3 -mt-1 mr-2 inline-block size-7 rounded border md:-mt-2 md:mr-3 md:size-12 md:rounded-xl'
@@ -210,11 +205,8 @@ export function About() {
                                     wezard
                                 </Link>
                                 ,
-                            </strong>{' '}
-                            un agenzia di sviluppo che crea{' '}
-                            <strong className='underline decoration-lime-300 underline-offset-8'>
-                                prodotti digitali eccezionali
                             </strong>
+                            {t('section7Description')}
                         </h2>
 
                         <Button variant={'ghost'} className='group -ml-4 mt-6 text-muted-foreground md:text-xl' asChild>
@@ -223,8 +215,8 @@ export function About() {
                                     medium: UtmMediums.Homepage,
                                     content: 'about',
                                 })}>
-                                💡 vuoi realizzare un progetto con me?
-                                <strong className='mx-2 underline underline-offset-4'>scrivimi</strong>
+                                {t('ctaText')}{' '}
+                                <strong className='mx-2 underline underline-offset-4'>{t('ctaLink')}</strong>
                                 <IconArrowRight className='inline-block size-5 transition-transform duration-200 group-hover:translate-x-1' />
                             </Link>
                         </Button>

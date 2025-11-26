@@ -19,15 +19,18 @@ type CopyButtonProps = {
 const getLanguageIcon = (lang: string): React.ReactNode => {
     switch (lang) {
         case 'js': {
+            // @ts-expect-error - React 19 compatibility
             return <SiJavascript className='size-3.5' />
         }
 
         case 'ts': {
+            // @ts-expect-error - React 19 compatibility
             return <SiTypescript className='size-3.5' />
         }
 
         case 'jsx':
         case 'tsx': {
+            // @ts-expect-error - React 19 compatibility
             return <SiReact className='size-3.5' />
         }
 

@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { UtmUrl } from '@/utils/urls'
 import { ArrowUpRight } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 import { UtmMediums } from '@/types/links'
 import { products } from '@/config/products'
@@ -28,13 +29,14 @@ import { Badge } from './ui/badge'
 
 export function Navbar() {
     const pathname = usePathname()
+    const t = useTranslations('navigation')
 
     return (
         <NavigationMenu className='hidden md:block'>
             <NavigationMenuList key={'navbar'}>
                 {/* Per le aziende */}
                 <NavigationMenuItem key='business-menu-item'>
-                    <NavigationMenuTrigger>per le aziende</NavigationMenuTrigger>
+                    <NavigationMenuTrigger>{t('business')}</NavigationMenuTrigger>
                     <NavigationMenuContent>
                         <ul className='grid gap-2 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]'>
                             <li className='row-span-3'>
@@ -45,14 +47,13 @@ export function Navbar() {
                                             medium: UtmMediums.Navbar,
                                         })}>
                                         <div className='text-lg font-semibold leading-tight'>
-                                            servizi per le aziende
+                                            {t('businessServices')}
                                         </div>
                                         <p className='mt-2 text-sm leading-tight text-sky-100'>
-                                            aiuto aziende e imprenditori a sbloccare il loro potenziale con la
-                                            tecnologia.
+                                            {t('businessDescription')}
                                         </p>
                                         <p className='mt-4 text-sm underline underline-offset-2'>
-                                            scopri tutti i servizi <ArrowUpRight className='ml-1 inline-block size-4' />
+                                            {t('discoverServices')} <ArrowUpRight className='ml-1 inline-block size-4' />
                                         </p>
                                     </Link>
                                 </NavigationMenuLink>
@@ -74,29 +75,32 @@ export function Navbar() {
 
                 {/* Prodotti di formazione */}
                 <NavigationMenuItem key='learn-menu-item'>
-                    <NavigationMenuTrigger>prodotti di formazione</NavigationMenuTrigger>
+                    <NavigationMenuTrigger>{t('learningProducts')}</NavigationMenuTrigger>
                     <NavigationMenuContent>
                         <ul className='grid w-[400px] grid-cols-1 gap-2 p-4 md:w-[500px] lg:w-[500px]'>
                             {products.map((product) => (
                                 <React.Fragment key={product.title}>
                                     <ListItem
-                                        {...product}
                                         key={product.title}
+                                        title={product.title}
                                         href={UtmUrl(product.url, {
                                             medium: UtmMediums.Navbar,
                                         })}
                                         target='_blank'
+                                        image={product.pictogram}
+                                        badge={product.badge}
                                         className='dark:hidden'>
                                         {product.description}
                                     </ListItem>
                                     <ListItem
-                                        {...product}
                                         key={product.title + '-dark'}
+                                        title={product.title}
                                         href={UtmUrl(product.url, {
                                             medium: UtmMediums.Navbar,
                                         })}
                                         target='_blank'
                                         image={product.pictogramDark}
+                                        badge={product.badge}
                                         className='hidden dark:block'>
                                         {product.description}
                                     </ListItem>
@@ -107,33 +111,31 @@ export function Navbar() {
                 </NavigationMenuItem>
 
                 <NavigationMenuItem key='projects-menu-item'>
-                    <Link
-                        href={UtmUrl(Routes.Projects, {
-                            medium: UtmMediums.Navbar,
-                        })}
-                        legacyBehavior
-                        passHref>
-                        <NavigationMenuLink
-                            active={pathname === Routes.Projects}
-                            className={navigationMenuTriggerStyle()}>
-                            progetti
-                        </NavigationMenuLink>
-                    </Link>
+                    <NavigationMenuLink
+                        active={pathname === Routes.Projects}
+                        className={navigationMenuTriggerStyle()}
+                        asChild>
+                        <Link
+                            href={UtmUrl(Routes.Projects, {
+                                medium: UtmMediums.Navbar,
+                            })}>
+                            {t('projects')}
+                        </Link>
+                    </NavigationMenuLink>
                 </NavigationMenuItem>
 
                 <NavigationMenuItem key='contacts-menu-item'>
-                    <Link
-                        href={UtmUrl(Routes.Contact, {
-                            medium: UtmMediums.Navbar,
-                        })}
-                        legacyBehavior
-                        passHref>
-                        <NavigationMenuLink
-                            active={pathname === Routes.Contact}
-                            className={navigationMenuTriggerStyle()}>
-                            contatti
-                        </NavigationMenuLink>
-                    </Link>
+                    <NavigationMenuLink
+                        active={pathname === Routes.Contact}
+                        className={navigationMenuTriggerStyle()}
+                        asChild>
+                        <Link
+                            href={UtmUrl(Routes.Contact, {
+                                medium: UtmMediums.Navbar,
+                            })}>
+                            {t('contacts')}
+                        </Link>
+                    </NavigationMenuLink>
                 </NavigationMenuItem>
 
                 <NavigationMenuItem key='calendar-menu-item'>
@@ -153,16 +155,17 @@ const ListItem = React.forwardRef<
         badge?: string
         icon?: keyof typeof Icons
     }
->(({ className, title, image, children, ...props }, _ref) => {
+>(({ className, title, image, badge, icon, children, href, target, ...props }, _ref) => {
     return (
         <li key={props.key}>
             <NavigationMenuLink asChild>
                 <Link
+                    href={href}
                     className={cn(
                         'focus:bg-accent focus:text-accent-foreground block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent',
                         className,
                     )}
-                    target={props.target || '_self'}
+                    target={target || '_self'}
                     {...props}>
                     <div className='flex flex-row items-center gap-4'>
                         {image ? (
@@ -179,9 +182,9 @@ const ListItem = React.forwardRef<
                             <div className='flex flex-row gap-1'>
                                 <div className=' flex items-center text-sm font-semibold leading-tight'>
                                     {title}{' '}
-                                    {props.badge && (
+                                    {badge && (
                                         <Badge className='mb-1 ml-2 p-1 px-2' variant={'secondary'}>
-                                            {props.badge}
+                                            {badge}
                                         </Badge>
                                     )}
                                 </div>

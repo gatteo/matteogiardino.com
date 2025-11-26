@@ -1,0 +1,228 @@
+{
+    "calendar": {
+        "bookCall": "book a call"
+    },
+    "site": {
+        "title": "Matteo Giardino",
+        "description": "Matteo Giardino is an Educator, Developer and Entrepreneur from Turin.",
+        "keywords": ["Programming", "Development", "CTO", "Technology"]
+    },
+    "navigation": {
+        "business": "for businesses",
+        "businessServices": "business services",
+        "businessDescription": "I help businesses and entrepreneurs build exceptional digital products",
+        "discoverServices": "discover all services",
+        "learningProducts": "learning products",
+        "projects": "projects",
+        "contacts": "contacts",
+        "articles": "articles"
+    },
+    "hero": {
+        "name": "Matteo Giardino",
+        "occupation": "founder & cto @",
+        "exitBadge": "exit 🎉",
+        "cta": "let me tell you who I am, in 30 seconds",
+        "announcements": {
+            "wezardExit": {
+                "text": "wezard, my development agency, has been acquired 🎉",
+                "linkText": "read the announcement"
+            },
+            "devv30Launch": {
+                "text": "The devv 30 app is now available! 🚀",
+                "linkText": "learn more"
+            },
+            "devv30CTA": {
+                "text": "Become a programmer in 30 days!",
+                "linkText": "start now"
+            }
+        }
+    },
+    "about": {
+        "section1": "👶 I was born in Turin, in 1998",
+        "section2": "since I was little, I've always looked for original ways to express my creativity",
+        "section2Highlight": "original ways",
+        "section3": "at 16, I discovered 💻 programming",
+        "section3Highlight": "programming",
+        "section4": "at 18, I dropped out of school and turned down a job at",
+        "section4Abandoned": "dropped out",
+        "section4Refused": "turned down",
+        "section5": "disappointed by the education system, I created my first company:",
+        "section5Stats": "🎉 today the westudents app has helped nearly 500,000 students 🎉",
+        "section6": "in 2022 I founded",
+        "section6Description": ", with the goal of revolutionizing how people learn to code",
+        "section6Stats": "🎉 more than 130,000 people follow me to learn programming 🎉",
+        "section7": "in January 2024 I sold",
+        "section7Description": ", a development agency that creates exceptional digital products",
+        "section7Highlight": "exceptional digital products",
+        "ctaText": "💡 want to build a project with me?",
+        "ctaLink": "get in touch"
+    },
+    "services": {
+        "title": "how I help businesses and entrepreneurs",
+        "titleAziende": "businesses",
+        "titleImprenditori": "entrepreneurs",
+        "description": "I unlock the potential of businesses and entrepreneurs. Here's how:",
+        "viewAll": "all services",
+        "list": {
+            "development": {
+                "title": "app & web development",
+                "shortDescription": "I transform your idea into an exceptional digital product.",
+                "description": "I transform your idea into an exceptional digital product. From concept to implementation, we work together to create an impeccable and functional product.",
+                "minPrice": "€10,000"
+            },
+            "productGrowth": {
+                "title": "product & growth advisory",
+                "shortDescription": "I take your product to millions of users.",
+                "description": "through in-depth analysis, growth strategies and product improvements, I'll guide you to maximize the adoption, engagement and value of your product in the market",
+                "minPrice": "€750 per month"
+            },
+            "fractionalCTO": {
+                "title": "fractional cto",
+                "shortDescription": "I manage your product's technical challenges.",
+                "description": "I'll work closely with you and your team to define the technical vision, plan product development and manage technical challenges.",
+                "minPrice": "€750 per month"
+            }
+        },
+        "pricingLabel": "starting from"
+    },
+    "products": {
+        "devvMax": {
+            "title": "devv max",
+            "description": "an interactive platform to learn programming concepts through hands-on practice."
+        },
+        "devv30": {
+            "title": "devv 30",
+            "badge": "New ✨",
+            "description": "30-day challenges to learn programming. directly from your phone."
+        },
+        "programmatoreLeg": {
+            "title": "legendary programmer",
+            "description": "the best Italian video course to learn programming, at the cost of a dinner."
+        },
+        "tcl": {
+            "title": "tech career launch",
+            "description": "a 1-on-1 mentorship to prepare for interviews and land your first job."
+        },
+        "tcb": {
+            "title": "tech career boost",
+            "badge": "Coming soon",
+            "description": "a 1-on-1 mentorship for programmers who want to make a career leap."
+        }
+    },
+    "testimonials": [
+        {
+            "name": "Simone Bresciani",
+            "title": "ceo & founder @ teachcorner",
+            "text": "I had the opportunity and fortune to collaborate with Matteo in developing tools useful for my company. Matteo is very knowledgeable and helpful, and not only listens to the client's needs but truly gets involved in the project with advice, insights, and improvements that are very useful for growth and development. Thank you for the professionalism and availability always shown to us"
+        },
+        {
+            "name": "Andriy Klitsuk",
+            "title": "senior software engineer @ banca sella",
+            "text": "Matteo has an impressive ability to see the goal clearly and dodge everything that is superfluous. I'm very grateful that our paths crossed, working with him has contributed to my personal and professional growth"
+        },
+        {
+            "name": "Cris Pintea",
+            "title": "founder @ uptimeline",
+            "text": "If I had to entrust my company to someone, I would entrust it to Matteo."
+        },
+        {
+            "name": "Gianluca Di Donato",
+            "title": "ceo @ utravel",
+            "text": "Matteo has been supporting us as Tech Advisor since 2023. He managed to launch the Utravel app and the new e-commerce site in less than a year. He programmed the roadmap and built a hybrid development team with both employees and external collaborators. He has the ability to take charge of a problem and solve it quickly in the best possible way. He embraces the projects he follows and experiences them as an internal team member!"
+        },
+        {
+            "name": "Simone Scarzella",
+            "title": "coo & founder @ accessiway",
+            "text": "I was fortunate to meet Matteo at WeStudents, collaborating daily for almost 2 years. I can say I found a deeply competent and passionate person, with a set of cross-functional skills that allows him to analyze and execute any project from all angles. The mix of creativity and logic makes his value extraordinary, not only professionally but also humanly."
+        },
+        {
+            "name": "Luigi Cervesi",
+            "title": "founder @ lilium agency",
+            "text": "Working with Matteo is an immense pleasure. He manages to convey his knowledge making it tangible even to those who don't directly touch his areas of expertise. What I liked most about collaborating with Matteo is perceiving the passion, not only for what concerns him but for the success of a project as a whole."
+        }
+    ],
+    "pages": {
+        "blog": {
+            "title": "articles",
+            "description": "a remote corner of the web that I can fill with articles, stories and guides. Who reads blogs in 2024 anyway?",
+            "pageTitle": "articles. stories. guides.",
+            "extendedDescription": "writing has always been a passion. when I code, I write code. when I'm not coding, I write articles. so basically I'm always writing."
+        },
+        "services": {
+            "title": "services",
+            "contactButton": "contact me"
+        },
+        "contacts": {
+            "title": "how to contact me",
+            "emailHeading": "Email",
+            "chatHeading": "Let's chat",
+            "socialHeading": "Social"
+        },
+        "projects": {
+            "title": "projects"
+        },
+        "learn": {
+            "title": "learning products"
+        },
+        "notFound": {
+            "title": "oops there's nothing here.",
+            "button": "go to home"
+        }
+    },
+    "common": {
+        "readMore": "read more",
+        "learnMore": "learn more",
+        "startNow": "start now",
+        "contactMe": "contact me",
+        "viewAll": "view all"
+    },
+    "followers": {
+        "title": "130,000+ students.",
+        "description": "programming revolutionized my life. that's why every day I commit to spreading my passion by providing tools and resources to make learning accessible to everyone.",
+        "stats": {
+            "tiktok": "tiktok followers",
+            "instagram": "instagram followers",
+            "students": "course students",
+            "views": "total views"
+        },
+        "productsTitle": "my learning products",
+        "productsDescription": "I can teach you to code or transform you into a true professional",
+        "viewAllProducts": "all products"
+    },
+    "projects": {
+        "myProjectsTitle": "some of my featured projects",
+        "myProjectsDescription": "some of the most important projects I've designed and developed over the years",
+        "collabProjectsTitle": "projects I've collaborated on",
+        "collabProjectsDescription": "the most exciting digital products I've contributed to",
+        "viewAllProjects": "all projects"
+    },
+    "business": {
+        "subtitle": "business services",
+        "title": "I help businesses and brilliant entrepreneurs unlock their potential with technology",
+        "description": "I've been fortunate to meet great people with great ideas. But they all lacked one thing: the technological knowledge needed to unlock their full potential. I want to provide the necessary guidance to help entrepreneurs achieve any kind of success.",
+        "cta": {
+            "title": "I transform your vision into reality.",
+            "description": "I'm ready to do everything necessary to help you or your company create a successful product",
+            "button": "contact me"
+        }
+    },
+    "blogPosts": {
+        "title": "things I've written for you",
+        "description": "read the articles and thoughts I've written",
+        "viewAll": "all articles"
+    },
+    "footer": {
+        "nowPlaying": {
+            "listening": "Right now I'm listening to",
+            "notListening": "Right now I'm not listening to music."
+        }
+    },
+    "notificationPopup": {
+        "badge": "new 🎉",
+        "titleShort": "30-day programmer challenge.",
+        "titleMobile": "become a programmer in just 30 days, do you accept the challenge?",
+        "description": "With the Devv 30 app you can become a programmer in just 30 days, just a few minutes a day. Do you accept the challenge?",
+        "learnMore": "Learn more",
+        "closeAriaLabel": "Close popup"
+    }
+}

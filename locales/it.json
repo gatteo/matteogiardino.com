@@ -1,0 +1,228 @@
+{
+    "calendar": {
+        "bookCall": "fissa una call"
+    },
+    "site": {
+        "title": "Matteo Giardino",
+        "description": "Matteo Giardino è un Educatore, Sviluppatore ed Imprenditore di Torino.",
+        "keywords": ["Programmazione", "Sviluppo", "CTO", "Tecnologia"]
+    },
+    "navigation": {
+        "business": "per le aziende",
+        "businessServices": "servizi per le aziende",
+        "businessDescription": "aiuto aziende e imprenditori a realizzare prodotti digitali eccezionali",
+        "discoverServices": "scopri tutti i servizi",
+        "learningProducts": "prodotti di formazione",
+        "projects": "progetti",
+        "contacts": "contatti",
+        "articles": "articoli"
+    },
+    "hero": {
+        "name": "Matteo Giardino",
+        "occupation": "founder & cto @",
+        "exitBadge": "exit 🎉",
+        "cta": "ti racconto chi sono, in 30 secondi",
+        "announcements": {
+            "wezardExit": {
+                "text": "wezard, la mia agenzia di sviluppo, è stata acquisita 🎉",
+                "linkText": "leggi l'annuncio"
+            },
+            "devv30Launch": {
+                "text": "L'app devv 30 è disponibile! 🚀",
+                "linkText": "scopri di più"
+            },
+            "devv30CTA": {
+                "text": "Diventa programmatore in 30 giorni!",
+                "linkText": "inizia ora"
+            }
+        }
+    },
+    "about": {
+        "section1": "👶 sono nato a Torino, nel 1998",
+        "section2": "fin da piccolo, ho sempre cercato modi originali per esprimere la mia creatività",
+        "section2Highlight": "modi originali",
+        "section3": "a 16 anni, ho scoperto la 💻 programmazione",
+        "section3Highlight": "programmazione",
+        "section4": "a 18 anni, ho abbandonato gli studi e rifiutato un lavoro da",
+        "section4Abandoned": "abbandonato",
+        "section4Refused": "rifiutato",
+        "section5": "deluso dal sistema scolastico, ho creato la mia prima azienda:",
+        "section5Stats": "🎉 ad oggi l'app di westudents ha aiutato quasi 500.000 studenti 🎉",
+        "section6": "nel 2022 ho fondato",
+        "section6Description": ", con l'obiettivo di rivoluzionare il modo in cui si impara a programmare",
+        "section6Stats": "🎉 più di 130.000 persone mi seguono per imparare a programmare 🎉",
+        "section7": "a gennaio 2024 ho venduto",
+        "section7Description": ", un agenzia di sviluppo che crea prodotti digitali eccezionali",
+        "section7Highlight": "prodotti digitali eccezionali",
+        "ctaText": "💡 vuoi realizzare un progetto con me?",
+        "ctaLink": "scrivimi"
+    },
+    "services": {
+        "title": "come aiuto aziende e imprenditori",
+        "titleAziende": "aziende",
+        "titleImprenditori": "imprenditori",
+        "description": "sblocco il potenziale di aziende e imprenditori. ecco come:",
+        "viewAll": "tutti i servizi",
+        "list": {
+            "development": {
+                "title": "sviluppo app e web",
+                "shortDescription": "trasformo la tue idea in un prodotto digitale eccezionale.",
+                "description": "trasformo la tua idea in un prodotto digitale eccezionale. Dal concept all'implementazione, lavoriamo insieme per creare un prodotto impeccabile e funzionale.",
+                "minPrice": "€ 10.000"
+            },
+            "productGrowth": {
+                "title": "product & growth advisory",
+                "shortDescription": "porto il tuo prodotto a milioni di utenti.",
+                "description": "attraverso analisi approfondite, strategie di crescita e miglioramenti del prodotto, ti guiderò nel massimizzare l'adozione, l'engagement e il valore del tuo prodotto sul mercato",
+                "minPrice": "€ 750 al mese"
+            },
+            "fractionalCTO": {
+                "title": "fractional cto",
+                "shortDescription": "gestisco le sfide tecniche del tuo prodotto.",
+                "description": "collaborerò a stretto contatto con te e con il tuo team per definire la visione tecnologica, pianificare lo sviluppo del prodotto e gestire le sfide tecniche.",
+                "minPrice": "€ 750 al mese"
+            }
+        },
+        "pricingLabel": "a partire da"
+    },
+    "products": {
+        "devvMax": {
+            "title": "devv max",
+            "description": "una piattaforma interattiva per imparare nozioni di programmazione facendo pratica."
+        },
+        "devv30": {
+            "title": "devv 30",
+            "badge": "Novità ✨",
+            "description": "sfide di 30 giorni per imparare a programmare. direttamente dal tuo telefono."
+        },
+        "programmatoreLeg": {
+            "title": "programmatore leggendario",
+            "description": "il miglior videocorso italiano per imparare a programmare, al costo di una cena."
+        },
+        "tcl": {
+            "title": "tech career launch",
+            "description": "una mentorship 1-1 per prepararsi al colloquio e trovare il primo lavoro."
+        },
+        "tcb": {
+            "title": "tech career boost",
+            "badge": "Coming soon",
+            "description": "una mentorship 1-1 per programmatori che vogliono fare il salto di carriera."
+        }
+    },
+    "testimonials": [
+        {
+            "name": "Simone Bresciani",
+            "title": "ceo & founder @ teachcorner",
+            "text": "Ho avuto il modo e la fortuna di collaborare con Matteo nello sviluppo di tool e strumenti utili alla mia azienda. Matteo è molto preparato e disponibile, inoltre non solo ascolta le esigenze del cliente ma entra proprio nel vivo del progetto con consigli, spunti, e miglioramenti utilissimi alla crescita e allo sviluppo. Grazie per la professionalità, disponibilità sempre dimostrataci"
+        },
+        {
+            "name": "Andriy Klitsuk",
+            "title": "senior software engineer @ banca sella",
+            "text": "Matteo ha un'impressionante capacità di vedere chiaro l'obiettivo e di schivare tutto quello che è superfluo. Sono molto grato che le nostre strade si siano incrociate, lavorare con lui ha contribuito alla mia crescita personale e professionale"
+        },
+        {
+            "name": "Cris Pintea",
+            "title": "founder @ uptimeline",
+            "text": "Se dovessi affidare la mia azienda, lo affiderei a Matteo."
+        },
+        {
+            "name": "Gianluca Di Donato",
+            "title": "ceo @ utravel",
+            "text": "Matteo ci supporta come Tech Advisor dal 2023. È riuscito a lanciare l'app Utravel ed il nuovo sito e-commerce in meno di un anno. Ha programmato la roadmap dei lavori e costruito un team di sviluppo ibrido, dipendenti e collaboratori esterni. Ha la capacità di prendere in carico un problema e risolverlo velocemente nel miglior modo possibile. Sposa i progetti che segue e li vive come un membro interno del team!"
+        },
+        {
+            "name": "Simone Scarzella",
+            "title": "coo & founder @ accessiway",
+            "text": "Ho avuto la fortuna di conoscere Matteo all'interno di WeStudents, collaborando quotidianamente per quasi 2 anni. Posso dire di aver trovato una persona profondamente competente e appassionata, con un set di skills trasversali che gli permette di analizzare e realizzare qualsiasi progetto a 360 gradi. Il mix tra creatività e logica rende fuori dal comune il suo valore, non solo a livello professionale, ma anche umano."
+        },
+        {
+            "name": "Luigi Cervesi",
+            "title": "founder @ lilium agency",
+            "text": "Lavorare con Matteo è un piacere immenso. Riesce a trasmettere le sue conoscenze rendendole tangibili anche a chi non tocca concretamente le sue aree di competenza. Ciò che più mi è piaciuto della collaborazione con Matteo è percepire la passione, non solo per ciò che lo riguarda bensì per la buona riuscita di un progetto a 360 gradi."
+        }
+    ],
+    "pages": {
+        "blog": {
+            "title": "articoli",
+            "description": "un remoto angolo del web che posso riempire di articoli, storie e guide. Tanto chi legge i blog nel 2024?",
+            "pageTitle": "articoli. storie. guide.",
+            "extendedDescription": "scrivere è sempre stata una passione. quando programmo, scrivo codice. quando non programmo, scrivo articoli. quindi in pratica scrivo sempre."
+        },
+        "services": {
+            "title": "servizi",
+            "contactButton": "contattami"
+        },
+        "contacts": {
+            "title": "come contattarmi",
+            "emailHeading": "Email",
+            "chatHeading": "Facciamo due chiacchiere",
+            "socialHeading": "Social"
+        },
+        "projects": {
+            "title": "progetti"
+        },
+        "learn": {
+            "title": "prodotti di formazione"
+        },
+        "notFound": {
+            "title": "oopz qui non c'è nulla.",
+            "button": "vai alla home"
+        }
+    },
+    "common": {
+        "readMore": "leggi di più",
+        "learnMore": "scopri di più",
+        "startNow": "inizia ora",
+        "contactMe": "contattami",
+        "viewAll": "vedi tutti"
+    },
+    "followers": {
+        "title": "130.000+ studenti.",
+        "description": "la programmazione ha rivoluzionato la mia vita. per questo motivo ogni giorno mi impegno a diffondere la mia passione fornendo strumenti e risorse per rendere l'apprendimento accessibile a tutti.",
+        "stats": {
+            "tiktok": "followers tiktok",
+            "instagram": "followers instagram",
+            "students": "corsisti",
+            "views": "visualizzazioni totali"
+        },
+        "productsTitle": "i miei prodotti di formazione",
+        "productsDescription": "posso insegnarti a programmare o trasformarti in un vero professionista",
+        "viewAllProducts": "tutti i prodotti"
+    },
+    "projects": {
+        "myProjectsTitle": "alcuni miei progetti di spicco",
+        "myProjectsDescription": "alcuni dei progetti più importanti che ho ideato e sviluppato in questi anni",
+        "collabProjectsTitle": "progetti su cui ho collaborato",
+        "collabProjectsDescription": "i prodotti digitali più entusiasmanti in cui ho dato un contributo",
+        "viewAllProjects": "tutti i progetti"
+    },
+    "business": {
+        "subtitle": "servizi per le aziende",
+        "title": "aiuto aziende e brillanti imprenditori a sbloccare il loro potenziale con la tecnologia",
+        "description": "ho avuto la fortuna di conoscere grandi persone con grandi idee. A tutte però mancava una cosa: la conoscenza tecnologica necessaria per sbloccare il pieno potenziale. Voglio dare la direzione necessaria per aiutare un imprenditore a raggiungere qualsiasi tipo di successo.",
+        "cta": {
+            "title": "trasformo la tua visione in realtà.",
+            "description": "sono pronto a fare tutto il necessario per aiutare te o la tua azienda a creare un prodotto di successo",
+            "button": "contattami"
+        }
+    },
+    "blogPosts": {
+        "title": "cose che ho scritto per te",
+        "description": "leggi gli articoli e pensieri che scritto",
+        "viewAll": "tutti gli articoli"
+    },
+    "footer": {
+        "nowPlaying": {
+            "listening": "In questo momento sto ascoltando",
+            "notListening": "In questo momento non sto ascoltando musica."
+        }
+    },
+    "notificationPopup": {
+        "badge": "novità 🎉",
+        "titleShort": "sfida programmatore in 30 giorni.",
+        "titleMobile": "diventa un programmatore in soli 30 giorni, accetti la sfida?",
+        "description": "Con l'app Devv 30 puoi diventare un programmatore in soli 30 giorni, bastano pochi minuti al giorno. Accetti la sfida?",
+        "learnMore": "Scopri di più",
+        "closeAriaLabel": "Chiudi popup"
+    }
+}

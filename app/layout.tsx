@@ -66,19 +66,5 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode
 }>) {
-    return (
-        <html lang='it-IT'>
-            <body className={cn(inter.className, biotif.className)}>
-                <SpeedInsights />
-                <GTM />
-                <ThemeProvider attribute='class' defaultTheme='dark' enableSystem={false}>
-                    <ProgressProvider>
-                        {children}
-                        <Toaster />
-                        <TailwindIndicator />
-                    </ProgressProvider>
-                </ThemeProvider>
-            </body>
-        </html>
-    )
+    return children
 }

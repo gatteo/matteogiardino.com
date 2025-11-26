@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Image from 'next/image'
 
-import CrossImage from '/public/images/tcl/cross.webp'
+import CrossImage from 'public/images/tcl/cross.webp'
 
 const problemBulletPoints = [
     'L’università non ti prepara ai colloqui',

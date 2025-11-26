@@ -1,7 +1,10 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
 import { UtmUrl } from '@/utils/urls'
 import { IconArrowRight } from '@tabler/icons-react'
+import { useTranslations } from 'next-intl'
 
 import { UtmMediums } from '@/types/links'
 import { products } from '@/config/products'
@@ -10,14 +13,17 @@ import { Routes } from '@/config/routes'
 import { LinkCard } from '../link-card'
 import { Button } from '../ui/button'
 
-const stats = [
-    { name: 'followers tiktok', value: '113.000+' },
-    { name: 'followers instagram', value: '14.000+' },
-    { name: 'corsisti', value: '900+' },
-    { name: 'visualizzazioni totali', value: '266.7 mln' },
-]
-
 export function Followers() {
+    const t = useTranslations('followers')
+    const tProducts = useTranslations('products')
+    const tCommon = useTranslations('common')
+
+    const stats = [
+        { name: t('stats.tiktok'), value: '113.000+' },
+        { name: t('stats.instagram'), value: '14.000+' },
+        { name: t('stats.students'), value: '900+' },
+        { name: t('stats.views'), value: '266.7 mln' },
+    ]
     return (
         <section id='followers' className='relative my-32'>
             {/* Background */}
@@ -51,13 +57,10 @@ export function Followers() {
                 <div className='flex-auto'>
                     <div>
                         <h2 className='text-4xl font-bold tracking-tight sm:text-5xl'>
-                            <strong className='underline decoration-sky-400 underline-offset-8'>130.000+</strong>{' '}
-                            studenti.
+                            {t('title')}
                         </h2>
                         <p className='mt-6 max-w-lg text-lg leading-8 text-muted-foreground'>
-                            la programmazione ha rivoluzionato la mia vita. <br /> per questo motivo ogni giorno mi
-                            impegno a diffondere la mia passione fornendo <strong>strumenti e risorse</strong> per
-                            rendere l'apprendimento accessibile a tutti.
+                            {t('description')}
                         </p>
                     </div>
 
@@ -91,11 +94,10 @@ export function Followers() {
             <div className='mt-24 flex flex-col items-start justify-between gap-4 md:flex-row md:items-end'>
                 <div className='flex-auto '>
                     <h2 className='text-balance text-3xl font-bold '>
-                        i miei prodotti di{' '}
-                        <strong className='underline decoration-sky-400 underline-offset-4'>formazione</strong>
+                        {t('productsTitle')}
                     </h2>
                     <p className='mt-2 text-balance text-muted-foreground '>
-                        posso insegnarti a programmare o trasformarti in un vero professionista
+                        {t('productsDescription')}
                     </p>
                 </div>
 
@@ -105,7 +107,7 @@ export function Followers() {
                             medium: UtmMediums.Homepage,
                             content: 'followers',
                         })}>
-                        tutti i prodotti
+                        {t('viewAllProducts')}
                         <IconArrowRight className='ml-2 inline-block size-5 transition-transform duration-200 group-hover:translate-x-1' />
                     </Link>
                 </Button>
@@ -113,18 +115,26 @@ export function Followers() {
 
             {/* Products */}
             <div className='mt-6 grid auto-rows-fr gap-4 md:grid-cols-2'>
-                {products.map((product) => (
-                    <LinkCard
-                        key={product.id}
-                        title={product.title}
-                        description={product.description}
-                        image={product.pictogramDark}
-                        href={UtmUrl(product.url, {
-                            medium: UtmMediums.Homepage,
-                            content: 'followers',
-                        })}
-                    />
-                ))}
+                {products.map((product) => {
+                    const productKey = product.id === 'devv-max' ? 'devvMax' :
+                                     product.id === 'devv-30' ? 'devv30' :
+                                     product.id === 'programmatore-leggendario' ? 'programmatoreLeg' :
+                                     product.id === 'tech-career-launch' ? 'tcl' : 'tcb'
+
+                    return (
+                        <LinkCard
+                            key={product.id}
+                            title={tProducts(`${productKey}.title`)}
+                            description={tProducts(`${productKey}.description`)}
+                            image={product.pictogramDark}
+                            href={UtmUrl(product.url, {
+                                medium: UtmMediums.Homepage,
+                                content: 'followers',
+                            })}
+                            buttonText={tCommon('learnMore')}
+                        />
+                    )
+                })}
             </div>
         </section>
     )

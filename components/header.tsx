@@ -2,6 +2,7 @@ import * as React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 
+import { LanguageSwitcher } from '@/components/language-switcher'
 import { Navbar } from '@/components/navbar'
 import { NavbarMobile } from '@/components/navbar-mobile'
 
@@ -25,7 +26,10 @@ export function Header() {
                 </Link>
                 <div className='flex items-center gap-2'>
                     <Navbar />
-                    <NavbarMobile />
+                    <div className='flex items-center gap-2'>
+                        <LanguageSwitcher />
+                        <NavbarMobile />
+                    </div>
                 </div>
             </div>
         </header>

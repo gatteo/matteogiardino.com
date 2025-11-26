@@ -11,9 +11,10 @@ type Props = {
     icon?: keyof typeof Icons
     image?: string
     href: string
+    buttonText?: string
 }
 
-export function LinkCard({ title, description, icon, image, href }: Props) {
+export function LinkCard({ title, description, icon, image, href, buttonText }: Props) {
     return (
         <Link
             href={href}
@@ -34,9 +35,11 @@ export function LinkCard({ title, description, icon, image, href }: Props) {
             <div className='flex-1 flex-row'>
                 <h2 className='text-xl font-bold'>{title}</h2>
                 <div className='mt-2 text-sm leading-tight text-muted-foreground md:text-base'>{description}</div>
-                <Button variant='link' className='mt-3 p-0' size='sm'>
-                    scopri di più
-                </Button>
+                {buttonText && (
+                    <Button variant='link' className='mt-3 p-0' size='sm'>
+                        {buttonText}
+                    </Button>
+                )}
             </div>
 
             <IconExternalLink className='absolute right-4 text-accent-foreground opacity-0 transition-opacity group-hover:opacity-100' />

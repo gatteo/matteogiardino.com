@@ -1,6 +1,9 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
 import { UtmUrl } from '@/utils/urls'
+import { useTranslations } from 'next-intl'
 
 import { UtmMediums } from '@/types/links'
 import { Routes } from '@/config/routes'
@@ -13,6 +16,8 @@ type Props = {
 }
 
 export function CtaBusiness({ medium, className }: Props) {
+    const t = useTranslations('business.cta')
+
     return (
         <>
             <section className={cn('relative py-16', className)}>
@@ -39,13 +44,8 @@ export function CtaBusiness({ medium, className }: Props) {
                     </svg>
 
                     <div className='max-w-md text-left sm:m-auto sm:text-center lg:mx-0 lg:flex-auto lg:py-32 lg:text-left'>
-                        <h2 className='text-3xl font-bold tracking-tight sm:text-4xl'>
-                            trasformo la tua visione in realtà.
-                        </h2>
-                        <p className='mt-6 text-lg leading-8 text-muted-foreground'>
-                            sono pronto a fare tutto il necessario per aiutare te o la tua azienda a creare un prodotto
-                            di successo
-                        </p>
+                        <h2 className='text-3xl font-bold tracking-tight sm:text-4xl'>{t('title')}</h2>
+                        <p className='mt-6 text-lg leading-8 text-muted-foreground'>{t('description')}</p>
                         <div className='mt-10 flex items-center justify-start gap-x-6 sm:justify-center lg:justify-start'>
                             <Button asChild>
                                 <Link
@@ -53,7 +53,7 @@ export function CtaBusiness({ medium, className }: Props) {
                                         medium: medium,
                                         content: 'business_cta',
                                     })}>
-                                    contattami
+                                    {t('button')}
                                 </Link>
                             </Button>
                         </div>

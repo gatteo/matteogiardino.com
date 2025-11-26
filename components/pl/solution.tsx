@@ -4,8 +4,8 @@ import Image from 'next/image'
 import { PlRoutes } from '@/config/routes'
 
 import { CtaButton } from './cta-button'
-import Section2Image from '/public/images/pl/creare-app-siti.webp'
-import Section1Image from '/public/images/pl/ti-trasformo.webp'
+import Section2Image from 'public/images/pl/creare-app-siti.webp'
+import Section1Image from 'public/images/pl/ti-trasformo.webp'
 
 const solutionOneBulletPoints = [
     'Scriverai un programma reale nei primi 3 minuti del corso',

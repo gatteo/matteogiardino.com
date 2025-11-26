@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { UtmUrl } from '@/utils/urls'
+import { useTranslations } from 'next-intl'
 
 import { UtmMediums } from '@/types/links'
 import { ContactLinks, FooterLinkGroups, SocialLinks } from '@/config/links'
@@ -12,6 +13,7 @@ import { CalendarButton } from '../calendar-button'
 import NowPlaying from './now-playing'
 
 export function Footer() {
+    const t = useTranslations('navigation')
     return (
         <footer className='mx-auto flex max-w-5xl flex-col px-8 pb-8'>
             <NowPlaying />
@@ -53,16 +55,26 @@ export function Footer() {
 
                 {FooterLinkGroups.map((list) => (
                     <div key={list.id} className='mb-10 flex flex-col items-start gap-4 pr-4'>
-                        {list.links.map((link) => (
-                            <Link
-                                key={link.title}
-                                href={UtmUrl(link.href, {
-                                    medium: UtmMediums.Footer,
-                                })}
-                                className='text-muted-foreground transition-colors duration-150 hover:text-accent-foreground'>
-                                {link.title}
-                            </Link>
-                        ))}
+                        {list.links.map((link) => {
+                            // Map href to translation key
+                            const translationKey =
+                                link.href === '/services' ? 'businessServices' :
+                                link.href === '/learn' ? 'learningProducts' :
+                                link.href === '/projects' ? 'projects' :
+                                link.href === '/contacts' ? 'contacts' :
+                                link.href === '/blog' ? 'articles' : 'business'
+
+                            return (
+                                <Link
+                                    key={link.href}
+                                    href={UtmUrl(link.href, {
+                                        medium: UtmMediums.Footer,
+                                    })}
+                                    className='text-muted-foreground transition-colors duration-150 hover:text-accent-foreground'>
+                                    {t(translationKey)}
+                                </Link>
+                            )
+                        })}
                     </div>
                 ))}
 

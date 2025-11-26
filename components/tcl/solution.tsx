@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { TclRoutes } from '@/config/routes'
 import { Button } from '@/components/ui/button'
 
-import SectionImage from '/public/images/tcl/solution.webp'
+import SectionImage from 'public/images/tcl/solution.webp'
 
 const solutionBulletPoints = [
     'Supera con successo il colloquio tecnico',
