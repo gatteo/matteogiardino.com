@@ -144,25 +144,45 @@
     "pages": {
         "blog": {
             "title": "articles",
-            "description": "a remote corner of the web that I can fill with articles, stories and guides. Who reads blogs in 2024 anyway?",
+            "description": "a remote corner of the web that I can fill with articles, stories and guides. Who reads blogs in 2026 anyway?",
             "pageTitle": "articles. stories. guides.",
             "extendedDescription": "writing has always been a passion. when I code, I write code. when I'm not coding, I write articles. so basically I'm always writing."
         },
         "services": {
             "title": "services",
+            "description": "explore the services I offer for businesses and entrepreneurs. I want to provide the necessary direction to help entrepreneurs achieve any kind of success",
+            "pageTitle": "services for businesses and entrepreneurs",
+            "pageDescription": "I've been fortunate to meet brilliant entrepreneurs with great ideas. But they all lacked one thing: the technological knowledge needed to unlock their full potential. I want to provide the necessary direction to help entrepreneurs achieve any kind of success.",
+            "startingFrom": "starting from",
             "contactButton": "contact me"
         },
         "contacts": {
             "title": "how to contact me",
+            "description": "whether you want to get to know me, talk about a project or collaboration, write to me. Something beautiful always comes from a message.",
             "emailHeading": "Email",
             "chatHeading": "Let's chat",
             "socialHeading": "Social"
         },
         "projects": {
-            "title": "projects"
+            "title": "projects",
+            "description": "explore the projects I've built in the past. Some projects were born from a personal need, while others are the result of collaborations with brilliant entrepreneurs motivated to turn ideas into reality.",
+            "pageTitle": "my projects",
+            "pageDescription": "explore the projects I've built in the past. Some projects were born from a personal need, while others are the result of collaborations with brilliant entrepreneurs motivated to turn ideas into reality. Each project was guided by the same desire to overcome challenges and achieve extraordinary results.",
+            "collabTitle": "projects I've",
+            "collabHighlight": "collaborated on",
+            "collabDescription": "the most exciting digital products I've contributed to"
         },
         "learn": {
-            "title": "learning products"
+            "title": "learning",
+            "description": "I've created tools and resources that help hundreds of people learn to code and launch their careers.",
+            "pageTitle": "learn and grow with me",
+            "pageDescription": "programming revolutionized my life. That's why I've created tools and resources that help hundreds of people learn to code and launch their careers."
+        },
+        "substackPost": {
+            "alertTitle": "⚠️ read this notice!",
+            "alertTextBefore": "the post you're about to read was originally published on my",
+            "alertLink": "newsletter on substack",
+            "alertTextAfter": ". If you encounter any issues, you can read it directly there."
         },
         "notFound": {
             "title": "oops there's nothing here.",

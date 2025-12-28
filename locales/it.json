@@ -144,25 +144,45 @@
     "pages": {
         "blog": {
             "title": "articoli",
-            "description": "un remoto angolo del web che posso riempire di articoli, storie e guide. Tanto chi legge i blog nel 2024?",
+            "description": "un remoto angolo del web che posso riempire di articoli, storie e guide. Tanto chi legge i blog nel 2026?",
             "pageTitle": "articoli. storie. guide.",
-            "extendedDescription": "scrivere è sempre stata una passione. quando programmo, scrivo codice. quando non programmo, scrivo articoli. quindi in pratica scrivo sempre."
+            "extendedDescription": "sarò onesto, la scrittura non è il mio punto forte. Non è che non mi piaccia, ma spesso mi spaventa affrontare una pagina bianca da riempire con parole. Proprio per questo, ho deciso di sfidare me stesso creando questo piccolo angolo del web, un posto dove allenarmi a scrivere. Tanto chi legge i blog nel 2026?"
         },
         "services": {
             "title": "servizi",
+            "description": "esplora i servizi che offro per aziende e imprenditori. Voglio dare la direzione necessaria per aiutare un imprenditore a raggiungere qualsiasi tipo di successo",
+            "pageTitle": "servizi per aziende e imprenditori",
+            "pageDescription": "ho avuto la fortuna di conoscere brillanti imprenditori con grandi idee. A tutti però mancava una cosa: la conoscenza tecnologica necessaria per sbloccare il pieno potenziale. Voglio dare la direzione necessaria per aiutare un imprenditore a raggiungere qualsiasi tipo di successo.",
+            "startingFrom": "a partire da",
             "contactButton": "contattami"
         },
         "contacts": {
             "title": "come contattarmi",
+            "description": "che tu voglia conoscermi, parlarmi di un progetto o una collaborazione, scrivimi. Nasce sempre qualcosa di bello da un messaggio.",
             "emailHeading": "Email",
             "chatHeading": "Facciamo due chiacchiere",
             "socialHeading": "Social"
         },
         "projects": {
-            "title": "progetti"
+            "title": "progetti",
+            "description": "esplora i progetti che ho realizzato in passato. Alcuni progetti sono nati da un mio bisogno personale, mentre altri sono frutto di collaborazioni con brillanti imprenditori motivati a trasformare le idee in realtà.",
+            "pageTitle": "i miei progetti",
+            "pageDescription": "esplora i progetti che ho realizzato in passato. Alcuni progetti sono nati da un mio bisogno personale, mentre altri sono frutto di collaborazioni con brillanti imprenditori motivati a trasformare le idee in realtà. Ogni lavoro però è stato guidato dalla stessa volontà di superare delle sfide e ottenere risultati straordinari.",
+            "collabTitle": "progetti su cui ho",
+            "collabHighlight": "collaborato",
+            "collabDescription": "i prodotti digitali più entusiasmanti in cui ho dato un contributo"
         },
         "learn": {
-            "title": "prodotti di formazione"
+            "title": "formazione",
+            "description": "ho creato strumenti e risorse che aiutano centinaia di persone ad imparare a programmare e lanciare la loro carriera.",
+            "pageTitle": "impara e cresci con me",
+            "pageDescription": "la programmazione ha rivoluzionato la mia vita. Per questo motivo ho creato strumenti e risorse che aiutano centinaia di persone ad imparare a programmare e lanciare la loro carriera."
+        },
+        "substackPost": {
+            "alertTitle": "⚠️ leggi questo avviso!",
+            "alertTextBefore": "il post che stai per leggere è stato originariamente pubblicato nella mia",
+            "alertLink": "newsletter su substack",
+            "alertTextAfter": ". Se incontri problemi, puoi leggerlo direttamente li."
         },
         "notFound": {
             "title": "oopz qui non c'è nulla.",

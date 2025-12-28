@@ -1,6 +1,7 @@
 import { Metadata, ResolvingMetadata } from 'next'
 import Link from 'next/link'
 import { absoluteUrl, UtmUrl } from '@/utils/urls'
+import { getTranslations } from 'next-intl/server'
 
 import { UtmMediums } from '@/types/links'
 import { Routes } from '@/config/routes'
@@ -14,18 +15,19 @@ import { PageTitle } from '@/components/page-title'
 // Force static generation for this page
 export const dynamic = 'force-static'
 
-const title = 'servizi'
-const description =
-    'esplora i servizi che offro per aziende e imprenditori. Voglio dare la direzione necessaria per aiutare un imprenditore a raggiungere qualsiasi tipo di successo'
-
 type Props = {
-    params: Promise<Record<string, never>>
+    params: Promise<{ locale: string }>
     searchParams: Promise<Record<string, never>>
 }
 
-export async function generateMetadata(_: Props, parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
+    const { locale } = await params
+    const t = await getTranslations({ locale, namespace: 'pages.services' })
     const previousOpenGraph = (await parent)?.openGraph ?? {}
     const previousTwitter = (await parent)?.twitter ?? {}
+
+    const title = t('title')
+    const description = t('description')
 
     return {
         title,
@@ -47,14 +49,15 @@ export async function generateMetadata(_: Props, parent: ResolvingMetadata): Pro
     }
 }
 
-export default function Page() {
+export default async function Page({ params }: Props) {
+    const { locale } = await params
+    const t = await getTranslations({ locale, namespace: 'pages.services' })
+
     return (
         <>
             <PageTitle
-                title='servizi per aziende e imprenditori'
-                description='ho avuto la fortuna di conoscere brillandti imprenditori con grandi idee. A tutti però mancava una
-                            cosa: la conoscenza tecnologica necessaria per sbloccare il pieno potenziale. Voglio dare la
-                            direzione necessaria per aiutare un imprenditore a raggiungere qualsiasi tipo di successo.'
+                title={t('pageTitle')}
+                description={t('pageDescription')}
                 fromColor='from-green-400'
                 toColor='to-blue-500'
             />
@@ -82,7 +85,7 @@ export default function Page() {
                             </div>
                             <div className='flex flex-none flex-col'>
                                 <div className='flex items-center justify-end gap-2 md:flex-col md:items-end md:gap-1'>
-                                    <p className='text-right text-xs text-muted-foreground'>a partire da</p>
+                                    <p className='text-right text-xs text-muted-foreground'>{t('startingFrom')}</p>
                                     <p className='text-right font-semibold leading-tight'> {service.min_price}</p>
                                 </div>
                                 <Button asChild size={'sm'} className='mt-2 md:mt-4'>
@@ -91,7 +94,7 @@ export default function Page() {
                                             medium: UtmMediums.Services,
                                             content: 'service_card',
                                         })}>
-                                        contattami
+                                        {t('contactButton')}
                                     </Link>
                                 </Button>
                             </div>

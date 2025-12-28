@@ -2,6 +2,7 @@ import { Metadata, ResolvingMetadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { absoluteUrl, UtmUrl } from '@/utils/urls'
+import { getTranslations } from 'next-intl/server'
 import rehypeParse from 'rehype-parse'
 import rehypeStringify from 'rehype-stringify'
 import { Article, WithContext } from 'schema-dts'
@@ -25,6 +26,7 @@ export const revalidate = 3600
 type Props = {
     params: Promise<{
         slug: string
+        locale: string
     }>
 }
 
@@ -90,7 +92,8 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
 }
 
 export default async function BlogPostPage({ params }: Props) {
-    const { slug } = await params
+    const { slug, locale } = await params
+    const t = await getTranslations({ locale, namespace: 'pages.substackPost' })
     const post = await getSubstackPost(slug)
 
     if (!post) {
@@ -141,9 +144,9 @@ export default async function BlogPostPage({ params }: Props) {
             />
 
             <Alert className='mb-12'>
-                <AlertTitle>⚠️ leggi questo avviso!</AlertTitle>
+                <AlertTitle>{t('alertTitle')}</AlertTitle>
                 <AlertDescription>
-                    il post che stai per leggere è stato originariamente pubblicato nella mia{' '}
+                    {t('alertTextBefore')}{' '}
                     <Link
                         href={UtmUrl(post.originalUrl, {
                             medium: UtmMediums.Blog,
@@ -152,9 +155,9 @@ export default async function BlogPostPage({ params }: Props) {
                         target='_blank'
                         rel='noopener noreferrer'
                         className='underline'>
-                        newsletter su substack
+                        {t('alertLink')}
                     </Link>
-                    . Se incontri problemi, puoi leggerlo direttamente li.
+                    {t('alertTextAfter')}
                 </AlertDescription>
             </Alert>
 

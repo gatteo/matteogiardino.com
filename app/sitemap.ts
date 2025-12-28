@@ -1,5 +1,5 @@
 import { absoluteUrl } from '@/utils/urls'
-import { allPages, allProjects } from 'contentlayer/generated'
+import { allPages, allProjects } from '@/.contentlayer/generated'
 
 import { PlRoutes, Routes, TcbRoutes, TclRoutes } from '@/config/routes'
 import { getAllBlogPosts } from '@/lib/blog'

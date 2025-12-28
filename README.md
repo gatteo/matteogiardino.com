@@ -77,9 +77,6 @@ The app will be available at `localhost:3000`.
 
 [@gatteo](https://github.com/gatteo)
 
-## ❤️ Credits
-
-This project has been has been heavly inspired by [@tszhong0411](https://github.com/tszhong0411) personal website.
 
 ## 🪪 License
 

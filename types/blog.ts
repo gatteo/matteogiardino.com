@@ -1,4 +1,4 @@
-import { MDX } from 'contentlayer/core'
+import { MDX } from 'contentlayer2/core'
 
 export type BlogPostAuthor = {
     id: string

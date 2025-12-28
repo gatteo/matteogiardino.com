@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { UtmUrl } from '@/utils/urls'
 import { IconArrowRight } from '@tabler/icons-react'
 import { useTranslations } from 'next-intl'
-import { allProjects } from 'contentlayer/generated'
+import { allProjects } from '@/.contentlayer/generated'
 
 import { UtmMediums } from '@/types/links'
 import { Routes } from '@/config/routes'

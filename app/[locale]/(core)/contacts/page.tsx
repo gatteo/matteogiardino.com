@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { absoluteUrl } from '@/utils/urls'
 import { IconExternalLink } from '@tabler/icons-react'
+import { getTranslations } from 'next-intl/server'
 
 import { ContactLinks, SocialLinks } from '@/config/links'
 import { Routes } from '@/config/routes'
@@ -12,18 +13,19 @@ import { PageTitle } from '@/components/page-title'
 
 export const dynamic = 'force-static'
 
-const title = 'contatti'
-const description =
-    'che tu voglia conoscermi, parlarmi di un progetto o una collaborazione, scrivimi. Nasce sempre qualcosa di bello da un messaggio.'
-
 type Props = {
-    params: Promise<Record<string, never>>
+    params: Promise<{ locale: string }>
     searchParams: Promise<Record<string, never>>
 }
 
-export async function generateMetadata(_: Props, parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
+    const { locale } = await params
+    const t = await getTranslations({ locale, namespace: 'pages.contacts' })
     const previousOpenGraph = (await parent)?.openGraph ?? {}
     const previousTwitter = (await parent)?.twitter ?? {}
+
+    const title = t('title')
+    const description = t('description')
 
     return {
         title,
@@ -45,17 +47,20 @@ export async function generateMetadata(_: Props, parent: ResolvingMetadata): Pro
     }
 }
 
-export default function Page() {
+export default async function Page({ params }: Props) {
+    const { locale } = await params
+    const t = await getTranslations({ locale, namespace: 'pages.contacts' })
+
     return (
         <>
             <PageTitle
-                title='come contattarmi'
-                description='che tu voglia conoscermi, parlarmi di un progetto o una collaborazione, scrivimi. Nasce sempre qualcosa di bello da un messaggio.'
+                title={t('title')}
+                description={t('description')}
                 fromColor='from-red-400'
                 toColor='to-blue-500'
             />
 
-            <h2 className='mt-16 text-xl font-bold md:text-2xl'>Email</h2>
+            <h2 className='mt-16 text-xl font-bold md:text-2xl'>{t('emailHeading')}</h2>
             <div className='mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:mt-6'>
                 {ContactLinks.map((link) => {
                     return (
@@ -82,12 +87,12 @@ export default function Page() {
                 })}
             </div>
 
-            <h2 className='mt-16 text-xl font-bold md:text-2xl'>Facciamo due chiacchiere</h2>
+            <h2 className='mt-16 text-xl font-bold md:text-2xl'>{t('chatHeading')}</h2>
             <div className='mt-4'>
                 <CalendarEmbed />
             </div>
 
-            <h2 className='mt-8 text-xl font-bold md:text-2xl'>Social</h2>
+            <h2 className='mt-8 text-xl font-bold md:text-2xl'>{t('socialHeading')}</h2>
             <div className='mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3 md:mt-6'>
                 {SocialLinks.map((link) => {
                     return (

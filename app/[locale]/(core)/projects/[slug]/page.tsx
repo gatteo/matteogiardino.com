@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { absoluteUrl } from '@/utils/urls'
-import { allProjects } from 'contentlayer/generated'
+import { allProjects } from '@/.contentlayer/generated'
 
 import { Routes } from '@/config/routes'
 import { site } from '@/config/site'

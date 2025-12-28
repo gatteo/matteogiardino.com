@@ -1,5 +1,5 @@
-import { MDXOptions } from 'contentlayer/core'
-import { defineDocumentType, makeSource } from 'contentlayer/source-files'
+import { MDXOptions } from 'contentlayer2/core'
+import { defineDocumentType, makeSource } from 'contentlayer2/source-files'
 
 import { BlogAuthors } from './config/blog'
 import { rehypePlugins, remarkPlugins } from './lib/mdx/plugins'

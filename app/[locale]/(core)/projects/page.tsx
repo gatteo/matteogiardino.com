@@ -2,7 +2,8 @@ import { Metadata, ResolvingMetadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { absoluteUrl, UtmUrl } from '@/utils/urls'
-import { allProjects } from 'contentlayer/generated'
+import { allProjects } from '@/.contentlayer/generated'
+import { getTranslations } from 'next-intl/server'
 
 import { UtmMediums } from '@/types/links'
 import { Routes } from '@/config/routes'
@@ -12,18 +13,19 @@ import { ProjectCollabCard } from '@/components/project-collab-card'
 // Force static generation for this page
 export const dynamic = 'force-static'
 
-const title = 'progetti'
-const description =
-    'esplora i progetti che ho realizzato in passato. Alcuni progetti sono nati da un mio bisogno personale, mentre altri sono frutto di collaborazioni con brillanti imprenditori motivati a trasformare le idee in realtà.'
-
 type Props = {
-    params: Promise<Record<string, never>>
+    params: Promise<{ locale: string }>
     searchParams: Promise<Record<string, never>>
 }
 
-export async function generateMetadata(_: Props, parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
+    const { locale } = await params
+    const t = await getTranslations({ locale, namespace: 'pages.projects' })
     const previousOpenGraph = (await parent)?.openGraph ?? {}
     const previousTwitter = (await parent)?.twitter ?? {}
+
+    const title = t('title')
+    const description = t('description')
 
     return {
         title,
@@ -45,12 +47,15 @@ export async function generateMetadata(_: Props, parent: ResolvingMetadata): Pro
     }
 }
 
-export default function Page() {
+export default async function Page({ params }: Props) {
+    const { locale } = await params
+    const t = await getTranslations({ locale, namespace: 'pages.projects' })
+
     return (
         <>
             <PageTitle
-                title='i miei progetti'
-                description='esplora i progetti che ho realizzato in passato. Alcuni progetti sono nati da un mio bisogno personale, mentre altri sono frutto di collaborazioni con brillanti imprenditori motivati a trasformare le idee in realtà. Ogni lavoro però è stato guidato dalla stessa volontà di superare delle sfide e ottenere risultati straordinari.'
+                title={t('pageTitle')}
+                description={t('pageDescription')}
                 fromColor='from-sky-400'
                 toColor='to-purple-600'
             />
@@ -89,11 +94,11 @@ export default function Page() {
             <div className='mt-24 flex flex-col items-start justify-between md:flex-row md:items-end'>
                 <div className='flex-auto'>
                     <h2 className='text-3xl font-bold'>
-                        progetti su cui ho{' '}
-                        <strong className='underline decoration-sky-400 underline-offset-4'>collaborato</strong>
+                        {t('collabTitle')}{' '}
+                        <strong className='underline decoration-sky-400 underline-offset-4'>{t('collabHighlight')}</strong>
                     </h2>
                     <p className='mt-2 text-muted-foreground'>
-                        i prodotti digitali più entusiasmanti in cui ho dato un contributo
+                        {t('collabDescription')}
                     </p>
                 </div>
             </div>

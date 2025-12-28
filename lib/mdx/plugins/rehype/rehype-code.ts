@@ -29,20 +29,6 @@ export const rehypeCode: [Plugin<[RehypeShikiOptions], Root>, RehypeShikiOptions
 
                     return code.replace(/\n$/, '')
                 },
-                root(hast) {
-                    const pre = hast.children[0]
-                    if (pre?.type !== 'element') return
-
-                    hast.children = [
-                        {
-                            ...pre,
-                            properties: {
-                                ...pre.properties,
-                                'data-lang': this.options.lang,
-                            },
-                        },
-                    ]
-                },
             },
             transformerMetaHighlight(),
         ],

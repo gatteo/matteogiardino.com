@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { absoluteUrl, UtmUrl } from '@/utils/urls'
 import { ArrowUpRight } from 'lucide-react'
+import { getTranslations } from 'next-intl/server'
 
 import { UtmMediums } from '@/types/links'
 import { products } from '@/config/products'
@@ -14,18 +15,19 @@ import { PageTitle } from '@/components/page-title'
 // Force static generation for this page
 export const dynamic = 'force-static'
 
-const title = 'formazione'
-const description =
-    'ho creato strumenti e risorse che aiutano centinaia di persone ad imparare a programmare e lanciare la loro carriera.'
-
 type Props = {
-    params: Promise<Record<string, never>>
+    params: Promise<{ locale: string }>
     searchParams: Promise<Record<string, never>>
 }
 
-export async function generateMetadata(_: Props, parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
+    const { locale } = await params
+    const t = await getTranslations({ locale, namespace: 'pages.learn' })
     const previousOpenGraph = (await parent)?.openGraph ?? {}
     const previousTwitter = (await parent)?.twitter ?? {}
+
+    const title = t('title')
+    const description = t('description')
 
     return {
         title,
@@ -47,12 +49,16 @@ export async function generateMetadata(_: Props, parent: ResolvingMetadata): Pro
     }
 }
 
-export default function Page() {
+export default async function Page({ params }: Props) {
+    const { locale } = await params
+    const t = await getTranslations({ locale, namespace: 'pages.learn' })
+    const tCommon = await getTranslations({ locale, namespace: 'common' })
+
     return (
         <>
             <PageTitle
-                title='impara e cresci con me'
-                description='la programmazione ha rivoluzionato la mia vita. Per questo motivo ho creato strumenti e risorse che aiutano centinaia di persone ad imparare a programmare e lanciare la loro carriera.'
+                title={t('pageTitle')}
+                description={t('pageDescription')}
                 fromColor='from-amber-500'
                 toColor='to-pink-500'
             />
@@ -97,7 +103,7 @@ export default function Page() {
                                             medium: UtmMediums.LearningProducts,
                                             content: 'product_card',
                                         })}>
-                                        scopri di più <ArrowUpRight className='ml-1 inline-block size-4' />
+                                        {tCommon('learnMore')} <ArrowUpRight className='ml-1 inline-block size-4' />
                                     </Link>
                                 </Button>
                             </div>
