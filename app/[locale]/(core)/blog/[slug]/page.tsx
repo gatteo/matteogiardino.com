@@ -12,6 +12,9 @@ import { Header } from '@/components/blog/post-header'
 import { Content } from '@/components/mdx-content'
 import { ScrollIndicator } from '@/components/scroll-indicator'
 
+// Force static generation
+export const dynamic = 'force-static'
+
 type Props = {
     params: Promise<{
         slug: string

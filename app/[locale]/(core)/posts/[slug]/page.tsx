@@ -20,7 +20,8 @@ import { Footer } from '@/components/blog/post-footer'
 import { Header } from '@/components/blog/post-header'
 import { ScrollIndicator } from '@/components/scroll-indicator'
 
-// Enable ISR: statically generate at build time, revalidate every hour
+// Force static generation, revalidate every hour
+export const dynamic = 'force-static'
 export const revalidate = 3600
 
 type Props = {

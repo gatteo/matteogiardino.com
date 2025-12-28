@@ -7,7 +7,8 @@ import { getAllBlogPosts } from '@/lib/blog'
 import { FilteredPosts } from '@/components/blog/filtered-posts'
 import { PageTitle } from '@/components/page-title'
 
-// Enable ISR: statically generate at build time, revalidate every hour
+// Force static generation, revalidate every hour
+export const dynamic = 'force-static'
 export const revalidate = 3600
 
 type Props = {

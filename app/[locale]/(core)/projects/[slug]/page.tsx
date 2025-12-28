@@ -9,6 +9,9 @@ import { Content } from '@/components/mdx-content'
 import Header from '@/components/project/header'
 import { ScrollIndicator } from '@/components/scroll-indicator'
 
+// Force static generation
+export const dynamic = 'force-static'
+
 type Props = {
     params: Promise<{
         slug: string
