@@ -1,0 +1,145 @@
+---
+title: 'What is OpenClaw? An AI Agent Framework That Actually Gets Stuff Done'
+createdAt: '2026-03-10T00:00:00Z'
+modifiedAt: '2026-03-10T00:00:00Z'
+summary: 'OpenClaw is an open-source AI agent framework that turns LLMs into productive tools. Learn what it is and why developers are building with it.'
+image: '/images/blog/what-is-openclaw-ai-agent-framework.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw', 'ai agents', 'automation', 'llm']
+---
+
+If you've been following AI development lately, you've probably heard about AI agents - systems that don't just answer questions but actually do work. OpenClaw is one of the frameworks making this possible, and it's worth understanding what it brings to the table.
+
+I've been using OpenClaw to run multiple AI agents on my Mac Mini server. They handle everything from blog writing to research to task management. In this post, I'll explain what OpenClaw is, what makes it different, and whether it's something you should explore.
+
+## What is OpenClaw?
+
+OpenClaw is an open-source framework that turns Large Language Models (LLMs) into capable agents. Think of it as the infrastructure layer between "chatbot that answers questions" and "AI assistant that actually completes tasks."
+
+The core idea is simple: give an LLM access to tools (file system, web browser, terminal, APIs) and let it use those tools to accomplish real work. But the implementation is where things get interesting.
+
+<CtaCard
+    title='Need help with AI integration?'
+    description='Get in touch for a consultation on implementing AI tools in your business.'
+    primaryButtonText='Contact Me'
+    primaryButtonUrl='/contacts'
+    pattern='circles'
+    align='center'
+/>
+
+## Key Features That Matter
+
+### Multi-Agent Architecture
+
+OpenClaw lets you run multiple specialized agents. I have one agent that writes blog posts, another that tracks revenue metrics, and a main orchestrator that supervises them all. Each agent has its own workspace, memory, and task queue.
+
+This beats having one monolithic AI trying to do everything. Specialized agents are better at their specific jobs.
+
+### Real Tool Integration
+
+OpenClaw agents can:
+- Read and write files
+- Execute shell commands
+- Control web browsers (via Playwright)
+- Make API calls
+- Search the web
+- Send messages (Telegram, Discord, etc.)
+- Access paired mobile devices (iOS/Android)
+
+These aren't simulated capabilities - they're actual integrations that work on your machine.
+
+### Memory and Context
+
+Agents maintain memory across sessions through markdown files. My blog agent keeps a daily log and a long-term memory file. When it wakes up for a new task, it reads yesterday's work and continues from there.
+
+This is crucial. Without memory, an AI agent is just a chatbot with tools.
+
+<CtaCard
+    title='Discover my projects'
+    description='Check out the projects I am working on and the technologies I use.'
+    primaryButtonText='View Projects'
+    primaryButtonUrl='/projects'
+    pattern='dots'
+    align='center'
+/>
+
+## The Architecture
+
+OpenClaw uses a gateway-node model:
+- **Gateway** runs on your main machine (laptop, server, VPS)
+- **Nodes** are paired devices (phones, tablets, other computers)
+- **Agents** are specialized AI workers with their own directories and configurations
+
+Messages flow through channels (Telegram, Discord, CLI) to the gateway, which routes them to the appropriate agent. Agents can spawn sub-agents for complex tasks, and results propagate back up automatically.
+
+## Model Flexibility
+
+You're not locked into one LLM provider. OpenClaw works with:
+- Anthropic (Claude)
+- OpenAI (GPT models)
+- Google (Gemini)
+- Local models via Ollama
+- Any OpenAI-compatible API
+
+You can set different models for different agents. My main agent uses Claude Sonnet for general work, but I can spawn a sub-agent with a cheaper model for simple tasks.
+
+## Why Developers Should Care
+
+**It's open source.** No vendor lock-in, no usage limits beyond what your API keys allow. You control where it runs and what data it accesses.
+
+**It's practical.** This isn't research code. People are using OpenClaw for real work - automating customer support, managing infrastructure, writing code, analyzing data.
+
+**It's extensible.** You can write skills (reusable procedures), create custom tools, and integrate with any API. The skill system makes it easy to package and share workflows.
+
+<CtaCard
+    title='Need help with AI integration?'
+    description='Get in touch for a consultation on implementing AI tools in your business.'
+    primaryButtonText='Contact Me'
+    primaryButtonUrl='/contacts'
+    pattern='signal'
+    align='center'
+/>
+
+## Real-World Use Cases
+
+Here's what I've built with OpenClaw:
+
+**Blog automation:** An agent that researches topics, writes posts, generates featured images, and publishes to my site via git push. It runs on a schedule and updates me via Telegram.
+
+**Revenue tracking:** An agent that pulls data from RevenueCat API, analyzes trends, and sends daily reports. It knows which metrics matter and alerts me to anomalies.
+
+**Task orchestration:** A main agent that supervises the others, checks their health, processes blockers, and keeps a Notion board updated with tasks that need my attention.
+
+These aren't toy examples. They save me hours every week.
+
+## The Catch
+
+OpenClaw has a learning curve. You'll need to:
+- Understand how agent architectures work
+- Write configuration files (AGENTS.md, TOOLS.md, etc.)
+- Design task workflows and memory systems
+- Handle API costs and rate limits
+- Debug when things go wrong
+
+It's not a plug-and-play solution. But if you're comfortable with code and willing to invest the setup time, it's incredibly powerful.
+
+## Getting Started
+
+If you want to explore OpenClaw:
+
+1. **Start with the docs** - Read the official documentation to understand the architecture
+2. **Run a simple agent** - Set up a basic agent that can read files and search the web
+3. **Add memory** - Give your agent a way to remember context across sessions
+4. **Integrate a real workflow** - Pick a task you do regularly and automate it
+5. **Monitor costs** - Keep an eye on API usage, especially if you're using expensive models
+
+The community is active and helpful. There are tutorials, example agents, and a growing collection of skills to learn from.
+
+## Final Thoughts
+
+OpenClaw is one of the most capable AI agent frameworks I've used. It's not perfect - the setup requires effort, and costs can add up if you're not careful - but it delivers on the promise of AI that actually does work.
+
+If you're a developer or CTO exploring how to integrate AI into real workflows, OpenClaw is worth your time. Start small, build incrementally, and see what's possible when you give an LLM the right tools and structure.
+
+I'll be writing more about my OpenClaw setup, specific agent workflows, and lessons learned. If you're interested in this space, stay tuned.
