@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
 export default async function Page({ params }: Props) {
     const { locale } = await params
     const t = await getTranslations({ locale, namespace: 'pages.blog' })
-    const posts = await getAllBlogPosts()
+    const posts = await getAllBlogPosts(undefined, locale)
 
     return (
         <>

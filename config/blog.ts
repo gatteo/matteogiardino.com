@@ -27,4 +27,11 @@ export const BlogCategories = [
     'web design',
     'cto',
     'freelance',
+    'ai',
+    'openclaw',
+    'llm',
+    'ai tools',
+    'machine learning',
+    'automation',
+    'ai agents',
 ]

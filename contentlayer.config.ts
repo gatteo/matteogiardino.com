@@ -99,6 +99,12 @@ const BlogPost = defineDocumentType(() => ({
             required: true,
         },
         tags: { type: 'list', of: { type: 'string' }, default: [] },
+        locale: {
+            type: 'string',
+            description: 'The locale of the blog post (it or en)',
+            required: false,
+            default: 'it',
+        },
     },
     computedFields: {
         slug: {

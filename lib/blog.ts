@@ -9,14 +9,23 @@ import { remarkHeading } from './mdx/plugins/remark/remark-heading'
 
 type Options = {
     limit?: number
+    locale?: string
 }
 
 export function getLocalBlogPost(slug: string): LocalBlogPost | undefined {
     return allBlogPosts.find((p) => p.slug === slug)
 }
 
-export function getLocalBlogPosts({ limit }: Options = {}): BlogPostPreview[] {
-    return allBlogPosts
+export function getLocalBlogPosts({ limit, locale }: Options = {}): BlogPostPreview[] {
+    let posts = allBlogPosts
+    if (locale) {
+        const filtered = posts.filter((p) => p.locale === locale)
+        if (filtered.length > 0) {
+            posts = filtered
+        }
+    }
+
+    return posts
         .sort((a, b) => Number(new Date(b.createdAt)) - Number(new Date(a.createdAt)))
         .slice(0, limit)
         .map((post) => ({
@@ -33,8 +42,8 @@ export function getLocalBlogPosts({ limit }: Options = {}): BlogPostPreview[] {
         }))
 }
 
-export async function getAllBlogPosts(limit?: number): Promise<BlogPostPreview[]> {
-    const localPosts = getLocalBlogPosts()
+export async function getAllBlogPosts(limit?: number, locale?: string): Promise<BlogPostPreview[]> {
+    const localPosts = getLocalBlogPosts({ locale })
     const substackPosts = await getSubstackPosts()
 
     const sortedLocalPosts = localPosts.sort((a, b) => Number(new Date(b.date)) - Number(new Date(a.date)))
