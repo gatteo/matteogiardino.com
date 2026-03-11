@@ -15,6 +15,8 @@ Ogni singolo uno di questi tool è potente. E ogni singolo uno di loro dimentica
 
 memUbot è la risposta a questo. È un framework di memoria proattiva 24/7, e la parola chiave è **proattiva**.
 
+<Image src="/images/blog/memubot-memoria-agente-openclaw/memubot-openclaw-agent-57.webp" alt="Panoramica di memUbot, il framework di memoria proattiva per agenti OpenClaw" width={1200} height={630} />
+
 ## Come funziona memUbot
 
 Fa girare due loop paralleli simultaneamente. L'agente principale gestisce le tue query, pianifica, esegue e risponde normalmente. Di lato, un memUbot dedicato osserva tutto, monitorando ogni input e output, estraendo fatti, preferenze e skill, predicendo cosa stai per fare dopo, e facendo task proattivi come pre-fetch di contesto e aggiornamento della tua to-do list in modo autonomo.
@@ -40,6 +42,8 @@ Pensa ad attività, esperienze, obiettivi, abitudini, conoscenza, opinioni, info
 
 Sto facendo girare questo su Ubuntu. Python 3.13 è un requisito hard, assicurati di averlo prima di qualsiasi altra cosa. Prendi il codice da [memubot su GitHub](https://github.com/seigneurcui/memubot).
 
+<Image src="/images/blog/memubot-memoria-agente-openclaw/memubot-openclaw-agent-125.webp" alt="Installazione di Python 3.13 e creazione dell'ambiente virtuale per memUbot" width={1200} height={630} />
+
 Installa Python 3.13 e crea un ambiente virtuale:
 
 ```bash
@@ -54,6 +58,8 @@ git clone https://github.com/seigneurcui/memubot.git
 cd memubot
 ```
 
+<Image src="/images/blog/memubot-memoria-agente-openclaw/memubot-openclaw-agent-140.webp" alt="Clonazione del repository memUbot da GitHub" width={1200} height={630} />
+
 Installa i prerequisiti dalla root del repo:
 
 ```bash
@@ -62,19 +68,29 @@ pip install -r requirements.txt
 
 Assicurati che OpenClaw sia già installato e in esecuzione con il tuo modello preferito, locale o API.
 
+<Image src="/images/blog/memubot-memoria-agente-openclaw/memubot-openclaw-agent-202.webp" alt="Installazione delle dipendenze e verifica che OpenClaw sia in esecuzione" width={1200} height={630} />
+
 ## Esempio con OpenRouter
+
+<Image src="/images/blog/memubot-memoria-agente-openclaw/memubot-openclaw-agent-218.webp" alt="Esempio di memUbot con OpenRouter che processa conversazioni ed estrae memoria" width={1200} height={630} />
 
 Ho fatto un esempio rapido con un modello OpenRouter che processa memoria conversazionale. Ho dato a memUbot tre file JSON di conversazioni contenenti dialoghi avanti e indietro. memUbot ha letto tutti e tre, li ha mandati a Claude via OpenRouter, e in un passaggio ha estratto 29 elementi di memoria individuali e li ha organizzati in 10 categorie automaticamente.
 
 Non c'era istruzione su cosa ricordare e nessun tagging manuale. Ha semplicemente letto le conversazioni e capito cosa importava. L'output è un file system di memoria strutturato con cartelle come attività, esperienze, obiettivi, abitudini, conoscenza, opinioni, info personali, preferenze, relazioni e work-life balance, ognuna un documento vivente.
 
+<Image src="/images/blog/memubot-memoria-agente-openclaw/memubot-openclaw-agent-288.webp" alt="Output strutturato di memUbot con 29 elementi di memoria organizzati in 10 categorie" width={1200} height={630} />
+
 Troverai l'output nella directory outputs del repo per quell'esempio. Il punto è che memUbot non ha solo memorizzato la conversazione grezza. Ha capito e organizzato il significato in qualcosa che il tuo agente può usare istantaneamente.
 
 ## Integrazione OpenClaw
 
+<Image src="/images/blog/memubot-memoria-agente-openclaw/memubot-openclaw-agent-367.webp" alt="Codice di integrazione tra OpenClaw e memUbot con configurazione della sessione" width={1200} height={630} />
+
 Ecco il path del codice che ho usato per integrare OpenClaw con memUbot. Prende una history di sessione OpenClaw reale dal file config.json dove abbiamo cinque messaggi tra un utente di nome Alex e l'agente su come costruire un trading bot. memUbot legge quei cinque messaggi, li manda al modello che gira con OpenClaw, scrive il file su disco, e poi crea la memoria nella directory outputs.
 
 Prepara la tua history di sessione OpenClaw come JSON con messaggi user e assistant sul trading bot. Punta memUbot a quel session file in config.json così può ingerire la conversazione. Fai girare l'integrazione così memUbot può estrarre elementi di memoria e categorie, poi scrive memory.md nell'output.
+
+<Image src="/images/blog/memubot-memoria-agente-openclaw/memubot-openclaw-agent-423.webp" alt="Risultato dell'integrazione OpenClaw con elementi di memoria estratti e file memory.md generato" width={1200} height={630} />
 
 Dopo una run di successo vedrai elementi di memoria estratti e stampati durante il processing. I file sono scritti in outputs sotto una directory specifica openclaw, incluso un memory.md. La prossima volta che OpenClaw parte sa già tutto questo senza che Alex debba mai ripetersi.
 

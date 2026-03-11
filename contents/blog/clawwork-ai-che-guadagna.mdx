@@ -13,11 +13,15 @@ Qualcuno ha dato 10 dollari a un agente OpenClaw e gli ha detto: "Sopravvivi". O
 
 Si chiama ClawWork, è open source, si basa su OpenClaw, e punta a qualcosa di genuinamente nuovo. Ma devi stare molto attento.
 
+<Image src="/images/blog/clawwork-ai-che-guadagna/clawwork-1.webp" alt="Panoramica di ClawWork, l'agente AI che guadagna completando task professionali" width={1200} height={630} />
+
 Ti spiego cosa fa ClawWork, come funziona l'architettura, il modello di scoring e pagamento, e i rischi che contano davvero. Ti segnalerò anche i punti esatti dove i costi possono esplodere e dove puoi esporre dati sensibili. Leggi bene le note di cautela prima di collegare qualsiasi cosa a un canale live.
 
 ## Cosa fa ClawWork
 
 ClawWork trasforma il tuo assistente AI in quello che gli sviluppatori chiamano un "AI co-worker". La differenza è importante. Un assistente risponde alle tue domande. Un co-worker fa lavoro che crea valore economico e viene pagato per questo.
+
+<Image src="/images/blog/clawwork-ai-che-guadagna/clawwork-82.webp" alt="Interfaccia di ClawWork che mostra la trasformazione da assistente a co-worker AI" width={1200} height={630} />
 
 L'agente parte con 10$. Ogni chiamata LLM costa soldi veri detratti da quel saldo. L'unico modo per aumentare il saldo è completare task professionali e farli valutare da un LLM.
 
@@ -39,6 +43,8 @@ Un task di market research analyst da tre ore a 38$ l'ora paga fino a 116$, ma s
 
 ## Segnali dalla leaderboard
 
+<Image src="/images/blog/clawwork-ai-che-guadagna/clawwork-126.webp" alt="Leaderboard pubblica di ClawWork con classifica dei modelli AI per reddito e qualità" width={1200} height={630} />
+
 Una leaderboard pubblica ha mostrato ATIC combinato con Qwen 3.5 Plus trasformare 10$ in 19.915$ in 8 ore. Qwen 3.5 Plus da solo è arrivato terzo spendendo solo 6$ di costo API. aic deepc è arrivato quinto sul reddito ma aveva il quality score più alto al 66,8%.
 
 Questi sono insight che non ottieni da un benchmark standard. Mostrano come reddito, costo e qualità interagiscono sotto pressione economica reale. Puoi confrontare modelli e decidere quale service provider usare, o considerare modelli locali per gestire i costi.
@@ -56,11 +62,15 @@ Questi sono insight che non ottieni da un benchmark standard. Mostrano come redd
 
 ClawWork sta dentro l'ecosistema OpenClaw e passa attraverso Nanobot, che si collega ai tuoi canali come Telegram o Discord. I messaggi passano attraverso il gateway Nanobot, e ogni singola chiamata LLM viene intercettata dal tracked provider, che detrae il costo dal saldo dell'agente in tempo reale. Il tuo agente sa esattamente quanto costa esistere.
 
+<Image src="/images/blog/clawwork-ai-che-guadagna/clawwork-199.webp" alt="Diagramma dell'architettura di ClawWork con gateway Nanobot e tracked provider" width={1200} height={630} />
+
 Sul lato task, l'agente riceve un task GDP-Well, decide se lavorare o imparare, esegue, guadagna reddito e persiste i risultati alla dashboard. Il valutatore assegna score alle submission e determina il pagamento usando la formula legata al salario. Questo feedback loop mantiene l'agente dentro un ambiente economico realistico.
 
 ## Setup e sandbox prima di tutto
 
 Inizia con la simulazione standalone e la sandbox, non un canale live. Ti serviranno chiavi API, e questo non è uno strumento gratuito.
+
+<Image src="/images/blog/clawwork-ai-che-guadagna/clawwork-311.webp" alt="Configurazione della sandbox di ClawWork per il testing sicuro" width={1200} height={630} />
 
 **Step 1:** Leggi la sezione cautela prima di far girare qualsiasi cosa. Il costo API può spiralare, e stai pagando sia per l'agente che per il valutatore allo stesso tempo.
 
@@ -78,6 +88,8 @@ Repo del progetto: [HKUDS/ClawWork su GitHub](https://github.com/HKUDS/ClawWork)
 
 Una volta pronto per un canale live, collega l'economic tracking a un gateway Nanobot. Ogni conversazione sarà tracciata e ogni token avrà un costo.
 
+<Image src="/images/blog/clawwork-ai-che-guadagna/clawwork-421.webp" alt="Processo di integrazione di ClawWork con il gateway OpenClaw" width={1200} height={630} />
+
 **Step 1:** Configura il tuo file JSON settings per il tracked provider di ClawWork e l'economic tracking. Ricontrolla nomi modello, rate limit e qualsiasi configurazione allowlist.
 
 **Step 2:** Installa lo skill file fornito dal repo e imposta il path corretto nel tuo gateway config. Assicurati che lo skill si carichi senza errori.
@@ -88,11 +100,17 @@ Una volta pronto per un canale live, collega l'economic tracking a un gateway Na
 
 ## Tool e capability
 
+<Image src="/images/blog/clawwork-ai-che-guadagna/clawwork-437.webp" alt="Lista dei tool disponibili in ClawWork inclusi gli economic tool" width={1200} height={630} />
+
 ClawWork espone circa 14 tool, inclusi quattro economic tool sopra ai tool Nanobot standard. Include web search, creazione file ed esecuzione codice in sandbox. La sandbox è E2B, che è un servizio cloud, il che significa che il tuo codice gira sulla loro infrastruttura, non sulla tua, quindi leggi i loro termini.
+
+<Image src="/images/blog/clawwork-ai-che-guadagna/clawwork-468.webp" alt="Dettaglio delle capability dell'agente ClawWork con sandbox E2B e valutatore" width={1200} height={630} />
 
 Il valutatore usa GPT-4o di default, il che significa che ogni submission di task manda l'output di lavoro del tuo agente a OpenAI. Se stai lavorando con dati finanziari confidenziali, è un problema. Considera la tua classificazione dati prima di far girare workload sensibili.
 
 ## Costi e rischi
+
+<Image src="/images/blog/clawwork-ai-che-guadagna/clawwork-496.webp" alt="Analisi dei costi API e rischi economici nell'uso di ClawWork" width={1200} height={630} />
 
 Il costo API può spiralare perché il task classifier, l'agente e il valutatore fanno tutti chiamate LLM separate per task. Una run mal definita con un modello costoso può bruciare soldi veri prima che te ne accorga. Il reddito è valore simulato legato a dati di salario, non revenue reale.
 
@@ -110,6 +128,8 @@ Questi vincoli sono il punto di ClawWork, ma richiedono gestione attenta. È pot
 />
 
 ## Pensieri finali
+
+<Image src="/images/blog/clawwork-ai-che-guadagna/clawwork-520.webp" alt="Riflessioni finali sull'esperimento ClawWork e il futuro degli agenti AI economici" width={1200} height={630} />
 
 ClawWork mostra come un AI co-worker può operare sotto pressione economica reale piuttosto che passare benchmark. I risultati della leaderboard rendono chiaro che qualità, costo e reddito interagiscono in modi che i test tipici non possono rivelare.
 

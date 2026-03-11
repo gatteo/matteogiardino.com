@@ -17,13 +17,25 @@ Ti condivido anche i prompt che ho testato e che hanno funzionato per me.
 
 Clicca Launch instance in EC2 e dai un nome alla VM OpenClaw. Seleziona l'immagine Ubuntu Server 24. Scegli il tipo di istanza t2.small con 1 vCPU e 2 GB RAM.
 
+<Image src="/images/blog/installare-openclaw-aws-ec2/install-openclaw-aws-ec2-47.webp" alt="Schermata di creazione istanza EC2 con nome e selezione immagine Ubuntu" width={1200} height={630} />
+
 Crea o seleziona una key pair esistente. Permetti HTTP e HTTPS nel security group. Imposta lo storage a 8 GB e lancia l'istanza.
 
-Apri i dettagli dell'istanza e clicca Connect. Usa EC2 Instance Connect per aprire il terminale nel browser. Pulisci il terminale e preparati a far girare i comandi.
+<Image src="/images/blog/installare-openclaw-aws-ec2/install-openclaw-aws-ec2-31.webp" alt="Configurazione key pair, security group e storage per l'istanza EC2" width={1200} height={630} />
+
+Apri i dettagli dell'istanza e clicca Connect. Usa EC2 Instance Connect per aprire il terminale nel browser.
+
+<Image src="/images/blog/installare-openclaw-aws-ec2/install-openclaw-aws-ec2-64.webp" alt="Connessione all'istanza EC2 tramite Instance Connect nel browser" width={1200} height={630} />
+
+Pulisci il terminale e preparati a far girare i comandi.
+
+<Image src="/images/blog/installare-openclaw-aws-ec2/install-openclaw-aws-ec2-129.webp" alt="Terminale EC2 pronto per l'installazione di OpenClaw" width={1200} height={630} />
 
 ## Installare OpenClaw
 
 Vai sul sito openclaw.ai e copia il comando installer. Incollalo nel terminale EC2 e premi Enter.
+
+<Image src="/images/blog/installare-openclaw-aws-ec2/install-openclaw-aws-ec2-149.webp" alt="Esecuzione del comando di installazione di OpenClaw nel terminale EC2" width={1200} height={630} />
 
 Aspetta che l'installer finisca. Quando richiesto, seleziona Yes e poi seleziona Quick Start.
 
@@ -40,13 +52,19 @@ Aspetta che l'installer finisca. Quando richiesto, seleziona Yes e poi seleziona
 
 Seleziona l'interfaccia OpenAI nella lista setup. Quando richiesto per la chiave API OpenAI, generala su [platform.openai.com/api-keys](https://platform.openai.com/api-keys) e crea una nuova secret key.
 
+<Image src="/images/blog/installare-openclaw-aws-ec2/install-openclaw-aws-ec2-224.webp" alt="Selezione dell'interfaccia OpenAI e generazione della chiave API" width={1200} height={630} />
+
 Copia la chiave e incollala nel terminale. Continua il setup.
+
+<Image src="/images/blog/installare-openclaw-aws-ec2/install-openclaw-aws-ec2-302.webp" alt="Selezione del modello GPT-4.1 mini dalla lista dei modelli disponibili" width={1200} height={630} />
 
 Scegli un modello dalla lista. Io ho selezionato GPT-4.1 mini. Cerca di selezionare modelli mini o nano perché i modelli grandi sono molto costosi e mangeranno tutti i tuoi crediti.
 
 ## Configurare il canale Telegram
 
 Seleziona Telegram nella lista canali. Crea un bot e ottieni il token usando BotFather di Telegram.
+
+<Image src="/images/blog/installare-openclaw-aws-ec2/install-openclaw-aws-ec2-320.webp" alt="Configurazione del canale Telegram e creazione del bot con BotFather" width={1200} height={630} />
 
 Apri Telegram, cerca BotFather, inizia una chat, e fai girare il comando:
 
@@ -60,6 +78,8 @@ Dai un nome al tuo bot e uno username quando richiesto. Copia il bot token e inc
 
 Di default, sei skill sono selezionati. Se vuoi selezionarne di più puoi scegliere Yes, ma io l'ho saltato e ho selezionato No.
 
+<Image src="/images/blog/installare-openclaw-aws-ec2/install-openclaw-aws-ec2-383.webp" alt="Selezione delle skill e avvio del servizio gateway OpenClaw" width={1200} height={630} />
+
 Vedrai il messaggio che il servizio gateway OpenClaw è installato. Seleziona Open in Web UI e conferma Yes, poi apri un nuovo terminale per controllare lo status.
 
 ## Verificare il setup
@@ -69,6 +89,8 @@ Fai girare questo comando per controllare lo status:
 ```bash
 openclaw status
 ```
+
+<Image src="/images/blog/installare-openclaw-aws-ec2/install-openclaw-aws-ec2-421.webp" alt="Output del comando openclaw status con canali e servizi in esecuzione" width={1200} height={630} />
 
 Vedrai i canali configurati, come Telegram, e info di sessione. Scrolla su nell'output per trovare l'URL della Web UI e conferma che i servizi sono in esecuzione.
 
