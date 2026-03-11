@@ -1,0 +1,280 @@
+---
+title: 'Come configurare OpenClaw con Ollama: guida pratica per agenti AI locali'
+createdAt: '2026-03-11T00:00:00Z'
+modifiedAt: '2026-03-11T00:00:00Z'
+summary: 'Guida pratica per installare OpenClaw e configurarlo con Ollama per avere un assistente AI completamente locale e privato.'
+image: '/images/blog/configurare-openclaw-ollama-agenti-ai-locali.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'ollama', 'llm', 'automation']
+---
+
+Dopo aver spiegato [cos'è OpenClaw](/blog/cos-e-openclaw-framework-agenti-ai), è ora di sporcarsi le mani. In questo articolo ti mostro come installare e configurare OpenClaw con Ollama per avere un assistente AI che gira completamente sul tuo hardware, senza inviare dati a terzi.
+
+## Perché locale?
+
+Prima di partire con la parte tecnica, una premessa: perché dovresti voler eseguire un modello AI in locale quando hai ChatGPT, Claude e compagnia bella a portata di click?
+
+**Privacy.** I tuoi dati restano sul tuo computer. Nessuna API call esterna, nessun log salvato da chi-sa-chi, nessuna ToS che cambia ogni mese.
+
+**Costi.** Dopo l'investimento iniziale in hardware (se non ce l'hai già), non paghi più nulla. Niente abbonamenti mensili, niente costi a token.
+
+**Controllo.** Vuoi usare un modello specifico? Modificarlo? Fine-tunarlo? Con un setup locale puoi farlo.
+
+Ovviamente i modelli locali non sono ancora al livello dei big commerciali per complessità e ragionamento avanzato, ma per automazioni quotidiane, assistenza personale e task specifici funzionano benissimo.
+
+## Cosa ti serve
+
+Per questo tutorial assumo che tu abbia:
+
+- Un computer con almeno 8GB di RAM (16GB meglio)
+- Una GPU discreta se vuoi eseguire modelli grandi (non obbligatoria, ma aiuta)
+- Linux, macOS o Windows
+- Node.js installato (v18+)
+- Un account Telegram (useremo Telegram come interfaccia)
+
+Non serve essere sysadmin esperti, ma un minimo di confidenza con il terminale sì.
+
+<CtaCard
+    title='Vuoi integrare AI nel tuo business?'
+    description='Ti aiuto a implementare soluzioni AI pratiche e su misura per la tua azienda.'
+    primaryButtonText='Contattami'
+    primaryButtonUrl='/contacts'
+    pattern='circles'
+    align='center'
+/>
+
+## Step 1: Installa Ollama
+
+[Ollama](https://ollama.ai) è un tool che semplifica l'esecuzione di modelli LLM in locale. Funziona come Docker per i modelli AI - scarichi un modello e lo esegui con un comando.
+
+**Su Linux:**
+
+```bash
+curl -fsSL https://ollama.ai/install.sh | sh
+```
+
+**Su macOS:**
+
+Scarica il .dmg dal sito ufficiale o usa Homebrew:
+
+```bash
+brew install ollama
+```
+
+**Su Windows:**
+
+Scarica l'installer dal sito Ollama.
+
+Verifica l'installazione:
+
+```bash
+ollama --version
+```
+
+Ora scarica un modello. Per iniziare, ti consiglio **GLM-4-9B** (buon compromesso tra performance e dimensioni) oppure **Llama 3.3 70B** se hai una GPU potente:
+
+```bash
+ollama pull glm4:9b
+```
+
+Il download può richiedere tempo a seconda della tua connessione. I modelli sono file da diversi GB.
+
+Per verificare che funzioni:
+
+```bash
+ollama run glm4:9b
+```
+
+Dovresti vedere un prompt interattivo. Scrivi qualcosa, ottieni una risposta, esci con `/bye`.
+
+## Step 2: Installa OpenClaw
+
+OpenClaw si installa globalmente via npm:
+
+```bash
+npm install -g openclaw
+```
+
+L'installazione richiede qualche minuto perché il tool è corposo.
+
+Una volta completata, lancia il wizard di onboarding:
+
+```bash
+openclaw onboard
+```
+
+Ti verrà chiesto:
+
+1. **Setup mode:** scegli "Quick Start"
+2. **Provider:** salta i cloud provider, scegli "Local Providers" e poi "Ollama"
+3. **Messaging app:** scegli Telegram (o quello che preferisci)
+4. **Bot token:** qui ti serve un bot Telegram
+
+## Step 3: Crea un bot Telegram
+
+Apri Telegram e cerca **@BotFather**. È il bot ufficiale per creare bot.
+
+Avvia la conversazione e usa il comando:
+
+```
+/newbot
+```
+
+Segui le istruzioni:
+- Nome del bot (es. "Il Mio Assistente AI")
+- Username del bot (deve finire con `_bot`, es. `mio_assistente_bot`)
+
+BotFather ti darà un **token** tipo:
+
+```
+1234567890:ABCdefGHIjklMNOpqrSTUvwxYZ
+```
+
+Copialo. Questo è il token che incollerai quando OpenClaw te lo chiede durante l'onboarding.
+
+<CtaCard
+    title='Scopri i miei progetti'
+    description='Dai un occhio ai progetti su cui sto lavorando e alle tecnologie che utilizzo.'
+    primaryButtonText='Vedi Progetti'
+    primaryButtonUrl='/projects'
+    pattern='dots'
+    align='center'
+/>
+
+## Step 4: Configura OpenClaw
+
+Dopo aver inserito il token, l'onboarding ti chiederà se vuoi installare skills e hooks. **Per ora salta entrambi** - li aggiungerai in seguito quando avrai capito come funziona il sistema.
+
+Alla fine, l'onboarding installerà un servizio in background (su Linux tramite systemd) chiamato **gateway**. Questo è il cuore di OpenClaw: gestisce le conversazioni, le routing e le chiamate al modello.
+
+Verifica che il servizio sia attivo:
+
+```bash
+openclaw gateway status
+```
+
+Se non è attivo, avvialo:
+
+```bash
+openclaw gateway start
+```
+
+## Step 5: Connetti Ollama
+
+Per default, OpenClaw potrebbe essere configurato su un provider cloud. Devi modificare il file di configurazione per puntare a Ollama.
+
+Apri il file di configurazione:
+
+```bash
+nano ~/.config/openclaw/config.yaml
+```
+
+Cerca la sezione `providers` e assicurati che ci sia qualcosa del genere:
+
+```yaml
+providers:
+  ollama:
+    endpoint: http://localhost:11434
+    model: glm4:9b
+```
+
+Salva e chiudi. Riavvia il gateway:
+
+```bash
+openclaw gateway restart
+```
+
+Controlla lo status di nuovo:
+
+```bash
+openclaw status
+```
+
+Dovresti vedere che il modello attivo è `ollama/glm4:9b` (o quello che hai scelto) e che Telegram è collegato.
+
+## Step 6: Pairing con Telegram
+
+Ora vai su Telegram, apri il bot che hai creato e scrivi:
+
+```
+hello
+```
+
+Il bot ti risponderà con un **codice di pairing** (una stringa tipo `ABC123`).
+
+Torna al terminale e approva il pairing:
+
+```bash
+openclaw pairing approve telegram ABC123
+```
+
+(Sostituisci `ABC123` con il codice che hai ricevuto.)
+
+Ora torna su Telegram e scrivi di nuovo qualcosa al bot. Dovrebbe rispondere usando il tuo modello locale!
+
+<CtaCard
+    title='Hai bisogno di una consulenza AI?'
+    description='Parliamo di come implementare agenti AI nel tuo workflow o nella tua azienda.'
+    primaryButtonText='Scrivimi'
+    primaryButtonUrl='/contacts'
+    pattern='circles'
+    align='center'
+/>
+
+## Gotcha e consigli pratici
+
+Ho configurato OpenClaw più volte e ci sono alcuni dettagli che ti faranno risparmiare tempo:
+
+**1. Il gateway crasha.**
+
+OpenClaw è un progetto giovane e il gateway può andare in crash. Se noti che il bot non risponde, riavvia il gateway:
+
+```bash
+openclaw gateway restart
+```
+
+Per evitare di farlo manualmente ogni volta, puoi creare un cronjob che riavvia il gateway ogni 30 minuti (è un workaround, ma funziona):
+
+```bash
+crontab -e
+```
+
+Aggiungi:
+
+```
+*/30 * * * * /usr/local/bin/openclaw gateway restart
+```
+
+**2. Il modello è lento.**
+
+Se il modello impiega troppo tempo a rispondere, prova un modello più piccolo (es. `phi-3:mini`) oppure investi in una GPU decente. La differenza tra CPU e GPU per l'inferenza è enorme.
+
+**3. Ollama non parte.**
+
+Se Ollama non si avvia, controlla che non ci siano conflitti di porta (di default usa la 11434):
+
+```bash
+lsof -i :11434
+```
+
+**4. Sicurezza.**
+
+OpenClaw ha accesso al tuo sistema (può eseguire comandi, leggere file, inviare messaggi). **Non dargli accesso a dati sensibili** senza prima capire cosa può fare. Il sistema di pairing aiuta, ma non è una sandbox completa.
+
+## Prossimi passi
+
+Ora che hai OpenClaw configurato e funzionante, puoi:
+
+- **Aggiungere skills:** OpenClaw supporta moduli esterni per estendere le funzionalità (controllo calendario, email, automazioni)
+- **Collegare altri canali:** oltre a Telegram, puoi usare Discord, Slack, Signal, WhatsApp
+- **Provare altri modelli:** Ollama supporta decine di modelli - sperimenta con Qwen, Llama, Mistral, GPT-OSS
+- **Creare agenti personalizzati:** OpenClaw permette di definire agent con ruoli e workspace separati
+
+## Conclusione
+
+Hai appena configurato un assistente AI che gira completamente sul tuo hardware. Nessun abbonamento mensile, nessun dato inviato a terzi, controllo totale.
+
+È perfetto? No. I modelli locali non battono ancora GPT-4 o Claude Opus per compiti complessi. Ma per automazioni quotidiane, assistenza personale e task specifici, funziona benissimo. E la privacy e il controllo che ottieni in cambio valgono lo sforzo iniziale.
+
+Se ti è piaciuta questa guida o hai domande, [scrivimi](/contacts). Nel prossimo articolo vedremo come creare agenti specializzati e collegarli a strumenti esterni.
