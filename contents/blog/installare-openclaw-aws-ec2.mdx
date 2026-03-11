@@ -1,0 +1,231 @@
+---
+title: 'Installare OpenClaw con OpenAI su AWS EC2 Free Tier'
+createdAt: '2026-03-11T00:00:00Z'
+modifiedAt: '2026-03-11T00:00:00Z'
+summary: 'Guida pratica per configurare OpenClaw su AWS con GPT-4.1 mini e Telegram. Free tier, setup completo in 20 minuti.'
+image: '/images/blog/installare-openclaw-aws-ec2.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'aws', 'cloud', 'tutorial']
+---
+
+Ti mostro come configurare OpenClaw (o Clawdbot/Moltbot) usando l'API OpenAI e il modello GPT-4.1 mini su un'istanza AWS Free Tier EC2. Creerò la VM, mi collegherò al terminale, installerò OpenClaw, configurerò OpenAI e Telegram, e verificherò il setup.
+
+Ti condivido anche i prompt che ho testato e che hanno funzionato per me.
+
+## Creare l'istanza EC2
+
+Clicca Launch instance in EC2 e dai un nome alla VM OpenClaw. Seleziona l'immagine Ubuntu Server 24. Scegli il tipo di istanza t2.small con 1 vCPU e 2 GB RAM.
+
+Crea o seleziona una key pair esistente. Permetti HTTP e HTTPS nel security group. Imposta lo storage a 8 GB e lancia l'istanza.
+
+Apri i dettagli dell'istanza e clicca Connect. Usa EC2 Instance Connect per aprire il terminale nel browser. Pulisci il terminale e preparati a far girare i comandi.
+
+## Installare OpenClaw
+
+Vai sul sito openclaw.ai e copia il comando installer. Incollalo nel terminale EC2 e premi Enter.
+
+Aspetta che l'installer finisca. Quando richiesto, seleziona Yes e poi seleziona Quick Start.
+
+<CtaCard
+    title='Vuoi integrare AI nel tuo business?'
+    description='Contattami per una consulenza su come implementare strumenti AI nella tua azienda.'
+    primaryButtonText='Contattami'
+    primaryButtonUrl='/contacts'
+    pattern='circles'
+    align='center'
+/>
+
+## Configurare OpenAI
+
+Seleziona l'interfaccia OpenAI nella lista setup. Quando richiesto per la chiave API OpenAI, generala su [platform.openai.com/api-keys](https://platform.openai.com/api-keys) e crea una nuova secret key.
+
+Copia la chiave e incollala nel terminale. Continua il setup.
+
+Scegli un modello dalla lista. Io ho selezionato GPT-4.1 mini. Cerca di selezionare modelli mini o nano perché i modelli grandi sono molto costosi e mangeranno tutti i tuoi crediti.
+
+## Configurare il canale Telegram
+
+Seleziona Telegram nella lista canali. Crea un bot e ottieni il token usando BotFather di Telegram.
+
+Apri Telegram, cerca BotFather, inizia una chat, e fai girare il comando:
+
+```
+/newbot
+```
+
+Dai un nome al tuo bot e uno username quando richiesto. Copia il bot token e incollalo nel terminale setup di OpenClaw.
+
+## Skill e servizio gateway
+
+Di default, sei skill sono selezionati. Se vuoi selezionarne di più puoi scegliere Yes, ma io l'ho saltato e ho selezionato No.
+
+Vedrai il messaggio che il servizio gateway OpenClaw è installato. Seleziona Open in Web UI e conferma Yes, poi apri un nuovo terminale per controllare lo status.
+
+## Verificare il setup
+
+Fai girare questo comando per controllare lo status:
+
+```bash
+openclaw status
+```
+
+Vedrai i canali configurati, come Telegram, e info di sessione. Scrolla su nell'output per trovare l'URL della Web UI e conferma che i servizi sono in esecuzione.
+
+Per listare i modelli configurati:
+
+```bash
+openclaw models
+```
+
+## Accoppiare OpenClaw con il tuo bot Telegram
+
+Apri il tuo bot Telegram e clicca Start. Vedrai il tuo Telegram user ID e un pairing code.
+
+Copia il comando di pairing mostrato nel tuo terminale, incollalo nel terminale EC2, e appendi il tuo bot token se richiesto. Fai girare il comando e aspetta il messaggio approved.
+
+<CtaCard
+    title='Scopri i miei progetti'
+    description='Dai un occhio ai progetti su cui sto lavorando e alle tecnologie che utilizzo.'
+    primaryButtonText='Vedi Progetti'
+    primaryButtonUrl='/projects'
+    pattern='circles'
+    align='center'
+/>
+
+## Test e errore comune
+
+Manda un messaggio di test al bot Telegram. Se ottieni l'errore "You exceeded your current quota. Please check your plan and billing details," aggiungi crediti al tuo account OpenAI e riprova.
+
+## Prompt che ho testato
+
+Ecco i prompt che ho testato e che hanno funzionato:
+
+**Lista tutti i file nella mia home directory:**
+
+```bash
+ls -la ~
+```
+
+**Crea una nuova directory chiamata test-project nella mia cartella Documents:**
+
+```bash
+mkdir -p ~/Documents/test-project
+```
+
+**Crea un file chiamato config.txt con contenuto hello nella directory test-project:**
+
+```bash
+echo "hello" > ~/Documents/test-project/config.txt
+```
+
+**Controlla se ho Docker installato e dimmi la versione. Se non installato, installa Docker:**
+
+```bash
+which docker || echo "Docker not found"
+docker --version
+```
+
+Su Ubuntu, installando Docker con apt:
+
+```bash
+sudo apt-get update
+sudo apt-get install -y docker.io
+sudo systemctl enable --now docker
+```
+
+**Lista tutti i container Docker attualmente in esecuzione. Poi fai girare un container Nginx chiamato test-nginx-web-server sulla porta 8080:**
+
+```bash
+mkdir -p ~/webroot
+echo "Hello World" > ~/webroot/index.html
+docker run -d --name test-nginx-web-server -p 8080:80 -v ~/webroot:/usr/share/nginx/html:ro nginx:stable
+curl http://localhost:8080
+```
+
+**Cambia il messaggio da Hello World a Hello World 111:**
+
+```bash
+echo "Hello World 111" > ~/webroot/index.html
+curl http://localhost:8080
+```
+
+**Fai girare un'app Python Flask in un container:**
+
+```bash
+mkdir -p ~/flaskapp
+cat > ~/flaskapp/app.py << 'EOF'
+from flask import Flask
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "Hello from Flask"
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
+EOF
+
+cat > ~/flaskapp/Dockerfile << 'EOF'
+FROM python:3.11-slim
+WORKDIR /app
+COPY app.py .
+RUN pip install flask
+EXPOSE 5000
+CMD ["python", "app.py"]
+EOF
+
+cd ~/flaskapp
+docker build -t flaskapp:latest .
+docker run -d --name flaskapp -p 5000:5000 flaskapp:latest
+curl http://localhost:5000
+```
+
+**Trova e lista file grandi. Scansiona porte aperte sul server:**
+
+```bash
+sudo du -ah / | sort -hr | head -n 20
+sudo ss -tulpn
+```
+
+**Installa SQLite, crea un database chiamato test, crea una tabella employees con colonne name e age, inserisci una riga e stampa i dati:**
+
+```bash
+sudo apt-get update
+sudo apt-get install -y sqlite3
+
+sqlite3 ~/test.db << 'EOF'
+CREATE TABLE IF NOT EXISTS employees (name TEXT, age INTEGER);
+INSERT INTO employees (name, age) VALUES ('Alice', 30);
+.headers on
+.mode column
+SELECT * FROM employees;
+EOF
+```
+
+**Aggiungi una nuova riga e una nuova colonna designation, poi query i dati:**
+
+```bash
+sqlite3 ~/test.db << 'EOF'
+ALTER TABLE employees ADD COLUMN designation TEXT;
+UPDATE employees SET designation = 'Engineer' WHERE name = 'Alice';
+INSERT INTO employees (name, age, designation) VALUES ('Bob', 28, 'Analyst');
+.headers on
+.mode column
+SELECT * FROM employees;
+EOF
+```
+
+**Elimina tutti i container Docker:**
+
+```bash
+docker rm -f $(docker ps -aq)
+```
+
+## Pensieri finali
+
+Questo è come ho configurato OpenClaw con l'API OpenAI e il modello GPT-4.1 mini su un'istanza EC2 e l'ho collegato a Telegram. Tieni d'occhio la selezione del modello perché modelli più grandi possono consumare crediti molto velocemente.
+
+Il setup è abbastanza diretto. La parte più importante è tenere sotto controllo i costi - usa mini o nano modelli per il testing, controlla regolarmente il tuo billing OpenAI, e non lasciare girare l'agente con un modello costoso senza supervision.
+
+Una volta configurato, hai un agente AI completo accessibile via Telegram che può eseguire comandi, gestire file, far girare container Docker, e molto altro. Utile per automazioni, testing remoto, o semplicemente per avere un assistente sempre disponibile su qualsiasi dispositivo.

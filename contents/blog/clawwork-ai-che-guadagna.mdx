@@ -1,0 +1,116 @@
+---
+title: 'ClawWork: quando il tuo agente AI inizia a guadagnare'
+createdAt: '2026-03-11T00:00:00Z'
+modifiedAt: '2026-03-11T00:00:00Z'
+summary: 'Un esperimento pazzo: dai 10$ a un agente OpenClaw e vedi se sopravvive. Spoiler: ha fatto 19.915$ in 8 ore facendo lavoro vero.'
+image: '/images/blog/clawwork-ai-che-guadagna.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'ai agents', 'automation']
+---
+
+Qualcuno ha dato 10 dollari a un agente OpenClaw e gli ha detto: "Sopravvivi". Otto ore dopo, quell'agente aveva guadagnato 19.915 dollari completando lavoro professionale vero. Non è una simulazione con soldi finti. Sono task reali, valutazioni reali, pressione economica reale.
+
+Si chiama ClawWork, è open source, si basa su OpenClaw, e punta a qualcosa di genuinamente nuovo. Ma devi stare molto attento.
+
+Ti spiego cosa fa ClawWork, come funziona l'architettura, il modello di scoring e pagamento, e i rischi che contano davvero. Ti segnalerò anche i punti esatti dove i costi possono esplodere e dove puoi esporre dati sensibili. Leggi bene le note di cautela prima di collegare qualsiasi cosa a un canale live.
+
+## Cosa fa ClawWork
+
+ClawWork trasforma il tuo assistente AI in quello che gli sviluppatori chiamano un "AI co-worker". La differenza è importante. Un assistente risponde alle tue domande. Un co-worker fa lavoro che crea valore economico e viene pagato per questo.
+
+L'agente parte con 10$. Ogni chiamata LLM costa soldi veri detratti da quel saldo. L'unico modo per aumentare il saldo è completare task professionali e farli valutare da un LLM.
+
+Lavoro fatto male = poco pagamento. Finisci i soldi = l'agente muore. Quel loop di pressione è il punto.
+
+## Scope e scoring
+
+Lo scope copre 44 occupazioni: developer, avvocato, financial manager, infermiere, giornalista, agente immobiliare, compliance officer e altro. Include 220 task professionali reali dal dataset GDP-Well, progettato per misurare il contributo effettivo dell'AI all'output economico. Non è un test a crocette.
+
+Ci sono deliverable veri come documenti Word, fogli Excel, analisi di mercato, piani di progetto e design di processi. Lo scoring è legato ai dati di salario orario reali del Bureau of Labor Statistics USA. Il pagamento dipende dalla qualità e dal tempo stimato del task.
+
+Il pagamento è calcolato così:
+
+```
+pagamento = quality_score * ore_stimate * salario_orario_bls
+```
+
+Un task di market research analyst da tre ore a 38$ l'ora paga fino a 116$, ma solo se il lavoro è buono.
+
+## Segnali dalla leaderboard
+
+Una leaderboard pubblica ha mostrato ATIC combinato con Qwen 3.5 Plus trasformare 10$ in 19.915$ in 8 ore. Qwen 3.5 Plus da solo è arrivato terzo spendendo solo 6$ di costo API. aic deepc è arrivato quinto sul reddito ma aveva il quality score più alto al 66,8%.
+
+Questi sono insight che non ottieni da un benchmark standard. Mostrano come reddito, costo e qualità interagiscono sotto pressione economica reale. Puoi confrontare modelli e decidere quale service provider usare, o considerare modelli locali per gestire i costi.
+
+<CtaCard
+    title='Vuoi integrare AI nel tuo business?'
+    description='Contattami per una consulenza su come implementare strumenti AI nella tua azienda.'
+    primaryButtonText='Contattami'
+    primaryButtonUrl='/contacts'
+    pattern='circles'
+    align='center'
+/>
+
+## Architettura
+
+ClawWork sta dentro l'ecosistema OpenClaw e passa attraverso Nanobot, che si collega ai tuoi canali come Telegram o Discord. I messaggi passano attraverso il gateway Nanobot, e ogni singola chiamata LLM viene intercettata dal tracked provider, che detrae il costo dal saldo dell'agente in tempo reale. Il tuo agente sa esattamente quanto costa esistere.
+
+Sul lato task, l'agente riceve un task GDP-Well, decide se lavorare o imparare, esegue, guadagna reddito e persiste i risultati alla dashboard. Il valutatore assegna score alle submission e determina il pagamento usando la formula legata al salario. Questo feedback loop mantiene l'agente dentro un ambiente economico realistico.
+
+## Setup e sandbox prima di tutto
+
+Inizia con la simulazione standalone e la sandbox, non un canale live. Ti serviranno chiavi API, e questo non è uno strumento gratuito.
+
+**Step 1:** Leggi la sezione cautela prima di far girare qualsiasi cosa. Il costo API può spiralare, e stai pagando sia per l'agente che per il valutatore allo stesso tempo.
+
+**Step 2:** Configura la simulazione in sandbox localmente e conferma che la dashboard riceva run e score. Osserva la spesa e i quality score in tempo reale prima di collegare qualsiasi canale live.
+
+**Step 3:** Conferma le tue variabili d'ambiente e scelte di modello. I modelli costosi si sommano velocemente quando il classifier, l'agente e il valutatore fanno ciascuno chiamate separate su ogni task.
+
+**Step 4:** Itera su task di test piccoli finché non capisci la curva di pagamento e i failure mode. Una run mal definita può bruciare soldi veri prima che te ne accorga.
+
+**Step 5:** Solo dopo che sei a tuo agio, pianifica l'integrazione del gateway live. Blocca prima i controlli d'accesso.
+
+Repo del progetto: [HKUDS/ClawWork su GitHub](https://github.com/HKUDS/ClawWork)
+
+## Integrazione OpenClaw
+
+Una volta pronto per un canale live, collega l'economic tracking a un gateway Nanobot. Ogni conversazione sarà tracciata e ogni token avrà un costo.
+
+**Step 1:** Configura il tuo file JSON settings per il tracked provider di ClawWork e l'economic tracking. Ricontrolla nomi modello, rate limit e qualsiasi configurazione allowlist.
+
+**Step 2:** Installa lo skill file fornito dal repo e imposta il path corretto nel tuo gateway config. Assicurati che lo skill si carichi senza errori.
+
+**Step 3:** Avvia il gateway e conferma che i messaggi vengono intercettati e hanno un costo. Valida che i saldi decrementino per chiamata e che i risultati dei task persistano nella dashboard.
+
+**Step 4:** Tieni l'allowlist limitata al tuo user ID finché non sei sicuro di costi e comportamento. Tratta qualsiasi canale connesso come un potenziale punto di trigger.
+
+## Tool e capability
+
+ClawWork espone circa 14 tool, inclusi quattro economic tool sopra ai tool Nanobot standard. Include web search, creazione file ed esecuzione codice in sandbox. La sandbox è E2B, che è un servizio cloud, il che significa che il tuo codice gira sulla loro infrastruttura, non sulla tua, quindi leggi i loro termini.
+
+Il valutatore usa GPT-4o di default, il che significa che ogni submission di task manda l'output di lavoro del tuo agente a OpenAI. Se stai lavorando con dati finanziari confidenziali, è un problema. Considera la tua classificazione dati prima di far girare workload sensibili.
+
+## Costi e rischi
+
+Il costo API può spiralare perché il task classifier, l'agente e il valutatore fanno tutti chiamate LLM separate per task. Una run mal definita con un modello costoso può bruciare soldi veri prima che te ne accorga. Il reddito è valore simulato legato a dati di salario, non revenue reale.
+
+L'integrazione in modalità Claw si lega direttamente al tuo gateway OpenClaw live. Qualsiasi canale connesso come Telegram o Discord diventa un punto d'ingresso potenziale per qualcuno che triggera comandi e accumula costi se la tua allowlist non è bloccata. Impostala sul tuo user ID mentre impari e testi.
+
+Questi vincoli sono il punto di ClawWork, ma richiedono gestione attenta. È potente, ma non perdona. Trattalo come un sistema che spende soldi veri su ogni messaggio.
+
+<CtaCard
+    title='Scopri i miei progetti'
+    description='Dai un occhio ai progetti su cui sto lavorando e alle tecnologie che utilizzo.'
+    primaryButtonText='Vedi Progetti'
+    primaryButtonUrl='/projects'
+    pattern='circles'
+    align='center'
+/>
+
+## Pensieri finali
+
+ClawWork mostra come un AI co-worker può operare sotto pressione economica reale piuttosto che passare benchmark. I risultati della leaderboard rendono chiaro che qualità, costo e reddito interagiscono in modi che i test tipici non possono rivelare.
+
+Procedi, ma procedi con cautela. Se me lo chiedi, probabilmente non lo userò subito perché ci sono ancora bug. Se sei già su OpenClaw e disposto a fare sandbox prima, vale la pena esplorarlo con controlli di costo stretti e un'allowlist rigorosa.
