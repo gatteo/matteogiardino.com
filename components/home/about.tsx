@@ -2,7 +2,7 @@
 
 import React, { MutableRefObject, useEffect, useRef } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
+import { Link } from '@/lib/navigation'
 import { UtmUrl } from '@/utils/urls'
 import { IconArrowRight } from '@tabler/icons-react'
 import { gsap, Linear } from 'gsap'

@@ -12,7 +12,11 @@ type Options = {
     locale?: string
 }
 
-export function getLocalBlogPost(slug: string): LocalBlogPost | undefined {
+export function getLocalBlogPost(slug: string, locale?: string): LocalBlogPost | undefined {
+    if (locale) {
+        const post = allBlogPosts.find((p) => p.slug === slug && p.locale === locale)
+        if (post) return post
+    }
     return allBlogPosts.find((p) => p.slug === slug)
 }
 
@@ -44,9 +48,13 @@ export function getLocalBlogPosts({ limit, locale }: Options = {}): BlogPostPrev
 
 export async function getAllBlogPosts(limit?: number, locale?: string): Promise<BlogPostPreview[]> {
     const localPosts = getLocalBlogPosts({ locale })
-    const substackPosts = await getSubstackPosts()
-
     const sortedLocalPosts = localPosts.sort((a, b) => Number(new Date(b.date)) - Number(new Date(a.date)))
+
+    if (locale && locale !== 'it') {
+        return sortedLocalPosts.slice(0, limit)
+    }
+
+    const substackPosts = await getSubstackPosts()
     const sortedSubstackPosts = substackPosts.sort((a, b) => Number(new Date(b.date)) - Number(new Date(a.date)))
 
     return [...sortedSubstackPosts, ...sortedLocalPosts].slice(0, limit)

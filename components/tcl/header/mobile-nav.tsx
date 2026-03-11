@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import Link from 'next/link'
+import { Link } from '@/lib/navigation'
 import { IconMenu } from '@tabler/icons-react'
 
 import { HeaderLinks } from '@/config/tcl'

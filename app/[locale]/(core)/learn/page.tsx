@@ -1,6 +1,6 @@
 import { Metadata, ResolvingMetadata } from 'next'
 import Image from 'next/image'
-import Link from 'next/link'
+import { Link } from '@/lib/navigation'
 import { absoluteUrl, UtmUrl } from '@/utils/urls'
 import { ArrowUpRight } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'

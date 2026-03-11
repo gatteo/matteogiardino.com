@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import { Link } from '@/lib/navigation'
 import { UtmUrl } from '@/utils/urls'
 
 import { UtmMediums } from '@/types/links'

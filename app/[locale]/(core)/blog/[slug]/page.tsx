@@ -18,6 +18,7 @@ export const dynamic = 'force-static'
 type Props = {
     params: Promise<{
         slug: string
+        locale: string
     }>
 }
 
@@ -32,8 +33,8 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
     const previousOpenGraph = (await parent)?.openGraph ?? {}
     const previousTwitter = (await parent)?.twitter ?? {}
 
-    const { slug } = await params
-    const post = getLocalBlogPost(slug)
+    const { slug, locale } = await params
+    const post = getLocalBlogPost(slug, locale)
     if (!post) return {}
 
     const ISOPublishedTime = new Date(post.createdAt).toISOString()
@@ -83,8 +84,8 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
 }
 
 export default async function Page({ params }: Props) {
-    const { slug } = await params
-    const post = getLocalBlogPost(slug)
+    const { slug, locale } = await params
+    const post = getLocalBlogPost(slug, locale)
 
     if (!post) {
         notFound()

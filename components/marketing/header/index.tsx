@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Image, { ImageProps } from 'next/image'
-import Link from 'next/link'
+import { Link } from '@/lib/navigation'
 
 import Navbar from './navbar'
 import NavbarMobile from './navbar-mobile'

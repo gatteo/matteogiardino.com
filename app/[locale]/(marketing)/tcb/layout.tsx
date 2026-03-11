@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Metadata, ResolvingMetadata } from 'next'
 import Image from 'next/image'
-import Link from 'next/link'
+import { Link } from '@/lib/navigation'
 import { absoluteUrl } from '@/utils/urls'
 
 import { PlRoutes } from '@/config/routes'

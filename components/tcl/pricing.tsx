@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
+import { Link } from '@/lib/navigation'
 import AmazonLogo from 'public/images/brands/amazon.svg'
 import GoogleLogo from 'public/images/brands/google.svg'
 import NetflixLogo from 'public/images/brands/netflix.svg'

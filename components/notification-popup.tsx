@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
+import { Link } from '@/lib/navigation'
 import { UtmUrl } from '@/utils/urls'
 import { useTranslations } from 'next-intl'
 import Devv30Icon from 'public/images/projects/devv-30/icon.webp'

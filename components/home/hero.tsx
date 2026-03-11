@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import Link from 'next/link'
+import { Link } from '@/lib/navigation'
 import { UtmUrl } from '@/utils/urls'
 import Autoplay from 'embla-carousel-autoplay'
 import { useTranslations } from 'next-intl'

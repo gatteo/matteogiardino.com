@@ -1,9 +1,9 @@
 'use client'
 
 import Image from 'next/image'
-import Link from 'next/link'
 import { formatDate } from '@/utils/dates'
 import { UtmUrl } from '@/utils/urls'
+import { Link } from '@/lib/navigation'
 
 import { BlogPostPreview } from '@/types/blog'
 

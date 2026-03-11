@@ -1,4 +1,4 @@
-import Link from 'next/link'
+import { Link } from '@/lib/navigation'
 
 import { TclRoutes } from '@/config/routes'
 import { HeaderLinks } from '@/config/tcl'

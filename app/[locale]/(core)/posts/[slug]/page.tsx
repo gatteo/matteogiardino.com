@@ -1,5 +1,5 @@
 import { Metadata, ResolvingMetadata } from 'next'
-import Link from 'next/link'
+import { Link } from '@/lib/navigation'
 import { notFound } from 'next/navigation'
 import { absoluteUrl, UtmUrl } from '@/utils/urls'
 import { getTranslations } from 'next-intl/server'

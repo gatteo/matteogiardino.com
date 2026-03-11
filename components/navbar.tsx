@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
+import { Link } from '@/lib/navigation'
 import { usePathname } from 'next/navigation'
 import { UtmUrl } from '@/utils/urls'
 import { ArrowUpRight } from 'lucide-react'

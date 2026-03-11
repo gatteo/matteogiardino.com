@@ -1,6 +1,6 @@
 import { Metadata, ResolvingMetadata } from 'next'
 import Image from 'next/image'
-import Link from 'next/link'
+import { Link } from '@/lib/navigation'
 import { absoluteUrl, UtmUrl } from '@/utils/urls'
 import { allProjects } from '@/.contentlayer/generated'
 import { getTranslations } from 'next-intl/server'

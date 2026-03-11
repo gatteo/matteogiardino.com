@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
+import { Link } from '@/lib/navigation'
 
 import { LanguageSwitcher } from '@/components/language-switcher'
 import { Navbar } from '@/components/navbar'
