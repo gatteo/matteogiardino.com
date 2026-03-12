@@ -1,0 +1,289 @@
+---
+title: 'Come Installare OpenClaw su Hostinger VPS: Guida Completa'
+createdAt: '2026-03-12T00:00:00Z'
+modifiedAt: '2026-03-12T00:00:00Z'
+summary: 'Guida passo-passo per installare OpenClaw su VPS Hostinger. Template one-click, configurazione LLM e Telegram.'
+image: '/images/blog/installare-openclaw-hostinger-vps.png'
+authorId: matteo
+locale: 'it'
+tags: ['openclaw', 'ai', 'ai agents', 'hostinger', 'vps', 'tutorial']
+---
+
+Vuoi un assistente AI personale che gira 24/7 su un tuo server? OpenClaw su Hostinger VPS è una delle soluzioni più semplici da configurare - niente script complessi, niente debugging, solo un template one-click e qualche configurazione.
+
+Ti mostro esattamente come fare: dal deploy del VPS alla connessione con Telegram, passando per la configurazione dell'LLM e l'installazione delle skill.
+
+## Perché Hostinger per OpenClaw
+
+Hostinger offre un **template Docker preconfigurato** per OpenClaw. Questo significa:
+- Deploy in un click
+- Backup automatici giornalieri
+- Configurazione guidata con interfaccia web
+- Server in varie regioni (Europa, USA, Asia)
+
+<Image src="/images/blog/installare-openclaw-hostinger-vps/openclaw-hostinger.webp" alt="Template OpenClaw su Hostinger VPS" width={1200} height={630} />
+
+Costo: circa 4-8€/mese a seconda del piano. Con il piano da 24 mesi risparmi sul costo mensile.
+
+## Step 1: Deploy del VPS
+
+Vai su **hostinger.com/vps/docker/openclaw** e clicca Deploy.
+
+<Image src="/images/blog/installare-openclaw-hostinger-vps/openclaw-hostinger-installation-46.webp" alt="Pagina di deploy OpenClaw su Hostinger" width={1200} height={630} />
+
+Nella pagina del carrello:
+
+**Scegli il periodo di fatturazione:**
+- 1 mese (più flessibile)
+- 12 mesi (risparmio moderato)
+- 24 mesi (miglior rapporto qualità-prezzo)
+
+**Attiva i backup automatici giornalieri.** OpenClaw può modificare la propria configurazione del server, quindi avere backup affidabili è essenziale per ripristinare versioni precedenti.
+
+**Seleziona la regione del server.** Di default viene scelta quella con latenza più bassa. Mantieni il default a meno che tu non abbia esigenze specifiche (es. server in Germania per compliance GDPR).
+
+<Image src="/images/blog/installare-openclaw-hostinger-vps/openclaw-hostinger-installation-96.webp" alt="Configurazione periodo di fatturazione e backup" width={1200} height={630} />
+
+Clicca Continua, registrati con Google o email, inserisci i dati di pagamento e completa la transazione.
+
+<CtaCard
+    title='Vuoi integrare AI nel tuo business?'
+    description='Contattami per una consulenza su come implementare strumenti AI nella tua azienda.'
+    primaryButtonText='Contattami'
+    primaryButtonUrl='/contacts'
+    pattern='circles'
+    align='center'
+/>
+
+## Step 2: Configurazione OpenClaw
+
+Dopo il pagamento atterri sulla pagina di configurazione OpenClaw.
+
+<Image src="/images/blog/installare-openclaw-hostinger-vps/openclaw-hostinger-installation-108.webp" alt="Pagina di configurazione OpenClaw con campi API" width={1200} height={630} />
+
+### Gateway Token
+
+Il primo campo è il **Gateway Token** - praticamente la password per accedere alla tua interfaccia OpenClaw.
+
+<Image src="/images/blog/installare-openclaw-hostinger-vps/openclaw-hostinger-installation-116.webp" alt="Campo Gateway Token con icona per rivelare la password" width={1200} height={630} />
+
+Clicca l'icona dell'occhio per rivelarlo e **salvalo in un password manager**. Ti servirà per accedere alla dashboard web.
+
+### API Key del LLM
+
+Ora serve una API key del tuo LLM preferito. Puoi usarne una o anche più di una. Io uso **Anthropic Claude** perché mi piace come funziona quel modello.
+
+La pagina dice di andare su console.anthropic.com, ma in realtà devi andare su **platform.claude.com**.
+
+<Image src="/images/blog/installare-openclaw-hostinger-vps/openclaw-hostinger-installation-141.webp" alt="Link per ottenere API key Anthropic Claude" width={1200} height={630} />
+
+**Su platform.claude.com:**
+
+1. Crea un account o fai login
+2. Se è un nuovo account, aggiungi nome e scegli tipo account (individuale o organizzazione)
+3. **Compra crediti:**
+   - Clicca "Buy credits"
+   - Minimo $5 di crediti
+   - Inserisci i dati di pagamento
+4. **Crea API key:**
+   - Clicca "Create API Key", poi "Create key"
+   - Dai un nome alla key (es. "OpenClaw")
+   - Clicca Add
+   - **Copia la API key** (trattala come una password, non condividerla)
+
+<Image src="/images/blog/installare-openclaw-hostinger-vps/openclaw-hostinger-installation-187.webp" alt="Processo di creazione API key su Anthropic Claude" width={1200} height={630} />
+
+Torna su Hostinger e incolla la API key nel campo corrispondente.
+
+Il processo è simile per gli altri LLM (OpenAI, Groq, ecc.). Segui i link forniti sotto ciascun campo, ottieni la key, torna indietro e incollala.
+
+Quando hai incollato almeno una API key, scorri in basso e clicca **Deploy**.
+
+## Step 3: Attesa e Monitoraggio
+
+Atterri sulla pagina H Panel di Hostinger con un sondaggio. Scorri in basso e clicca Skip.
+
+<Image src="/images/blog/installare-openclaw-hostinger-vps/openclaw-hostinger-installation-222.webp" alt="Docker Manager che mostra il deploy in corso" width={1200} height={630} />
+
+Nel Docker Manager vedi un indicatore che dice "deploying". Ci vogliono **2-5 minuti**. Aspetta che finisca.
+
+Quando è completato, vedrai un segno di spunta verde e lo stato "Running".
+
+<CtaCard
+    title='Scopri i miei progetti'
+    description='Dai un occhio ai progetti su cui sto lavorando e alle tecnologie che utilizzo.'
+    primaryButtonText='Vedi Progetti'
+    primaryButtonUrl='/projects'
+    pattern='dots'
+    align='center'
+/>
+
+## Step 4: Accesso alla Dashboard
+
+Per accedere alla dashboard OpenClaw:
+
+1. Clicca il **link viola in basso a sinistra**
+2. Incolla il Gateway Token che hai salvato prima
+3. Clicca Log in
+
+<Image src="/images/blog/installare-openclaw-hostinger-vps/openclaw-hostinger-installation-235.webp" alt="Schermata di login dashboard OpenClaw" width={1200} height={630} />
+
+Se non ti è apparso il flusso di onboarding e non hai ancora inserito il gateway token:
+
+1. Sul lato sinistro, sotto Control, clicca Overview
+2. Nel pannello "Gateway access", incolla il gateway token e clicca Connect
+3. Lo "Snapshot status" cambierà da Disconnected a Connected
+
+<Image src="/images/blog/installare-openclaw-hostinger-vps/openclaw-hostinger-installation-252.webp" alt="Dashboard OpenClaw con stato Connected" width={1200} height={630} />
+
+## Step 5: Configurazione Identità (soul.md)
+
+Prima cosa: configura l'identità di OpenClaw (un modo fancy per dire onboarding).
+
+<Image src="/images/blog/installare-openclaw-hostinger-vps/openclaw-hostinger-installation-282.webp" alt="Chat di onboarding OpenClaw che chiede nome e ruolo" width={1200} height={630} />
+
+**In Chat:**
+
+1. Scrivi "ciao"
+2. Ti chiederà chi è e chi sei tu. Dagli un nome
+3. Farà una serie di domande per capire:
+   - Chi sei
+   - Su che progetti lavori
+   - Qual è il suo ruolo
+
+Esempio di risposta: "Sei il mio assistente digitale, informale con me e professionale con tutti quelli con cui interagisci per conto mio."
+
+4. Chiederà che emoji usare per rappresentarsi e il tuo fuso orario
+
+Esempio: "Scegli tu l'emoji, io sono in fuso orario Europa/Roma."
+
+Questo configura il file soul.md (l'identità dell'agente).
+
+## Step 6: Connessione Telegram
+
+Una delle cose fighe di OpenClaw è che puoi comunicarci da ovunque. Ora stai chattando nella dashboard web, ma puoi usare **Telegram, WhatsApp, iMessage, Slack, Discord** e altro.
+
+Ti mostro come connettere Telegram.
+
+### Chiedi a OpenClaw di Configurare Telegram
+
+Nella Chat, scrivi: "configuriamo Telegram"
+
+Ti fornirà istruzioni dettagliate. Il messaggio potrebbe essere leggermente diverso, ma avrà tutti i passi da seguire.
+
+### Crea un Bot Telegram con BotFather
+
+1. Apri Telegram e cerca **BotFather**
+2. Avvia la conversazione e clicca il pulsante blu Start
+3. Usa il comando `/newbot` (o selezionalo dalla lista comandi)
+4. Dai un nome al bot (es. "Assistente OpenClaw")
+5. Dai un username al bot. Deve essere unico nell'ecosistema Telegram e **finire con "bot"** (es. "terrific_tony_bot")
+6. BotFather ti fornirà un **API token**. Copialo
+
+### Connetti Telegram a OpenClaw
+
+Torna alla chat OpenClaw e incolla il token Telegram quando richiesto.
+
+<Image src="/images/blog/installare-openclaw-hostinger-vps/openclaw-hostinger-installation-425.webp" alt="Messaggio di conferma connessione Telegram" width={1200} height={630} />
+
+**Importante:** Tratta questo token come una password. Non condividerlo.
+
+Se ottieni una risposta con del codice e poi un messaggio vuoto, vedi la sezione Troubleshooting qui sotto.
+
+<CtaCard
+    title='Vuoi integrare AI nel tuo business?'
+    description='Contattami per una consulenza su come implementare strumenti AI nella tua azienda.'
+    primaryButtonText='Contattami'
+    primaryButtonUrl='/contacts'
+    pattern='zigzag'
+    align='center'
+/>
+
+## Troubleshooting: Risposte Vuote
+
+Se ricevi risposte vuote dall'assistente, significa che hai **raggiunto il rate limit** del tuo LLM.
+
+Con Anthropic Claude tier 1:
+- 30.000 token di input al minuto
+- 8.000 token di output al minuto
+
+**Soluzioni:**
+
+1. **Aspetta 1-2 minuti** e riprova
+2. **Inizia una nuova sessione** (così non invii tutta la conversazione ogni volta)
+3. **Aumenta il tier** finanziando almeno $40 di crediti su Claude
+   - Tier 2: 450.000 token/min input, 90.000 token/min output
+
+Per evitare messaggi vuoti, ho aggiunto $40 di crediti al mio account Claude. Se non vuoi spendere $40, aspetta semplicemente un paio di minuti.
+
+## Test del Bot Telegram
+
+1. Su Telegram, inizia una conversazione con il bot (usa il link che BotFather ti ha fornito)
+2. Clicca Start
+3. Il bot ti fornirà un **codice di pairing**
+4. Copia il codice
+5. Torna su OpenClaw e chiedi "approva il pairing del bot", fornisci il codice
+6. Dopo il messaggio di successo, puoi messaggiare OpenClaw su Telegram
+
+Ho inviato un messaggio al bot e ho ricevuto risposta. Funziona!
+
+## Aggiungere Skill
+
+Ora che hai configurato il bot e il canale di comunicazione, la prossima cosa che la gente vuole fare è aggiungere **skill** (plugin che insegnano al bot nuove capacità).
+
+**Come vedere le skill disponibili:**
+
+- Visita il ClawHub ufficiale
+- Oppure chiedi al bot: "quali skill possiamo aggiungere?"
+
+Ti fornirà una lista di skill popolari:
+- Calendario
+- Email (Gmail, Outlook)
+- Smart home (Philips Hue, HomeAssistant)
+- Notion
+- GitHub
+- E molto altro
+
+**Per installare una skill:**
+
+Chiedi semplicemente al bot di installarla. Ti guiderà attraverso tutti i passaggi.
+
+Esempio: "installa la skill Google Workspace"
+
+Il bot ti fornirà istruzioni dettagliate. Se ti perdi, fai domande di follow-up. Il tuo assistente è lì per aiutarti.
+
+## Ripristino da Backup
+
+Poiché OpenClaw può cambiare la propria configurazione, c'è la possibilità che qualcosa vada storto. Se hai bisogno di ripristinare una versione precedente:
+
+1. Torna all'H Panel di Hostinger
+2. Nel VPS Manager, clicca "Backups and monitoring", poi "Snapshots and backups"
+3. Rivedi i backup precedenti
+4. Scegli la versione che vuoi ripristinare
+
+### Ricominciare da Zero
+
+Se vuoi ricominciare da zero e riconfigurare OpenClaw dall'inizio:
+
+1. Vai su Docker Manager
+2. Clicca Projects
+3. Clicca i tre puntini accanto alla tua istanza OpenClaw
+4. Clicca Delete, poi conferma "Delete project"
+5. Vai su Catalogue, cerca OpenClaw e deploy il template
+6. Riparti con il flusso di onboarding iniziale
+
+## Riepilogo
+
+Hai ora un workflow completo per deployare OpenClaw su Hostinger VPS:
+
+1. **Deploy VPS** con template one-click e backup automatici
+2. **Aggiungi API key** del tuo LLM preferito (Anthropic, OpenAI, ecc.)
+3. **Deploy** e attendi 2-5 minuti
+4. **Accedi alla dashboard** con il gateway token
+5. **Configura identità** (soul.md) tramite chat
+6. **Connetti Telegram** (o altro canale messaging)
+7. **Aggiungi skill** per estendere le capacità
+
+**Pro tip:** Tieni d'occhio i rate limit dell'LLM per evitare risposte vuote. Usa gli snapshot se hai bisogno di rollback o riparti da zero con un deploy fresco.
+
+Hostinger rende il processo più semplice rispetto a configurare manualmente su AWS EC2 o altri VPS generici. Il template preconfigurato elimina la maggior parte del lavoro tecnico.
