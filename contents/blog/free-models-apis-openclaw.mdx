@@ -1,0 +1,197 @@
+---
+title: 'Free Models and APIs for OpenClaw: How to Run AI Agents at Zero Cost'
+createdAt: '2026-03-12T00:00:00Z'
+modifiedAt: '2026-03-12T00:00:00Z'
+summary: 'Discover how to find and configure free AI models for OpenClaw using OpenRouter. Run powerful agents without API costs.'
+image: '/images/blog/free-models-apis-openclaw.png'
+authorId: matteo
+locale: 'en'
+tags: ['openclaw', 'ai', 'free models', 'openrouter', 'cost optimization']
+---
+
+Running OpenClaw can get expensive fast if you're hitting paid APIs with every request. But what if you could run a powerful AI agent at zero cost?
+
+OpenRouter makes this possible by aggregating over 600 models, including dozens of free options. Some are surprisingly capable - good enough for daily automation, code assistance, and research tasks.
+
+Let me show you how to find free models, configure them in OpenClaw, and test them effectively.
+
+## Checking Your Current Setup
+
+Before switching models, verify what you're currently using. Ask your running OpenClaw agent:
+
+> "What provider and model are you using?"
+
+<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-40.webp" alt="OpenClaw agent showing current model configuration" width={1200} height={630} />
+
+Or run from the command line:
+
+```bash
+openclaw models list
+```
+
+This shows your primary model and any configured fallbacks. In my setup, I was running `google/gemini-2.5-flash-preview` through OpenRouter.
+
+## Finding Free Models on OpenRouter
+
+Head to **openrouter.ai/models**. You'll see 621 models (and counting). The interface lets you filter by input/output modalities and cost.
+
+<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-70.webp" alt="OpenRouter models page showing 621 available models" width={1200} height={630} />
+
+To find free options, type **"free"** in the search box:
+
+<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-65.webp" alt="OpenRouter free models search results" width={1200} height={630} />
+
+You'll see models marked with $0.00 pricing. These are completely free to use, though they often have rate limits or lower priority in queues.
+
+<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-76.webp" alt="List of free models with zero cost pricing" width={1200} height={630} />
+
+<CtaCard
+    title='Need help with AI integration?'
+    description='Get in touch for a consultation on implementing AI tools in your business.'
+    primaryButtonText='Contact Me'
+    primaryButtonUrl='/contacts'
+    pattern='circles'
+    align='center'
+/>
+
+## Filtering by Modalities
+
+Want to narrow down further? Use the modality filters.
+
+### Text-Only Models
+
+Select **Text** under both Input and Output for traditional text-based models:
+
+<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-110.webp" alt="Filtering for text input and text output models" width={1200} height={630} />
+
+These are your best options for coding assistance, writing, research, and general automation tasks.
+
+### Image-to-Text Models
+
+Select **Image** under Input and **Text** under Output for vision models:
+
+<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-134.webp" alt="Filtering for image input to text output models" width={1200} height={630} />
+
+Free vision models can scan documents, analyze screenshots, extract text from images, and describe visual content. Surprisingly useful for automation workflows.
+
+### Image Generation?
+
+Check **Image** under Output to see if any free image generation models exist:
+
+<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-150.webp" alt="No free image generation models currently available" width={1200} height={630} />
+
+At the time of writing, there are no free image generation models on OpenRouter. Text-based and image-to-text models are the only free options.
+
+## Configuring a Free Model in OpenClaw
+
+Once you've picked a model, note its **model ID** (shown in the card on OpenRouter). Then configure it as your primary model.
+
+Edit your OpenClaw config (usually `~/.config/openclaw/openclaw.json`):
+
+```json
+{
+  "provider": "openrouter",
+  "model": "google/gemma-2-9b-it:free",
+  "models": {
+    "openrouter": {
+      "apiKey": "your-openrouter-key"
+    }
+  }
+}
+```
+
+<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-165.webp" alt="OpenClaw configuration with free model set as primary" width={1200} height={630} />
+
+Restart the gateway:
+
+```bash
+openclaw gateway restart
+```
+
+Verify the switch:
+
+```bash
+openclaw models list
+```
+
+The primary model should now show your selected free option.
+
+<CtaCard
+    title='Explore My Projects'
+    description='Check out the projects I am working on and the technologies I use.'
+    primaryButtonText='View Projects'
+    primaryButtonUrl='/projects'
+    pattern='dots'
+    align='center'
+/>
+
+## Testing Your Free Model
+
+Send a quick prompt to test responses:
+
+```bash
+openclaw agent run --session-id test
+```
+
+Ask something practical:
+> "Summarize the key features of Next.js 15 in bullet points"
+
+Free models will be slower than premium options and may have lower quality responses, but for many tasks they're more than adequate.
+
+### What Works Well with Free Models
+
+- **Code snippets** - Basic syntax, common patterns
+- **Research summaries** - Condensing information
+- **Text processing** - Formatting, cleaning, extracting data
+- **Scheduling automation** - Simple logic, reminders
+- **Documentation parsing** - Reading and summarizing docs
+
+### What Doesn't Work Well
+
+- **Complex reasoning** - Multi-step logic, math
+- **Long-form writing** - Quality drops on longer outputs
+- **Nuanced judgment** - Understanding context, tone
+- **Real-time speed** - Rate limits mean slower responses
+
+## Local Alternatives
+
+If you want to avoid external APIs entirely, consider running models locally with **Ollama**. OpenClaw has forks optimized for Ollama:
+
+- **ZeroClaw** - Lightweight OpenClaw fork with Ollama support
+- **PicoClaw** - Minimal resource usage
+- **NullClaw** - Stripped-down version
+
+These run entirely on your hardware with zero external API calls. Slower than cloud models but completely private and free.
+
+<CtaCard
+    title='Want to integrate AI in your business?'
+    description='Contact me for a consultation on implementing AI tools tailored to your company.'
+    primaryButtonText='Get in Touch'
+    primaryButtonUrl='/contacts'
+    pattern='zigzag'
+    align='center'
+/>
+
+## Cost vs Capability Trade-offs
+
+Free models make sense when:
+- You're testing OpenClaw for the first time
+- Running low-priority background tasks
+- Automating simple, repetitive work
+- Budget is a hard constraint
+
+Paid models make sense when:
+- You need reliable, fast responses
+- Quality matters (writing, code generation)
+- Complex reasoning or long context required
+- Production use cases with real users
+
+Most productive setups use **ClawRouter** to blend both - routing simple requests to free models and complex ones to paid models automatically.
+
+## Final Thoughts
+
+OpenRouter's free tier gives you genuine access to capable models at zero cost. The quality won't match GPT-4 or Claude, but for automation workflows and experimentation, it's more than enough.
+
+Start with a free text model, test it on your actual use cases, and upgrade selectively to paid models where quality matters. You can save hundreds of dollars per month with smart routing.
+
+And if privacy is a concern, go fully local with Ollama and the ZeroClaw fork. No external APIs, no usage logs, just your AI running on your hardware.
