@@ -1,0 +1,312 @@
+---
+title: 'Debugging OpenClaw: Common Errors and How to Fix Them'
+createdAt: '2026-03-14T00:00:00Z'
+modifiedAt: '2026-03-14T00:00:00Z'
+summary: 'Practical guide to troubleshooting OpenClaw issues. Learn how to diagnose connection problems, model routing errors, permission issues, and more with step-by-step fixes.'
+image: '/images/blog/debugging-openclaw-common-errors.png'
+authorId: matteo
+locale: 'en'
+tags: ['openclaw', 'ai agents', 'debugging', 'troubleshooting', 'tutorial']
+---
+
+When you're running AI agents with OpenClaw, things will break. It's not a question of if, but when. The good news? Most errors follow predictable patterns, and once you know where to look, debugging becomes straightforward.
+
+I've spent hours debugging OpenClaw setups - on my Mac Mini, on EC2 instances, on VPS servers. This guide covers the most common issues I've hit and the exact steps to fix them.
+
+## Where to Look First
+
+Before diving into specific errors, you need to know **where OpenClaw logs its problems**.
+
+**Check the status:**
+```bash
+openclaw status
+```
+
+This shows you if the gateway is running, which model is active, and basic config info. If something's obviously wrong (like "gateway not running"), you've found your starting point.
+
+**Enable verbose mode:**
+```bash
+openclaw config set verbose true
+```
+
+Now OpenClaw will log detailed information about every request, tool call, and model interaction. This is your debugging superpower.
+
+**Read the logs:**
+```bash
+openclaw gateway logs
+# or for real-time monitoring
+openclaw gateway logs --follow
+```
+
+Most errors show up here with stack traces, API responses, and timing info.
+
+<CtaCard
+    title='Need help with AI integration?'
+    description='Get in touch for a consultation on implementing AI tools in your business.'
+    primaryButtonText='Contact Me'
+    primaryButtonUrl='/contacts'
+    pattern='circuits'
+    align='center'
+/>
+
+## Common Error #1: Connection and API Issues
+
+**Symptom:** "Failed to connect to model provider" or timeout errors.
+
+**Cause:** Wrong API keys, network issues, or provider downtime.
+
+**Fix:**
+
+1. Verify your API key is correct:
+```bash
+openclaw model list
+# Check if your provider shows up with correct config
+```
+
+2. Test the connection manually:
+```bash
+# For OpenAI
+curl https://api.openai.com/v1/models \
+  -H "Authorization: Bearer YOUR_API_KEY"
+
+# For Anthropic
+curl https://api.anthropic.com/v1/messages \
+  -H "x-api-key: YOUR_API_KEY"
+```
+
+If curl fails, the problem is with your key or network, not OpenClaw.
+
+3. Check your firewall or VPN. Some providers block certain regions or IPs.
+
+4. If using a local model (Ollama, LM Studio), make sure the server is actually running:
+```bash
+# For Ollama
+curl http://localhost:11434/api/tags
+```
+
+## Common Error #2: Model Not Found
+
+**Symptom:** "Model X not found" or routing errors.
+
+**Cause:** Typo in model name, provider not configured, or model not pulled yet (for local models).
+
+**Fix:**
+
+1. List available models:
+```bash
+openclaw model list
+```
+
+2. Check the exact model name. It's case-sensitive. Use `gpt-4o`, not `GPT-4o` or `gpt4o`.
+
+3. For Ollama models, pull them first:
+```bash
+ollama pull llama3.3
+# Then add to OpenClaw
+openclaw model add ollama:llama3.3
+```
+
+4. Verify your config file (`~/.openclaw/config.json`) has the provider correctly set up:
+```json
+{
+  "providers": {
+    "openai": {
+      "apiKey": "sk-..."
+    }
+  }
+}
+```
+
+## Common Error #3: Permission Errors
+
+**Symptom:** "EACCES: permission denied" or file write errors.
+
+**Cause:** OpenClaw can't write to its config directory or workspace.
+
+**Fix:**
+
+1. Check ownership of the OpenClaw config directory:
+```bash
+ls -la ~/.openclaw/
+```
+
+If it's owned by root (common after `sudo` usage), fix it:
+```bash
+sudo chown -R $USER:$USER ~/.openclaw/
+```
+
+2. Verify workspace permissions:
+```bash
+ls -la ~/agents/
+# Make sure your user can write here
+```
+
+3. For Docker setups, ensure volume mounts have correct permissions:
+```bash
+docker exec openclaw ls -la /home/user/.openclaw/
+```
+
+<CtaCard
+    title='Discover My Projects'
+    description='Check out the projects I'm working on and the technologies I use.'
+    primaryButtonText='View Projects'
+    primaryButtonUrl='/projects'
+    pattern='dots'
+    align='left'
+/>
+
+## Common Error #4: Out of Memory or Timeout
+
+**Symptom:** Process killed, "heap out of memory", or request timeout errors.
+
+**Cause:** Large context, heavy tools, or underpowered server.
+
+**Fix:**
+
+1. Reduce context window. If using Ollama with huge context, trim it:
+```bash
+openclaw model add ollama:llama3.3 --context-length 4096
+```
+
+2. Increase Node.js memory limit:
+```bash
+export NODE_OPTIONS="--max-old-space-size=4096"
+openclaw gateway restart
+```
+
+3. Use a smaller model. `gpt-4o-mini` is faster and cheaper than `gpt-4o` for most tasks.
+
+4. For timeouts, increase the timeout in config:
+```json
+{
+  "timeout": 120000
+}
+```
+
+## Common Error #5: Config File Corruption
+
+**Symptom:** "Unexpected token" or "invalid JSON" errors on startup.
+
+**Cause:** Manually edited config with syntax errors.
+
+**Fix:**
+
+1. Validate your config JSON:
+```bash
+cat ~/.openclaw/config.json | jq .
+# If jq shows an error, your JSON is broken
+```
+
+2. Backup and reset:
+```bash
+mv ~/.openclaw/config.json ~/.openclaw/config.json.backup
+openclaw config init
+# Re-add your models manually
+```
+
+3. Never edit JSON by hand if you can avoid it. Use `openclaw config set` instead:
+```bash
+openclaw config set model.default "gpt-4o"
+```
+
+## Debugging Tools You Should Know
+
+**Verbose mode** (mentioned earlier) is your #1 tool. But here are others:
+
+**Check gateway health:**
+```bash
+curl http://localhost:3721/health
+# Should return 200 OK
+```
+
+**Inspect a specific session:**
+```bash
+openclaw session list
+openclaw session history <session-id>
+```
+
+**Test a model directly without agents:**
+```bash
+openclaw chat --model gpt-4o
+# Type a message and see if the model responds
+```
+
+**Check network connectivity:**
+```bash
+openclaw diagnose network
+```
+
+<CtaCard
+    title='Want to integrate AI in your business?'
+    description='Contact me for a consultation on how to implement AI tools in your company.'
+    primaryButtonText='Contact Me'
+    primaryButtonUrl='/contacts'
+    pattern='circles'
+    align='center'
+/>
+
+## When to Ask for Help
+
+If you've tried the steps above and still stuck, it's time to reach out:
+
+**OpenClaw Discord:** https://discord.com/invite/clawd
+- Active community, maintainers respond quickly
+- Share your logs (use pastebin for long traces)
+- Mention your OS, OpenClaw version, and what you tried
+
+**GitHub Issues:** https://github.com/openclaw/openclaw/issues
+- For reproducible bugs
+- Include: OS, Node version, OpenClaw version, full error trace
+- Minimal reproduction steps help immensely
+
+**Before posting:**
+1. Run `openclaw status` and share the output
+2. Check if your issue already exists in GitHub
+3. Include relevant logs (not the entire 10MB file, just the error section)
+
+## Preventive Tips
+
+Stop errors before they happen:
+
+**1. Pin your OpenClaw version.** Don't auto-update in production:
+```bash
+npm install -g openclaw@1.2.3
+```
+
+**2. Use environment variables for secrets:**
+```bash
+export OPENAI_API_KEY="sk-..."
+# Instead of hardcoding in config.json
+```
+
+**3. Set up health checks.** If running 24/7, monitor the gateway:
+```bash
+# Add to cron
+*/5 * * * * curl -f http://localhost:3721/health || systemctl restart openclaw
+```
+
+**4. Keep logs rotating.** Logs can grow huge:
+```bash
+openclaw config set logRetention 7
+# Keep only last 7 days
+```
+
+**5. Test config changes in a separate profile:**
+```bash
+openclaw config set --profile test model.default "claude-opus-4"
+openclaw chat --profile test
+# If it works, apply to main profile
+```
+
+## Summary
+
+Most OpenClaw errors boil down to:
+- **Connection issues** - check API keys and network
+- **Config problems** - validate JSON, check model names
+- **Permissions** - fix ownership of .openclaw directory
+- **Resource limits** - reduce context or increase memory
+- **Tool/skill bugs** - check skill code, enable verbose mode
+
+Start with `openclaw status` and verbose logging. Read the error message carefully - it usually tells you exactly what's wrong. And when stuck, the OpenClaw community is there to help.
+
+Debugging AI agents isn't magic. It's methodical troubleshooting. Once you learn the patterns, you'll fix most issues in minutes instead of hours.
