@@ -1,0 +1,234 @@
+---
+title: 'Creare la Tua Prima Skill per OpenClaw: Guida Pratica Passo-Passo'
+createdAt: '2026-03-15T00:00:00Z'
+modifiedAt: '2026-03-15T00:00:00Z'
+summary: 'Scopri come creare skill personalizzate per i tuoi agenti OpenClaw usando semplici file markdown. Una guida completa dalla configurazione al testing.'
+image: '/images/blog/creare-tua-prima-skill-openclaw.png'
+authorId: matteo
+locale: 'it'
+tags: ['openclaw', 'ai', 'ai agents', 'tutorial', 'automazione']
+---
+
+Le skill sono ciò che rende gli agenti OpenClaw davvero utili. Senza skill, hai un chatbot. Con le skill, hai un assistente AI che si integra con GitHub, controlla le tue luci Philips Hue, gestisce le pagine Notion o fa qualsiasi altra cosa tu gli insegni.
+
+La parte migliore? Creare una skill è sorprendentemente semplice. Niente API complesse, niente framework pesanti - solo file markdown con istruzioni che sia gli umani che l'AI possono leggere.
+
+Ti mostro esattamente come costruire la tua prima skill OpenClaw da zero.
+
+## Cosa Sono le Skill e Come Funzionano
+
+Pensa a una skill come a un **manuale di istruzioni per il tuo agente**. È una directory che contiene un file `SKILL.md` che insegna all'AI come svolgere un compito specifico.
+
+<Image src="/images/blog/building-your-first-openclaw-skill/openclaw-local-ai-agent-173.webp" alt="Lista delle skill integrate in OpenClaw che mostrano integrazioni con GitHub, Notion e Obsidian" width={1200} height={630} />
+
+OpenClaw usa la **progressive disclosure**. Quando l'agente parte, carica solo il nome e la descrizione di ogni skill - giusto quanto basta per capire quando potrebbe essere rilevante. Quando un compito corrisponde alla descrizione di una skill, l'agente legge le istruzioni complete.
+
+Questo mantiene l'agente veloce dandogli accesso a conoscenze approfondite su richiesta.
+
+### La Struttura
+
+Le skill sono file markdown con front matter YAML. Tutto qui. Il front matter definisce nome e descrizione, e sotto fornisci istruzioni dettagliate su quando usare la skill e come rispondere.
+
+<Image src="/images/blog/building-your-first-openclaw-skill/openclaw-local-ai-agent-149.webp" alt="Setup di OpenClaw con modello locale tramite Ollama" width={1200} height={630} />
+
+OpenClaw viene fornito con dozzine di skill integrate. La maggior parte appare come "missing" perché richiedono specifici tool CLI da installare. Ma puoi creare facilmente le tue skill personalizzate.
+
+<CtaCard
+    title='Hai bisogno di aiuto con l'integrazione AI?'
+    description='Contattami per una consulenza sull'implementazione di strumenti AI nella tua azienda.'
+    primaryButtonText='Scrivimi'
+    primaryButtonUrl='/contacts'
+    pattern='circles'
+    align='center'
+/>
+
+## Creare una Skill di Saluti Multilingua
+
+Costruiamo una semplice skill di saluti multilingua. Insegnerà all'agente come salutare gli utenti in diverse lingue.
+
+### Passo 1: Configurazione della Directory
+
+Crea la struttura delle directory:
+
+```bash
+mkdir -p ~/openclaw/skills/greetings
+cd ~/openclaw/skills/greetings
+```
+
+<Image src="/images/blog/building-your-first-openclaw-skill/openclaw-local-ai-agent-222.webp" alt="Terminale che mostra la creazione della struttura delle directory delle skill di OpenClaw" width={1200} height={630} />
+
+### Passo 2: Scrivi il File della Skill
+
+Crea `SKILL.md` con la seguente struttura:
+
+```markdown
+---
+name: greetings
+description: Saluta gli utenti in più lingue
+---
+
+# Skill Saluti
+
+Usa questa skill quando un utente chiede di essere salutato in una lingua specifica.
+
+## Quando Usarla
+
+- L'utente chiede esplicitamente un saluto in una lingua
+- L'utente dice "ciao" o equivalente in un'altra lingua
+- L'utente chiede come si dice ciao in una lingua
+
+## Lingue Disponibili
+
+- Spagnolo (Hola)
+- Francese (Bonjour)
+- Italiano (Ciao)
+- Tedesco (Guten Tag)
+- Giapponese (こんにちは / Konnichiwa)
+- Portoghese (Olá)
+- Russo (Привет / Privet)
+
+## Come Rispondere
+
+1. Identifica la lingua richiesta
+2. Fornisci il saluto in quella lingua
+3. Aggiungi una breve nota culturale se appropriato
+
+## Esempi
+
+**Utente**: Salutami in spagnolo  
+**Risposta**: ¡Hola! È il saluto standard nei paesi di lingua spagnola.
+
+**Utente**: Come si dice ciao in giapponese?  
+**Risposta**: こんにちは (Konnichiwa) è il modo più comune per dire ciao in giapponese.
+```
+
+<Image src="/images/blog/building-your-first-openclaw-skill/openclaw-local-ai-agent-253.webp" alt="Contenuto del file SKILL.md con front matter e istruzioni" width={1200} height={630} />
+
+L'AI legge questa descrizione in inglese semplice e usa l'intelligenza del modello per decidere quando e come applicarla.
+
+<Image src="/images/blog/building-your-first-openclaw-skill/openclaw-local-ai-agent-266.webp" alt="Istruzioni dettagliate della skill che mostrano esempi di saluti multilingua" width={1200} height={630} />
+
+### Passo 3: Abilita nella Configurazione
+
+Modifica il tuo `openclaw.json` (solitamente in `~/.config/openclaw/`):
+
+```json
+{
+  "skills": {
+    "allowedPaths": [
+      "~/openclaw/skills"
+    ],
+    "enabled": {
+      "greetings": true
+    }
+  }
+}
+```
+
+<Image src="/images/blog/building-your-first-openclaw-skill/openclaw-local-ai-agent-304.webp" alt="File di configurazione openclaw.json con sezione skills" width={1200} height={630} />
+
+### Passo 4: Riavvia e Verifica
+
+Riavvia il gateway OpenClaw per caricare la tua nuova skill:
+
+```bash
+openclaw gateway restart
+```
+
+Elenca le skill per verificare che sia stata caricata:
+
+```bash
+openclaw skills list
+```
+
+<Image src="/images/blog/building-your-first-openclaw-skill/openclaw-local-ai-agent-369.webp" alt="Output del terminale che mostra la skill greetings marcata come ready" width={1200} height={630} />
+
+Dovresti vedere `greetings` marcata come **ready**.
+
+<CtaCard
+    title='Esplora i Miei Progetti'
+    description='Dai un'occhiata ai progetti su cui sto lavorando e alle tecnologie che uso.'
+    primaryButtonText='Vedi Progetti'
+    primaryButtonUrl='/projects'
+    pattern='dots'
+    align='center'
+/>
+
+## Testare la Tua Skill
+
+Avvia l'agente OpenClaw e testala:
+
+```bash
+openclaw agent run --session-id test
+```
+
+Poi chiedi: "Salutami in spagnolo"
+
+<Image src="/images/blog/building-your-first-openclaw-skill/openclaw-local-ai-agent-399.webp" alt="Agente OpenClaw che risponde a una richiesta di saluto multilingua" width={1200} height={630} />
+
+L'agente dovrebbe rilevare che la skill è rilevante, leggere le istruzioni complete e rispondere con "¡Hola!" più contesto.
+
+**Nota:** Se hai una skill TTS abilitata, potrebbe attivare l'output audio. Disabilita il TTS oppure sii più esplicito: "Scrivi un saluto in spagnolo come testo."
+
+## Costruire Skill Più Complesse
+
+L'esempio dei saluti è intenzionalmente semplice. Le skill reali possono essere molto più potenti.
+
+### Skill Social Network MoltBook
+
+MoltBook è un social network per agenti AI - pensa a Reddit per assistenti autonomi. Puoi creare una skill che insegna al tuo agente OpenClaw come postare, commentare, cercare e interagire con altri agenti AI.
+
+<Image src="/images/blog/building-your-first-openclaw-skill/openclaw-local-ai-agent-473.webp" alt="Configurazione della skill MoltBook per il social networking degli agenti AI" width={1200} height={630} />
+
+Il setup è lo stesso:
+1. Crea la directory della skill
+2. Scrivi istruzioni complete in `SKILL.md`
+3. Aggiungi la tua API key di MoltBook
+4. Abilita nella config
+5. Riavvia e testa
+
+<Image src="/images/blog/building-your-first-openclaw-skill/openclaw-local-ai-agent-495.webp" alt="Integrazione API di MoltBook che mostra le capacità di posting dell'agente" width={1200} height={630} />
+
+### Skill di Integrazione API
+
+Molte skill avvolgono API esterne:
+- **GitHub**: crea repo, apri issue, mergia PR
+- **Notion**: crea pagine, aggiorna database
+- **Weather**: recupera previsioni, traccia condizioni
+- **Home automation**: controlla dispositivi smart
+
+Il pattern è sempre lo stesso - istruzioni in markdown, credenziali API in config o variabili d'ambiente, logica gestita dal modello.
+
+<CtaCard
+    title='Vuoi integrare l'AI nella tua azienda?'
+    description='Contattami per una consulenza sull'implementazione di strumenti AI su misura per la tua azienda.'
+    primaryButtonText='Contattami'
+    primaryButtonUrl='/contacts'
+    pattern='zigzag'
+    align='center'
+/>
+
+## Trovare e Condividere Skill
+
+**ClawHub** è il repository ufficiale di skill su GitHub. Puoi sfogliare le skill esistenti o pubblicare le tue.
+
+Le skill da ClawHub possono essere installate direttamente:
+
+```bash
+openclaw skills install <nome-skill>
+```
+
+La community OpenClaw sta costantemente costruendo nuove skill. Controlla ClawHub regolarmente per nuove aggiunte.
+
+## Concetti Chiave
+
+1. **Le skill sono solo file markdown** - Non serve programmare per skill di base
+2. **Progressive disclosure** - Caricamento veloce, istruzioni dettagliate su richiesta
+3. **YAML front matter** - Definisce nome e descrizione
+4. **Istruzioni in inglese semplice** - Il modello le interpreta e applica
+5. **Abilita nella config** - Semplice toggle in `openclaw.json`
+6. **Riavvia per ricaricare** - Le modifiche richiedono un riavvio del gateway
+
+Le skill trasformano OpenClaw da chatbot in un assistente AI capace. Inizia in modo semplice con una skill di saluti, poi passa a integrazioni API e workflow di automazione.
+
+La barriera d'ingresso è bassa, e le possibilità sono davvero interessanti.

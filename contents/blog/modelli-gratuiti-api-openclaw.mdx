@@ -1,0 +1,197 @@
+---
+title: 'Modelli e API Gratuiti per OpenClaw: Come Gestire Agenti AI a Costo Zero'
+createdAt: '2026-03-15T00:00:00Z'
+modifiedAt: '2026-03-15T00:00:00Z'
+summary: 'Scopri come trovare e configurare modelli AI gratuiti per OpenClaw usando OpenRouter. Gestisci agenti potenti senza costi API.'
+image: '/images/blog/modelli-gratuiti-api-openclaw.png'
+authorId: matteo
+locale: 'it'
+tags: ['openclaw', 'ai', 'modelli gratuiti', 'openrouter', 'ottimizzazione costi']
+---
+
+Gestire OpenClaw può diventare costoso velocemente se colpisci API a pagamento ad ogni richiesta. Ma cosa succederebbe se potessi gestire un agente AI potente a costo zero?
+
+OpenRouter rende questo possibile aggregando oltre 600 modelli, incluse dozzine di opzioni gratuite. Alcuni sono sorprendentemente capaci - abbastanza buoni per automazione quotidiana, assistenza al codice e task di ricerca.
+
+Ti mostro come trovare modelli gratuiti, configurarli in OpenClaw e testarli efficacemente.
+
+## Controllare il Tuo Setup Attuale
+
+Prima di cambiare modelli, verifica cosa stai usando attualmente. Chiedi al tuo agente OpenClaw in esecuzione:
+
+> "Quale provider e modello stai usando?"
+
+<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-40.webp" alt="Agente OpenClaw che mostra la configurazione del modello corrente" width={1200} height={630} />
+
+O esegui dalla command line:
+
+```bash
+openclaw models list
+```
+
+Questo mostra il tuo modello primario e eventuali fallback configurati. Nel mio setup, stavo usando `google/gemini-2.5-flash-preview` tramite OpenRouter.
+
+## Trovare Modelli Gratuiti su OpenRouter
+
+Vai su **openrouter.ai/models**. Vedrai 621 modelli (e in crescita). L'interfaccia ti permette di filtrare per modalità di input/output e costo.
+
+<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-70.webp" alt="Pagina dei modelli OpenRouter che mostra 621 modelli disponibili" width={1200} height={630} />
+
+Per trovare opzioni gratuite, scrivi **"free"** nella casella di ricerca:
+
+<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-65.webp" alt="Risultati di ricerca modelli gratuiti OpenRouter" width={1200} height={630} />
+
+Vedrai modelli marcati con prezzo $0.00. Questi sono completamente gratuiti da usare, anche se spesso hanno limiti di rate o priorità più bassa nelle code.
+
+<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-76.webp" alt="Lista di modelli gratuiti con prezzo a costo zero" width={1200} height={630} />
+
+<CtaCard
+    title='Hai bisogno di aiuto con l'integrazione AI?'
+    description='Contattami per una consulenza sull'implementazione di strumenti AI nella tua azienda.'
+    primaryButtonText='Scrivimi'
+    primaryButtonUrl='/contacts'
+    pattern='circles'
+    align='center'
+/>
+
+## Filtrare per Modalità
+
+Vuoi restringere ulteriormente? Usa i filtri delle modalità.
+
+### Modelli Solo Testo
+
+Seleziona **Text** sia sotto Input che Output per modelli basati su testo tradizionali:
+
+<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-110.webp" alt="Filtro per modelli con input testo e output testo" width={1200} height={630} />
+
+Queste sono le tue migliori opzioni per assistenza al codice, scrittura, ricerca e task di automazione generale.
+
+### Modelli Image-to-Text
+
+Seleziona **Image** sotto Input e **Text** sotto Output per modelli di visione:
+
+<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-134.webp" alt="Filtro per modelli con input immagine e output testo" width={1200} height={630} />
+
+I modelli di visione gratuiti possono scansionare documenti, analizzare screenshot, estrarre testo da immagini e descrivere contenuti visivi. Sorprendentemente utili per workflow di automazione.
+
+### Generazione Immagini?
+
+Controlla **Image** sotto Output per vedere se esistono modelli gratuiti di generazione immagini:
+
+<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-150.webp" alt="Nessun modello gratuito di generazione immagini attualmente disponibile" width={1200} height={630} />
+
+Al momento della scrittura, non ci sono modelli gratuiti di generazione immagini su OpenRouter. I modelli basati su testo e image-to-text sono le uniche opzioni gratuite.
+
+## Configurare un Modello Gratuito in OpenClaw
+
+Una volta scelto un modello, annota il suo **model ID** (mostrato nella card su OpenRouter). Poi configuralo come modello primario.
+
+Modifica la tua config OpenClaw (solitamente `~/.config/openclaw/openclaw.json`):
+
+```json
+{
+  "provider": "openrouter",
+  "model": "google/gemma-2-9b-it:free",
+  "models": {
+    "openrouter": {
+      "apiKey": "tua-chiave-openrouter"
+    }
+  }
+}
+```
+
+<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-165.webp" alt="Configurazione OpenClaw con modello gratuito impostato come primario" width={1200} height={630} />
+
+Riavvia il gateway:
+
+```bash
+openclaw gateway restart
+```
+
+Verifica il cambio:
+
+```bash
+openclaw models list
+```
+
+Il modello primario dovrebbe ora mostrare la tua opzione gratuita selezionata.
+
+<CtaCard
+    title='Esplora i Miei Progetti'
+    description='Dai un'occhiata ai progetti su cui sto lavorando e alle tecnologie che uso.'
+    primaryButtonText='Vedi Progetti'
+    primaryButtonUrl='/projects'
+    pattern='dots'
+    align='center'
+/>
+
+## Testare il Tuo Modello Gratuito
+
+Invia un prompt veloce per testare le risposte:
+
+```bash
+openclaw agent run --session-id test
+```
+
+Chiedi qualcosa di pratico:
+> "Riassumi le caratteristiche chiave di Next.js 15 in punti elenco"
+
+I modelli gratuiti saranno più lenti delle opzioni premium e potrebbero avere risposte di qualità inferiore, ma per molti task sono più che adeguati.
+
+### Cosa Funziona Bene con i Modelli Gratuiti
+
+- **Snippet di codice** - Sintassi di base, pattern comuni
+- **Riepiloghi di ricerca** - Condensare informazioni
+- **Elaborazione testo** - Formattazione, pulizia, estrazione dati
+- **Automazione scheduling** - Logica semplice, promemoria
+- **Parsing documentazione** - Leggere e riassumere docs
+
+### Cosa Non Funziona Bene
+
+- **Ragionamento complesso** - Logica multi-step, matematica
+- **Scrittura long-form** - La qualità cala su output più lunghi
+- **Giudizio sfumato** - Comprensione contesto, tono
+- **Velocità real-time** - I limiti di rate significano risposte più lente
+
+## Alternative Locali
+
+Se vuoi evitare completamente le API esterne, considera di eseguire modelli localmente con **Ollama**. OpenClaw ha fork ottimizzati per Ollama:
+
+- **ZeroClaw** - Fork OpenClaw leggero con supporto Ollama
+- **PicoClaw** - Uso minimo delle risorse
+- **NullClaw** - Versione ridotta all'osso
+
+Questi girano interamente sul tuo hardware con zero chiamate API esterne. Più lenti dei modelli cloud ma completamente privati e gratuiti.
+
+<CtaCard
+    title='Vuoi integrare l'AI nella tua azienda?'
+    description='Contattami per una consulenza sull'implementazione di strumenti AI su misura per la tua azienda.'
+    primaryButtonText='Contattami'
+    primaryButtonUrl='/contacts'
+    pattern='zigzag'
+    align='center'
+/>
+
+## Trade-off Costo vs Capacità
+
+I modelli gratuiti hanno senso quando:
+- Stai testando OpenClaw per la prima volta
+- Esegui task di background a bassa priorità
+- Automatizzi lavoro semplice e ripetitivo
+- Il budget è un vincolo rigido
+
+I modelli a pagamento hanno senso quando:
+- Hai bisogno di risposte affidabili e veloci
+- La qualità conta (scrittura, generazione codice)
+- È richiesto ragionamento complesso o contesto lungo
+- Casi d'uso di produzione con utenti reali
+
+I setup più produttivi usano **ClawRouter** per mescolare entrambi - instradando automaticamente richieste semplici a modelli gratuiti e quelle complesse a modelli a pagamento.
+
+## Considerazioni Finali
+
+Il tier gratuito di OpenRouter ti dà accesso genuino a modelli capaci a costo zero. La qualità non eguaglierà GPT-4 o Claude, ma per workflow di automazione e sperimentazione, è più che sufficiente.
+
+Inizia con un modello di testo gratuito, testalo sui tuoi casi d'uso reali e passa selettivamente a modelli a pagamento dove conta la qualità. Puoi risparmiare centinaia di dollari al mese con routing intelligente.
+
+E se la privacy è una preoccupazione, vai completamente locale con Ollama e il fork ZeroClaw. Niente API esterne, niente log di utilizzo, solo la tua AI che gira sul tuo hardware.

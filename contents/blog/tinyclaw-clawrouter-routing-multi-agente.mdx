@@ -1,0 +1,149 @@
+---
+title: 'TinyClaw e ClawRouter: Routing Multi-Agente AI Spiegato'
+createdAt: '2026-03-15T00:00:00Z'
+modifiedAt: '2026-03-15T00:00:00Z'
+summary: 'Come TinyClaw abilita la collaborazione multi-agente AI e ClawRouter taglia i costi instradando le richieste al modello capace più economico.'
+image: '/images/blog/tinyclaw-clawrouter-routing-multi-agente.png'
+authorId: matteo
+locale: 'it'
+tags: ['openclaw', 'ai', 'ai agents', 'multi-agente', 'automazione']
+---
+
+L'ecosistema OpenClaw continua ad espandersi, e due progetti hanno catturato la mia attenzione: **TinyClaw** e **ClawRouter**. Risolvono problemi completamente diversi, ma entrambi spingono i confini di ciò che puoi fare con agenti AI locali.
+
+TinyClaw ti permette di eseguire più agenti specializzati in parallelo - pensa a coder, writer e reviewer che lavorano insieme sullo stesso task. ClawRouter affronta il problema dei costi instradando intelligentemente ogni richiesta al modello più economico che può gestirla.
+
+Ti spiego cosa rende interessante ciascuno e ti mostro esattamente come configurarli.
+
+## Cosa Rende Diverso TinyClaw
+
+Ogni altro tool nella famiglia OpenClaw ti dà un assistente personale che risponde ai tuoi messaggi. TinyClaw butta fuori dalla finestra quel modello.
+
+Invece, esegui **più agenti simultaneamente** con ruoli specializzati. Possono passarsi il lavoro a vicenda in catene, fare fan-out in parallelo, e puoi guardarli collaborare in real-time su una dashboard del terminale live.
+
+<Image src="/images/blog/tinyclaw-clawrouter-multi-agent-routing/tinyclaw-clawrouter-135.webp" alt="Dashboard terminale multi-agente TinyClaw che mostra collaborazione real-time" width={1200} height={630} />
+
+L'architettura è intelligente - usa una **coda messaggi basata su file** per evitare race condition, e ogni agente ottiene un workspace isolato e cronologia conversazioni. Supporta Telegram, Discord e WhatsApp out of the box.
+
+<Image src="/images/blog/tinyclaw-clawrouter-multi-agent-routing/tinyclaw-clawrouter-140.webp" alt="Diagramma architettura TinyClaw con workspace agenti isolati" width={1200} height={630} />
+
+### Il Problema: Requisiti Provider
+
+TinyClaw è rigoroso sui provider. **Non supporta Ollama, OpenRouter o modelli locali**. Hai bisogno di Anthropic Claude o OpenAI, il che significa una subscription attiva.
+
+Eseguire da tre a cinque agenti in parallelo significa chiamate API multiple che avvengono contemporaneamente. I costi si sommano velocemente, puoi essere throttlato, e nei casi estremi gli account possono essere flaggati. Considera questo prima di far partire un sistema multi-agente.
+
+<CtaCard
+    title='Hai bisogno di aiuto con l'integrazione AI?'
+    description='Contattami per una consulenza sull'implementazione di strumenti AI nella tua azienda.'
+    primaryButtonText='Scrivimi'
+    primaryButtonUrl='/contacts'
+    pattern='circles'
+    align='center'
+/>
+
+## ClawRouter: Ottimizzazione Costi Intelligente
+
+ClawRouter affronta il problema dei costi da un'angolazione diversa. È un **router locale intelligente** che si mette tra la tua istanza OpenClaw e il modello, valutando ogni richiesta in arrivo su 15 dimensioni in meno di un millisecondo.
+
+Poi instrada la richiesta al **modello più economico capace di gestirla**. Il costo medio blended risulta essere circa $2 per milione di token rispetto a $25 per milione se stessi usando Claude Opus direttamente.
+
+Supporta oltre 30 modelli su sette provider e include profili preconfigurati:
+- **Eco** - massimo risparmio
+- **Auto** - performance bilanciata
+- **Premium** - miglior modello quando ne hai bisogno
+- **Free** - gira interamente su tier gratuito usando GPT-OSS 120B come fallback
+
+Niente API key richieste. Basta installare e lasciare che indirizzi.
+
+## Configurare TinyClaw
+
+Prima, assicurati di avere Node.js, tmux e jq installati. Avrai anche bisogno della CLI Anthropic o OpenAI autenticata con una API key valida.
+
+Usa l'installer curl one-line dal progetto, poi lancia il wizard di setup:
+
+<Image src="/images/blog/tinyclaw-clawrouter-multi-agent-routing/tinyclaw-clawrouter-371.webp" alt="Interfaccia command line wizard installazione TinyClaw" width={1200} height={630} />
+
+```bash
+tinyclaw start
+```
+
+Il wizard interattivo ti guida attraverso la scelta del tuo canale, token bot, nome workspace, provider AI e modello.
+
+### Definire Agenti e Team
+
+Il vero potere si mostra quando definisci i tuoi agenti e team in `settings.json`:
+
+```json
+{
+  "agents": [
+    { "name": "@coder", "role": "Coder", "provider": "anthropic", "model": "claude-3" },
+    { "name": "@writer", "role": "Writer", "provider": "openai", "model": "gpt-4" },
+    { "name": "@reviewer", "role": "Reviewer", "provider": "openai", "model": "gpt-4" }
+  ],
+  "teams": [
+    { "name": "dev-team", "members": ["@coder", "@writer", "@reviewer"] }
+  ]
+}
+```
+
+<Image src="/images/blog/tinyclaw-clawrouter-multi-agent-routing/tinyclaw-clawrouter-380.webp" alt="Esempio file di configurazione settings.json TinyClaw" width={1200} height={630} />
+
+Instrada messaggi ad agenti specifici usando il prefisso `@` nella tua chat:
+
+```bash
+# In chat: @coder costruisci l'API; @writer scrivi docs; @reviewer audita PR
+tinyclaw team visualize
+```
+
+<Image src="/images/blog/tinyclaw-clawrouter-multi-agent-routing/tinyclaw-clawrouter-399.webp" alt="Visualizzazione team TinyClaw che mostra flusso collaborazione agenti" width={1200} height={630} />
+
+<CtaCard
+    title='Esplora i Miei Progetti'
+    description='Dai un'occhiata ai progetti su cui sto lavorando e alle tecnologie che uso.'
+    primaryButtonText='Vedi Progetti'
+    primaryButtonUrl='/projects'
+    pattern='dots'
+    align='center'
+/>
+
+## Configurare ClawRouter
+
+L'installazione di ClawRouter è ancora più semplice. Un singolo comando curl lo installa e riavvia il tuo gateway OpenClaw:
+
+<Image src="/images/blog/tinyclaw-clawrouter-multi-agent-routing/tinyclaw-clawrouter-420.webp" alt="Comando installazione ClawRouter nel terminale" width={1200} height={630} />
+
+Il routing intelligente diventa default immediatamente. Le richieste sono valutate e inviate al miglior modello in termini di rapporto qualità-prezzo senza lavoro extra da parte tua.
+
+<Image src="/images/blog/tinyclaw-clawrouter-multi-agent-routing/tinyclaw-clawrouter-442.webp" alt="Visualizzazione sistema scoring richieste ClawRouter" width={1200} height={630} />
+
+Puoi cambiare profili secondo necessità. Il risparmio sui costi è significativo su workload misti - questo swap da solo può ridurre drasticamente il costo medio per token.
+
+<Image src="/images/blog/tinyclaw-clawrouter-multi-agent-routing/tinyclaw-clawrouter-448.webp" alt="Grafico comparazione costi ClawRouter tra diversi modelli" width={1200} height={630} />
+
+## Quale Dovresti Scegliere?
+
+**TinyClaw** è per persone che vogliono andare oltre un singolo assistente ed entrare in workflow multi-agente. È sperimentale e ti costerà in crediti API, ma guardare un team di agenti collaborare su un task in real-time è genuinamente eccitante.
+
+**ClawRouter** è per persone che già eseguono OpenClaw e vogliono smettere di pagare troppo per ogni richiesta. Se sei a tuo agio con il setup, il risparmio sui costi è significativo.
+
+Puoi eseguire entrambi insieme - TinyClaw che gestisce più agenti, ClawRouter che ottimizza le richieste di ogni agente.
+
+<Image src="/images/blog/tinyclaw-clawrouter-multi-agent-routing/tinyclaw-clawrouter-511.webp" alt="Diagramma architettura combinata TinyClaw e ClawRouter" width={1200} height={630} />
+
+<CtaCard
+    title='Vuoi integrare l'AI nella tua azienda?'
+    description='Contattami per una consulenza sull'implementazione di strumenti AI su misura per la tua azienda.'
+    primaryButtonText='Contattami'
+    primaryButtonUrl='/contacts'
+    pattern='zigzag'
+    align='center'
+/>
+
+## Considerazioni Finali
+
+Due tool molto diversi che risolvono due problemi molto diversi. TinyClaw espande la capacità attraverso agenti paralleli. ClawRouter taglia i costi instradando il traffico intelligentemente.
+
+Entrambi richiedono attenta considerazione prima del deployment in produzione. Audita le tue configurazioni regolarmente, monitora l'uso API e sii consapevole dei limiti di rate e rischi di flagging account con sistemi di agenti paralleli.
+
+Se stai già eseguendo OpenClaw e stai incontrando limiti di costi o capacità, questi tool vale la pena esplorare. Basta sapere in cosa ti stai cacciando prima di iniziare a far partire team multi-agente.
