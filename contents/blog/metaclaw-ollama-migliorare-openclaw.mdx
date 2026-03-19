@@ -1,0 +1,202 @@
+---
+title: 'Come MetaClaw e Ollama Rendono OpenClaw Più Intelligente'
+createdAt: '2026-03-19T08:00:00Z'
+modifiedAt: '2026-03-19T08:00:00Z'
+summary: 'MetaClaw è un proxy tra OpenClaw e LLM che inietta skill e impara automaticamente. Guida pratica all'installazione con Ollama locale.'
+image: '/images/blog/metaclaw-ollama-migliorare-openclaw.png'
+authorId: matteo
+locale: 'it'
+tags: ['openclaw', 'ollama', 'ai agents', 'metaclaw', 'machine learning', 'automation']
+---
+
+OpenClaw è uno strumento potente, ma ha un problema che condivide con praticamente tutti gli agenti AI: **ogni sessione parte da zero**. Stessi errori, stessi pattern, nessuna crescita.
+
+MetaClaw prova a risolvere questo problema in un modo interessante. Si posiziona come proxy tra OpenClaw e il tuo modello LLM, intercetta ogni conversazione, inietta automaticamente le skill più rilevanti nel prompt di sistema e dopo ogni sessione distilla quello che è successo in nuove skill usando il tuo stesso LLM. La libreria di skill cresce con l'uso.
+
+In pratica: **il tuo agente impara davvero** invece di limitarsi a ricordare fatti sparsi.
+
+## Il problema degli agenti stateless
+
+La maggior parte degli agenti AI è stateless per design. Ogni conversazione inizia fresca. Risolvi gli stessi problemi ripetutamente, spieghi le tue preferenze più e più volte, e l'agente non porta mai avanti quello che ha imparato.
+
+Anche con strumenti di memoria, l'agente sta solo recuperando fatti. Non sta migliorando il suo comportamento. **MetaClaw prova a essere diverso**: trasforma pattern comportamentali in skill riutilizzabili che vengono iniettate automaticamente al momento giusto.
+
+<Image src="/images/blog/metaclaw-ollama-migliorare-openclaw/metaclaw-ollama-176.webp" alt="Architettura MetaClaw - proxy tra OpenClaw e LLM" width={1200} height={630} />
+
+Se hai bisogno di un ripasso su come configurare OpenClaw con Ollama, dai un'occhiata alla [guida ufficiale OpenClaw con Ollama](https://sonusahani.com/blogs/openclaw-ollama-model).
+
+<CtaCard
+    title="Hai bisogno di aiuto con l'integrazione AI?"
+    description="Contattami per una consulenza su come implementare agenti AI nella tua infrastruttura."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Setup e ambiente
+
+Nel mio setup ho Ubuntu con OpenClaw già installato e integrato con i miei modelli Ollama. GPU Nvidia RTX 6000 con 48 GB di VRAM. Se stai usando Qwen 3.5 32B localmente con Ollama, questa guida è utile: [run Qwen 3.5 with OpenClaw using Ollama](https://sonusahani.com/blogs/qwen3-5-openclaw-ollama-locally).
+
+Il bello di usare Ollama è che **tutto rimane locale** e non paghi chiamate API. Questo è quello che uso io.
+
+## Installare MetaClaw localmente
+
+L'installazione è diretta. Clona il repo, installa i prerequisiti, lancia il setup guidato:
+
+```bash
+git clone https://github.com/aiming-lab/MetaClaw.git
+cd MetaClaw
+pip install -r requirements.txt
+metaclaw setup
+```
+
+<Image src="/images/blog/metaclaw-ollama-migliorare-openclaw/metaclaw-ollama-211.webp" alt="Installazione MetaClaw - comandi iniziali" width={1200} height={630} />
+
+Durante il setup, scegli la modalità dove l'agente inietta e impara skill dalle conversazioni. **Non c'è training coinvolto** in questa modalità, è quello che vogliamo. Salta la modalità RL che fa fine-tuning dei pesi del modello in tempo reale perché richiede un'API a pagamento.
+
+<Image src="/images/blog/metaclaw-ollama-migliorare-openclaw/metaclaw-ollama-224.webp" alt="Configurazione provider LLM - Ollama localhost" width={1200} height={630} />
+
+Per il provider LLM, usa un base URL custom che punta alla tua istanza Ollama. Il default è `http://localhost:11434` ed è quello che uso io. Per il model ID, incolla il tuo modello locale, ad esempio `qwen2.5-32b-instruct` o `llama3.1`.
+
+Per l'API key, qualsiasi valore placeholder va bene perché Ollama su localhost non la richiede. **Abilita skill injection** così MetaClaw inserisce le skill più rilevanti nel prompt di sistema prima di ogni risposta. Accetta la directory skills di default e abilita auto summarization.
+
+<Image src="/images/blog/metaclaw-ollama-migliorare-openclaw/metaclaw-ollama-281.webp" alt="Abilitazione skill injection e auto summarization" width={1200} height={630} />
+
+Abilita e configura il proxy. Accetta la porta di default mostrata dal setup, a meno che tu non debba cambiarla per il tuo ambiente. Mantieni tutto locale così non paghi chiamate API. Completa il setup e continua.
+
+<CtaCard
+    title="Scopri i miei progetti"
+    description="Dai un'occhiata ai progetti su cui sto lavorando e alle tecnologie che utilizzo."
+    primaryButtonText="Vedi Progetti"
+    primaryButtonUrl="/projects"
+    pattern="dots"
+    align="center"
+/>
+
+## Avvio e verifica
+
+Avvia MetaClaw e verifica lo stato in un altro terminale:
+
+```bash
+metaclaw start
+metaclaw status
+```
+
+<Image src="/images/blog/metaclaw-ollama-migliorare-openclaw/metaclaw-ollama-303.webp" alt="MetaClaw status - proxy attivo e configurazione" width={1200} height={630} />
+
+Dovresti vedere che il proxy è in esecuzione e collegato al tuo gateway OpenClaw. MetaClaw riporterà che ha caricato skill generali e task-specific dalla skill bank. Puoi anche confermare che ha preso il tuo modello Ollama.
+
+Se ti piace lavorare da terminale con OpenClaw, questo riferimento rapido aiuta: [accedere alla Terminal UI di OpenClaw](https://sonusahani.com/blogs/access-terminal-ui-openclaw). È comodo per controlli veloci mentre iteri sulle skill. Puoi stratificare MetaClaw sotto senza cambiare il tuo flusso normale.
+
+## Skill bank e skill custom
+
+MetaClaw arriva con una skill bank generale e skill task-specific. **Puoi copiare le tue skill** nella cartella skill bank se mantieni già pattern riutilizzabili. MetaClaw le considererà durante l'iniezione e l'apprendimento.
+
+<Image src="/images/blog/metaclaw-ollama-migliorare-openclaw/metaclaw-ollama-400.webp" alt="Skill bank - organizzazione e gestione delle skill" width={1200} height={630} />
+
+Una volta che MetaClaw è in esecuzione, puoi usare OpenClaw o qualsiasi altro client API come al solito. **Dietro le quinte**, MetaClaw inietta skill e continua a distillarne di nuove dopo ogni sessione. È lì che vedi il miglioramento nel tempo.
+
+Se preferisci monitorare il tuo agente e i progetti da browser, ecco un modo semplice per aprire la dashboard OpenClaw localmente: [OpenClaw dashboard access](https://sonusahani.com/blogs/access-openclaw-ai-dashboard). Si abbina bene con il proxy MetaClaw.
+
+<CtaCard
+    title="Vuoi integrare AI nel tuo business?"
+    description="Contattami per una consulenza su come implementare strumenti AI nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="grid"
+    align="center"
+/>
+
+## Test con un task reale
+
+Chiedi all'agente di scrivere uno script Python che monitora una directory per nuovi file e li logga con un timestamp. MetaClaw intercetterà la sessione e genererà una nuova skill dallo scambio. Quel pattern distillato verrà iniettato automaticamente la prossima volta prima che l'agente inizi a pensare.
+
+Ecco un esempio Python che puoi usare nel test:
+
+```python
+import os
+import time
+import logging
+from datetime import datetime
+
+WATCH_DIR = "/path/to/watch"
+LOG_FILE = "file_events.log"
+
+logging.basicConfig(
+    filename=LOG_FILE,
+    level=logging.INFO,
+    format="%(asctime)s - %(message)s",
+)
+
+def snapshot(dir_path):
+    return {f for f in os.listdir(dir_path) if os.path.isfile(os.path.join(dir_path, f))}
+
+def main():
+    if not os.path.isdir(WATCH_DIR):
+        raise SystemExit(f"Directory not found: {WATCH_DIR}")
+
+    seen = snapshot(WATCH_DIR)
+    logging.info(f"Started watcher for {WATCH_DIR}. Baseline files: {len(seen)}")
+
+    try:
+        while True:
+            current = snapshot(WATCH_DIR)
+            new_files = current - seen
+            for fname in sorted(new_files):
+                full = os.path.join(WATCH_DIR, fname)
+                ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                logging.info(f"New file: {fname} at {ts} (size={os.path.getsize(full)} bytes)")
+            seen = current
+            time.sleep(2)
+    except KeyboardInterrupt:
+        logging.info("Watcher stopped.")
+
+if __name__ == "__main__":
+    main()
+```
+
+<Image src="/images/blog/metaclaw-ollama-migliorare-openclaw/metaclaw-ollama-452.webp" alt="Esempio di skill generata automaticamente da MetaClaw" width={1200} height={630} />
+
+Dopo questa esecuzione, controlla la directory skills che MetaClaw usa. Vedrai un nuovo file che cattura il pattern distillato dalla tua conversazione. **Questa è la skill riutilizzabile** che viene iniettata la prossima volta che richiedi qualcosa relativo al monitoraggio file.
+
+## Modelli sotto Ollama: scelte, casi d'uso, e trade-off
+
+**Qwen 3.5 32B** è forte su coding, tool use, e task strutturati. Brilla per automazione, scripting, e workflow agent-style dove l'output preciso step-by-step conta. Ha bisogno di VRAM significativa e sarà più lento su GPU più piccole.
+
+**Famiglia LLaMA** sono versatili e ampiamente disponibili in Ollama. Sono buoni per ragionamento generale, scrittura, e lavoro misto chat più codice. Varianti più piccole sono più veloci ma potrebbero perdere contesto più profondo su task complessi.
+
+Se vuoi esplorare un fork alternativo di OpenClaw che gioca bene con Ollama in setup locali, questa guida è utile: [Zeroclaw with Ollama](https://sonusahani.com/blogs/zeroclaw-ollama-openclaw-fork-setup). Può essere una baseline solida per comparare il comportamento dell'agente sotto lo stesso proxy MetaClaw.
+
+## Cosa aspettarsi dopo il setup
+
+MetaClaw carica un set di skill generali e task-specific dalla skill bank all'avvio. Usa i tuoi modelli Ollama locali, quindi **non paghi chiamate API**. Puoi accedere a OpenClaw come al solito mentre MetaClaw gira dietro le quinte.
+
+<Image src="/images/blog/metaclaw-ollama-migliorare-openclaw/metaclaw-ollama-483.webp" alt="MetaClaw in azione - skill accumulate e contesto" width={1200} height={630} />
+
+Noterai skill e note simili a memoria che si accumulano sul tuo profilo, tag, timing, e workspace. Quel contesto diventa parte del prompt di sistema nei momenti giusti. Sta provando a fare una cosa di valore invece di replicare semplicemente OpenClaw.
+
+**Ogni sessione che insegna all'agente qualcosa di utile si trasforma in expertise a lungo termine.** Più lo usi, più diventa affilato. Cura automaticamente quello che conta senza una pipeline di training manuale da gestire.
+
+<CtaCard
+    title="Hai bisogno di aiuto con l'integrazione AI?"
+    description="Contattami per una consulenza su come implementare agenti AI nella tua infrastruttura."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Riferimenti e risorse
+
+La pagina del progetto MetaClaw e i dettagli di setup sono qui: [MetaClaw su GitHub](https://github.com/aiming-lab/MetaClaw). Puoi tracciare aggiornamenti, issue, e flag di configurazione esatti.
+
+Se stai iniziando da zero con OpenClaw su Ollama, questo quick-start ti aiuta a far funzionare il pairing prima di aggiungere MetaClaw: [OpenClaw with Ollama guide](https://sonusahani.com/blogs/openclaw-ollama-model). Mantiene la base stabile così il setup del proxy va liscio.
+
+## Conclusioni
+
+MetaClaw si collega a OpenClaw come proxy locale, inietta le skill giuste automaticamente, e distilla di nuove dopo ogni sessione. Se funziona correttamente, più lo usi, più diventa affilato, e trasforma ogni conversazione in expertise a lungo termine del tuo agente.
+
+Testarlo con task di coding e workflow mostra guadagni chiari dove i pattern ripetuti contano. Mantenere tutto locale con Ollama e una GPU capace lo rende cost-effective. **L'idea è interessante**: invece di un agente che riparte da zero ogni volta, hai uno che impara davvero dai tuoi pattern d'uso.
+
+Per un riferimento più profondo sul setup OpenClaw, tieni questi a portata di mano: [OpenClaw dashboard setup](https://sonusahani.com/blogs/access-openclaw-ai-dashboard) e [terminal access](https://sonusahani.com/blogs/access-terminal-ui-openclaw).
