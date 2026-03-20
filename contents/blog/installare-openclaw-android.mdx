@@ -1,0 +1,227 @@
+---
+title: 'Installare OpenClaw su Android: Guida Completa con Modello Gratuito e Telegram'
+createdAt: '2026-03-20T08:00:00Z'
+modifiedAt: '2026-03-20T08:00:00Z'
+summary: 'Guida passo-passo per installare OpenClaw su Android con Termux, Ubuntu proot, modello gratuito OpenRouter Gemini Flash e integrazione Telegram.'
+image: '/images/blog/installare-openclaw-android.png'
+authorId: matteo
+locale: 'it'
+tags: ['openclaw', 'android', 'termux', 'ai agents', 'tutorial', 'telegram', 'openrouter']
+---
+
+Ti mostro come installare e configurare OpenClaw su un telefono Android usando Termux, Ubuntu in proot e un modello gratuito tramite OpenRouter. Configureremo anche Telegram come canale di comunicazione e risolveremo l'errore di disconnessione della dashboard usando il gateway token.
+
+È un setup più articolato rispetto all'installazione su Linux desktop, ma il risultato è che avrai un agente AI completamente funzionante sul telefono, senza bisogno di server esterni. Seguimi passo dopo passo.
+
+## Preparare Termux
+
+Installa Termux dal Google Play Store (o F-Droid se preferisci) e aprilo. Termux ti dà un terminale Linux completo dove puoi eseguire comandi e installare software. Prima cosa, aggiorniamo Termux e abilitiamo l'accesso allo storage.
+
+<Image src="/images/blog/installare-openclaw-android/installing-openclaw-android-20.webp" alt="Apertura di Termux su Android" width={1200} height={630} />
+
+Esegui:
+
+```bash
+pkg update && pkg upgrade -y
+termux-setup-storage
+```
+
+Ti apparirà una schermata di permessi. Scorri per trovare Termux, attiva il toggle per l'accesso ai file e torna indietro. Ora Termux può leggere e scrivere nella memoria del telefono.
+
+<Image src="/images/blog/installare-openclaw-android/installing-openclaw-android-35.webp" alt="Abilitazione permessi storage su Termux" width={1200} height={630} />
+
+## Installare Ubuntu in Termux con proot-distro
+
+OpenClaw richiede un ambiente Linux completo. Useremo proot-distro per eseguire Ubuntu dentro Termux senza bisogno di root. Installa proot-distro, scarica Ubuntu e fai login:
+
+<Image src="/images/blog/installare-openclaw-android/installing-openclaw-android-81.webp" alt="Installazione Ubuntu in Termux con proot-distro" width={1200} height={630} />
+
+```bash
+pkg install proot-distro -y
+proot-distro install ubuntu
+proot-distro login ubuntu
+```
+
+Ora sei dentro Ubuntu Linux. Tutti i comandi successivi li esegui in questo ambiente Ubuntu.
+
+<CtaCard
+    title="Vuoi integrare AI nel tuo business?"
+    description="Contattami per una consulenza su come implementare strumenti AI nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Aggiornare Ubuntu e installare dipendenze
+
+Aggiorniamo i repository Ubuntu e installiamo i pacchetti essenziali: curl, git e build-essential. Questo può richiedere qualche minuto.
+
+```bash
+apt update && apt upgrade -y
+apt install -y curl git build-essential
+```
+
+Questi strumenti sono necessari per installare Node.js e compilare eventuali moduli nativi di OpenClaw.
+
+<Image src="/images/blog/installare-openclaw-android/installing-openclaw-android-128.webp" alt="Aggiornamento pacchetti Ubuntu su Termux" width={1200} height={630} />
+
+## Installare Node.js e OpenClaw
+
+Installiamo Node.js 20 tramite NodeSource e poi OpenClaw globalmente via npm:
+
+```bash
+curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+apt install -y nodejs
+node -v
+npm -v
+npm install -g openclaw
+```
+
+OpenClaw è ora installato. Verifica che `openclaw` sia disponibile digitando `openclaw --version`.
+
+<Image src="/images/blog/installare-openclaw-android/installing-openclaw-android-157.webp" alt="Installazione Node.js e OpenClaw su Android" width={1200} height={630} />
+
+## Risolvere il crash del kernel bionic
+
+Prima di avviare OpenClaw, dobbiamo risolvere un bug del kernel bionic che può causare crash. Creeremo un piccolo shim JavaScript che Node carica automaticamente all'avvio.
+
+Crea il file `hijack.js` nella home:
+
+```bash
+nano ~/hijack.js
+```
+
+Incolla questo codice (è un workaround minimo per evitare il crash legato a `os.cpus()`):
+
+```javascript
+/* Minimal shim to avoid potential bionic crash */
+try {
+  const os = require('os');
+  if (typeof os.cpus === 'function') {
+    const one = (Array.isArray(os.cpus()) && os.cpus()[0]) || { model: 'unknown', speed: 0, times: {} };
+    os.cpus = () => [one];
+  }
+} catch {}
+```
+
+Salva con `Ctrl+O`, `Enter`, ed esci con `Ctrl+X`. Ora aggiungi la variabile `NODE_OPTIONS` al tuo `.bashrc`:
+
+```bash
+echo 'export NODE_OPTIONS="--require=$HOME/hijack.js"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+Questo fa sì che Node carichi automaticamente lo shim per tutti i processi.
+
+<Image src="/images/blog/installare-openclaw-android/installing-openclaw-android-211.webp" alt="Configurazione hijack.js per risolvere bug kernel bionic" width={1200} height={630} />
+
+<CtaCard
+    title="Scopri i miei progetti"
+    description="Dai un occhio ai progetti su cui sto lavorando e alle tecnologie che utilizzo."
+    primaryButtonText="Vedi Progetti"
+    primaryButtonUrl="/projects"
+    pattern="dots"
+    align="center"
+/>
+
+## Configurare OpenClaw
+
+Avvia l'onboarding di OpenClaw per configurare provider, modello e canale Telegram:
+
+```bash
+openclaw onboard
+```
+
+Seleziona "Yes" quando richiesto e scegli "Quick Start". Quando ti chiede il provider API, seleziona **OpenRouter** e incolla la tua API key di OpenRouter (la trovi nelle impostazioni del tuo account su openrouter.ai).
+
+<Image src="/images/blog/installare-openclaw-android/installing-openclaw-android-250.webp" alt="Onboarding OpenClaw: selezione OpenRouter" width={1200} height={630} />
+
+### Scegliere il modello gratuito
+
+Per evitare costi, scegli un modello gratuito. Quando ti chiede il modello, seleziona:
+
+```
+openrouter/google/gemini-flash-1.5-preview
+```
+
+Questo modello è gratuito e funziona bene per la maggior parte dei task. Puoi cambiare modello in seguito modificando il config file.
+
+<Image src="/images/blog/installare-openclaw-android/installing-openclaw-android-296.webp" alt="Selezione modello gratuito Gemini Flash su OpenRouter" width={1200} height={630} />
+
+### Configurare Telegram
+
+Per collegare Telegram, devi creare un bot. Apri Telegram, cerca **BotFather** e avvia una chat. Invia `/newbot`, scegli un nome per il bot e poi un username univoco (deve finire con "bot"). BotFather ti darà un token.
+
+Copia il token e incollalo quando OpenClaw te lo chiede durante l'onboarding. Quando ti chiede se vuoi installare skills, puoi saltare per ora. L'onboarding completa e ti mostra l'URL locale per la dashboard del Gateway OpenClaw.
+
+<CtaCard
+    title="Hai bisogno di aiuto con AI?"
+    description="Offro consulenze personalizzate per integrare AI nel tuo workflow o progetto."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Avviare il gateway e aprire la dashboard
+
+A questo punto la dashboard non si caricherà ancora perché il gateway non è in esecuzione. Esci dalla schermata di onboarding con `Ctrl+C` se necessario e avvia il gateway in modalità verbose:
+
+<Image src="/images/blog/installare-openclaw-android/installing-openclaw-android-380.webp" alt="Avvio del gateway OpenClaw in modalità verbose" width={1200} height={630} />
+
+```bash
+openclaw gateway --verbose
+```
+
+Apri il browser sul telefono e vai su:
+
+```
+http://localhost:18789
+```
+
+Probabilmente vedrai uno stato "Disconnected". Ora lo risolviamo.
+
+## Risolvere lo stato disconnesso
+
+Apri una nuova sessione Termux (swipe dalla sinistra o usa il drawer) e fai di nuovo login in Ubuntu. Leggeremo il config file di OpenClaw per ottenere il gateway token:
+
+<Image src="/images/blog/installare-openclaw-android/installing-openclaw-android-420.webp" alt="Lettura del gateway token dal config OpenClaw" width={1200} height={630} />
+
+```bash
+proot-distro login ubuntu
+cat ~/.openclaw/openclaw.json
+```
+
+Cerca la sezione `gateway` e copia la stringa `token`. Incollala nel campo token della dashboard (nella sezione Overview), rimuovi eventuali virgolette e clicca "Connect". Lo stato diventerà "Connected".
+
+## Testare chat e Telegram
+
+Vai alla tab "Chat" nella dashboard e invia un prompt. Testo qualcosa di semplice tipo "ciao, dimmi una curiosità" e aspetto la risposta per confermare che il modello funziona.
+
+<Image src="/images/blog/installare-openclaw-android/installing-openclaw-android-480.webp" alt="Test della chat nella dashboard OpenClaw" width={1200} height={630} />
+
+Ora testa Telegram. Apri il bot che hai creato in Telegram, premi "Start". Il bot ti mostrerà un comando di pairing. Copialo, incollalo nel terminale Ubuntu e approva il pairing. Dopo l'approvazione, invia un prompt in Telegram e verifica che la risposta appaia sia in Telegram che nella dashboard OpenClaw.
+
+<CtaCard
+    title="Scopri altri tutorial AI"
+    description="Leggi altri articoli su OpenClaw, agenti AI e automazione intelligente."
+    primaryButtonText="Vai al Blog"
+    primaryButtonUrl="/blog"
+    pattern="dots"
+    align="center"
+/>
+
+## Considerazioni finali
+
+Abbiamo installato Termux su Android, aggiunto Ubuntu con proot-distro, aggiornato i pacchetti essenziali, installato Node.js con un workaround per il kernel bionic, installato OpenClaw e completato l'onboarding con OpenRouter e il modello gratuito Gemini Flash. Abbiamo collegato Telegram, avviato il gateway, risolto il problema del token e verificato che i prompt funzionino sia dalla dashboard che da Telegram.
+
+Ora hai un agente AI completo sul telefono, senza costi per il modello e senza bisogno di un server esterno. Puoi usarlo per automazione, assistenza personale, o come base per esperimenti con skills personalizzate. Se in futuro vuoi passare a modelli locali con Ollama, il setup è già pronto per accogliere quella configurazione.
+
+**Cosa fare dopo:**
+- Esplora le skills disponibili con `openclaw skills list`
+- Configura altri canali (Signal, Discord, WhatsApp)
+- Passa a un modello più potente quando serve (Claude, GPT-4o, ecc.)
+- Crea le tue skills personalizzate per task specifici
+
+OpenClaw su Android è più lento di un server dedicato, ma è perfetto per avere un assistente AI sempre con te, completamente sotto il tuo controllo.
