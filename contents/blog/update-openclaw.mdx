@@ -1,0 +1,223 @@
+---
+title: 'How to Update OpenClaw: Complete Guide to Upgrade and Downgrade'
+createdAt: '2026-03-21T00:00:00Z'
+modifiedAt: '2026-03-21T00:00:00Z'
+summary: 'Practical guide to updating OpenClaw on Linux, Windows (WSL2), and Mac. Covers upgrade, downgrade, stable/beta/dev channels, gateway service management, and doctor checks.'
+image: '/images/blog/update-openclaw.png'
+authorId: matteo
+locale: 'en'
+tags: ['openclaw', 'tutorial', 'ai agents', 'linux', 'docker', 'macos']
+---
+
+OpenClaw is moving fast. The project is pre-1.0 and actively adding new features, bug fixes, and improvements almost daily. If you're using OpenClaw in production or even experimenting, you need to know how to update it properly.
+
+This guide shows you how to upgrade and downgrade OpenClaw on Linux, Windows (via WSL2), and Mac, which channels to use (stable, beta, dev), and how to manage the gateway service after updates.
+
+## Fast Update on Linux (Recommended Method)
+
+The safest and most reliable way to update OpenClaw is using the dedicated command:
+
+```bash
+openclaw update
+```
+
+This command downloads the latest version, detects your existing installation, and upgrades in place. It updates both the core and the CLI, runs the doctor for health checks, and restarts services as needed.
+
+<Image src="/images/blog/update-openclaw/how-to-update-openclaw-97.webp" alt="openclaw update command running on Linux" width={1200} height={630} />
+
+**What happens during the update:**
+
+1. Detects existing installation
+2. Downloads and installs the latest version
+3. Updates core and CLI
+4. Runs doctor for health and integrity checks
+5. Restarts services if necessary
+
+<Image src="/images/blog/update-openclaw/how-to-update-openclaw-78.webp" alt="OpenClaw update logs showing plugin verification" width={1200} height={630} />
+
+You'll see logs as it updates plugins and restarts services. If you haven't installed any extra plugins, that step will be skipped.
+
+### Interactive Prompts During Update
+
+During the update you may encounter these prompts:
+
+**Tighten permissions to 700:** if you're in production, I recommend choosing yes for security hardening.
+
+**Upgrade gateway service config:** if you've integrated OpenClaw with Anthropic or OpenAI, select yes. If you installed with Ollama or LM Studio, you can skip and restart the service manually.
+
+<Image src="/images/blog/update-openclaw/how-to-update-openclaw-150.webp" alt="Configuration prompts during OpenClaw update" width={1200} height={630} />
+
+<CtaCard
+    title="Need help with AI integration?"
+    description="Get in touch for a consultation on implementing AI tools in your business."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+### Verification and Health Checks
+
+The doctor handles config migrations, checks for deprecated settings, audits security configuration, and ensures that gateway services are properly configured.
+
+<Image src="/images/blog/update-openclaw/how-to-update-openclaw-236.webp" alt="Doctor check output after OpenClaw update" width={1200} height={630} />
+
+After any changes to the config file or OpenClaw itself, **always restart the gateway service**:
+
+```bash
+openclaw gateway restart
+```
+
+<Image src="/images/blog/update-openclaw/how-to-update-openclaw-277.webp" alt="Status of all OpenClaw services after update" width={1200} height={630} />
+
+The `openclaw status` command shows all services. You can ignore warnings about group privileges where they're making the system more secure.
+
+## Updating OpenClaw on Windows (WSL2)
+
+On Windows, use WSL2 and run the same commands inside the Linux environment. This is the best way to run and update OpenClaw on Windows.
+
+<Image src="/images/blog/update-openclaw/how-to-update-openclaw-301.webp" alt="OpenClaw update in WSL2 on Windows" width={1200} height={630} />
+
+The experience is identical to Linux - same command, same prompts, same workflow.
+
+## Options for macOS
+
+On macOS you can choose between several methods:
+
+- **Universal installer** - the recommended method
+- **Node and npm globally** - if you prefer managing it as an npm package
+- **PNPM** - if you use this package manager
+
+<Image src="/images/blog/update-openclaw/how-to-update-openclaw-410.webp" alt="OpenClaw update options on macOS" width={1200} height={630} />
+
+Commands are very similar across operating systems with slight variations.
+
+<CtaCard
+    title="Check Out My Projects"
+    description="Take a look at what I'm building and the technologies I use."
+    primaryButtonText="View Projects"
+    primaryButtonUrl="/projects"
+    pattern="dots"
+    align="center"
+/>
+
+## Other Update Methods
+
+### Updating via Global npm
+
+If you installed OpenClaw as a global npm package:
+
+```bash
+npm install -g openclaw@latest
+```
+
+This method is simple and straightforward, perfect if you manage OpenClaw like any other Node dependency.
+
+<Image src="/images/blog/update-openclaw/how-to-update-openclaw-342.webp" alt="Updating OpenClaw with npm install global" width={1200} height={630} />
+
+### Docker Updates
+
+If you're using Docker, the process involves:
+
+```bash
+docker stop openclaw
+docker pull openclaw/openclaw:latest
+docker run -d --name openclaw openclaw/openclaw:latest
+```
+
+Stop the current container, pull the latest image, and restart. Choose the method that best fits your CI/CD pipeline.
+
+## Channels: Stable, Beta, Dev
+
+OpenClaw has three release channels:
+
+- **Stable:** recommended for production or serious use cases
+- **Beta:** new features in testing, relatively stable
+- **Dev:** bleeding edge, for experimenting with the latest changes
+
+<Image src="/images/blog/update-openclaw/how-to-update-openclaw-420.webp" alt="OpenClaw update channels: stable, beta, dev" width={1200} height={630} />
+
+You can switch channels with:
+
+```bash
+openclaw update --channel beta
+```
+
+To preview what would happen without applying changes:
+
+```bash
+openclaw update --dry-run
+```
+
+This is useful for testing potentially risky upgrades before applying them.
+
+<CtaCard
+    title="Need OpenClaw Help?"
+    description="I can help you set up, update, and manage your OpenClaw system."
+    primaryButtonText="Let's Talk"
+    primaryButtonUrl="/contacts"
+    pattern="lines"
+    align="center"
+/>
+
+## Downgrade to a Previous Version
+
+If something breaks after an update, you have two options to roll back.
+
+### Option 1: Downgrade with npm
+
+If you installed with npm, you can specify an exact version:
+
+```bash
+npm install -g openclaw@0.5.2
+```
+
+This requires Node and npm installed.
+
+<Image src="/images/blog/update-openclaw/how-to-update-openclaw-461.webp" alt="Downgrading OpenClaw to specific version with npm" width={1200} height={630} />
+
+### Option 2: Build from Source
+
+For total control:
+
+1. Fetch from origin repository
+2. Checkout the version or branch you want
+3. Build with PNPM
+
+This method is more complex but gives you maximum control over the exact version you're running.
+
+## Gateway Service and Doctor: Best Practices
+
+The **gateway** is the core that manages OpenClaw's integrations with messaging services and external endpoints.
+
+**Fundamental rules:**
+- After any config changes, restart the gateway service
+- If something isn't working, run the doctor
+- The doctor handles migrations, flags deprecated settings, audits security, and verifies gateway configuration
+
+```bash
+openclaw gateway restart
+openclaw doctor
+```
+
+These two commands solve 90% of post-update issues.
+
+## Summary: How to Update OpenClaw
+
+**For most users:**
+1. Run `openclaw update`
+2. Choose yes to security prompts if you're in production
+3. Restart the gateway service with `openclaw gateway restart`
+4. Verify with `openclaw status`
+
+**Recommended channels:**
+- Production → stable
+- Testing and feature preview → beta
+- Development and experimentation → dev
+
+**If something goes wrong:**
+- Run `openclaw doctor` for diagnostics
+- Consider a downgrade with npm or build from source
+- Check gateway service logs
+
+OpenClaw is a rapidly evolving project. Keeping it updated means you have access to the latest features, security fixes, and performance improvements. With this guide you have everything you need to safely manage upgrades and downgrades.
