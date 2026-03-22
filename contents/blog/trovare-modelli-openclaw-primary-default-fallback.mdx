@@ -1,0 +1,134 @@
+---
+title: 'Come Trovare Tutti i Modelli Configurati in OpenClaw: Primary, Default e Fallback'
+createdAt: '2026-03-22T05:00:00Z'
+modifiedAt: '2026-03-22T05:00:00Z'
+summary: 'Guida pratica per visualizzare tutti i modelli AI configurati in OpenClaw, capire la gerarchia primary/default/fallback e gestire le configurazioni.'
+image: '/images/blog/trovare-modelli-openclaw-primary-default-fallback.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'llm', 'tutorial']
+---
+
+Quando configuri OpenClaw con più modelli AI, prima o poi ti chiedi: quali modelli ho effettivamente configurato? Qual è il modello primario? Quali sono i fallback?
+
+Ho due metodi per rispondere a queste domande. Il primo usa i comandi CLI di OpenClaw - veloce e diretto. Il secondo passa dal file di configurazione - utile quando devi modificare qualcosa.
+
+## Metodo 1: Comandi CLI
+
+### Listare i modelli configurati
+
+Il comando più semplice è questo:
+
+```bash
+openclaw models list
+```
+
+Ti mostra tutti i modelli che hai aggiunto. Nel mio setup, per esempio, ho configurato quattro modelli: OpenAI GPT-4.1 Nano, GPT-4.0 Mini, GPT-4.0 Nano e Google Gemini Pro (preview).
+
+<Image src="/images/blog/trovare-modelli-openclaw-primary-default-fallback/find-added-models-openclaw-primary-default-fallback-29.webp" alt="Output del comando openclaw models list che mostra i modelli configurati" width={1200} height={630} />
+
+Il comando stampa i modelli in modo chiaro, uno per riga. Se hai bisogno solo di sapere quali fallback sono attivi, c'è un comando specifico per quello.
+
+<Image src="/images/blog/trovare-modelli-openclaw-primary-default-fallback/find-added-models-openclaw-primary-default-fallback-12.webp" alt="Lista completa dei modelli OpenClaw configurati" width={1200} height={630} />
+
+### Vedere lo status con tag primary e fallback
+
+Questo comando ti dà più dettagli:
+
+```bash
+openclaw models status
+```
+
+L'output include tag espliciti: **default** per il modello primario, **fallback** per gli altri. Vedi anche il path del file di configurazione e l'elenco completo dei modelli.
+
+<Image src="/images/blog/trovare-modelli-openclaw-primary-default-fallback/find-added-models-openclaw-primary-default-fallback-49.webp" alt="Comando openclaw models status che mostra il modello default e i fallback" width={1200} height={630} />
+
+Questa visione è molto utile quando hai più modelli e vuoi capire velocemente la gerarchia. OpenClaw prova prima il modello default. Se non risponde o dà errore, passa ai fallback nell'ordine in cui li hai configurati.
+
+<CtaCard
+    title="Hai bisogno di aiuto con l'integrazione AI?"
+    description="Contattami per una consulenza su come implementare strumenti AI nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Metodo 2: File di Configurazione
+
+### Aprire il file
+
+Se preferisci vedere tutto insieme e magari modificare qualcosa, apri direttamente il file di configurazione:
+
+```bash
+vim ~/.openclaw/openclaw.json
+```
+
+Oppure usa `nano` se preferisci:
+
+```bash
+nano ~/.openclaw/openclaw.json
+```
+
+<Image src="/images/blog/trovare-modelli-openclaw-primary-default-fallback/find-added-models-openclaw-primary-default-fallback-88.webp" alt="Apertura del file di configurazione OpenClaw con vim" width={1200} height={630} />
+
+### Identificare primary e fallback
+
+Cerca la sezione `models`. Lì vedi il modello primario e i fallback elencati in ordine.
+
+<Image src="/images/blog/trovare-modelli-openclaw-primary-default-fallback/find-added-models-openclaw-primary-default-fallback-116.webp" alt="Sezione models nel file di configurazione con il primary model" width={1200} height={630} />
+
+Nel JSON, il modello primario è quello indicato come `primary` o `default`. I fallback sono in un array separato. Se scorri più in basso, vedi tutti i modelli configurati con i loro dettagli completi.
+
+<Image src="/images/blog/trovare-modelli-openclaw-primary-default-fallback/find-added-models-openclaw-primary-default-fallback-104.webp" alt="Array dei fallback models configurati" width={1200} height={630} />
+
+Questa visione rispecchia l'output del comando `status`, ma qui hai tutto il contesto: API key, endpoint, parametri custom.
+
+<Image src="/images/blog/trovare-modelli-openclaw-primary-default-fallback/find-added-models-openclaw-primary-default-fallback-130.webp" alt="Dettagli completi della configurazione dei modelli" width={1200} height={630} />
+
+### Modificare e riavviare
+
+Se modifichi il file - aggiungi un modello, cambi l'ordine dei fallback, rimuovi qualcosa - devi salvare e riavviare il gateway:
+
+```bash
+openclaw gateway restart
+```
+
+<Image src="/images/blog/trovare-modelli-openclaw-primary-default-fallback/find-added-models-openclaw-primary-default-fallback-141.webp" alt="Riavvio del gateway OpenClaw dopo le modifiche" width={1200} height={630} />
+
+Il riavvio applica le modifiche. Non serve riavviare l'intero sistema, solo il processo gateway.
+
+<CtaCard
+    title="Scopri i miei progetti"
+    description="Dai un occhio ai progetti su cui sto lavorando e alle tecnologie che utilizzo."
+    primaryButtonText="Vedi Progetti"
+    primaryButtonUrl="/projects"
+    pattern="dots"
+    align="left"
+/>
+
+## Gerarchia dei Modelli
+
+OpenClaw ha una logica semplice ma efficace:
+
+1. **Primary (default)** - il modello che usi normalmente. Tutte le richieste partono da qui.
+2. **Fallback** - modelli di backup. Se il primary non risponde o fallisce, OpenClaw prova il primo fallback. Se anche quello fallisce, passa al secondo, e così via.
+
+Questo sistema ti salva quando un provider ha problemi. Io ho sempre almeno un fallback configurato, di solito un modello locale con Ollama o un modello free su OpenRouter.
+
+## Troubleshooting
+
+**Il comando models list non funziona?**  
+Verifica che OpenClaw sia installato e che il gateway sia attivo. Prova `openclaw status` per vedere lo stato generale.
+
+**Il modello primario non è quello che pensavo?**  
+Controlla il file di configurazione. A volte modifichi i modelli da CLI e poi il file JSON non riflette l'ultimo comando. In caso di dubbio, fidati del JSON.
+
+**I fallback non vengono usati?**  
+Assicurati che il modello primario stia effettivamente fallendo. Se risponde correttamente (anche se lentamente), OpenClaw non passa ai fallback. I fallback entrano in gioco solo su errori veri (timeout, 429, 500, ecc.).
+
+## Pensieri Finali
+
+Questi sono i due modi per vedere tutti i modelli configurati in OpenClaw. Il metodo CLI è più veloce per check quotidiani. Il file di configurazione è meglio quando devi capire esattamente come è strutturato il setup o fare modifiche manuali.
+
+Io uso `openclaw models status` ogni volta che aggiungo un nuovo modello, giusto per confermare che tutto sia andato a posto. E tengo sempre un backup del file `openclaw.json` prima di modifiche importanti - non si sa mai.
