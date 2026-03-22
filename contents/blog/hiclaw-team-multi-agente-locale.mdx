@@ -1,0 +1,235 @@
+---
+title: 'HiClaw: Come Far Lavorare un Team di Agenti AI in Locale'
+createdAt: '2026-03-22T08:00:00Z'
+modifiedAt: '2026-03-22T08:00:00Z'
+summary: 'HiClaw: sistema operativo multi-agente su OpenClaw con manager, worker, chat Matrix in tempo reale e sicurezza integrata, tutto in locale con Ollama.'
+image: '/images/blog/hiclaw-team-multi-agente-locale.png'
+authorId: matteo
+locale: 'it'
+tags: ['openclaw', 'ai', 'ai agents', 'multi-agent', 'ollama', 'automation']
+---
+
+Immagina un sistema in cui un agente AI gestisce altri agenti AI. Puoi seguire ogni conversazione in tempo reale dal telefono, intervenire quando vuoi, e le tue credenziali API non vengono mai esposte. Questo è **HiClaw**.
+
+Ho configurato HiClaw con modelli locali per mostrarti come funziona l'orchestrazione multi-agente. È un progetto open-source costruito sopra OpenClaw che risolve un problema concreto: **i task complessi mandano in crisi gli agenti singoli**.
+
+HiClaw introduce un'architettura manager-worker dove un agente manager coordina più agenti worker attraverso chat room Matrix. Tu osservi tutto in tempo reale e puoi entrare dove serve.
+
+<Image src="/images/blog/hiclaw-team-multi-agente-locale/hiclaw-18.webp" alt="Architettura HiClaw con manager e worker agents" width={1200} height={630} />
+
+## Cos'è HiClaw e che Problema Risolve
+
+HiClaw è un **sistema operativo multi-agente** basato su OpenClaw. Il problema che risolve è semplice: gli agenti singoli si bloccano sui task complessi.
+
+La soluzione? Un manager che coordina worker specializzati. Ogni worker lavora su una parte del progetto, il manager assegna i compiti e monitora il progresso.
+
+**Il modello di sicurezza è solido:** i worker non vedono mai le tue chiavi API reali. Hanno solo token consumer, e le credenziali vere non escono mai dal gateway Higress.
+
+<Image src="/images/blog/hiclaw-team-multi-agente-locale/hiclaw-59.webp" alt="Diagramma sicurezza credenziali HiClaw" width={1200} height={630} />
+
+Un comando installa tutto: gateway AI, server Matrix, storage file, client web e l'agente manager. L'intero team AI gira sulla tua macchina.
+
+<CtaCard
+    title="Vuoi automatizzare task complessi con AI?"
+    description="Contattami per una consulenza su come implementare sistemi multi-agente nella tua azienda."
+    primaryButtonText="Scopri di Più"
+    primaryButtonUrl="/contacts"
+    pattern="dots"
+    align="center"
+/>
+
+## Requisiti per Installare HiClaw
+
+Per questa guida ho usato un sistema Ubuntu con una GPU NVIDIA RTX 6000 e 48 GB di VRAM. Il modello che uso è **GLM 4.7 Flash** su Ollama.
+
+**Requisiti minimi:**
+- Docker installato e funzionante
+- Ollama in esecuzione (se usi modelli locali)
+- Driver NVIDIA e CUDA (se usi GPU)
+
+Verifica Docker:
+
+```bash
+docker --version
+```
+
+Controlla la GPU (se disponibile):
+
+```bash
+nvidia-smi
+```
+
+Lista i modelli Ollama disponibili:
+
+```bash
+ollama list
+```
+
+L'endpoint OpenAI-compatibile di Ollama di default è:
+
+```bash
+http://localhost:11434
+```
+
+Se non hai ancora configurato Ollama, leggi la guida completa su come [configurare OpenClaw con Ollama](https://matteogiardino.com/blog/configurare-openclaw-ollama-agenti-ai-locali).
+
+## Installazione di HiClaw Passo per Passo
+
+Lancio lo script di installazione che installa HiClaw e tutti i suoi componenti. Il wizard chiede qualche input e io scelgo il percorso manuale.
+
+Seleziono **inglese** come lingua. Scelgo **Manual setup** invece di Quick Start, e salto il loro piano a pagamento per il coding. Scelgo l'opzione **OpenAI-compatible API**.
+
+Quando mi chiede il base URL, inserisco l'endpoint OpenAI-compatibile di Ollama. Se lo esegui su un'altra porta o URL, adatta di conseguenza.
+
+Inserisco l'ID del modello Ollama. Dato che Ollama non richiede API key in locale, metto un valore qualsiasi nel campo chiave.
+
+Imposto username e password. Uso **admin** e lascio che generi la password automaticamente.
+
+Mantengo il deployment locale per uso personale così non esponi nulla alla rete. Per i container Docker e la console Higress, accetto le porte di default (puoi cambiarle se serve).
+
+Vedrai un'opzione per entry di dominio locale e deployment ECS. In parole semplici, serve per domini custom tra i servizi, ma per run locali accetto i default.
+
+Salto il token GitHub. Accetto i percorsi di volume Docker di default.
+
+Per l'integrazione ci sono due opzioni: **OpenClaw** e **Copa**. Scelgo OpenClaw perché è quella che offre l'esperienza completa al momento.
+
+Salto E2E per ora. Mantengo valori di default e percorso home directory, poi lascio che l'installer scarichi le immagini e avvii i container.
+
+Lo script scarica molte immagini Docker e ci mette un po'. Dopo i download, il container manager parte e appare la pagina di login con le credenziali autogenerate.
+
+## Primo Login e Interfaccia
+
+Apro la pagina di login nel browser, inserisco le credenziali e accedo. La schermata di benvenuto mostra una sezione **Manager** dove puoi chattare con l'agente manager. È già connesso a OpenClaw.
+
+<Image src="/images/blog/hiclaw-team-multi-agente-locale/hiclaw-389.webp" alt="Interfaccia login HiClaw" width={1200} height={630} />
+
+Puoi fare il deploy sulla LAN. Puoi anche connetterlo con Copa, che è un altro framework per agenti. Da qui l'esperienza assomiglia a OpenClaw e progetti simili.
+
+<Image src="/images/blog/hiclaw-team-multi-agente-locale/hiclaw-449.webp" alt="Dashboard HiClaw dopo il login" width={1200} height={630} />
+
+Puoi creare più room e assegnare agenti diversi a room diverse. Per quello, non raccomando modelli base locali in produzione. Usa modelli API hosted da OpenAI o Alibaba Model Studio se ti serve velocità e affidabilità su scala.
+
+<CtaCard
+    title="Scopri i Miei Progetti AI"
+    description="Dai un occhio ai progetti su cui sto lavorando e alle tecnologie che uso per automatizzare con AI."
+    primaryButtonText="Vedi Progetti"
+    primaryButtonUrl="/projects"
+    pattern="circles"
+    align="center"
+/>
+
+## Test Rapido: Hello World
+
+Chiedo al manager di creare un semplice programma Hello World per mostrare come funziona. Risponde con il codice e la documentazione. Puoi vedere che sta usando OpenClaw dietro le quinte.
+
+<Image src="/images/blog/hiclaw-team-multi-agente-locale/hiclaw-496.webp" alt="Test Hello World con HiClaw manager" width={1200} height={630} />
+
+La risposta arriva veloce e il manager genera tutto in autonomia. È un buon test per verificare che l'integrazione OpenClaw funzioni.
+
+## Orchestrazione Multi-Agente con il Manager
+
+La vera potenza di HiClaw è **l'orchestrazione e coordinamento multi-agente**. Gli chiedo di creare un worker di nome Alice per lo sviluppo front-end e un worker di nome Bob per il back-end. Gli assegno un task condiviso: costruire una to-do app autocontenuta.
+
+Bob gestisce un back-end Python FastAPI e Alice gestisce il front-end. Voglio che collaborino. Sul lato sinistro dell'interfaccia appaiono i worker, e io entro nelle loro room.
+
+<Image src="/images/blog/hiclaw-team-multi-agente-locale/hiclaw-540.webp" alt="Creazione worker Alice e Bob in HiClaw" width={1200} height={630} />
+
+Il manager spiega che può creare worker e gestire progetti multi-agente. Per produzione e lavoro intenso suggerisco modelli basati su API per performance. Poi crea i task di progetto e i workflow e mi chiede conferma.
+
+Confermo, e il progetto parte. Il manager assegna a Bob i task di back-end e lo tagga nella room di progetto. Stessa cosa per Alice sui task di front-end, e gli aggiornamenti iniziano ad arrivare tra le room.
+
+<Image src="/images/blog/hiclaw-team-multi-agente-locale/hiclaw-558.webp" alt="Manager assegna task a Bob" width={1200} height={630} />
+
+C'è una room del manager, una room di Bob, e una room di progetto dove gli agenti parlano tra loro. I progetti complessi richiedono più tempo, e se usi modelli API, tieni d'occhio costo e token.
+
+<Image src="/images/blog/hiclaw-team-multi-agente-locale/hiclaw-612.webp" alt="Conversazioni in tempo reale tra agenti" width={1200} height={630} />
+
+La velocità è un po' lenta nel mio caso, ma le feature di coordinamento sono solide sopra OpenClaw.
+
+<Image src="/images/blog/hiclaw-team-multi-agente-locale/hiclaw-641.webp" alt="Progresso task multi-agente" width={1200} height={630} />
+
+<Image src="/images/blog/hiclaw-team-multi-agente-locale/hiclaw-655.webp" alt="Risultato finale progetto collaborativo" width={1200} height={630} />
+
+Se i tuoi agenti devono controllare il browser per workflow web, guarda l'esempio pratico su come [automatizzare il browser con OpenClaw](https://matteogiardino.com/blog/automazione-browser-openclaw).
+
+## Modelli: Locale vs Hosted
+
+### Modelli Locali con Ollama
+
+I modelli locali sono ottimi per privacy e controllo completo. Funzionano bene per prototipi, strumenti interni ed esperimenti controllati dove vuoi mantenere i dati locali.
+
+**Pro:** niente chiavi API esterne, controllo totale sui dati, costo prevedibile.
+
+**Contro:** risposte più lente, requisiti VRAM elevati, ragionamento più debole su task complessi rispetto ai migliori modelli hosted.
+
+### Modelli API Hosted
+
+I modelli hosted da provider come OpenAI e Alibaba Model Studio funzionano bene per progetti multi-agente in produzione. Brillano su pianificazione complessa, uso di tool e coordinamento tra team.
+
+**Pro:** risposte più veloci, migliore affidabilità, qualità di output superiore.
+
+**Contro:** costo continuo, limiti di token, devi gestire la sicurezza delle API key.
+
+<CtaCard
+    title="Hai bisogno di aiuto con l'integrazione AI?"
+    description="Posso aiutarti a scegliere i modelli giusti e a configurare sistemi multi-agente per le tue esigenze."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="dots"
+    align="center"
+/>
+
+## Snippet di Configurazione
+
+Se l'integrazione ti chiede un base URL OpenAI-compatibile per Ollama, questo è il valore tipico locale:
+
+```bash
+# Base URL nel prompt dell'installer
+http://localhost:11434
+```
+
+Se vuoi forzare Ollama ad ascoltare su un'interfaccia e porta specifica prima di lanciare l'installer:
+
+```bash
+# Opzionale - bind Ollama a localhost:11434
+export OLLAMA_HOST=127.0.0.1:11434
+ollama serve
+```
+
+Per confermare il tuo model ID per l'installer:
+
+```bash
+# Trova il tuo identificatore esatto del modello
+ollama list
+# Scarica un modello se serve
+ollama pull <your_ollama_model_id>
+```
+
+## Consigli e Note Pratiche
+
+**I worker detengono solo token consumer.** Le tue credenziali reali restano dietro il gateway Higress, che è la giusta postura di sicurezza per setup multi-agente.
+
+Puoi monitorare ogni conversazione in tempo reale e intervenire quando serve. Progetti con più room e thread di task lunghi richiederanno più tempo per convergere.
+
+**Attenzione ai costi:** se usi modelli API hosted per progetti complessi, i token si sommano velocemente. Monitora sempre l'uso.
+
+**Visualizzazione real-time:** una delle feature migliori è vedere come gli agenti comunicano tra loro. Ti dà una trasparenza che normalmente non hai con sistemi single-agent.
+
+## Considerazioni Finali
+
+HiClaw porta un pattern manager-worker ai progetti multi-agente e rende l'intero workflow visibile e interattivo. L'installer one-step configura gateway, chat Matrix, storage, client web e manager così il tuo team gira completamente in locale.
+
+Usa modelli Ollama locali per demo e test privati, e passa ad API hosted quando ti serve velocità e affidabilità per il coordinamento multi-agente in produzione.
+
+**Quando usare HiClaw:**
+- Task complessi che richiedono competenze specializzate
+- Progetti dove vuoi osservare e guidare il coordinamento tra agenti
+- Setup dove la sicurezza delle credenziali è critica
+- Ambienti dove la privacy dei dati è prioritaria
+
+**Quando evitarlo:**
+- Task semplici che un single agent può gestire
+- Situazioni dove la velocità è più importante della coordinazione
+- Budget limitato (attenzione ai costi API su task lunghi)
+
+Se vuoi approfondire OpenClaw e costruire il tuo primo agente, leggi la guida su [come creare la tua prima skill OpenClaw](https://matteogiardino.com/blog/creare-tua-prima-skill-openclaw).
