@@ -1,0 +1,212 @@
+---
+title: 'How to Restart OpenClaw Gateway and Verify Its Status'
+createdAt: '2026-03-22T06:00:00Z'
+modifiedAt: '2026-03-22T06:00:00Z'
+summary: 'Complete guide to restarting the OpenClaw gateway, monitoring live logs, and verifying that the service is up and running correctly.'
+image: '/images/blog/restart-openclaw-gateway-verify-status.png'
+authorId: matteo
+locale: 'en'
+tags: ['openclaw', 'tutorial', 'troubleshooting', 'linux']
+---
+
+When you modify OpenClaw configuration, add a model, or troubleshoot an issue, you need to restart the gateway. I've learned the best way is to keep a terminal open with live logs - so you immediately see if something goes wrong.
+
+This is the procedure I use every time. It works on Ubuntu, but also applies to other Linux distributions, WSL2 on Windows, and Mac.
+
+## Environment
+
+I work from the terminal on Ubuntu. The important thing is to keep two terminals open: one for live logs, one for commands.
+
+This setup lets you see exactly what happens during the restart.
+
+## Follow Logs in Real Time
+
+In the first terminal, start logs in follow mode:
+
+```bash
+openclaw logs --follow
+```
+
+<Image src="/images/blog/riavviare-gateway-openclaw-verificare-stato/openclaw-gateway-restart-command-16.webp" alt="openclaw logs --follow command to monitor logs in real time" width={1200} height={630} />
+
+Logs start scrolling. Leave this terminal open - it will show you what happens when you restart the gateway.
+
+<Image src="/images/blog/riavviare-gateway-openclaw-verificare-stato/openclaw-gateway-restart-command-28.webp" alt="OpenClaw logs streaming in real time" width={1200} height={630} />
+
+If you have connection problems or timeouts, this is where you'll see them first.
+
+## Restart the Gateway
+
+Open a second terminal and run the restart command:
+
+```bash
+openclaw gateway restart
+```
+
+<Image src="/images/blog/riavviare-gateway-openclaw-verificare-stato/openclaw-gateway-restart-command-43.webp" alt="openclaw gateway restart command to restart the service" width={1200} height={630} />
+
+The command executes immediately. To see what happened, go back to the logs terminal.
+
+<Image src="/images/blog/riavviare-gateway-openclaw-verificare-stato/openclaw-gateway-restart-command-48.webp" alt="Gateway restart output in the terminal" width={1200} height={630} />
+
+If you see Node.js stack traces in the logs, there's a configuration or dependency problem to resolve.
+
+<CtaCard
+    title="Need OpenClaw support?"
+    description="Get in touch for consultation on installing and configuring OpenClaw for your project."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Manual Start and Stop
+
+If you prefer manual control, you can stop the gateway:
+
+```bash
+openclaw gateway stop
+```
+
+And then start it:
+
+```bash
+openclaw gateway start
+```
+
+These commands are useful when you want to make sure the process is completely terminated before restarting - for example, when changing complex configurations or debugging state issues.
+
+## Verify Gateway Status
+
+After restarting, check that the gateway is active:
+
+```bash
+openclaw gateway status
+```
+
+<Image src="/images/blog/riavviare-gateway-openclaw-verificare-stato/openclaw-gateway-restart-command-90.webp" alt="openclaw gateway status command to verify service state" width={1200} height={630} />
+
+The output tells you if systemd has the service enabled and if the gateway is running.
+
+<Image src="/images/blog/riavviare-gateway-openclaw-verificare-stato/openclaw-gateway-restart-command-98.webp" alt="Status output confirming active gateway" width={1200} height={630} />
+
+If you see "active (running)", everything is fine.
+
+## Complete System Status
+
+There's a more complete command that shows everything:
+
+```bash
+openclaw status
+```
+
+<Image src="/images/blog/riavviare-gateway-openclaw-verificare-stato/openclaw-gateway-restart-command-114.webp" alt="openclaw status command to see complete system state" width={1200} height={630} />
+
+This output includes:
+- **Dashboard URL** - where you access the web interface
+- **Installation path** - where OpenClaw files are located
+- **Configured channels** - Telegram, Discord, etc.
+- **Configured models** - which AI models you're using
+
+<Image src="/images/blog/riavviare-gateway-openclaw-verificare-stato/openclaw-gateway-restart-command-122.webp" alt="Complete output with dashboard URL, channels and models" width={1200} height={630} />
+
+I use this command when I want a complete overview - especially after new installations or major changes.
+
+<CtaCard
+    title="Check out my AI projects"
+    description="Take a look at what I am working on: automation, AI agents and developer tools."
+    primaryButtonText="View Projects"
+    primaryButtonUrl="/projects"
+    pattern="dots"
+    align="left"
+/>
+
+## Step-by-Step Procedure
+
+Here's the complete sequence I always use:
+
+**1. Open the first terminal for logs:**
+
+```bash
+openclaw logs --follow
+```
+
+**2. Open the second terminal for restart:**
+
+```bash
+openclaw gateway restart
+```
+
+<Image src="/images/blog/riavviare-gateway-openclaw-verificare-stato/openclaw-gateway-restart-command-157.webp" alt="Setup with two terminals: one for logs, one for commands" width={1200} height={630} />
+
+**3. Go back to the logs terminal** and confirm the restart succeeded.
+
+**4. Verify service status:**
+
+```bash
+openclaw gateway status
+```
+
+**5. Check complete system status:**
+
+```bash
+openclaw status
+```
+
+<Image src="/images/blog/riavviare-gateway-openclaw-verificare-stato/openclaw-gateway-restart-command-128.webp" alt="Complete command sequence for restart and verification" width={1200} height={630} />
+
+## Command Summary
+
+For quick reference, here are all useful commands:
+
+**View live logs:**
+```bash
+openclaw logs --follow
+```
+
+**Restart the gateway:**
+```bash
+openclaw gateway restart
+```
+
+**Stop the gateway:**
+```bash
+openclaw gateway stop
+```
+
+**Start the gateway:**
+```bash
+openclaw gateway start
+```
+
+**Check gateway status:**
+```bash
+openclaw gateway status
+```
+
+**See complete status (dashboard, channels, models):**
+```bash
+openclaw status
+```
+
+## Troubleshooting
+
+**The restart command doesn't respond?**  
+Check that OpenClaw is actually installed. Try `openclaw --version` to confirm.
+
+**The gateway doesn't start after restart?**  
+Look at the logs carefully. Often the problem is a wrong configuration in the `~/.openclaw/openclaw.json` file - missing API key, invalid model, or wrong JSON syntax.
+
+**I see errors in logs but the gateway seems to work?**  
+Some warnings are normal (rate limits, automatic retries). Real errors block startup or cause continuous crashes.
+
+**The dashboard isn't reachable after restart?**  
+Verify that the gateway is active with `openclaw gateway status`. If it's active but the browser doesn't load, check firewall and ports. The dashboard URL is visible in `openclaw status`.
+
+## Final Thoughts
+
+Using live logs during restart makes everything clearer. You see exactly when the gateway stops, when it restarts, if there are errors.
+
+The `gateway status` and `status` commands are my daily debugging allies - the first for quick confirmations, the second for complete overviews.
+
+I restart the gateway every time I modify models, add fallbacks, or change channel configurations. With this procedure, the whole thing takes just a few seconds.
