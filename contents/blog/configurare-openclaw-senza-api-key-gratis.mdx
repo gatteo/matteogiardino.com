@@ -1,0 +1,180 @@
+---
+title: 'Come Configurare OpenClaw Senza API Key a Pagamento: Guida con OpenRouter Gratis'
+createdAt: '2026-03-23T01:00:00Z'
+modifiedAt: '2026-03-23T01:00:00Z'
+summary: 'Setup completo di OpenClaw a costo zero: onboarding wizard, OpenRouter con API key gratuita, modello Gemini Flash, bot Telegram e test end-to-end.'
+image: '/images/blog/configurare-openclaw-senza-api-key-gratis.png'
+authorId: matteo
+locale: 'it'
+tags: ['openclaw', 'tutorial', 'openrouter', 'gemini', 'telegram', 'gratis']
+---
+
+Puoi usare OpenClaw senza spendere un euro. Io l'ho configurato con una API key gratuita di OpenRouter, il modello Gemini 2.5 Flash (gratis), e un bot Telegram. Tutto funzionante, testato end-to-end.
+
+Questa è la procedura completa - dall'installazione al primo test su Telegram. Zero costi, zero limiti artificiali (almeno per sperimentare).
+
+## Installare e Avviare l'Onboarding
+
+Dopo aver installato OpenClaw sul tuo sistema, lancia il wizard di onboarding:
+
+```bash
+openclaw onboard
+```
+
+<Image src="/images/blog/configurare-openclaw-senza-api-key-gratis/set-up-openclaw-without-paid-api-key-18.webp" alt="Comando openclaw onboard per avviare il wizard di configurazione" width={1200} height={630} />
+
+Il wizard ti chiede se vuoi iniziare il setup. Rispondi **Yes**. Seleziona **Quick Start** per un percorso semplificato.
+
+<Image src="/images/blog/configurare-openclaw-senza-api-key-gratis/set-up-openclaw-without-paid-api-key-28.webp" alt="Wizard di onboarding OpenClaw in modalità Quick Start" width={1200} height={630} />
+
+Quick Start evita configurazioni avanzate e ti porta dritto al punto.
+
+## Configurare Provider e API Key Gratuita
+
+Il wizard ti chiede quale provider vuoi usare. Seleziona **OpenRouter**.
+
+<Image src="/images/blog/configurare-openclaw-senza-api-key-gratis/set-up-openclaw-without-paid-api-key-34.webp" alt="Selezione del provider OpenRouter nel wizard" width={1200} height={630} />
+
+Ora hai bisogno di una API key. Vai su [https://openrouter.ai/settings/keys](https://openrouter.ai/settings/keys), clicca **Create API Key** e genera una chiave gratuita.
+
+<Image src="/images/blog/configurare-openclaw-senza-api-key-gratis/set-up-openclaw-without-paid-api-key-48.webp" alt="Generazione di una API key gratuita su OpenRouter" width={1200} height={630} />
+
+Copia la chiave e incollala nel prompt del wizard. Premi Enter per continuare.
+
+<CtaCard
+    title="Hai bisogno di supporto con OpenClaw?"
+    description="Contattami per una consulenza sull'integrazione di OpenClaw nel tuo progetto o infrastruttura."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Scegliere un Modello Gratuito
+
+Il wizard ti mostra la lista dei modelli disponibili. Scegli un modello free. Io ho usato:
+
+```
+google/gemini-2.5-flash-preview
+```
+
+<Image src="/images/blog/configurare-openclaw-senza-api-key-gratis/set-up-openclaw-without-paid-api-key-78.webp" alt="Selezione del modello Gemini 2.5 Flash gratuito" width={1200} height={630} />
+
+Questo modello funziona senza credito pagato. È perfetto per test, sviluppo, e anche per uso personale leggero.
+
+## Configurare il Canale Telegram
+
+Ora il wizard chiede quale canale vuoi usare. Seleziona **Telegram**.
+
+<Image src="/images/blog/configurare-openclaw-senza-api-key-gratis/set-up-openclaw-without-paid-api-key-108.webp" alt="Selezione del canale Telegram nel wizard OpenClaw" width={1200} height={630} />
+
+Ti serve un bot token. Ecco come ottenerlo.
+
+### Creare un Bot Telegram
+
+Apri Telegram e cerca **BotFather**. Avvia la chat e invia:
+
+```
+/newbot
+```
+
+BotFather ti chiede il nome del bot e lo username. Scegli quello che vuoi. Quando confermi, BotFather ti restituisce il **bot token**.
+
+Copia il token e incollalo nel wizard di OpenClaw.
+
+### Completare l'Onboarding
+
+Il wizard ti fa altre domande:
+
+- **Configure skills now?** → No
+- **Skip for now?** → Yes, premi Enter
+- **Attach your bot?** → Do this later
+- **Install shell completion scripts?** → No
+
+Il wizard avvia il servizio gateway. Aspetta che finisca. Setup completato.
+
+## Usare la Terminal UI
+
+OpenClaw include una UI testuale per interagire direttamente da terminale. Avviala:
+
+```bash
+openclaw tui
+```
+
+Scrivi un prompt per verificare che tutto funzioni. Io ho provato:
+
+```
+install files in my root directory
+```
+
+Se vedi una risposta coerente, significa che il modello risponde correttamente.
+
+<CtaCard
+    title="Scopri i miei progetti AI"
+    description="Dai un occhio ai progetti su cui sto lavorando: automazione, agenti AI e strumenti per sviluppatori."
+    primaryButtonText="Vedi Progetti"
+    primaryButtonUrl="/projects"
+    pattern="dots"
+    align="left"
+/>
+
+## Abbinare il Bot Telegram
+
+Apri Telegram e avvia il bot che hai creato con BotFather. Il bot ti chiede di completare il pairing.
+
+Nel terminale dove hai aperto `openclaw tui`, vedi un comando di pairing. Copia quel comando, incollalo nella chat del bot su Telegram e invialo.
+
+<Image src="/images/blog/configurare-openclaw-senza-api-key-gratis/set-up-openclaw-without-paid-api-key-234.webp" alt="Comando di pairing da copiare e incollare nel bot Telegram" width={1200} height={630} />
+
+Il bot ti restituisce un **pairing code**. Copia quel codice, torna al terminale e incollalo nella terminal UI. Premi Enter.
+
+Il sistema ti chiede di approvare il sender Telegram. Approva. Il bot è ora connesso.
+
+Torna su Telegram e inizia a testare.
+
+## Testare il Setup
+
+Ho inviato questo messaggio al bot:
+
+```
+What is the RAM memory of this server? OpenClaw server.
+```
+
+<Image src="/images/blog/configurare-openclaw-senza-api-key-gratis/set-up-openclaw-without-paid-api-key-255.webp" alt="Test del bot Telegram con risposta sui dettagli della RAM del server" width={1200} height={630} />
+
+Il bot ha risposto con i dettagli completi: memoria totale, usata, libera, disponibile, swap. Questo conferma che il percorso completo funziona - da OpenClaw a OpenRouter a Gemini Flash a Telegram.
+
+Se preferisci usare modelli locali invece di cloud gratuiti, puoi configurare Ollama con OpenClaw e saltare completamente le API key esterne.
+
+## Cosa Ho Usato
+
+Ricapitoliamo i componenti di questo setup a costo zero:
+
+- **Provider:** OpenRouter (API key gratuita)
+- **Modello:** google/gemini-2.5-flash-preview (gratis)
+- **Canale:** Telegram bot (gratis)
+- **Interfacce:** Terminal UI + Telegram chat
+
+Tutto configurato con il wizard di onboarding. Nessun costo, nessun limite iniziale.
+
+## Troubleshooting
+
+**Il wizard non trova OpenRouter?**  
+Assicurati di aver scelto "OpenRouter" nella lista provider. Se non appare, aggiorna OpenClaw all'ultima versione.
+
+**Il modello non risponde?**  
+Controlla che la API key di OpenRouter sia valida. Vai su openrouter.ai/settings/keys e verifica che la chiave esista e non sia scaduta.
+
+**Il bot Telegram non si connette?**  
+Verifica il token del bot. Se hai sbagliato a copiarlo, puoi rigenerarlo con BotFather (/token) oppure rifare l'onboarding.
+
+**La terminal UI dà errore?**  
+Controlla che il gateway sia attivo con `openclaw gateway status`. Se non è running, fai `openclaw gateway start`.
+
+## Pensieri Finali
+
+Questo setup dimostra che puoi usare OpenClaw senza pagare nulla. OpenRouter offre API key gratuite con limiti ragionevoli per sperimentazione e uso personale. Gemini Flash è veloce e affidabile.
+
+Se poi decidi di scalare o hai bisogno di modelli più potenti, puoi sempre passare a chiavi premium o configurare modelli locali con Ollama - ma per iniziare, questo funziona perfettamente.
+
+Io uso questo setup per testare skill, provare configurazioni multi-agente e fare esperimenti senza preoccuparmi di costi. Zero frizioni, zero sorprese.
