@@ -1,0 +1,200 @@
+---
+title: 'Controllo Totale del Browser con OpenClaw e Chrome DevTools MCP'
+createdAt: '2026-03-24T00:00:00Z'
+modifiedAt: '2026-03-24T00:00:00Z'
+summary: 'Chrome 146 introduce il debug remoto nativo e OpenClaw si collega direttamente. Scopri come controllare il tuo browser reale con le sessioni autenticate già attive.'
+image: '/images/blog/controllo-browser-openclaw-chrome-devtools.png'
+authorId: matteo
+locale: 'it'
+tags: ['openclaw', 'ai', 'browser automation', 'mcp', 'chrome', 'ai agents']
+---
+
+Google Chrome è appena diventato molto più utile per gli agenti AI. Fino a poco tempo fa, gli agenti browser dovevano aggirare l'autenticazione, avviare browser headless, gestire login separati, fare screenshot e indovinare il contenuto. Google ha rilasciato il supporto nativo per il remote debugging in Chrome 146, e OpenClaw si collega direttamente.
+
+Cosa significa in pratica? Semplice. Attivi un'impostazione in Chrome e il tuo agente può vedere il tuo browser reale, le schede che hai già aperte, le dashboard a cui sei loggato, i tuoi repo GitHub e gli strumenti interni. Ci sono serie implicazioni di sicurezza, e la sicurezza è una tua responsabilità.
+
+Io uso una macchina Linux con GPU e un modello locale basato su Ollama, nello specifico Qwen 3.5 di circa 35B parametri. In Ollama, questo corrisponde alla famiglia qwen2.5, e una buona approssimazione è qwen2.5:32b per esecuzioni locali. Puoi anche usare varianti più piccole o più grandi a seconda della VRAM.
+
+## Perché il Controllo Totale del Browser Conta
+
+OpenClaw si integra direttamente con Chrome DevTools MCP. MCP è il Model Context Protocol, uno standard aperto che permette agli agenti di collegarsi a strumenti esterni e fonti di dati. Il server Chrome DevTools MCP dà accesso diretto a un'istanza di Chrome in esecuzione, le sue schede, la console, le richieste di rete, il DOM e altro.
+
+Non c'è nessuna estensione da installare e nessun screenshot da interpretare. Ottieni accesso pulito e strutturato al browser che già usi. E questo include le sessioni autenticate in cui sei già loggato.
+
+Per una panoramica pratica di come gli agenti operano in un browser, dai un'occhiata a questo post su come usano le schede live: [agent browser walkthrough](https://sonusahani.com/blogs/browser-use-ai-agent).
+
+## Setup: Installa o Aggiorna OpenClaw
+
+Parto da Ubuntu con driver GPU funzionanti e Ollama installato. I passaggi qui sotto assumono che tu abbia già OpenClaw o che lo installerai e aggiornerai per primo.
+
+Esegui il quick installer e accetta i default dove appropriato. Quando richiesto, mantieni il provider su Local, salta le integrazioni opzionali come Telegram, e installa il servizio Gateway.
+
+```bash
+openclaw quickstart
+```
+
+Quando il setup offre dipendenze di skill, premi Spazio per selezionare quelle che ti servono e continua. Se non stai aggiungendo Places, Notion o altri provider, puoi saltarli. Lascia che l'installer completi il setup del Gateway.
+
+Esegui la diagnostica e aggiorna il Gateway se richiesto. Riavvia per applicare le modifiche.
+
+```bash
+openclaw doctor
+openclaw gateway update
+openclaw gateway restart
+```
+
+<Image src="/images/blog/controllo-browser-openclaw-chrome-devtools/openclaw-chrome-devtools-mcp-494.webp" alt="Diagnostica OpenClaw e verifica dello stato del gateway" width={1200} height={630} />
+
+<CtaCard
+    title="Hai bisogno di aiuto con l'integrazione AI?"
+    description="Contattami per una consulenza su come implementare strumenti AI nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Configura il Gateway e Ottieni il Token
+
+Genera un token locale e scrivilo nella tua config OpenClaw. Il setup lo oscurerà nei log e lo salverà nel file di configurazione per il riutilizzo.
+
+```bash
+openclaw gateway configure --local --create-token
+openclaw gateway restart
+```
+
+Puoi gestire modelli di fallback per migliorare l'affidabilità durante task pesanti. Questa guida spiega come configurare un modello secondario in modo pulito: [fallback model setup](https://sonusahani.com/blogs/add-fallback-model-openclaw).
+
+## Imposta il Tuo Modello Ollama
+
+Io uso un modello locale basato su Ollama della classe Qwen 3.5 di circa 35B parametri. In Ollama, scarica ed esegui la variante disponibile più vicina, ad esempio qwen2.5:32b.
+
+```bash
+ollama pull qwen2.5:32b
+```
+
+Punta OpenClaw al tuo modello locale nella configurazione. Mantienilo consistente nella tua config OpenClaw così l'agente chiama Ollama localmente.
+
+```bash
+openclaw models set default ollama:qwen2.5:32b
+openclaw gateway restart
+```
+
+<Image src="/images/blog/controllo-browser-openclaw-chrome-devtools/openclaw-chrome-devtools-mcp-579.webp" alt="Configurazione del modello Ollama in OpenClaw" width={1200} height={630} />
+
+Se preferisci un modello hosted per certi task, valuta un'opzione ad alta precisione come Claude Opus e cambia on demand.
+
+## Connetti Chrome DevTools MCP
+
+La parte Chrome è diventata molto più semplice. Assicurati di essere su Chrome 146 o più recente e di aver effettuato l'accesso al tuo profilo così le tue sessioni esistenti sono attive.
+
+Apri il controllo del remote debugging. Digita `chrome://inspect/#devices` nella barra degli indirizzi e premi Invio.
+
+Attiva **Allow remote debugging from this device**. Chrome avvierà il server DevTools MCP localmente, tipicamente su 127.0.0.1:9222.
+
+<Image src="/images/blog/controllo-browser-openclaw-chrome-devtools/openclaw-chrome-devtools-mcp-497.webp" alt="Abilitazione del remote debugging in Chrome" width={1200} height={630} />
+
+Se il comando OpenClaw per aggiungere automaticamente il server MCP non funziona a causa di differenze di versione, aggiungi manualmente l'entry del server nella tua config OpenClaw, poi riavvia il Gateway.
+
+```yaml
+# Esempio di blocco MCP server per Chrome DevTools
+mcp_servers:
+  - name: chrome-devtools
+    url: http://127.0.0.1:9222
+```
+
+<Image src="/images/blog/controllo-browser-openclaw-chrome-devtools/openclaw-chrome-devtools-mcp-503.webp" alt="Configurazione del server MCP nella config OpenClaw" width={1200} height={630} />
+
+```bash
+openclaw gateway restart
+```
+
+In un terminale, verifica che OpenClaw veda il server Chrome DevTools MCP locale.
+
+```bash
+openclaw browser profile user status
+```
+
+Se connesso, vedrai una connessione MCP a Chrome sul path locale con le schede attive rilevate. Puoi anche elencare esplicitamente le schede aperte.
+
+```bash
+openclaw browser tabs list
+```
+
+<Image src="/images/blog/controllo-browser-openclaw-chrome-devtools/openclaw-chrome-devtools-mcp-521.webp" alt="Verifica della connessione MCP e lista delle schede aperte" width={1200} height={630} />
+
+<CtaCard
+    title="Scopri i miei progetti"
+    description="Dai un occhio ai progetti su cui sto lavorando e alle tecnologie che utilizzo."
+    primaryButtonText="Vedi Progetti"
+    primaryButtonUrl="/projects"
+    pattern="dots"
+    align="center"
+/>
+
+## Esempio Pratico di Utilizzo
+
+Ho una scheda GitHub già aperta con alcune issue di demo. L'agente può enumerare le schede, leggere i titoli e recuperare gli identificatori senza fare screenshot o chiedere un nuovo login.
+
+Chiedi all'agente di elencare e ispezionare le schede aperte. Se vuoi dettagli più approfonditi, fagli cliccare in ogni issue ed estrarre i campi che ti interessano, come titoli e stato.
+
+<Image src="/images/blog/controllo-browser-openclaw-chrome-devtools/openclaw-chrome-devtools-mcp-538.webp" alt="L'agente enumera e ispeziona le schede GitHub aperte" width={1200} height={630} />
+
+Puoi attivare gli stessi workflow dal TUI o UI. L'agente annuncerà che il browser è in esecuzione, controllerà le schede aperte e poi trasmetterà quello che trova.
+
+<Image src="/images/blog/controllo-browser-openclaw-chrome-devtools/openclaw-chrome-devtools-mcp-584.webp" alt="Output dell'agente con dettagli delle issue GitHub estratti" width={1200} height={630} />
+
+## Sicurezza: Cosa Devi Sapere
+
+Il remote debugging dà a qualsiasi processo connesso accesso completo al tuo browser, e completo significa davvero completo. Questo include cookie, password salvate e sessioni attive. OpenClaw gira localmente, quindi il rischio è contenuto, ma devi trattare questo toggle come lasciare la porta di casa aperta.
+
+Abilita il remote debugging solo quando ti serve. Disabilitalo quando hai finito, e non esporre mai la porta 9222 oltre il loopback. Il prompt di consenso che Chrome mostra ogni volta che un agente si connette non è una formalità, è la tua ultima linea di difesa.
+
+<Image src="/images/blog/controllo-browser-openclaw-chrome-devtools/openclaw-chrome-devtools-mcp-633.webp" alt="Prompt di sicurezza di Chrome quando un agente si connette" width={1200} height={630} />
+
+Non possiamo smettere di usare la tecnologia che ci fa avanzare, ma dobbiamo usarla in modo sicuro e responsabile. Sii attento prima di abilitare questo su qualcosa di sensibile, specialmente conti finanziari. Tieni un controllo stretto sulla tua config e audita frequentemente.
+
+## Casi d'Uso Pratici
+
+Le dashboard interne diventano ricercabili e azionabili senza nuovi login. Puoi far estrarre all'agente dati da pagine autenticate, attivare strumenti interni e riassumere o triage. I team di engineering possono operare su issue GitHub live e dashboard CI nelle schede che tengono già aperte.
+
+I team di supporto e ops possono raccogliere log della console e trace di rete in contesto. I flussi di ricerca migliorano perché l'agente legge il DOM invece di screenshot fragili. Il risultato è meno flussi rotti e iterazione più veloce dentro la stessa sessione browser fidata.
+
+<CtaCard
+    title="Vuoi integrare AI nel tuo business?"
+    description="Contattami per una consulenza su come implementare strumenti AI nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="grid"
+    align="center"
+/>
+
+## Scelte di Modelli: Pro e Contro
+
+Ollama locale con Qwen 3.5 di circa 35B è un default solido per task di browsing privati. Il grande vantaggio è privacy e zero dipendenze esterne per l'accesso alle schede, con buon ragionamento su letture DOM strutturate. Il compromesso è memoria GPU e velocità, quindi aspettati maggiori necessità di VRAM e task su contesti grandi più lenti su hardware modesto.
+
+Le varianti Claude Opus brillano su ragionamento difficile, contesti più lunghi ed estrazione ad alta precisione. Paghi con latenza, costo e dipendenza esterna, che conta se non vuoi che nessun contenuto lasci la tua macchina. Un buon pattern è mantenere Qwen locale per il controllo delle schede e scraping veloce, e chiamare un modello hosted solo per summarization pesante o sintesi complessa.
+
+Se l'affidabilità conta, definisci un modello secondario come fallback. Questo pattern riduce le esecuzioni fallite durante i picchi di carico e ti permette di instradare per complessità del task.
+
+## Risoluzione Problemi
+
+Se il server Chrome MCP non viene scoperto, conferma che il toggle su `chrome://inspect/#devices` sia attivo e che 127.0.0.1:9222 sia raggiungibile. Riavvia Chrome se il server non si è collegato, poi riavvia il Gateway OpenClaw.
+
+```bash
+openclaw gateway restart
+```
+
+Se le schede non vengono elencate, assicurati che il tuo profilo Chrome sia quello che esegue la sessione attiva. Riesegui la lista delle schede per verificare la connessione.
+
+```bash
+openclaw browser tabs list
+```
+
+<Image src="/images/blog/controllo-browser-openclaw-chrome-devtools/openclaw-chrome-devtools-mcp-529.webp" alt="Troubleshooting della connessione MCP con verifica delle schede" width={1200} height={630} />
+
+## Conclusioni
+
+Chrome 146 ha reso il remote debugging nativo, e OpenClaw si è collegato direttamente. Con un toggle, il tuo agente può lavorare dentro il tuo browser reale con le tue schede e sessioni reali, e questo è potente se rispetti il modello di sicurezza. Abilitalo quando serve, disabilitalo quando hai finito, e mantieni il tuo Gateway locale e bloccato.
+
+La combinazione di OpenClaw con Chrome DevTools MCP apre scenari pratici per automazione, estrazione dati e orchestrazione di workflow complessi, tutto senza screenshot o login duplicati. È un passo avanti significativo per chi vuole agenti AI che operano nel mondo reale, con le tue credenziali e i tuoi dati.
