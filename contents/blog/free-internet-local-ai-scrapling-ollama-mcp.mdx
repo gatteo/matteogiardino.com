@@ -1,0 +1,224 @@
+---
+title: 'How to Give Your Local AI Free Internet Access with Scrapling, Ollama & MCP'
+createdAt: '2026-03-25T08:00:00Z'
+modifiedAt: '2026-03-25T08:00:00Z'
+summary: 'Practical guide to connecting a local Ollama model to the internet using Scrapling (web scraping with anti-bot bypass) and MCP, no API costs and fully private.'
+image: '/images/blog/free-internet-local-ai-scrapling-ollama-mcp.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'ollama', 'python', 'web scraping', 'mcp', 'ai agents', 'automation']
+---
+
+Scrapling is a Python web scraping library that solves two real problems: sites that change their layout every week and anti-bot systems that block your requests. With built-in MCP support and a local Ollama model, you can give your AI live internet access without spending a cent on API calls.
+
+Scrapling tracks elements in a way that survives page structure changes. It also provides built-in stealth fetching that bypasses Cloudflare and similar protections using a real browser. The result is a practical path to a private, local research agent that can read the web on command.
+
+## What Are Scrapling, MCP, and Ollama
+
+**Scrapling** is a Python library that does robust web scraping. Instead of fragile CSS selectors that break with every site update, it tracks elements semantically. It also handles anti-bot systems like Cloudflare with browser fingerprinting techniques.
+
+**MCP** stands for Model Context Protocol. It's a standard that lets AI models call external tools. Instead of just generating text, your AI can trigger actions like scraping a website, reading a file, or querying a database. Scrapling ships with a built-in MCP server.
+
+**Ollama** is the runtime for running LLM models locally on your machine. From 3B to 70B, you can run open-source models without sending data to third parties.
+
+Combining these three pieces, you get a completely local and free setup where your model can request fresh content from the web in real time.
+
+<Image src="/images/blog/free-internet-local-ai-scrapling-ollama-mcp/scrapling-ollama-119.webp" alt="Creating a virtual environment with Conda for Scrapling" width={1200} height={630} />
+
+## Setup on Ubuntu (or Any Linux)
+
+I used an Ubuntu server with a GPU because I wanted to run a local Ollama model on the same machine. You can also use CPU-only models if needed, but a GPU helps with speed and larger models.
+
+### Create a Virtual Environment
+
+Isolate dependencies with Conda, uv, or venv. I prefer Conda for Python projects:
+
+```bash
+conda create -n scrapling python=3.11 -y
+conda activate scrapling
+```
+
+Or with uv (faster):
+
+```bash
+uv venv .venv
+source .venv/bin/activate
+```
+
+Or with standard venv:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+
+### Install Scrapling and Dependencies
+
+Install the library with pip:
+
+```bash
+pip install scrapling
+```
+
+Initialize Scrapling to set up browser automation dependencies like Playwright. This downloads a real browser so Scrapling can handle dynamic pages and anti-bot systems reliably:
+
+```bash
+scrapling install
+```
+
+You can ignore benign warnings during this step. Playwright gives you programmatic control over Chrome, Firefox, or WebKit to interact with dynamic websites.
+
+<Image src="/images/blog/free-internet-local-ai-scrapling-ollama-mcp/scrapling-ollama-140.webp" alt="Installing Scrapling with pip" width={1200} height={630} />
+
+<Image src="/images/blog/free-internet-local-ai-scrapling-ollama-mcp/scrapling-ollama-145.webp" alt="Initializing Scrapling with scrapling install command" width={1200} height={630} />
+
+<CtaCard
+    title="Need a custom AI infrastructure?"
+    description="I can help you design and implement local or cloud AI systems for your business, with focus on privacy and cost control."
+    primaryButtonText="Get in Touch"
+    primaryButtonUrl="/contacts"
+    pattern="dots"
+    align="center"
+/>
+
+## Start the MCP Server
+
+Now start the MCP server so your model can call Scrapling as a tool. This runs a server on port 8000 accessible from the network, so any MCP-compatible client can trigger a scrape:
+
+```bash
+scrapling mcp serve --host 0.0.0.0 --port 8000
+```
+
+Once running, your LLM can issue requests like "go fetch this URL and extract paragraphs" and Scrapling will return results. You can also call it from your own scripts if your client understands MCP.
+
+<Image src="/images/blog/free-internet-local-ai-scrapling-ollama-mcp/scrapling-ollama-183.webp" alt="Starting the Scrapling MCP server on port 8000" width={1200} height={630} />
+
+The MCP server exposes scraping capabilities as function calls. Your local model (via Open WebUI, Continue.dev, or other MCP clients) can now say "scrape this page" and receive the extracted content.
+
+## Python Example with Ollama Summarization
+
+Here's the pattern I used: scrape paragraph text from a target site, then send that text to a local model in Ollama to summarize what the site is about. I used a local 3 to 4 billion parameter model for speed on a single GPU, but you can switch to a larger model if you need more depth.
+
+First, make sure Ollama is installed and a model is pulled. For example:
+
+```bash
+# install Ollama following official instructions, then:
+ollama pull llama3.2:3b
+```
+
+Then a minimal Python script to summarize scraped text with Ollama. Replace `get_page_text(...)` with your Scrapling call or your MCP client call that returns extracted paragraph text from a URL:
+
+```python
+import requests
+import textwrap
+
+# Replace this with your Scrapling extraction call, e.g., via MCP client.
+# It should return a string containing paragraph text from the target page.
+def get_page_text(url: str) -> str:
+    # Example placeholder. Implement with your Scrapling workflow.
+    # For instance, via an MCP client call or Scrapling's Python API.
+    raise NotImplementedError("Integrate Scrapling here to return page text")
+
+def summarize_with_ollama(text: str, model: str = "llama3.2:3b") -> str:
+    payload = {
+        "model": model,
+        "prompt": textwrap.dedent(f"""
+            Summarize the main topics of the following website content.
+            Keep it concise and factual.
+
+            Content:
+            {text}
+        """).strip(),
+        "stream": False
+    }
+    resp = requests.post("http://localhost:11434/api/generate", json=payload, timeout=600)
+    resp.raise_for_status()
+    data = resp.json()
+    return data.get("response", "").strip()
+
+if __name__ == "__main__":
+    url = "https://example.com"
+    page_text = get_page_text(url)
+    summary = summarize_with_ollama(page_text)
+    print(summary)
+```
+
+When I ran this flow, the scraper returned a 200 HTTP status, navigated through search when needed, and traversed links on the page. The local model summarized the site topics, noted sponsors, and highlighted that it hosts educational content.
+
+This gives your model private, live context rather than relying on stale training data.
+
+<Image src="/images/blog/free-internet-local-ai-scrapling-ollama-mcp/scrapling-ollama-253.webp" alt="Python code to integrate Scrapling with Ollama" width={1200} height={630} />
+
+<Image src="/images/blog/free-internet-local-ai-scrapling-ollama-mcp/scrapling-ollama-237.webp" alt="Example Ollama model response after processing scraped content" width={1200} height={630} />
+
+<CtaCard
+    title="Want to automate research with local AI?"
+    description="I can help you set up scraping and analysis pipelines with local models to keep data private and costs under control."
+    primaryButtonText="Let's Talk"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Stealth Fetching, Ethics, and Reliability
+
+Scrapling includes a stealth fetcher that can bypass protections like Cloudflare Turnstile using a real browser with spoofed fingerprints. It also handles production settings automatically without extra configuration.
+
+**Use these capabilities responsibly** and stay within legal and ethical boundaries set by target sites. Always check robots.txt files and terms of service. Aggressive scraping can overload servers and violate ToS.
+
+Because Scrapling tracks elements instead of fragile selectors, scrapers keep working after many layout changes. This reduces maintenance for long-running agents and dataset builders. It's free and open source, which fits well for local and private projects.
+
+<Image src="/images/blog/free-internet-local-ai-scrapling-ollama-mcp/scrapling-ollama-364.webp" alt="Scrapling stealth features to bypass anti-bot protections" width={1200} height={630} />
+
+## Practical Use Cases
+
+**Local research agent**: Build an agent that accepts a topic, scrapes multiple relevant sites (that allow crawling), aggregates the content, and asks a local LLM to summarize and compare. You avoid API costs, keep data private, and reduce hallucinations by grounding responses in fresh content.
+
+This is ideal for personal knowledge bases, technical briefs, and quick market overviews.
+
+**Price or news monitoring**: Periodically scrape e-commerce sites or news feeds, extract structured data, and have a local model analyze trends or significant changes.
+
+**Custom datasets for training**: Collect domain-specific data from public sources, clean it with a local model, and create datasets for fine-tuning. Everything private, no sending sensitive data to third parties.
+
+You can also run command-line workflows and bypass MCP if you prefer pure CLI pipelines. Tools like OpenClaw integrate nicely when you want reproducible runs and a simple control panel for your agent stack.
+
+<Image src="/images/blog/free-internet-local-ai-scrapling-ollama-mcp/scrapling-ollama-421.webp" alt="Use case examples for Scrapling and Ollama with MCP" width={1200} height={630} />
+
+<CtaCard
+    title="Check Out My AI Projects"
+    description="Take a look at the projects I'm working on and the technologies I use for automation and local AI."
+    primaryButtonText="See Projects"
+    primaryButtonUrl="/projects"
+    pattern="dots"
+    align="center"
+/>
+
+## Choosing an Ollama Model
+
+**Small models (2B-4B)**: Fast and light. Pros: quick responses on modest hardware, low VRAM, good for short summaries and extraction. Cons: weaker reasoning, may miss nuance in long articles.
+
+Examples: Llama 3.2 3B, Phi-3 Mini, Gemma 2B.
+
+**Medium models (7B-13B)**: Balance speed and quality. Pros: stronger summaries, better topic coverage, still practical on a single GPU or strong CPU. Cons: higher memory use and slower throughput than small models.
+
+Examples: Mistral 7B, Llama 3.1 8B, Qwen 2.5 7B.
+
+**Large models (30B+)**: Can produce richer synthesis. Pros: better depth and coherence for long-form reports. Cons: heavy VRAM needs, slower on consumer hardware, and may be overkill for quick summarization.
+
+Examples: Llama 3.1 70B, Qwen 2.5 32B.
+
+Pick a size based on your machine and task length. For simple page summaries and metadata extraction, a 3B to 8B model works well. For multi-site synthesis and longer reports, step up to 13B or higher if your GPU can handle it.
+
+## Final Thoughts
+
+Scrapling gives your local model robust web access with element tracking and stealth fetching. MCP turns that capability into a callable tool so your LLM can ask for fresh context on demand.
+
+Paired with Ollama, you get private, API-free research workflows that stay resilient as pages change. It's a powerful setup for anyone who wants to keep data in-house and build agents that truly see the current web.
+
+**Useful resources**:
+- Scrapling GitHub repository: https://github.com/D4Vinci/Scrapling
+- Ollama documentation: https://ollama.com/
+- MCP specification: https://modelcontextprotocol.io/
+- OpenClaw for agent orchestration: https://openclaw.ai/
+
+If you want to experiment, start with a small model (Llama 3.2 3B or Phi-3 Mini), set up the Scrapling MCP server, and try summarizing a few web pages. Then scale based on your needs.
