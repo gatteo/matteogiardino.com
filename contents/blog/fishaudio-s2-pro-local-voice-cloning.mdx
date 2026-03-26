@@ -1,0 +1,271 @@
+---
+title: 'Fish Audio S2 Pro: Local Voice Cloning with Emotion Control in 80+ Languages'
+createdAt: '2026-03-26T00:00:00Z'
+modifiedAt: '2026-03-26T00:00:00Z'
+summary: 'Practical guide to Fish Audio S2 Pro for local text-to-speech with voice cloning, 15,000 emotional tags, dual model architecture, and multilingual support. Ubuntu installation, CLI workflow, and real use cases.'
+image: '/images/blog/fishaudio-s2-pro-local-voice-cloning.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'ai tools', 'machine learning', 'text-to-speech', 'voice cloning']
+---
+
+Text-to-speech has always had one problem: it sounds flat. In most cases you can't tell if it's a machine or human. **Fish Audio S2 Pro** is trying to change that.
+
+It's an open-weight TTS model you can run locally on your machine, trained on 10 million hours of audio across 80 languages. The key feature? You control exactly how the voice sounds by embedding tags directly in your text.
+
+Write `[whisper]` and it whispers. Write `[laugh]` and it laughs. There are **15,000 supported tags** - from laughing to professional broadcast tone to completely custom descriptions you can make up yourself.
+
+## Fish Audio S2 Pro - Technical Architecture
+
+Under the hood, Fish Audio S2 Pro uses a dual model architecture. Two neural networks working in tandem:
+
+<Image src="/images/blog/fishaudio-s2-pro-voice-cloning-locale/fishaudio-s2-pro-184.webp" alt="Fish Audio S2 Pro dual model architecture with 4B and 400M parameter models" width={1200} height={630} />
+
+**The large model** (4 billion parameters) handles timing and meaning - the prosody. **The small model** (400 million parameters) fills in the acoustic detail.
+
+<Image src="/images/blog/fishaudio-s2-pro-voice-cloning-locale/fishaudio-s2-pro-201.webp" alt="Text processing flow diagram in Fish Audio S2 Pro" width={1200} height={630} />
+
+Together they produce high-quality audio fast - around 100 milliseconds to first audio output. The inference engine is built on **SGLang**, the same serving stack used for LLMs. Production-ready out of the box.
+
+<Image src="/images/blog/fishaudio-s2-pro-voice-cloning-locale/fishaudio-s2-pro-223.webp" alt="Fish Audio S2 Pro performance and latency during inference" width={1200} height={630} />
+
+The architecture uses a dual autoregressive (AR) on top of an RVQ audio codec with 10 code books at 21 kHz. If you track LLM stacks, you'll recognize the pattern.
+
+<CtaCard
+    title="Need help with AI integration?"
+    description="Get in touch for a consultation on implementing AI tools in your business."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Installing Fish Audio S2 Pro Locally
+
+I tested on an Ubuntu system with one NVIDIA RTX 6000 GPU with 48 GB of VRAM. During inference, VRAM consumption reached close to **17 GB**, so plan accordingly.
+
+<Image src="/images/blog/fishaudio-s2-pro-voice-cloning-locale/fishaudio-s2-pro-143.webp" alt="Hardware requirements and VRAM consumption of Fish Audio S2 Pro" width={1200} height={630} />
+
+You'll also want recent CUDA drivers and Python 3.10 or later.
+
+### System Requirements
+
+Create an isolated environment and install dependencies. This keeps your Python site clean and reproducible:
+
+```bash
+# System packages you may need
+sudo apt-get update
+sudo apt-get install -y git git-lfs ffmpeg python3-venv
+
+# Create and activate a virtual environment
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+
+# Install PyTorch with CUDA (adjust CUDA version if needed)
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
+# Optional but often required
+pip install sglang huggingface_hub soundfile numpy
+git lfs install
+```
+
+### Get the Repository
+
+Clone the repo that includes the CLI utilities and install its requirements. The project name is fish-speech:
+
+<Image src="/images/blog/fishaudio-s2-pro-voice-cloning-locale/fishaudio-s2-pro-160.webp" alt="Cloning the fish-speech repository from GitHub" width={1200} height={630} />
+
+```bash
+# Clone repo
+git clone https://github.com/fishaudio/fish-speech.git
+cd fish-speech
+
+# Install Python requirements
+pip install -r requirements.txt
+```
+
+### Download the Model
+
+You need a Hugging Face token to access the model files. The checkpoint is sharded and around 9 GB total:
+
+<Image src="/images/blog/fishaudio-s2-pro-voice-cloning-locale/fishaudio-s2-pro-234.webp" alt="Downloading Fish Audio S2 Pro model from Hugging Face" width={1200} height={630} />
+
+```bash
+# Login to Hugging Face
+huggingface-cli login
+
+# Download S2-Pro weights with Git LFS
+git lfs install
+git clone https://huggingface.co/fishaudio/s2-pro models/s2-pro
+```
+
+**License note:** The license is not Apache or MIT, so it doesn't seem free for commercial use. Check the licensing for your own use case.
+
+<CtaCard
+    title="Explore my projects"
+    description="Check out what I'm working on and the technologies I use."
+    primaryButtonText="View Projects"
+    primaryButtonUrl="/projects"
+    pattern="dots"
+    align="left"
+/>
+
+## Voice Cloning with Emotion Control
+
+The web UI isn't working locally in my tests yet. CLI works and follows three clear steps.
+
+### Step 1 - Extract a Reference Voice
+
+This step takes a reference audio file and compresses it into an NPY file called ref_voice. Think of it like fingerprinting the voice:
+
+<Image src="/images/blog/fishaudio-s2-pro-voice-cloning-locale/fishaudio-s2-pro-310.webp" alt="Extracting voice tokens from a reference audio file" width={1200} height={630} />
+
+```bash
+# Example: extract voice tokens from a reference WAV
+python tools/tts/encode_reference.py \
+  --input data/ref.wav \
+  --output workdir/ref_voice.npy \
+  --checkpoint_path models/s2-pro
+```
+
+The model breaks the audio down into numbers - tokens that represent the unique characteristics of that voice. The tone, accent, and texture are captured.
+
+### Step 2 - Generate Semantic Tokens from Text + Voice
+
+This step takes the input text plus the voice fingerprint and generates semantic tokens. These are not audio yet, just a numerical blueprint of what the speech should sound like:
+
+<Image src="/images/blog/fishaudio-s2-pro-voice-cloning-locale/fishaudio-s2-pro-405.webp" alt="Generating semantic tokens from text with voice cloning" width={1200} height={630} />
+
+```bash
+# Example: create semantic tokens
+python tools/tts/generate_semantic.py \
+  --text "Welcome to my channel. Today we are testing Fish Audio S2 Pro [whisper]." \
+  --ref workdir/ref_voice.npy \
+  --output workdir/code_0.spk \
+  --checkpoint_path models/s2-pro
+```
+
+It's like the model writing sheet music. It knows what words to say, in what emotion, in whose voice, but it hasn't actually sung it yet.
+
+On my setup, generating semantic tokens took around **3 to 4 minutes**. Monitor GPU memory with nvidia-smi if you need to keep a cap on VRAM:
+
+```bash
+# Watch GPU memory
+watch -n 1 nvidia-smi
+```
+
+### Step 3 - Synthesize Audio from Tokens
+
+Convert the tokens into audio and save a WAV. This is the final rendering stage:
+
+<Image src="/images/blog/fishaudio-s2-pro-voice-cloning-locale/fishaudio-s2-pro-450.webp" alt="Decoding tokens into WAV audio file" width={1200} height={630} />
+
+```bash
+# Example: decode to audio
+python tools/tts/decode_audio.py \
+  --codes workdir/code_0.spk \
+  --output outputs/output.wav \
+  --checkpoint_path models/s2-pro
+```
+
+It has saved the file, so you can play the result with your default player. You can script all three steps to run in one go.
+
+<CtaCard
+    title="Looking for AI consulting?"
+    description="I help businesses implement practical, scalable AI solutions."
+    primaryButtonText="Get in Touch"
+    primaryButtonUrl="/contacts"
+    pattern="squares"
+    align="center"
+/>
+
+### One-Shot Bash Script
+
+I put all steps into a simple bash script so I can swap language and text quickly. Replace the file paths as needed:
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+
+REF_WAV="data/ref.wav"
+WORKDIR="workdir"
+OUTDIR="outputs"
+MODEL_DIR="models/s2-pro"
+
+mkdir -p "$WORKDIR" "$OUTDIR"
+
+# 1) Extract reference voice tokens
+python tools/tts/encode_reference.py \
+  --input "$REF_WAV" \
+  --output "$WORKDIR/ref_voice.npy" \
+  --checkpoint_path "$MODEL_DIR"
+
+# 2) Generate semantic tokens for target text
+TEXT="$1" # pass the text as the first argument
+python tools/tts/generate_semantic.py \
+  --text "$TEXT" \
+  --ref "$WORKDIR/ref_voice.npy" \
+  --output "$WORKDIR/code_0.spk" \
+  --checkpoint_path "$MODEL_DIR"
+
+# 3) Decode to waveform
+python tools/tts/decode_audio.py \
+  --codes "$WORKDIR/code_0.spk" \
+  --output "$OUTDIR/out.wav" \
+  --checkpoint_path "$MODEL_DIR"
+
+echo "Saved: $OUTDIR/out.wav"
+```
+
+Run it for German or Arabic by changing the input text. You can embed tags like `[whisper]`, `[laugh]`, `[excited]`, or `[pause]` directly in the text to nudge emotion:
+
+```bash
+# German example
+bash run_tts.sh "Willkommen. Heute testen wir Fish Audio S2 Pro [whisper]."
+
+# Arabic example with expressive hints
+bash run_tts.sh "مرحبًا بكم [excited] في هذا الاختبار [pause] اليوم نجرب Fish Audio S2 Pro."
+```
+
+## Results and Notes from Experience
+
+On English cloning, I used a line like this: "Welcome to my channel. Today we are testing Fish Audio S2 Pro and it sounds incredible."
+
+<Image src="/images/blog/fishaudio-s2-pro-voice-cloning-locale/fishaudio-s2-pro-485.webp" alt="Voice cloning results with Fish Audio S2 Pro" width={1200} height={630} />
+
+This produced a very strong clone of my reference voice. **Voice cloning quality is very high**.
+
+It takes a long time to generate the audio on my machine. Expressions like laughing or whispering sometimes work and sometimes they are missed, including pauses.
+
+Multilinguality is a bit shaky, especially on the local version. On the hosted version they expose today, I only saw Korean, Chinese, and English. I ran a German prompt and an Arabic prompt as above and got mixed results on expressive tags.
+
+## Pros and Cons
+
+**Pros:**
+- Voice cloning quality has improved a lot on this release. It matches the quality tier I expect from the top hosted tools in many cases
+- Expressive control is promising with 15,000 tags
+- The codebase sits on SGLang, so serving design aligns with modern LLM stacks. That makes it easier to think about scaling and monitoring
+
+**Cons:**
+- Speed is the main drawback on my tests. Generating semantic tokens took minutes and full runs are not instant on a single GPU
+- Expressive tags still miss some cues like whisper and laugh in non-English prompts on local runs
+- Multilingual support exists across 80 languages in training, but results feel uneven. The hosted endpoints I saw focus on three languages for now
+
+## Practical Use Cases
+
+**Voice cloning for long-form narration:** You can keep tone and texture consistent while adding subtle emotion cues.
+
+**Localization workflows:** Can benefit from structured tags, once multilingual stability improves. You can drive the same voice across markets with language-specific scripts.
+
+**Prototyping assistants and IVR-style systems** that need control over prosody and pacing can use semantic tokens to plan delivery. Production teams can wrap these three CLI steps behind a service.
+
+## Final Thoughts
+
+Fish Audio S2 Pro brings strong local voice cloning with fine control through text tags. The quality is high, VRAM needs are real, and generation speed plus multilingual stability still need work.
+
+I expect the team to tighten the expressive controls and speed over time. For now, the three-step CLI is the reliable path while the web UI matures.
+
+**Useful links:**
+- [Fish Audio S2 Pro on Hugging Face](https://huggingface.co/fishaudio/s2-pro)
+- [fish-speech GitHub Repository](https://github.com/fishaudio/fish-speech)
