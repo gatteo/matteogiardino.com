@@ -1,0 +1,312 @@
+---
+title: 'Run Qwen 3.5 0.8B Locally with OpenClaw and Ollama on CPU'
+createdAt: '2026-03-27T08:00:00Z'
+modifiedAt: '2026-03-27T08:00:00Z'
+summary: 'Step-by-step guide to integrate Qwen 3.5 0.8B with OpenClaw and Ollama. An 800M parameter model that runs on CPU, no GPU needed, with Telegram support.'
+image: '/images/blog/run-qwen35-08b-openclaw-ollama-cpu.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw', 'ollama', 'llm', 'ai tools', 'qwen', 'local ai']
+---
+
+I installed and configured Qwen 3.5 0.8B with OpenClaw and Ollama on Ubuntu, running entirely on CPU. No GPU involved. The model weighs about 1 GB and responds via Telegram in a few seconds.
+
+If you are looking for a small, fast, and fully local model, this guide shows you how to integrate Qwen 3.5 0.8B with OpenClaw. The setup works on any recent machine with decent CPU, ideal for testing, development, or deployment on budget VPS.
+
+<Image src="/images/blog/qwen35-08b-openclaw-ollama-locale/qwen3-5-openclaw-ollama-locally-1.webp" alt="Qwen 3.5 0.8B with OpenClaw and Ollama local architecture" width={1200} height={630} />
+
+## Why Qwen 3.5 0.8B
+
+**800 million parameters**. Not a giant like GPT-4 or Claude, but for many use cases it's more than enough:
+- Quick answers to simple questions
+- Telegram assistant for basic commands
+- AI agent prototyping and testing
+- Deploy on machines without GPU (VPS, Raspberry Pi 5, old laptops)
+
+The model is from Alibaba's Qwen family, released in early 2026. It supports context up to 32k tokens (roughly 24,000 words), decent multilingual reasoning, and fast CPU inference thanks to its small size.
+
+**Real use case**: I installed it on my Mac Mini M4 to run a testing Telegram bot that answers basic questions about OpenClaw documentation. It's not for complex reasoning, but for simple queries it's fast and costs zero.
+
+<CtaCard
+    title="Need help with AI integration?"
+    description="Get in touch for a consultation on implementing AI tools in your business."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Prerequisites
+
+Before starting, make sure you have:
+- **Ollama installed and updated** - check version with `ollama --version`
+- **Ubuntu or macOS** - guide tested on Ubuntu 24.04, but works on any recent distro and Mac
+- **At least 2 GB free RAM** - model takes about 1 GB, OpenClaw and Ollama add another 500 MB
+- **Node.js 18+** - required by OpenClaw
+
+If you don't have Ollama, install it from [ollama.com](https://ollama.com/download). On Ubuntu:
+
+```bash
+curl -fsSL https://ollama.com/install.sh | sh
+```
+
+Verify installation:
+
+```bash
+ollama --version
+```
+
+<Image src="/images/blog/qwen35-08b-openclaw-ollama-locale/qwen3-5-openclaw-ollama-locally-70.webp" alt="Check Ollama version from terminal" width={1200} height={630} />
+
+## Download and Test Qwen 3.5 0.8B
+
+Use Ollama to download the model. The exact tag is `qwen3.5:0.8b`:
+
+```bash
+ollama pull qwen3.5:0.8b
+```
+
+Ollama downloads the model, verifies the checksum, and makes it available for local inference. Takes 1-2 minutes on a decent connection.
+
+<Image src="/images/blog/qwen35-08b-openclaw-ollama-locale/qwen3-5-openclaw-ollama-locally-51.webp" alt="Download Qwen 3.5 0.8B model with Ollama" width={1200} height={630} />
+
+Test the model immediately in interactive mode:
+
+```bash
+ollama run qwen3.5:0.8b
+```
+
+Ask a basic question to verify it works:
+
+```
+>>> Who wrote "1984"?
+```
+
+If you get a sensible answer (George Orwell), the model is active. Exit with `/bye` or `Ctrl+D`.
+
+Verify the model is in your local list:
+
+```bash
+ollama list
+```
+
+You should see `qwen3.5:0.8b` in the output. **Note the exact name** - you'll use it in OpenClaw configuration.
+
+<Image src="/images/blog/qwen35-08b-openclaw-ollama-locale/qwen3-5-openclaw-ollama-locally-153.webp" alt="List of locally installed Ollama models" width={1200} height={630} />
+
+<CtaCard
+    title="Check out my projects"
+    description="Take a look at the projects I am working on and the technologies I use."
+    primaryButtonText="View Projects"
+    primaryButtonUrl="/projects"
+    pattern="dots"
+    align="center"
+/>
+
+## Install or Update OpenClaw
+
+If you already have OpenClaw installed, update it to the latest version:
+
+```bash
+npm install -g openclaw@latest
+```
+
+If it's your first install, go to [github.com/openclaw/openclaw](https://github.com/openclaw/openclaw) and follow the official instructions. The installer prepares the environment, installs dependencies, and configures the gateway.
+
+<Image src="/images/blog/qwen35-08b-openclaw-ollama-locale/qwen3-5-openclaw-ollama-locally-160.webp" alt="OpenClaw installation from official repository" width={1200} height={630} />
+
+Installation can take a few minutes to download updates and plugins. Once complete, check status:
+
+```bash
+openclaw status
+```
+
+If you see "Gateway: running", you're ready. If the gateway isn't active, start it manually:
+
+```bash
+openclaw gateway start
+```
+
+## Configure OpenClaw for Ollama
+
+Open OpenClaw's configuration file:
+
+```bash
+nano ~/.config/openclaw/config.yaml
+```
+
+Add or modify the `providers` section to point to local Ollama and specify the model:
+
+```yaml
+gateway:
+  host: 127.0.0.1
+  port: 3000
+
+providers:
+  ollama:
+    type: ollama
+    base_url: http://localhost:11434
+    model: qwen3.5:0.8b
+
+agents:
+  default:
+    provider: ollama
+    system_prompt: You are a helpful assistant.
+
+channels:
+  telegram:
+    bot_token: YOUR_TELEGRAM_TOKEN
+```
+
+**Key points**:
+- `base_url: http://localhost:11434` - Ollama's local endpoint (default port)
+- `model: qwen3.5:0.8b` - must match EXACTLY the name in `ollama list`
+- `provider: ollama` - tells OpenClaw to use the local Ollama provider
+
+Save the file (`Ctrl+O`, `Enter`, `Ctrl+X` on nano).
+
+<Image src="/images/blog/qwen35-08b-openclaw-ollama-locale/qwen3-5-openclaw-ollama-locally-279.webp" alt="OpenClaw configuration file with Ollama provider" width={1200} height={630} />
+
+Restart the gateway to apply changes:
+
+```bash
+openclaw gateway restart
+```
+
+<Image src="/images/blog/qwen35-08b-openclaw-ollama-locale/qwen3-5-openclaw-ollama-locally-271.webp" alt="Restart OpenClaw gateway after configuration" width={1200} height={630} />
+
+<CtaCard
+    title="Want to automate your workflow with AI?"
+    description="Let's talk about building custom AI agents for your business."
+    primaryButtonText="Book a Call"
+    primaryButtonUrl="/contacts"
+    pattern="grid"
+    align="center"
+/>
+
+## Configure Telegram
+
+Open Telegram and search for **@BotFather**. Start a chat and create a new bot:
+
+```
+/newbot
+```
+
+Follow the instructions:
+1. Choose a name for the bot (e.g. "Qwen Assistant")
+2. Choose a unique username ending with `bot` (e.g. `qwen_assistant_bot`)
+
+BotFather will give you an **API token**. Copy it - it's long, starts with numbers, and contains the `:` character.
+
+**Important**: rotate the token after testing if you expose it in public repositories or screenshots.
+
+<Image src="/images/blog/qwen35-08b-openclaw-ollama-locale/qwen3-5-openclaw-ollama-locally-390.webp" alt="Create Telegram bot with BotFather" width={1200} height={630} />
+
+Now add the token to OpenClaw's configuration file (we already prepared it above in the `channels.telegram.bot_token` section). If you prefer using the interactive wizard:
+
+```bash
+openclaw configure
+```
+
+Select:
+- Gateway type: `local`
+- Channel: `telegram`
+- Paste the token when prompted
+
+Save and restart the gateway:
+
+```bash
+openclaw gateway restart
+```
+
+## Test the Local Model
+
+Start OpenClaw's terminal interface:
+
+```bash
+openclaw tui
+```
+
+Or use the web dashboard if you prefer:
+
+```bash
+openclaw dashboard
+```
+
+The dashboard opens at `http://localhost:3000`. If you see "Unauthorized", generate an access token with `openclaw token create` and use it to authenticate.
+
+To **pair Telegram**, go to Telegram and search for the bot you created (find it by searching for the username you chose, e.g. `@qwen_assistant_bot`). Click `/start`.
+
+If everything is configured correctly, the bot will respond immediately using the local Qwen 3.5 0.8B model via Ollama.
+
+**Practical test**: send a simple message like:
+
+```
+Hello! How do you work?
+```
+
+You should get a response within seconds. The response arrives both in OpenClaw's terminal/dashboard interface and directly on Telegram.
+
+<Image src="/images/blog/qwen35-08b-openclaw-ollama-locale/qwen3-5-openclaw-ollama-locally-503.webp" alt="Test Telegram bot with local Qwen 3.5 model" width={1200} height={630} />
+
+**Check latency**: on a Mac Mini M4 with M4 CPU, average latency is 2-3 seconds per response (depends on query complexity). On a VPS with Intel Xeon CPU, expect 5-8 seconds.
+
+<CtaCard
+    title="Have questions about OpenClaw?"
+    description="Contact me for technical consulting on setup, deployment, and optimization of AI agents."
+    primaryButtonText="Get in Touch"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Limitations and When NOT to Use Qwen 3.5 0.8B
+
+**This model is NOT suitable for**:
+- Complex reasoning (math, advanced logic)
+- Advanced code generation (better with Qwen Coder 7B or Claude Sonnet)
+- Long document summarization (context limited to 32k tokens)
+- Elaborate creative or narrative output
+
+**Use it for**:
+- Simple chatbots (FAQs, basic support)
+- Telegram assistants for quick commands
+- AI agent prototyping (test workflows before moving to large models)
+- Deploy on limited hardware (budget VPS, Raspberry Pi)
+
+If you need more advanced reasoning, consider Qwen 2.5 7B (also on Ollama) or switch to cloud models like Claude 3.5 Sonnet via OpenRouter.
+
+## Alternatives and Similar Models
+
+Other small models to try with Ollama + OpenClaw:
+- **Phi-4 3.8B** (Microsoft) - excellent for code generation on CPU
+- **Gemma 2 2B** (Google) - balanced between size and quality
+- **Llama 3.2 3B** (Meta) - good compromise for general use
+
+To compare local models:
+
+```bash
+ollama list
+ollama run <model-name>
+```
+
+Change the `model` in OpenClaw config and restart the gateway. Everything else stays the same.
+
+## Resources and Further Reading
+
+- [OpenClaw GitHub repository](https://github.com/openclaw/openclaw)
+- [Ollama model library](https://ollama.com/library)
+- [Qwen documentation](https://github.com/QwenLM/Qwen)
+- [Complete OpenClaw + Ollama guide](/blog/configurare-openclaw-ollama-agenti-ai-locali)
+
+<Image src="/images/blog/qwen35-08b-openclaw-ollama-locale/qwen3-5-openclaw-ollama-locally-511.webp" alt="Resources and documentation for Qwen and OpenClaw" width={1200} height={630} />
+
+## Conclusion
+
+I installed Qwen 3.5 0.8B on CPU with OpenClaw and Ollama. The setup is quick (15 minutes total), the model responds in seconds, and Telegram integration works without exotic configurations.
+
+**When to use it**: rapid prototypes, simple bots, AI agent testing, deployment on limited hardware.
+
+**When to avoid it**: complex reasoning, advanced code generation, elaborate creative output.
+
+If you want a local, small, working model without GPU, Qwen 3.5 0.8B is a great starting point. Start here, test your workflow, then scale to larger models if needed.
