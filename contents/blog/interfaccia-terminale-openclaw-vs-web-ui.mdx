@@ -1,0 +1,187 @@
+---
+title: 'Interfaccia Terminale vs Web UI in OpenClaw: Quale Usare e Quando'
+createdAt: '2026-03-28T00:00:00Z'
+modifiedAt: '2026-03-28T00:00:00Z'
+summary: 'Come usare la terminal UI di OpenClaw invece della web dashboard. Scopri quando usare il terminale, vantaggi e come lanciarlo via SSH.'
+image: '/images/blog/interfaccia-terminale-openclaw-vs-web-ui.png'
+authorId: matteo
+locale: 'it'
+tags: ['openclaw', 'terminal', 'tutorial', 'tui', 'cli']
+---
+
+OpenClaw offre due interfacce principali: una web dashboard accessibile via browser e una terminal UI (TUI) che gira direttamente nel terminale. Se lavori spesso in SSH, gestisci server headless o semplicemente preferisci la tastiera al mouse, la TUI è probabilmente quello che ti serve.
+
+In questa guida ti mostro come lanciare l'interfaccia terminale di OpenClaw, quando conviene usarla rispetto alla web UI e quali sono i vantaggi concreti di ciascuna opzione.
+
+## Perché Scegliere la Terminal UI
+
+La maggior parte degli utenti OpenClaw usa la web dashboard - è comoda, visiva, facile da navigare. Ma ci sono situazioni in cui la terminal UI è decisamente più pratica:
+
+**Sessioni SSH remote**: Se gestisci OpenClaw su un server VPS o Raspberry Pi e ti connetti in SSH, aprire un browser per accedere alla dashboard è scomodo. La TUI ti permette di interagire con l'agent direttamente nella sessione SSH, senza port forwarding o tunnel.
+
+**Server headless**: Macchine senza display o ambiente grafico (server Linux, container Docker, installazioni minimali) non hanno browser. La terminal UI funziona ovunque ci sia una shell.
+
+**Ambienti a risorse limitate**: La web dashboard carica JavaScript, CSS, asset vari. La TUI è leggera - niente rendering, solo testo. Su dispositivi con poca RAM o CPU (ESP32, vecchi laptop, installazioni embedded) fa la differenza.
+
+**Workflow completamente da tastiera**: Se sei uno di quelli che tiene le mani sulla tastiera e odia usare il mouse, la TUI si integra perfettamente con tmux, screen, vim e tutto l'ecosistema terminale.
+
+**Scripting e automazione**: La TUI può essere chiamata da script bash, integrata in pipeline, lanciata automaticamente all'avvio del server. La web UI richiede un browser aperto manualmente.
+
+Non è una questione di meglio o peggio - sono strumenti diversi per contesti diversi. Io uso la web UI quando lavoro in locale sul Mac Mini e voglio vedere conversazioni lunghe con scroll fluido. Passo alla TUI quando mi connetto in SSH per check veloci o quando devo lanciare comandi da script cron.
+
+<Image src="/images/blog/interfaccia-terminale-openclaw-vs-web-ui/access-terminal-ui-openclaw-13.webp" alt="Terminal UI di OpenClaw - interfaccia a riga di comando" width={1200} height={630} />
+
+<CtaCard
+    title="Hai bisogno di aiuto con l'integrazione AI?"
+    description="Contattami per una consulenza su come implementare strumenti AI nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Come Lanciare la Terminal UI
+
+Il comando è semplice:
+
+```bash
+openclaw tui
+```
+
+Aprilo nel tuo terminale preferito. OpenClaw caricherà l'interfaccia testuale e dopo pochi secondi vedrai il prompt pronto per ricevere messaggi.
+
+**Prima esecuzione**: Se non hai mai configurato OpenClaw prima, ti verrà chiesto di completare l'onboarding (selezione modello, configurazione provider API, eventuale pairing con Telegram). Puoi fare tutto da TUI - non serve la web UI.
+
+**Gateway già attivo**: Se il gateway OpenClaw è già in esecuzione (lanciato in background o via systemd), la TUI si connette immediatamente. Se il gateway non è attivo, OpenClaw lo avvia automaticamente.
+
+<Image src="/images/blog/interfaccia-terminale-openclaw-vs-web-ui/access-terminal-ui-openclaw-23.webp" alt="Comando per lanciare la terminal UI di OpenClaw" width={1200} height={630} />
+
+## Usare la Terminal UI
+
+Una volta dentro, l'uso è intuitivo:
+
+**Scrivere messaggi**: Digita il tuo prompt direttamente nel campo di input e premi `Enter` per inviare. L'agent elabora il messaggio e risponde nel terminale.
+
+**Nessun output visibile**: A volte sembra che non succeda niente dopo aver premesso Enter. È normale - OpenClaw potrebbe star processando in background o aspettare il modello LLM. Se il prompt è complesso o il modello remoto lento, ci vogliono secondi. Aspetta.
+
+**Conversazioni multi-turno**: La TUI mantiene il contesto. Puoi fare domande di follow-up, chiedere all'agent di modificare risposte precedenti, continuare una conversazione come faresti in chat.
+
+**Risposte lunghe**: Le risposte vengono stampate a schermo man mano che arrivano (streaming). Se sono molto lunghe, scorrono fuori dalla view. Usa lo scroll del terminale (Shift+PgUp/PgDown su Linux, Cmd+freccia su macOS con Terminal.app) per risalire.
+
+<Image src="/images/blog/interfaccia-terminale-openclaw-vs-web-ui/access-terminal-ui-openclaw-45.webp" alt="Digitare messaggi nella terminal UI" width={1200} height={630} />
+
+<CtaCard
+    title="Scopri i miei progetti AI"
+    description="Esplora i progetti su cui sto lavorando e le tecnologie che utilizzo per l'automazione e l'intelligenza artificiale."
+    primaryButtonText="Vedi Progetti"
+    primaryButtonUrl="/projects"
+    pattern="dots"
+    align="center"
+/>
+
+## Uscire dalla Terminal UI
+
+Per chiudere la TUI e tornare alla shell, premi:
+
+```
+Ctrl+C
+```
+
+Questo termina il processo e ti riporta al prompt bash/zsh. Il gateway OpenClaw continua a girare in background - hai solo chiuso l'interfaccia. Se vuoi fermare anche il gateway:
+
+```bash
+openclaw gateway stop
+```
+
+Se invece vuoi rientrare nella TUI più tardi, rilancia semplicemente `openclaw tui`.
+
+<Image src="/images/blog/interfaccia-terminale-openclaw-vs-web-ui/access-terminal-ui-openclaw-55.webp" alt="Uscire dalla terminal UI con Ctrl+C" width={1200} height={630} />
+
+## Web UI vs Terminal UI: Confronto Pratico
+
+Ecco quando usare una o l'altra interfaccia, basato sulla mia esperienza quotidiana:
+
+| **Criterio** | **Web UI** | **Terminal UI** |
+|--------------|------------|-----------------|
+| **Accesso remoto (SSH)** | Scomoda, serve port forwarding o tunnel | Perfetta, funziona nativamente |
+| **Server headless** | Impossibile senza browser | Funziona sempre |
+| **Consumo risorse** | Moderato (browser + rendering) | Minimo (solo testo) |
+| **Visualizzazione conversazioni lunghe** | Ottima, scroll fluido, syntax highlighting | Basica, scorre fuori schermo |
+| **Workflow da tastiera** | Richiede mouse per navigazione | 100% tastiera |
+| **Integrazione scripting** | Difficile | Facile, chiamabile da bash |
+| **Immagini e media** | Visualizzazione inline | Solo path/link testuali |
+| **Onboarding iniziale** | Più user-friendly | Richiede familiarità col terminale |
+| **Debugging e log** | Comoda per vedere messaggi strutturati | Ottima con `openclaw --verbose` |
+
+**Il mio setup**: Uso la web UI come interfaccia principale quando lavoro in locale. Quando mi connetto in SSH al Mac Mini per check veloci o deploy, uso la TUI. Per automazioni cron (report giornalieri, script di monitoraggio), sempre TUI.
+
+<CtaCard
+    title="Vuoi automatizzare con AI?"
+    description="Ti aiuto a implementare agenti AI e workflow automatizzati per la tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="grid"
+    align="center"
+/>
+
+## Casi d'Uso Reali per la Terminal UI
+
+**1. Gestione di agent su VPS**
+
+Ho OpenClaw installato su un VPS Hostinger per alcuni agent che girano 24/7. Mi connetto in SSH per monitoraggio e configurazione. La TUI mi permette di testare prompt, controllare risposte, verificare che gli agent rispondano correttamente - tutto senza dover esporre la web dashboard su Internet o configurare reverse proxy.
+
+**2. Debugging rapido**
+
+Quando un agent si comporta in modo strano, lancio `openclaw tui --verbose` da SSH. La TUI mostra log dettagliati in real-time mentre invio messaggi. Vedo esattamente cosa passa tra user input, LLM e tool calls. Per debugging veloci, è più rapida della dashboard.
+
+**3. Script cron automatici**
+
+Ho script bash che girano ogni mattina per generare report e inviarli via Telegram. Gli script chiamano `openclaw tui` (in modalità non interattiva tramite pipe) per processare dati e generare testo. La web UI non sarebbe scriptabile così facilmente.
+
+**4. Installazioni Raspberry Pi**
+
+Su Raspberry Pi 4 con 4GB RAM, ogni MB conta. Faccio girare OpenClaw con modelli Ollama locali (Qwen, Phi-4). La web dashboard carica asset JavaScript pesanti. La TUI lascia più RAM disponibile per il modello.
+
+**5. Tmux workflows**
+
+Uso tmux per gestire sessioni multiple. In una finestra ho Neovim per scrivere codice, in un'altra la TUI di OpenClaw per chiedere spiegazioni o generare snippet. Resto in terminale, passo da una finestra all'altra con keybinding, zero context switch.
+
+## Alternative: Telegram e Altri Client
+
+La terminal UI non è l'unica alternativa alla web dashboard. OpenClaw supporta:
+
+**Telegram bot**: Se hai configurato Clawdbot (il bot Telegram di OpenClaw), puoi interagire con l'agent direttamente da Telegram. Comodo per check rapidi dal telefono o quando non hai accesso al server. Leggi la [guida completa su come configurare OpenClaw con Telegram](/blog/configurare-openclaw-senza-api-key-gratis) per il setup.
+
+**Discord, Signal, Slack**: OpenClaw si integra con vari client di messaggistica. Puoi chattare con l'agent senza mai aprire browser o terminale.
+
+**API diretta**: Se stai costruendo applicazioni custom, puoi chiamare l'API HTTP di OpenClaw direttamente. Non serve interfaccia - fai POST al gateway e ricevi JSON.
+
+La scelta dipende dal contesto. Per gestione server e scripting, la TUI è imbattibile. Per uso mobile o condivisione in team, i bot di messaggistica sono più pratici.
+
+<CtaCard
+    title="Esplora altri tutorial OpenClaw"
+    description="Scopri come installare OpenClaw su Android, configurare modelli locali con Ollama e automatizzare workflow con multi-agent."
+    primaryButtonText="Leggi il Blog"
+    primaryButtonUrl="/blog"
+    pattern="circles"
+    align="center"
+/>
+
+## Conclusione
+
+La terminal UI di OpenClaw è uno strumento potente per chi lavora in ambienti server, gestisce installazioni headless o semplicemente preferisce lavorare da tastiera. Non sostituisce la web dashboard - la integra.
+
+**Usa la terminal UI quando**:
+- Lavori in SSH su server remoti
+- Gestisci installazioni headless o embedded
+- Vuoi integrare OpenClaw in script bash
+- Preferisci workflow completamente da tastiera
+- Hai risorse limitate (RAM, CPU)
+
+**Usa la web UI quando**:
+- Lavori in locale con ambiente grafico
+- Hai conversazioni lunghe da visualizzare
+- Preferisci interfacce visuali
+- Stai facendo onboarding o configurazione iniziale
+
+Il comando è semplice: `openclaw tui` per lanciare, `Ctrl+C` per uscire. Provalo nella prossima sessione SSH - è più comodo di quanto pensi.
