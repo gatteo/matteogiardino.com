@@ -1,0 +1,103 @@
+---
+title: 'Costruire Workflow Semi-Autonomi con Agenti OpenClaw: Guida Pratica'
+createdAt: '2026-04-13T00:00:00Z'
+modifiedAt: '2026-04-13T00:00:00Z'
+summary: 'Tutorial sulla progettazione di workflow agentici semi-autonomi con OpenClaw. Orchestrazione, gestione errori e pattern human-in-the-loop per CTOS e Devs.'
+image: '/images/blog/workflow-semi-autonomi-openclaw-agenti.png'
+authorId: matteo
+locale: 'it'
+tags: ['openclaw', 'ai', 'ai agents', 'workflow', 'automazione', 'tutorial', 'cto']
+---
+
+Siamo passati dai semplici chatbot che rispondono a domande, alla vera e propria "agente-leap": workflow complessi orchestrati da AI che portano a termine compiti in autonomia. Per un CTO o uno sviluppatore, questo significa passare dal "prompt engineering" alla "progettazione di sistemi agentici".
+
+In questa guida, vediamo come approcciare la costruzione di workflow semi-autonomi con OpenClaw, focalizzandoci su quello che conta davvero: orchestrazione, gestione degli errori e il fondamentale pattern human-in-the-loop.
+
+## Oltre il Prompt: Cos'è un Workflow Autonomo
+
+Un workflow autonomo non è una sequenza rigida di comandi. È un sistema che prende un obiettivo (ad esempio "Ricerca dati di mercato su X e crea un report"), scompone il compito in sotto-attività, esegue azioni, valuta i risultati e corregge il tiro se necessario.
+
+L'autonomia è **semi-autonomia**: l'agente esegue il 90% del lavoro, ma mantiene punti di controllo per l'approvazione umana o per gestire eccezioni che non sa risolvere.
+
+## I Pilastri del Sistema Agentico
+
+Prima di scrivere codice, dobbiamo definire l'architettura.
+
+### 1. Orchestrazione (Il Pattern Manager-Worker)
+Non affidare tutto a un singolo agent. Crea un "Manager" (l'agent orchestratore) che ha la visione d'insieme, e "Worker" (agenti specializzati) che eseguono i singoli compiti. Il Manager delega, il Worker risponde.
+
+### 2. Scomposizione del Compito
+Un workflow fallisce quando provi a fare troppo in un colpo solo. Spezza il compito in passi atomici. Se l'agent deve ricercare, analizzare e scrivere, crea un workflow con 3 agenti o 3 step distinti.
+
+### 3. Human-in-the-Loop (HITL)
+Non eliminare l'uomo. Elimina il lavoro noioso. L'agente prepara il lavoro, tu approvi. In OpenClaw, questo si implementa creando punti di interruzione dove l'agente attende un segnale prima di proseguire.
+
+<CtaCard
+    title="Hai bisogno di aiuto con l'integrazione AI?"
+    description="Contattami per una consulenza su come implementare agenti AI e workflow automatizzati nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Implementazione in OpenClaw
+
+Come traduciamo questi concetti in OpenClaw?
+
+### Orchestrazione tramite Task Decomposition
+In OpenClaw, usa le sessioni isolate (`sessions_spawn`) per creare agenti Worker specializzati. Il Manager (nella sessione principale) coordina i Worker inviando prompt specifici.
+
+```bash
+# Esempio concettuale di orchestrazione
+# Sessione Manager lancia un worker per una ricerca
+openclaw sessions_spawn --task "Ricerca info su X" --agentId worker-ricerca
+```
+
+### Gestione degli Errori e Loop di Controllo
+L'errore è parte del processo. Se un worker fallisce (es. timeout o errore API), il Manager deve saperlo. Usa i risultati delle chiamate agli agenti per implementare logica di retry o fallback. Non lasciare mai che un agent giri all'infinito - imposta sempre `timeoutSeconds` e limiti alle iterazioni.
+
+### Pattern Human-in-the-Loop
+Puoi far sì che un agent faccia il lavoro sporco, ti invii un sommario su Telegram e aspetti il tuo `OK` prima di procedere con l'azione finale (es. pubblicazione, invio email).
+
+## Caso d'Uso: Agente Ricercatore e Report Automatizzato
+
+Immaginiamo di voler automatizzare la creazione di un report settimanale su un trend tech.
+
+1. **Manager**: Riceve il trigger (es. cron job). Definisce il topic.
+2. **Worker Ricerca**: Naviga, usa tool (browser control), estrae dati, sintetizza in markdown.
+3. **Manager**: Revisiona, riassume, invia a te (Telegram).
+4. **Tu**: Approvi o chiedi modifiche.
+5. **Worker Scrittura**: Finalizza il report basandosi sull'approvazione.
+
+Il segreto sta nella separazione delle responsabilità.
+
+<CtaCard
+    title="Scopri i miei progetti"
+    description="Dai un occhio ai progetti su cui sto lavorando e alle tecnologie che utilizzo."
+    primaryButtonText="Vedi Progetti"
+    primaryButtonUrl="/projects"
+    pattern="dots"
+    align="center"
+/>
+
+## Sfide e Best Practices (Lezioni imparate)
+
+1. **Il Trap del Loop Infinito**: Se non definisci bene le condizioni di uscita, un agent può entrare in un loop di auto-correzione inutile. Limita sempre il numero di tentativi.
+2. **Costi**: Ogni chiamata LLM ha un costo. Ottimizza usando modelli piccoli (es. Qwen 0.8B) per compiti semplici e modelli avanzati solo dove necessario.
+3. **Osservabilità**: Se non vedi cosa sta facendo l'agent, sei cieco. Usa `verbose` mode e log strutturati nelle tue skill custom.
+
+## Conclusione
+
+Costruire workflow autonomi non significa "dimenticarsene". Significa creare sistemi robusti che lavorano per te, chiedendo il tuo aiuto solo dove è necessario. Inizia in piccolo: prendi un compito ripetitivo, spezzalo, costruisci l'agente che lo gestisce.
+
+Vuoi approfondire come costruire skill specifiche o gestire l'orchestrazione? Scrivimi o controlla gli altri tutorial sul blog.
+
+<CtaCard
+    title="Vuoi automatizzare con AI?"
+    description="Ti aiuto a implementare agenti AI e workflow automatizzati per la tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="grid"
+    align="center"
+/>
