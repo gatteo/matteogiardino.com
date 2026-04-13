@@ -1,0 +1,105 @@
+---
+title: 'Come Creare un Assistente Email AI con OpenClaw e Himalaya'
+createdAt: '2026-04-13T00:00:00Z'
+modifiedAt: '2026-04-13T00:00:00Z'
+summary: 'Automatizza la gestione delle tue email usando OpenClaw e Himalaya CLI. Trasforma il tuo agente AI in un assistente personale che legge, riassume e risponde.'
+image: '/images/blog/assistente-email-ai-openclaw-himalaya.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'automazione', 'email', 'himalaya', 'ai agents', 'produttività']
+---
+
+La gestione delle email è un problema che tutti cerchiamo di risolvere da anni. Abbiamo provato decine di client diversi, regole automatiche, filtri complessi, ma la verità è che **leggere e rispondere alle email richiede tempo**. 
+
+E se potessimo delegare questo lavoro noioso a un agente AI locale?
+
+Con [OpenClaw](https://openclaw.ai) e [Himalaya](https://github.com/pimalaya/himalaya) (un potente client email da riga di comando), ho configurato un assistente personale che legge la mia inbox, riassume le email più importanti e mi prepara le bozze di risposta. In questo articolo ti spiego come ho fatto e come puoi replicarlo.
+
+## Perché Himalaya?
+
+Gli agenti AI come quelli di OpenClaw non hanno le dita. Non sanno cliccare bene su interfacce complesse come Gmail o Outlook web (anche se possono farlo usando Playwright, è lento e prono a errori). **Il linguaggio nativo degli agenti AI è la riga di comando.**
+
+Himalaya è perfetto per questo scopo. È un client CLI scritto in Rust che gestisce IMAP, SMTP e offre comandi semplici per fare tutto: `himalaya envelope list`, `himalaya message read 42`, `himalaya message write`. Fornendo questa CLI a OpenClaw, stiamo dando all'agente le chiavi della nostra inbox in un formato che sa usare perfettamente.
+
+<CtaCard
+    title="Vuoi integrare AI nel tuo business?"
+    description="Contattami per una consulenza su come implementare strumenti AI e agenti autonomi nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## 1. Installare e Configurare Himalaya
+
+Per prima cosa, installiamo Himalaya sul nostro server o Mac Mini. Se usi macOS, basta Homebrew:
+
+```bash
+brew install himalaya
+```
+
+Adesso dobbiamo configurarlo. Puoi usare il wizard interattivo eseguendo `himalaya account configure`, oppure creare manualmente il file in `~/.config/himalaya/config.toml`:
+
+```toml
+[accounts.personal]
+email = "tu@email.com"
+display-name = "Il Tuo Nome"
+default = true
+
+backend.type = "imap"
+backend.host = "imap.example.com"
+backend.port = 993
+backend.encryption.type = "tls"
+backend.login = "tu@email.com"
+backend.auth.type = "password"
+backend.auth.cmd = "pass show email/imap"  # o usa il keyring di sistema
+
+message.send.backend.type = "smtp"
+message.send.backend.host = "smtp.example.com"
+# ... configurazione smtp ...
+```
+
+**Nota sulla sicurezza:** Non mettere la password in chiaro nel file toml. Usa un password manager CLI come `pass` o il portachiavi del sistema. L'agente OpenClaw erediterà i permessi dell'utente che lo esegue, quindi funzionerà senza intoppi.
+
+## 2. Insegnare a OpenClaw a usare le Email
+
+OpenClaw ha un sistema a plugin basato sulle skill. Esiste già una skill ufficiale per Himalaya, quindi dobbiamo solo dirgli di usarla. 
+
+Puoi chiedere direttamente al tuo agente OpenClaw (via Telegram o terminale):
+
+> "Aggiungi la skill himalaya per poter leggere le mie email."
+
+L'agente cercherà la skill e caricherà le istruzioni necessarie. Da questo momento, OpenClaw "sa" che può eseguire i comandi `himalaya` nel terminale.
+
+## 3. Workflow Pratici con l'Assistente Email
+
+Ora viene il bello. Con il setup completato, ecco alcune delle richieste che faccio regolarmente al mio agente:
+
+### "Fammi un riassunto delle email non lette di oggi"
+
+OpenClaw eseguirà `himalaya envelope list` cercando i messaggi non letti, e poi un loop di `himalaya message read <id>` per scaricare il testo di ognuno. Grazie alla context window dei modelli moderni (come Claude 3.5 Sonnet o GPT-4o), leggerà tutto in background e mi manderà su Telegram un bel report a punti con le priorità.
+
+### "Trova l'ultima fattura di AWS e riassumila"
+
+L'agente userà la sintassi di ricerca di Himalaya (`himalaya envelope list from aws-receivables subject invoice`), leggerà il messaggio giusto e mi estrarrà il totale da pagare o il link al PDF.
+
+### "Rispondi a Marco dicendogli che ci vediamo giovedì alle 15"
+
+Questo è il mio uso preferito. Quando vedo una mail dal riassunto a cui devo rispondere, chiedo all'agente di preparare la risposta. OpenClaw analizza la mail originale per capire il tono, scrive una risposta cortese e usa il comando template di Himalaya:
+
+```bash
+cat << 'EOF' | himalaya template send
+From: tu@email.com
+To: marco@email.com
+Subject: Re: Meeting
+
+Ciao Marco,
+Perfetto, confermato per giovedì alle 15. A presto!
+EOF
+```
+
+## Conclusione
+
+Creare un assistente email con OpenClaw e Himalaya è un progetto perfetto per il weekend. Ti insegna come ragionano gli agenti AI e come interagiscono con gli strumenti CLI. 
+
+La vera potenza degli agenti non sta nei wrapper web lenti e instabili, ma nel combinare LLM con tool da riga di comando solidi. Provalo sul tuo setup locale e fammi sapere su Twitter cosa ne pensi!
