@@ -1,0 +1,143 @@
+---
+title: 'Guida Definitiva: Creare un Assistente Email AI con OpenClaw e Himalaya'
+createdAt: '2026-04-19T00:00:00Z'
+modifiedAt: '2026-04-19T00:00:00Z'
+summary: 'Scopri come gestire la tua casella di posta dal terminale automatizzando triage, riassunti e bozze di risposta con OpenClaw e Himalaya.'
+image: '/images/blog/guida-definitiva-assistente-email-openclaw-himalaya.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'automation', 'himalaya', 'email']
+---
+
+# Guida Definitiva: Creare un Assistente Email AI con OpenClaw e Himalaya
+
+Gestire la posta elettronica è uno dei maggiori sprechi di tempo per qualsiasi sviluppatore o CTO. Passiamo ore a filtrare newsletter, leggere thread infiniti e scrivere risposte che potrebbero facilmente essere automatizzate.
+
+E se potessi gestire l'intera casella di posta dal terminale, usando un agente AI per leggere, riassumere e scrivere le risposte al posto tuo?
+
+In questa guida, ti mostrerò come combinare **Himalaya** - un client email CLI incredibilmente veloce - con **OpenClaw** per costruire il tuo assistente email autonomo.
+
+## Perché Himalaya e OpenClaw?
+
+Ho provato moltissimi client email, ma quando vuoi costruire automazioni AI, hai bisogno di strumenti che funzionino bene nel terminale.
+
+- **Himalaya** è scritto in Rust, gestisce IMAP/SMTP in modo super efficiente e può restituire qualsiasi output in formato JSON o testo normale.
+- **OpenClaw** è un framework che collega modelli AI a tool locali, permettendo al tuo agente di eseguire comandi Himalaya, ragionare sull'output e agire di conseguenza.
+
+Combinandoli, l'AI può letteralmente leggere la tua inbox e digitare le risposte.
+
+## 1. Configurare Himalaya
+
+Per prima cosa, devi installare Himalaya. Se usi macOS, puoi sfruttare Homebrew:
+
+```bash
+brew install himalaya
+```
+
+Successivamente, configura il tuo account email. Puoi lanciare il wizard interattivo (`himalaya account configure`) o creare manualmente il file `~/.config/himalaya/config.toml`.
+
+Ecco una configurazione IMAP/SMTP di base:
+
+```toml
+[accounts.personal]
+email = "tu@example.com"
+display-name = "Il Tuo Nome"
+default = true
+
+backend.type = "imap"
+backend.host = "imap.example.com"
+backend.port = 993
+backend.encryption.type = "tls"
+backend.login = "tu@example.com"
+# Salva le password in modo sicuro!
+backend.auth.type = "password"
+backend.auth.cmd = "pass show email/imap"  
+
+message.send.backend.type = "smtp"
+message.send.backend.host = "smtp.example.com"
+message.send.backend.port = 587
+# ...
+```
+
+Una volta configurato, verifica che funzioni listando le ultime email:
+
+```bash
+himalaya envelope list
+```
+
+## 2. Connettere OpenClaw
+
+OpenClaw ha una skill nativa per Himalaya. Ti basta assicurarti che il framework sia installato e configurato.
+
+<CtaCard
+    title="Vuoi integrare AI nel tuo business?"
+    description="Contattami per una consulenza su come implementare strumenti AI nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+Quando chiedi a OpenClaw di controllare le tue email, scoprirà automaticamente la CLI di `himalaya` e inizierà ad usarla.
+
+## 3. Automatizzare il Workflow
+
+Ora arriva la parte divertente. Ecco tre modi potenti in cui puoi usare il tuo nuovo assistente AI.
+
+### Il Triage Mattutino
+
+Invece di aprire il client email e sentirti sopraffatto, puoi chiedere a OpenClaw:
+
+> "Controlla le mie email non lette di ieri, riassumi quelle importanti e fammi una lista di quelle a cui devo rispondere."
+
+OpenClaw eseguirà `himalaya envelope list`, leggerà i messaggi specifici usando `himalaya message read <id>` e ti fornirà un elenco puntato conciso e dritto al punto.
+
+### Bozze di Risposta
+
+Se un'email richiede una risposta standard, l'AI può scriverla per te e salvarla, oppure inviarla direttamente.
+
+> "Leggi l'email ID 42. Scrivi una risposta cortese dicendo che non sono disponibile per un meeting questa settimana, ma ci sarò martedì prossimo."
+
+L'agente userà il sistema di template di Himalaya per preparare la risposta:
+
+```bash
+cat << 'EOF' | himalaya template send
+From: tu@example.com
+To: mittente@example.com
+Subject: Re: Richiesta Meeting
+
+Ciao,
+Grazie per avermi scritto! Questa settimana sono pieno, ma sentiamoci martedì prossimo.
+A presto,
+Matteo
+EOF
+```
+
+### Archivio e Tag Intelligenti
+
+Puoi far girare uno script OpenClaw ogni giorno per fare pulizia nella tua inbox. L'agente può iterare sulle tue email, identificare le newsletter e spostarle in una cartella "Archivio" usando:
+
+```bash
+himalaya message move <id> "Archive"
+```
+
+## Sicurezza e Modelli Locali
+
+Quando dai a un'AI l'accesso alle tue email, la privacy è fondamentale. **Non usare modelli cloud per caselle di posta altamente sensibili.**
+
+Configura invece OpenClaw per usare un modello locale tramite Ollama (come `llama3` o `qwen`). I modelli locali oggi sono abbastanza intelligenti da riassumere e scrivere email, e i tuoi dati non lasceranno mai la tua macchina.
+
+<CtaCard
+    title="Scopri i miei progetti"
+    description="Dai un occhio ai progetti su cui sto lavorando e alle tecnologie che utilizzo."
+    primaryButtonText="Vedi Progetti"
+    primaryButtonUrl="/projects"
+    pattern="dots"
+    align="left"
+/>
+
+## Conclusione
+
+Automatizzare le email non significa smettere di leggerle. Significa smettere di gestire manualmente le attività ripetitive. Con OpenClaw e Himalaya, puoi trattare la tua inbox come un'API e lasciare che sia l'AI a fare il lavoro sporco.
+
+Hai già provato ad automatizzare la tua posta? Fammi sapere come l'hai configurato!
