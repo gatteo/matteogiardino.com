@@ -1,0 +1,63 @@
+---
+title: 'Building an AI-Driven Email Assistant with OpenClaw and Himalaya'
+createdAt: '2026-04-17T00:00:00Z'
+modifiedAt: '2026-04-17T00:00:00Z'
+summary: 'A practical guide to automating email: integrate Himalaya with OpenClaw to manage your inbox with artificial intelligence.'
+image: '/images/blog/email-assistant-openclaw-himalaya.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw', 'automation', 'himalaya', 'email']
+---
+
+# Building an AI-Driven Email Assistant with OpenClaw and Himalaya
+
+Managing email is one of the most time-consuming tasks. We often get lost between unimportant messages, newsletters, and urgent communications.
+
+What if you could have an AI assistant that reads, organizes, and drafts replies for you directly in the terminal?
+
+In this guide, we will see how to integrate **Himalaya** (a powerful CLI email client) with **OpenClaw** to transform your email workflow.
+
+## Why Himalaya + OpenClaw?
+
+The main advantage is the seamless integration between the terminal and AI. Himalaya handles IMAP/SMTP connections efficiently, while OpenClaw provides the reasoning engine to analyze email content.
+
+## Initial Setup
+
+### 1. Himalaya
+Ensure Himalaya is configured correctly. The configuration is typically located at `~/.config/himalaya/config.toml`. Verify that you can send and receive emails.
+
+### 2. OpenClaw
+Ensure OpenClaw is updated and the Himalaya skill is active.
+
+## Automation Scenarios
+
+### Scenario 1: Intelligent Sorting
+You can create an OpenClaw agent that periodically runs a Himalaya command to list unread emails, analyzes their content, and applies tags based on importance.
+
+```bash
+# Conceptual command example
+himalaya list --mailbox inbox
+# The agent analyzes the output and takes action...
+```
+
+### Scenario 2: AI Drafts
+Don't write everything from scratch. The agent can read the received email, generate a relevant draft reply, and save it to drafts in Himalaya, ready for your review.
+
+<CtaCard
+    title="Need help with AI integration?"
+    description="Get in touch for a consultation on implementing AI tools in your business."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Privacy and Security
+
+Automation requires caution. Always use local models (via Ollama) if you are handling highly sensitive data. Avoid sending email credentials to unknown cloud providers.
+
+## Conclusion
+
+Automating email doesn't mean stopping reading, but stopping manually managing repetitive tasks.
+
+Try setting up your first agent today. If you have any questions or want to share your setup, let me know!
