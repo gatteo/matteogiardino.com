@@ -1,0 +1,72 @@
+---
+title: 'How to Delegate Coding Tasks to OpenClaw Agents using ACP'
+createdAt: '2026-04-21T07:05:00Z'
+modifiedAt: '2026-04-21T07:05:00Z'
+summary: 'Learn how to use OpenClaw'\''s Agent Control Protocol (ACP) to delegate complex coding tasks to specialized sub-agents.'
+image: '/images/blog/delegate-coding-tasks-openclaw-agents-acp.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw', 'sviluppo', 'ai agents', 'cto']
+---
+
+One of the biggest challenges when working with AI agents is handling complex, time-consuming tasks like code refactoring or building new features from scratch. If you ask your main agent to do everything, you risk locking up your session for hours.
+
+The solution? **OpenClaw's Agent Control Protocol (ACP)**.
+
+In this article, I'll show you how I use ACP to "spawn" isolated sub-agents dedicated entirely to programming, allowing my main agent to keep handling the rest of my workflow.
+
+## What is the Agent Control Protocol (ACP)?
+
+ACP is a built-in protocol in OpenClaw that allows an agent to instantiate, control, and communicate with other agents or specialized coding harnesses, such as **Claude Code** or **Codex**.
+
+Instead of executing code directly in your main environment (with the risk of causing damage or overwriting the wrong files), you can delegate the work to a separate session with clear directives.
+
+## Why Use Sub-Agents for Coding?
+
+If you've ever tried to have a single LLM write an entire application in a chat, you know it loses context after a while. By using `runtime: "acp"` with `sessions_spawn`, you get three fundamental advantages:
+
+1. **Isolation**: The sub-agent works in a separate directory or thread. If it makes mistakes, it doesn't compromise your main project.
+2. **Parallelization**: You can launch an agent to review a Pull Request while you continue using your assistant to write emails.
+3. **Specialized Tools**: You can hook up coding-specific harnesses (e.g., cursor, codex) that are optimized for navigating source files and applying diffs.
+
+<CtaCard
+    title="Need help with AI integration?"
+    description="Get in touch for a consultation on implementing AI tools and autonomous agents in your business."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## How to Spawn a Coding Agent
+
+The beauty of OpenClaw is that interaction can happen via CLI or directly by asking your assistant. Behind the scenes, the agent uses the `sessions_spawn` tool.
+
+Here is a practical example of how you tell your agent to launch a refactoring task:
+
+```javascript
+// Internal tool call example (sessions_spawn)
+{
+  "runtime": "acp",
+  "agentId": "claude-code", // or "codex"
+  "mode": "session",
+  "thread": true,
+  "task": "Refactor the auth.ts file to use the new JWT standard, and open a PR when you're done."
+}
+```
+
+The main agent hands over control of that task to the sub-agent. Once finished, the sub-agent will notify you (via a push-based system) that the work is complete.
+
+## Best Practices for Code Delegation
+
+Working with this setup for a few months, I've learned a few lessons the hard way:
+
+* **Don't use sub-agents for one-liner fixes**: For a small typo or a simple bug, use the main agent with the `edit` tool. Sub-agents are for work that requires exploration (e.g., "read all controllers and update dependencies").
+* **Use temporary directories for Code Review**: If you need an agent to review a Pull Request, tell it to clone the branch in an isolated folder and work there, avoiding conflicts with your main workspace.
+* **Request logs asynchronously**: Configure timeouts correctly. If a task takes hours, don't poll the agent continuously. Wait for it to wake up and tell you "Done!".
+
+## Conclusion
+
+The introduction of ACP sub-agents in OpenClaw completely changes the way we think about AI-assisted development. It's no longer about having a single "copilot", but rather having an entire team of junior developers ready to work in parallel under your supervision.
+
+Have you tried structuring a multi-agent system yet? What have been your biggest challenges?

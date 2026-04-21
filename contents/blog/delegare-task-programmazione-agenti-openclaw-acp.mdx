@@ -1,0 +1,72 @@
+---
+title: 'Come Delegare Task di Programmazione agli Agenti OpenClaw con ACP'
+createdAt: '2026-04-21T07:05:00Z'
+modifiedAt: '2026-04-21T07:05:00Z'
+summary: 'Scopri come utilizzare l'\''Agent Control Protocol (ACP) di OpenClaw per delegare task di coding complessi a sub-agenti.'
+image: '/images/blog/delegare-task-programmazione-agenti-openclaw-acp.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'sviluppo', 'ai agents', 'cto']
+---
+
+Una delle sfide più grandi quando si lavora con gli agenti AI è la gestione di task complessi che richiedono molto tempo, come il refactoring del codice o la creazione di nuove feature da zero. Se chiedi al tuo agente principale di fare tutto, rischi di bloccare la sessione per ore. 
+
+La soluzione? **L'Agent Control Protocol (ACP) di OpenClaw**.
+
+In questo articolo ti mostro come utilizzo l'ACP per "spawnare" (creare) sub-agenti isolati dedicati esclusivamente alla programmazione, permettendo al mio agente principale di continuare a gestire il resto del lavoro.
+
+## Cos'è l'Agent Control Protocol (ACP)?
+
+L'ACP è un protocollo integrato in OpenClaw che permette a un agente di istanziare, controllare e comunicare con altri agenti o strumenti di coding specializzati, come **Claude Code** o **Codex**. 
+
+Invece di eseguire il codice direttamente nell'ambiente principale (col rischio di fare danni o sovrascrivere file sbagliati), puoi delegare il lavoro a una sessione separata con direttive chiare.
+
+## Perché usare i Sub-Agenti per il Coding?
+
+Se hai mai provato a far scrivere un'intera applicazione a un singolo LLM in una chat, sai che dopo un po' perde il contesto. Utilizzando `runtime: "acp"` con `sessions_spawn` ottieni tre vantaggi fondamentali:
+
+1. **Isolamento**: Il sub-agente lavora in una directory o thread separato. Se fa errori, non compromette il tuo progetto principale.
+2. **Parallelizzazione**: Puoi lanciare un agente a fare code review su una PR mentre tu continui a usare l'assistente per scrivere e-mail.
+3. **Strumenti Specializzati**: Puoi agganciare harness specifici per il coding (es. cursor, codex) che sono ottimizzati per navigare i file sorgente e applicare diff.
+
+<CtaCard
+    title="Vuoi integrare AI nel tuo team di sviluppo?"
+    description="Contattami per una consulenza su come implementare strumenti AI e agenti autonomi nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Come fare lo Spawn di un Coding Agent
+
+La bellezza di OpenClaw è che l'interazione può avvenire sia tramite CLI che direttamente chiedendo al tuo assistente. Dietro le quinte, l'agente utilizza il tool `sessions_spawn`.
+
+Ecco un esempio pratico di come dire al tuo agente di lanciare un task di refactoring:
+
+```javascript
+// Esempio di chiamata tool interna (sessions_spawn)
+{
+  "runtime": "acp",
+  "agentId": "claude-code", // o "codex"
+  "mode": "session",
+  "thread": true,
+  "task": "Fai il refactoring del file auth.ts per usare il nuovo standard JWT, e apri una PR quando hai finito."
+}
+```
+
+L'agente principale cede il controllo di quel task al sub-agente. Una volta terminato, il sub-agente notificherà (tramite sistema push-based) che il lavoro è completato.
+
+## Best Practices per la Delega del Codice
+
+Lavorando con questo setup da qualche mese, ho imparato alcune lezioni a mie spese:
+
+* **Non usare i sub-agenti per fix di una riga**: Per un piccolo typo o un bug semplice, usa l'agente principale con il tool `edit`. Il sub-agente è per lavori che richiedono esplorazione (es. "leggi tutti i controller e aggiorna le dipendenze").
+* **Usa directory temporanee per la Code Review**: Se devi far recensire una Pull Request, dì all'agente di clonare il branch in una cartella isolata e lavorare lì, evitando conflitti col tuo workspace principale.
+* **Richiedi i log**: Configura i timeout correttamente e, se un task richiede ore, non interrogare l'agente (no polling continuo). Attendi che sia lui a risvegliarsi per dirti "Fatto!".
+
+## Conclusione
+
+L'introduzione dei sub-agenti tramite ACP in OpenClaw cambia completamente il modo di concepire lo sviluppo assistito dall'AI. Non si tratta più di avere un "copilota", ma di avere un intero team di sviluppatori junior pronti a lavorare in parallelo sotto la tua supervisione.
+
+Hai già provato a strutturare un sistema multi-agente? Quali sono state le tue sfide più grandi?
