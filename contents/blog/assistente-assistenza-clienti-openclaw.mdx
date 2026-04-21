@@ -1,0 +1,73 @@
+---
+title: 'Tutorial: Come costruire un agente di assistenza clienti personalizzato in 10 minuti con OpenClaw'
+createdAt: '2026-04-21T00:00:00Z'
+modifiedAt: '2026-04-21T00:00:00Z'
+summary: 'Tutorial veloce: costruisci un agente di assistenza clienti con OpenClaw per gestire le richieste e automatizzare il supporto in 10 minuti.'
+image: '/images/blog/customer-service-agent-openclaw.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'tutorial', 'assistenza clienti', 'automazione']
+---
+
+# Tutorial: Come costruire un agente di assistenza clienti personalizzato in 10 minuti con OpenClaw
+
+L'assistenza clienti è spesso la prima area aziendale in cui l'IA fa una vera differenza. Se il tuo team passa troppo tempo a rispondere sempre alle stesse domande, hai bisogno di una soluzione automatizzata.
+
+In questo tutorial, costruiremo un agente di assistenza clienti personalizzato con **OpenClaw** in soli 10 minuti. Questo agente sarà capace di leggere le richieste in arrivo, cercare nella tua base di conoscenza e redigere risposte utili.
+
+## Prerequisiti
+
+- OpenClaw installato e configurato.
+- Accesso al tuo canale di comunicazione di supporto (Telegram, Slack o email).
+- Una base di conoscenza di base (file di testo o una pagina Notion).
+
+## Il Flusso di Lavoro
+
+Stiamo costruendo un agente con una specifica "personalità" e un set di strumenti per:
+1. **Ascoltare:** Monitorare i messaggi in arrivo.
+2. **Recuperare:** Cercare risposte nella tua documentazione.
+3. **Redigere:** Generare una risposta cortese basata sui risultati.
+
+## Passaggio 1: Definisci il Ruolo dell'Agente
+
+Nella configurazione del tuo agente, imposta le istruzioni principali:
+
+```yaml
+# agent-config.yaml
+role: "Agente di Assistenza Clienti"
+goal: "Aiutare gli utenti con domande comuni in modo efficiente e cortese."
+context: "Sei l'assistente di supporto per [La Tua Azienda]. Consulta sempre la documentazione interna prima di rispondere."
+```
+
+## Passaggio 2: Connetti la Base di Conoscenza
+
+Assicurati che il tuo agente abbia accesso alla tua documentazione. Usando l'accesso al file system di OpenClaw, punta semplicemente l'agente alla tua cartella `resources/docs/`.
+
+## Passaggio 3: Gestisci i Messaggi in Arrivo
+
+Configura un semplice trigger per il tuo canale di comunicazione.
+
+```bash
+# Esempio di logica dell'agente
+if messaggio_in_arrivo:
+    cerca_nella_base_di_conoscenza(query=messaggio.text)
+    genera_risposta(context=risultati_ricerca)
+    invia_alle_bozze(risposta)
+```
+
+<CtaCard
+    title="Vuoi integrare AI nel tuo business?"
+    description="Contattami per una consulenza su come implementare strumenti AI nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Perché funziona
+
+Mantenendo l'attenzione dell'agente limitata all'assistenza clienti, riduci i rischi di allucinazione e garantisci una voce del brand coerente.
+
+## Conclusione
+
+Costruire il tuo primo agente di assistenza clienti è un grande passo avanti per scalare il tuo team di supporto senza aggiungere costi fissi. Prova questa configurazione e fammi sapere come va!

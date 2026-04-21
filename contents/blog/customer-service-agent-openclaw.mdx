@@ -1,0 +1,73 @@
+---
+title: 'Tutorial: How to build a custom customer service agent in 10 minutes with OpenClaw'
+createdAt: '2026-04-21T00:00:00Z'
+modifiedAt: '2026-04-21T00:00:00Z'
+summary: 'A 10-minute tutorial on building a custom customer service agent using OpenClaw to handle inquiries, improve response times, and automate support.'
+image: '/images/blog/customer-service-agent-openclaw.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw', 'tutorial', 'customer service', 'automation']
+---
+
+# Tutorial: How to build a custom customer service agent in 10 minutes with OpenClaw
+
+Customer service is often the first business area where AI makes a real difference. If your team spends too much time answering the same questions over and over, you need an automated solution.
+
+In this tutorial, we will build a custom customer service agent with **OpenClaw** in just 10 minutes. This agent will be capable of reading incoming inquiries, searching your knowledge base, and drafting helpful responses.
+
+## Prerequisites
+
+- OpenClaw installed and configured.
+- Access to your support communication channel (Telegram, Slack, or email).
+- A basic knowledge base (text files or a Notion page).
+
+## The Workflow
+
+We are building an agent with a specific "personality" and a set of tools to:
+1. **Listen:** Monitor incoming messages.
+2. **Retrieve:** Look up answers in your documentation.
+3. **Draft:** Generate a polite response based on the findings.
+
+## Step 1: Define the Agent's Role
+
+In your agent's configuration, set its core instructions:
+
+```yaml
+# agent-config.yaml
+role: "Customer Service Agent"
+goal: "Help users with common questions efficiently and politely."
+context: "You are the support assistant for [Your Business]. Always consult the internal documentation before answering."
+```
+
+## Step 2: Connect the Knowledge Base
+
+Ensure your agent has access to your documentation. Using OpenClaw's file-system access, simply point the agent to your `resources/docs/` folder.
+
+## Step 3: Handle Incoming Messages
+
+Configure a simple trigger for your communication channel.
+
+```bash
+# Example agent logic
+if incoming_message:
+    search_knowledge_base(query=message.text)
+    generate_response(context=search_results)
+    send_to_drafts(response)
+```
+
+<CtaCard
+    title="Need help with AI integration?"
+    description="Get in touch for a consultation on implementing AI tools in your business."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Why This Works
+
+By keeping the agent's focus limited to customer service, you reduce hallucination risks and ensure consistent brand voice.
+
+## Conclusion
+
+Building your first customer service agent is a huge step toward scaling your support team without adding overhead. Try this setup and let me know how it goes!
