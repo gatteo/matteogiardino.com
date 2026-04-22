@@ -1,0 +1,69 @@
+---
+title: 'Tutorial: Setting up a local multi-agent RAG pipeline for company documents'
+createdAt: '2026-04-22T00:00:00Z'
+modifiedAt: '2026-04-22T00:00:00Z'
+summary: 'A technical guide to building a local RAG pipeline using OpenClaw to safely query and interact with internal company documents.'
+image: '/images/blog/local-rag-pipeline-openclaw.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw', 'rag', 'tutorial', 'enterprise']
+---
+
+# Tutorial: Setting up a local multi-agent RAG pipeline for company documents
+
+Enterprise data is sensitive. If you want to use AI to query your company's internal documents, sending that data to a third-party API isn't just a security risk - it's often a hard "no" from compliance teams.
+
+The solution is **Retrieval-Augmented Generation (RAG)** running entirely on your local infrastructure. In this tutorial, we will set up a local multi-agent RAG pipeline using OpenClaw.
+
+## The Architecture
+
+Our pipeline consists of three main components:
+1. **Document Ingestion:** A script that crawls your local folders, extracts text, and chunks it.
+2. **Vector Store:** A local vector database (like ChromaDB or FAISS) to store embeddings.
+3. **Retrieval Agent:** An OpenClaw agent that retrieves relevant chunks based on user questions and passes them to the LLM for synthesis.
+
+## Step 1: Document Ingestion and Embeddings
+
+First, we need to convert your documents into a searchable format.
+
+```bash
+# Simple embedding pipeline example
+python3 embed_docs.py --source ./company_docs/ --destination ./vector_store/
+```
+
+This script will read your PDFs, Markdown, and text files, break them into manageable chunks, and create vector embeddings using a local model like `nomic-embed-text`.
+
+## Step 2: The Retrieval Agent
+
+Configure your OpenClaw agent to use the local vector store as a tool.
+
+```yaml
+# agent-config.yaml
+tools:
+  - name: "document_search"
+    description: "Search internal company documentation."
+    path: "/path/to/vector_store"
+```
+
+The agent's instruction: "When a user asks a question, use `document_search` to find relevant information, then summarize the answer based *only* on the provided context."
+
+<CtaCard
+    title="Need help with AI integration?"
+    description="Get in touch for a consultation on implementing AI tools in your business."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Why Local RAG for Enterprise?
+
+1. **Security:** Data never leaves your premises.
+2. **Performance:** Low latency, as there's no network round-trip to an external API.
+3. **Control:** You can update documents in real-time, and the agent sees them immediately.
+
+## Conclusion
+
+Building a local RAG pipeline is the gold standard for enterprise AI implementation. It ensures data privacy while providing all the benefits of intelligent, context-aware AI agents.
+
+Have you built a RAG pipeline for your data yet? Let's discuss your architecture.

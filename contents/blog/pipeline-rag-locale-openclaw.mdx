@@ -1,0 +1,69 @@
+---
+title: 'Tutorial: Creare una pipeline RAG multi-agente locale per documenti aziendali'
+createdAt: '2026-04-22T00:00:00Z'
+modifiedAt: '2026-04-22T00:00:00Z'
+summary: 'Guida tecnica alla creazione di una pipeline RAG locale usando OpenClaw per interrogare e interagire in modo sicuro con i documenti aziendali interni.'
+image: '/images/blog/local-rag-pipeline-openclaw.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'rag', 'tutorial', 'impresa']
+---
+
+# Tutorial: Creare una pipeline RAG multi-agente locale per documenti aziendali
+
+I dati aziendali sono sensibili. Se vuoi usare l'IA per interrogare i documenti interni della tua azienda, inviare quei dati a un'API di terze parti non è solo un rischio di sicurezza, ma spesso un fermo "no" da parte dei team di conformità.
+
+La soluzione è la **Retrieval-Augmented Generation (RAG)** che gira interamente sulla tua infrastruttura locale. In questo tutorial, creeremo una pipeline RAG locale multi-agente usando OpenClaw.
+
+## L'Architettura
+
+La nostra pipeline è composta da tre componenti principali:
+1. **Ingestione Documenti:** Uno script che scansiona le cartelle locali, estrae il testo e lo suddivide in blocchi (chunking).
+2. **Vector Store:** Un database vettoriale locale (come ChromaDB o FAISS) per memorizzare gli embedding.
+3. **Agente di Retrieval:** Un agente OpenClaw che recupera i blocchi pertinenti in base alle domande dell'utente e li passa all'LLM per la sintesi.
+
+## Passaggio 1: Ingestione Documenti e Embedding
+
+Prima, dobbiamo convertire i tuoi documenti in un formato ricercabile.
+
+```bash
+# Esempio di pipeline di embedding semplice
+python3 embed_docs.py --source ./documenti_aziendali/ --destination ./vector_store/
+```
+
+Questo script leggerà i tuoi PDF, Markdown e file di testo, li suddividerà in blocchi gestibili e creerà vettori di embedding usando un modello locale come `nomic-embed-text`.
+
+## Passaggio 2: L'Agente di Retrieval
+
+Configura il tuo agente OpenClaw per usare il vector store locale come strumento.
+
+```yaml
+# agent-config.yaml
+tools:
+  - name: "ricerca_documenti"
+    description: "Cerca nella documentazione aziendale interna."
+    path: "/percorso/al/vector_store"
+```
+
+Le istruzioni per l'agente: "Quando un utente fa una domanda, usa `ricerca_documenti` per trovare informazioni pertinenti, quindi riassumi la risposta basandoti *solo* sul contesto fornito."
+
+<CtaCard
+    title="Vuoi integrare AI nel tuo business?"
+    description="Contattami per una consulenza su come implementare strumenti AI nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Perché RAG locale per l'impresa?
+
+1. **Sicurezza:** I dati non lasciano mai la tua sede.
+2. **Prestazioni:** Latenza ridotta, non essendoci andata e ritorno verso un'API esterna.
+3. **Controllo:** Puoi aggiornare i documenti in tempo reale e l'agente li vede immediatamente.
+
+## Conclusione
+
+Creare una pipeline RAG locale è lo standard di riferimento per l'implementazione dell'IA aziendale. Garantisce la privacy dei dati offrendo tutti i benefici di agenti IA intelligenti e consapevoli del contesto.
+
+Hai già costruito una pipeline RAG per i tuoi dati? Parliamo della tua architettura.
