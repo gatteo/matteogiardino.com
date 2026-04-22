@@ -1,0 +1,81 @@
+---
+title: 'Creare un Agente Ricercatore Autonomo con OpenClaw Web Search e Fetch'
+createdAt: '2026-04-22T00:00:00Z'
+modifiedAt: '2026-04-22T00:00:00Z'
+summary: 'Scopri come utilizzare gli strumenti nativi web_search e web_fetch di OpenClaw per automatizzare la ricerca, la lettura e la sintesi di informazioni online.'
+image: '/images/blog/creare-agente-ricercatore-autonomo-openclaw-web-search-fetch.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'ai agents', 'automazione', 'tecnologia']
+---
+
+Una delle attività che richiede più tempo nel lavoro di tutti i giorni è la ricerca online. Che tu debba analizzare i competitor, cercare informazioni su un nuovo framework o compilare una rassegna stampa, il processo è sempre lo stesso: cercare su Google, aprire decine di tab, leggere, estrarre e sintetizzare.
+
+Con OpenClaw, puoi delegare completamente questo flusso di lavoro a un agente AI autonomo. In questo articolo ti mostro come sfruttare i tool integrati `web_search` e `web_fetch` per creare un vero e proprio "assistente ricercatore".
+
+## I Tool Nativi: web_search e web_fetch
+
+A differenza di altri framework che richiedono complessi setup con Puppeteer o API esterne costose, OpenClaw integra nativamente due strumenti progettati per lavorare in sinergia:
+
+1. **web_search**: Utilizza l'API di Brave Search per effettuare query mirate, fornendo risultati strutturati con titoli, URL e brevi snippet. Puoi filtrare per data (`freshness`), lingua e regione.
+2. **web_fetch**: Prende l'URL trovato nella fase di ricerca e ne estrae il contenuto leggibile. Converte automaticamente il codice HTML della pagina in formato Markdown o testo puro, eliminando pubblicità, menu e rumore di fondo.
+
+Combinando questi due tool, l'agente può navigare il web in modo intelligente e leggero, senza il peso di un browser reale (salvo casi in cui serva superare login o interfacce complesse, per cui esiste il tool `browser`).
+
+<CtaCard
+    title="Vuoi automatizzare la raccolta dati nel tuo business?"
+    description="Contattami per una consulenza su come implementare agenti di ricerca autonomi per la tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Il Workflow del Ricercatore Autonomo
+
+Per mettere al lavoro il tuo agente ricercatore, basta fornirgli un prompt strutturato. Quando chiedo al mio agente di fare una ricerca, lui segue implicitamente questo workflow:
+
+1. **Ricerca iniziale**: Esegue `web_search` con la mia query, magari impostando `freshness="week"` se voglio solo notizie recenti.
+2. **Selezione delle fonti**: Analizza gli snippet dei risultati (solitamente prende i primi 3 o 5 URL rilevanti).
+3. **Estrazione dei contenuti**: Lancia una serie di chiamate `web_fetch` parallele o sequenziali sugli URL selezionati.
+4. **Sintesi**: Analizza il testo estratto e genera un report formattato, incrociando i dati e citando le fonti.
+
+## Un Esempio Pratico
+
+Ecco un comando tipico che potresti dare al tuo agente in chat:
+
+> "Cerca le ultime notizie sulla release di Llama 4 di Meta dell'ultima settimana. Leggi almeno tre articoli rilevanti e creamene un riassunto a punti, indicando le fonti originali."
+
+Dietro le quinte, l'agente eseguirà prima:
+
+```json
+{
+  "query": "Meta Llama 4 release news",
+  "freshness": "week"
+}
+```
+
+E subito dopo, per ogni link interessante trovato:
+
+```json
+{
+  "url": "https://techcrunch.com/...",
+  "extractMode": "markdown"
+}
+```
+
+Il risultato è un report perfetto, creato in una manciata di secondi, con informazioni precise e contestualizzate.
+
+## Limiti e Best Practices
+
+Dopo aver costruito diversi workflow di ricerca con OpenClaw, ho imparato alcune regole fondamentali per non far deragliare l'agente:
+
+* **Occhio alla lunghezza**: I contenuti estratti da `web_fetch` possono essere enormi. Assicurati che l'agente usi il parametro `maxChars` se sta leggendo molte pagine insieme, altrimenti intaserà la sua stessa finestra di contesto.
+* **Non tutto è estraibile**: Siti con pesanti protezioni anti-bot (come Cloudflare) o applicazioni a pagina singola (SPA) molto complesse potrebbero restituire risultati vuoti con il fetch rapido. In quei rari casi, dì all'agente di ricorrere all'automazione browser completa.
+* **Citazione delle fonti**: Obbliga sempre l'agente a inserire i link originali nel report finale. Le allucinazioni sono rare quando l'agente ha il testo della pagina sottomano, ma poter verificare la fonte originaria è cruciale.
+
+## Conclusione
+
+Creare un agente ricercatore con OpenClaw non richiede scrivere decine di righe di codice Python o gestire dipendenze complesse. I tool `web_search` e `web_fetch` rendono il reperimento delle informazioni un'azione nativa e fluida.
+
+Come utilizzeresti un assistente del genere nel tuo lavoro quotidiano?
