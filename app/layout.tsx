@@ -43,8 +43,8 @@ export const metadata: Metadata = {
     ...siteBaseMetadata,
     metadataBase: new URL(site.url),
     title: {
-        template: `%s | ${site.title}`,
-        default: site.title,
+        template: `%s · ${site.title}`,
+        default: `${site.title} · ${site.tagline}`,
     },
 }
 

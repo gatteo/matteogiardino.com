@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 
 type Site = {
     title: string
+    tagline: string
     description: string
     url: string
     logo: string
@@ -9,6 +10,7 @@ type Site = {
 
 export const site: Site = {
     title: 'Matteo Giardino',
+    tagline: 'Product, AI & Growth',
     description: 'Matteo Giardino è un Educatore, Sviluppatore ed Imprenditore di Torino.',
     url: process.env.NODE_ENV === 'production' ? 'https://matteogiardino.com' : 'http://localhost:3002',
     logo: 'https://matteogiardino.com/images/mg-logo-white.webp',

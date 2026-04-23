@@ -5,13 +5,29 @@ import { locales } from '@/i18n'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { NextIntlClientProvider } from 'next-intl'
 import { getMessages, setRequestLocale } from 'next-intl/server'
+import { type WebSite, type WithContext } from 'schema-dts'
 import { Toaster } from 'sonner'
 
+import { site } from '@/config/site'
 import { cn } from '@/lib/utils'
 import { GTM } from '@/components/gtm'
 import { ProgressProvider } from '@/components/progress-provider'
 import { TailwindIndicator } from '@/components/tailwind-indicator'
 import { ThemeProvider } from '@/components/theme-provider'
+
+const websiteJsonLd: WithContext<WebSite> = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: site.title,
+    alternateName: `${site.title} · ${site.tagline}`,
+    url: site.url,
+    inLanguage: ['it-IT', 'en-US'],
+    publisher: {
+        '@type': 'Person',
+        name: site.title,
+        url: site.url,
+    },
+}
 
 const inter = Inter({
     variable: '--font-inter',
@@ -63,6 +79,10 @@ export default async function LocaleLayout({
     return (
         <html lang={locale} suppressHydrationWarning>
             <body className={cn(inter.className, biotif.className)}>
+                <script
+                    type='application/ld+json'
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+                />
                 <SpeedInsights />
                 <GTM />
                 <NextIntlClientProvider locale={locale} messages={messages}>
