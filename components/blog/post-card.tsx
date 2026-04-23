@@ -4,12 +4,20 @@ import Image from 'next/image'
 import { formatDate } from '@/utils/dates'
 import { UtmUrl } from '@/utils/urls'
 import { Link } from '@/lib/navigation'
+import { useTranslations } from 'next-intl'
 
 import { BlogPostPreview } from '@/types/blog'
 
 import { Badge } from '../ui/badge'
 
+const MAX_VISIBLE_TAGS = 3
+
 export function PostCard({ post }: { post: BlogPostPreview }) {
+    const t = useTranslations('pages.blog')
+    const tags = post.tags ?? []
+    const visibleTags = tags.slice(0, MAX_VISIBLE_TAGS)
+    const overflow = tags.length - visibleTags.length
+
     return (
         <Link
             key={post.id}
@@ -33,16 +41,21 @@ export function PostCard({ post }: { post: BlogPostPreview }) {
                 </div>
             </div>
 
-            <div className='mt-3 flex flex-wrap items-center gap-2 text-xs sm:text-sm'>
-                <div>{formatDate(post.date)}</div>
-                {post.tags && post.tags.length > 0 && (
+            <div className='mt-3 flex flex-nowrap items-center gap-2 overflow-hidden text-xs sm:text-sm'>
+                <div className='shrink-0'>{formatDate(post.date)}</div>
+                {visibleTags.length > 0 && (
                     <>
-                        <div className='text-muted-foreground'>•</div>
-                        {post.tags.map((t) => (
-                            <Badge key={t} variant={'outline'}>
+                        <div className='shrink-0 text-muted-foreground'>•</div>
+                        {visibleTags.map((t) => (
+                            <Badge key={t} variant={'outline'} className='shrink-0 whitespace-nowrap'>
                                 {t}
                             </Badge>
                         ))}
+                        {overflow > 0 && (
+                            <Badge variant={'outline'} className='shrink-0 whitespace-nowrap text-muted-foreground'>
+                                {t('moreTags', { count: overflow })}
+                            </Badge>
+                        )}
                     </>
                 )}
             </div>

@@ -1,8 +1,11 @@
 import Image from 'next/image'
+import { Link } from '@/lib/navigation'
 import { formatDate } from '@/utils/dates'
 import { absoluteUrl } from '@/utils/urls'
 
 import { BlogPostAuthor, BlogPostSource } from '@/types/blog'
+import { canonicalizeTag, TAG_QUERY_PARAM } from '@/config/blog-tags'
+import { Routes } from '@/config/routes'
 import { getUrlFromSource } from '@/lib/blog'
 
 import { AspectRatio } from '../ui/aspect-ratio'
@@ -22,6 +25,8 @@ type Props = {
 }
 
 export function Header({ createdAt, title, slug, summary, image, source, author, tags }: Props) {
+    const canonicalTags = Array.from(new Set(tags.map(canonicalizeTag).filter(Boolean)))
+
     return (
         <>
             <div>
@@ -41,14 +46,20 @@ export function Header({ createdAt, title, slug, summary, image, source, author,
 
                         <p>{formatDate(createdAt)}</p>
 
-                        {tags.length > 0 && (
+                        {canonicalTags.length > 0 && (
                             <>
                                 <div className='text-muted-foreground'>•</div>
                                 <div className='flex flex-wrap gap-1'>
-                                    {tags.map((t) => (
-                                        <Badge key={t} variant={'outline'}>
-                                            {t}
-                                        </Badge>
+                                    {canonicalTags.map((t) => (
+                                        <Link
+                                            key={t}
+                                            href={{ pathname: Routes.Blog, query: { [TAG_QUERY_PARAM]: t } }}>
+                                            <Badge
+                                                variant='outline'
+                                                className='transition-colors hover:bg-accent hover:text-accent-foreground'>
+                                                {t}
+                                            </Badge>
+                                        </Link>
                                     ))}
                                 </div>
                             </>

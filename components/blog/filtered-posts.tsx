@@ -1,39 +1,66 @@
 'use client'
 
 import React from 'react'
-import { IconSearch } from '@tabler/icons-react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 
 import { type BlogPostPreview } from '@/types/blog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { canonicalizeTag, TAG_QUERY_PARAM } from '@/config/blog-tags'
+import { cn } from '@/lib/utils'
 
 import { PostCard } from './post-card'
 
-export function FilteredPosts({ posts }: { posts: BlogPostPreview[] }) {
-    const [searchValue, setSearchValue] = React.useState('')
+function canonicalTagsFor(post: BlogPostPreview): string[] {
+    return Array.from(new Set((post.tags ?? []).map(canonicalizeTag).filter(Boolean)))
+}
 
-    const filteredPosts = posts.filter((post) => post.title.toLowerCase().includes(searchValue.toLowerCase()))
+export function FilteredPosts({ posts }: { posts: BlogPostPreview[] }) {
+    const t = useTranslations('pages.blog')
+    const router = useRouter()
+    const pathname = usePathname()
+    const searchParams = useSearchParams()
+
+    const tagCounts = React.useMemo(() => {
+        const counts = new Map<string, number>()
+        for (const post of posts) {
+            for (const tag of canonicalTagsFor(post)) {
+                counts.set(tag, (counts.get(tag) ?? 0) + 1)
+            }
+        }
+        return Array.from(counts, ([tag, count]) => ({ tag, count })).sort(
+            (a, b) => b.count - a.count || a.tag.localeCompare(b.tag),
+        )
+    }, [posts])
+
+    const queryTag = canonicalizeTag(searchParams.get(TAG_QUERY_PARAM) ?? '')
+    const activeTag = queryTag && tagCounts.some((tc) => tc.tag === queryTag) ? queryTag : null
+
+    const setActiveTag = (next: string | null) => {
+        const params = new URLSearchParams(searchParams)
+        if (next) params.set(TAG_QUERY_PARAM, next)
+        else params.delete(TAG_QUERY_PARAM)
+        const query = params.toString()
+        router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false })
+    }
+
+    const filteredPosts = activeTag ? posts.filter((post) => canonicalTagsFor(post).includes(activeTag)) : posts
 
     return (
         <>
-            <div className='relative mb-8'>
-                <Input
-                    type='text'
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                    placeholder='cerca un articolo'
-                    aria-label='cerca un articolo'
-                    className='w-full pl-12'
-                    id='search'
-                />
-                <Label htmlFor='search'>
-                    <IconSearch className='absolute left-4 top-1/2 -translate-y-1/2' size={20} />
-                </Label>
+            <div className='mb-8 flex flex-wrap gap-2'>
+                <TagChip active={activeTag === null} onClick={() => setActiveTag(null)} label={t('allTag')} count={posts.length} />
+                {tagCounts.map(({ tag, count }) => (
+                    <TagChip
+                        key={tag}
+                        active={activeTag === tag}
+                        onClick={() => setActiveTag(activeTag === tag ? null : tag)}
+                        label={tag}
+                        count={count}
+                    />
+                ))}
             </div>
 
-            {filteredPosts.length === 0 && (
-                <div className='text-center text-xl'>Non ci sono articoli per il momento</div>
-            )}
+            {filteredPosts.length === 0 && <div className='text-center text-xl'>{t('emptyState')}</div>}
 
             <div className='-mx-4 grid gap-4 sm:grid-cols-2'>
                 {filteredPosts.map((post) => (
@@ -41,5 +68,38 @@ export function FilteredPosts({ posts }: { posts: BlogPostPreview[] }) {
                 ))}
             </div>
         </>
+    )
+}
+
+function TagChip({
+    active,
+    onClick,
+    label,
+    count,
+}: {
+    active: boolean
+    onClick: () => void
+    label: string
+    count: number
+}) {
+    return (
+        <button
+            type='button'
+            onClick={onClick}
+            className={cn(
+                'inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium transition-colors sm:text-sm',
+                active
+                    ? 'border-foreground bg-foreground text-background'
+                    : 'border-border bg-muted text-foreground hover:bg-accent',
+            )}>
+            <span>{label}</span>
+            <span
+                className={cn(
+                    'rounded-full px-1.5 py-0.5 text-[10px] font-semibold sm:text-xs',
+                    active ? 'bg-background/20 text-background' : 'bg-background/60 text-muted-foreground',
+                )}>
+                {count}
+            </span>
+        </button>
     )
 }

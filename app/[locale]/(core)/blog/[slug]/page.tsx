@@ -1,6 +1,7 @@
 import { Metadata, ResolvingMetadata } from 'next'
 import { notFound } from 'next/navigation'
 import { absoluteUrl } from '@/utils/urls'
+import { setRequestLocale } from 'next-intl/server'
 import { type Article, type WithContext } from 'schema-dts'
 
 import { BlogPostSource } from '@/types/blog'
@@ -85,6 +86,7 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
 
 export default async function Page({ params }: Props) {
     const { slug, locale } = await params
+    setRequestLocale(locale)
     const post = getLocalBlogPost(slug, locale)
 
     if (!post) {
