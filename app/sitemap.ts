@@ -57,9 +57,10 @@ const sitemap = async () => {
         priority: 0.6,
     }))
 
-    // Project pages - medium priority
-    const projectPages = allProjects.map((project) => ({
-        url: absoluteUrl(Routes.Project(project.slug)),
+    // Project pages - medium priority (one URL per unique slug, regardless of locale variants)
+    const projectSlugs = Array.from(new Set(allProjects.map((project) => project.slug)))
+    const projectPages = projectSlugs.map((slug) => ({
+        url: absoluteUrl(Routes.Project(slug)),
         lastModified: new Date().toISOString().split('T')[0],
         changeFrequency: 'yearly' as const,
         priority: 0.6,

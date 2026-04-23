@@ -4,17 +4,19 @@ import Image from 'next/image'
 import { Link } from '@/lib/navigation'
 import { UtmUrl } from '@/utils/urls'
 import { IconArrowRight } from '@tabler/icons-react'
-import { useTranslations } from 'next-intl'
-import { allProjects } from '@/.contentlayer/generated'
+import { useLocale, useTranslations } from 'next-intl'
 
 import { UtmMediums } from '@/types/links'
 import { Routes } from '@/config/routes'
+import { getProjects } from '@/lib/projects'
 
 import { ProjectCollabCard } from '../project-collab-card'
 import { Button } from '../ui/button'
 
 export function Projects() {
     const t = useTranslations('projects')
+    const locale = useLocale()
+    const projects = getProjects(locale)
     return (
         <section id='projects' className='my-32 flex flex-col'>
             {/* Title My Projects */}
@@ -42,7 +44,7 @@ export function Projects() {
 
             {/* My Projects */}
             <div className='-mx-4 mt-4 grid sm:grid-cols-2'>
-                {allProjects
+                {projects
                     .filter((p) => !p.collab && p.featured)
                     .slice(0, 4)
                     .map(({ _id, name, image, description, slug }) => {
@@ -93,7 +95,7 @@ export function Projects() {
 
             {/* Collab Projects */}
             <div className='mt-6 grid gap-4 sm:grid-cols-2'>
-                {allProjects
+                {projects
                     .filter((p) => p.collab)
                     .slice(0, 4)
                     .map((project) => (

@@ -54,11 +54,17 @@ const Project = defineDocumentType(() => ({
             description: 'Whether this project is a collaboration',
             required: true,
         },
+        locale: {
+            type: 'string',
+            description: 'The locale of the project (it or en). Defaults to it.',
+            required: false,
+            default: 'it',
+        },
     },
     computedFields: {
         slug: {
             type: 'string',
-            resolve: (doc) => doc._raw.sourceFileName.replace(/\.mdx$/, ''),
+            resolve: (doc) => doc._raw.sourceFileName.replace(/(\.(en|it))?\.mdx$/, ''),
         },
     },
 }))

@@ -2,9 +2,11 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { absoluteUrl } from '@/utils/urls'
 import { allProjects } from '@/.contentlayer/generated'
+import { setRequestLocale } from 'next-intl/server'
 
 import { Routes } from '@/config/routes'
 import { site } from '@/config/site'
+import { getProject } from '@/lib/projects'
 import { Content } from '@/components/mdx-content'
 import Header from '@/components/project/header'
 import { ScrollIndicator } from '@/components/scroll-indicator'
@@ -14,13 +16,15 @@ export const dynamic = 'force-static'
 
 type Props = {
     params: Promise<{
+        locale: string
         slug: string
     }>
 }
 
 export default async function Page({ params }: Props) {
-    const { slug } = await params
-    const project = allProjects.find((project) => project.slug === slug)
+    const { locale, slug } = await params
+    setRequestLocale(locale)
+    const project = getProject(slug, locale)
 
     if (!project) {
         notFound()
@@ -46,8 +50,8 @@ export default async function Page({ params }: Props) {
 }
 
 export const generateMetadata = async ({ params }: Props): Promise<Metadata> => {
-    const { slug } = await params
-    const project = allProjects.find((project) => project.slug === slug)
+    const { locale, slug } = await params
+    const project = getProject(slug, locale)
 
     if (!project) return {}
 
@@ -78,7 +82,6 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
 }
 
 export const generateStaticParams = () => {
-    return allProjects.map((project) => ({
-        slug: project.slug,
-    }))
+    const slugs = Array.from(new Set(allProjects.map((project) => project.slug)))
+    return slugs.map((slug) => ({ slug }))
 }

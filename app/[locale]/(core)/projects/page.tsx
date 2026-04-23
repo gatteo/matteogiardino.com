@@ -2,11 +2,11 @@ import { Metadata, ResolvingMetadata } from 'next'
 import Image from 'next/image'
 import { Link } from '@/lib/navigation'
 import { absoluteUrl, UtmUrl } from '@/utils/urls'
-import { allProjects } from '@/.contentlayer/generated'
-import { getTranslations } from 'next-intl/server'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
 
 import { UtmMediums } from '@/types/links'
 import { Routes } from '@/config/routes'
+import { getProjects } from '@/lib/projects'
 import { PageTitle } from '@/components/page-title'
 import { ProjectCollabCard } from '@/components/project-collab-card'
 
@@ -49,7 +49,9 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
 
 export default async function Page({ params }: Props) {
     const { locale } = await params
+    setRequestLocale(locale)
     const t = await getTranslations({ locale, namespace: 'pages.projects' })
+    const projects = getProjects(locale)
 
     return (
         <>
@@ -61,7 +63,7 @@ export default async function Page({ params }: Props) {
             />
 
             <div className='-mx-4 mt-8 grid sm:grid-cols-2'>
-                {allProjects
+                {projects
                     .filter((p) => !p.collab)
                     .map(({ _id, name, image, description, slug }) => {
                         return (
@@ -105,7 +107,7 @@ export default async function Page({ params }: Props) {
 
             {/* Collab Projects */}
             <div className='mt-6 grid gap-4 sm:grid-cols-2'>
-                {allProjects
+                {projects
                     .filter((p) => p.collab)
                     .map((project) => (
                         <ProjectCollabCard key={project._id} project={project} />
