@@ -1,7 +1,7 @@
 import { Metadata, ResolvingMetadata } from 'next'
 import Image from 'next/image'
 import { Link } from '@/lib/navigation'
-import { absoluteUrl } from '@/utils/urls'
+import { absoluteUrl, localizedAlternates } from '@/utils/urls'
 import { IconExternalLink } from '@tabler/icons-react'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 
@@ -31,9 +31,7 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
     return {
         title,
         description,
-        alternates: {
-            canonical: absoluteUrl(Routes.Contact),
-        },
+        alternates: localizedAlternates(Routes.Contact),
         openGraph: {
             ...previousOpenGraph,
             url: absoluteUrl(Routes.Contact),

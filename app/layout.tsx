@@ -9,6 +9,7 @@ import { Toaster } from 'sonner'
 
 import { site, siteBaseMetadata } from '@/config/site'
 import { cn } from '@/lib/utils'
+import { localizedAlternates } from '@/utils/urls'
 import { GTM } from '@/components/gtm'
 import { ProgressProvider } from '@/components/progress-provider'
 import { TailwindIndicator } from '@/components/tailwind-indicator'
@@ -45,6 +46,10 @@ export const metadata: Metadata = {
     title: {
         template: `%s · ${site.title}`,
         default: `${site.title} · ${site.tagline}`,
+    },
+    alternates: {
+        ...siteBaseMetadata.alternates,
+        ...localizedAlternates(''),
     },
 }
 

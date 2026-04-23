@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { absoluteUrl } from '@/utils/urls'
+import { absoluteUrl, localizedAlternates } from '@/utils/urls'
 import { allProjects } from '@/.contentlayer/generated'
 import { setRequestLocale } from 'next-intl/server'
 
@@ -58,9 +58,7 @@ export const generateMetadata = async ({ params }: Props): Promise<Metadata> => 
     return {
         title: project.title ?? project.name,
         description: project.description,
-        alternates: {
-            canonical: absoluteUrl(Routes.Project(slug)),
-        },
+        alternates: localizedAlternates(Routes.Project(slug)),
         openGraph: {
             url: absoluteUrl(Routes.Project(slug)),
             type: 'website',
