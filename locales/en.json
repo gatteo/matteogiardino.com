@@ -109,6 +109,14 @@
             "description": "a 1-on-1 mentorship for programmers who want to make a career leap."
         }
     },
+    "featuredTestimonial": {
+        "textBefore": "\"I've had the chance to meet people",
+        "textCompetent": "competent on the technical side",
+        "textMiddle": "and people competent on the commercial and growth side. Few people deeply understand both topics and know how to bring value wherever it's needed at both a practical and strategic level,",
+        "textUnicorn": "Matteo is one of these unicorns",
+        "textAfter": "\"",
+        "role": "ceo @ revenue farm"
+    },
     "testimonials": [
         {
             "name": "Simone Bresciani",
@@ -146,7 +154,10 @@
             "title": "articles",
             "description": "a remote corner of the web that I can fill with articles, stories and guides. Who reads blogs in 2026 anyway?",
             "pageTitle": "articles. stories. guides.",
-            "extendedDescription": "writing has always been a passion. when I code, I write code. when I'm not coding, I write articles. so basically I'm always writing."
+            "extendedDescription": "writing has always been a passion. when I code, I write code. when I'm not coding, I write articles. so basically I'm always writing.",
+            "allTag": "all",
+            "emptyState": "no articles for this tag yet",
+            "moreTags": "+{count} more"
         },
         "services": {
             "title": "services",
@@ -159,9 +170,11 @@
         "contacts": {
             "title": "how to contact me",
             "description": "whether you want to get to know me, talk about a project or collaboration, write to me. Something beautiful always comes from a message.",
-            "emailHeading": "Email",
-            "chatHeading": "Let's chat",
-            "socialHeading": "Social"
+            "emailHeading": "email",
+            "chatHeading": "let's chat",
+            "socialHeading": "social",
+            "copyEmail": "copy email",
+            "emailCopied": "email copied"
         },
         "projects": {
             "title": "projects",

@@ -2,12 +2,14 @@ import Image from 'next/image'
 import { Link } from '@/lib/navigation'
 import { UtmUrl } from '@/utils/urls'
 import { IconExternalLink } from '@tabler/icons-react'
+import { useTranslations } from 'next-intl'
 
 import { Routes } from '@/config/routes'
 
 import { Button } from './ui/button'
 
 export function ProjectCollabCard({ project }: { project: any }) {
+    const t = useTranslations('common')
     return (
         <Link
             href={UtmUrl(Routes.Project(project.slug), {
@@ -31,7 +33,7 @@ export function ProjectCollabCard({ project }: { project: any }) {
                     {project.description}
                 </div>
                 <Button variant='link' className='mt-3 p-0' size='sm'>
-                    scopri di più
+                    {t('learnMore')}
                 </Button>
             </div>
 

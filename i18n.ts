@@ -7,6 +7,10 @@ export type Locale = (typeof locales)[number]
 
 export const defaultLocale: Locale = 'it'
 
+// Default locale has no URL prefix (`/blog`), other locales do (`/en/blog`).
+// Keep this in sync across middleware (proxy.ts) and navigation helpers (lib/navigation.ts).
+export const localePrefix = 'as-needed' as const
+
 export default getRequestConfig(async ({ requestLocale }) => {
     // This typically corresponds to the `[locale]` segment
     let locale = await requestLocale

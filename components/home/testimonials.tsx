@@ -1,5 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
+import { useTranslations } from 'next-intl'
 
 import { testimonials } from '@/config/testimonials'
 import { cn } from '@/lib/utils'
@@ -9,6 +10,15 @@ type Props = {
 }
 
 export function Testimonials({ className }: Props) {
+    const tFeatured = useTranslations('featuredTestimonial')
+    const tList = useTranslations('testimonials')
+
+    const localized = testimonials.map((e, index) => ({
+        ...e,
+        title: tList(`${index}.title`),
+        testimonial: `"${tList(`${index}.text`)}"`,
+    }))
+
     return (
         <section id='testimonials' className={cn('my-32', className)}>
             {/* Testimonial expanded */}
@@ -24,17 +34,15 @@ export function Testimonials({ className }: Props) {
                     <figure className='mt-10'>
                         <blockquote className='text-accent-7 text-center text-xl font-semibold leading-8 sm:text-2xl sm:leading-9'>
                             <p>
-                                “Ho avuto modo di conoscere persone{' '}
+                                {tFeatured('textBefore')}{' '}
                                 <strong className='underline decoration-sky-400 underline-offset-4'>
-                                    competenti sul lato tecnico{' '}
+                                    {tFeatured('textCompetent')}{' '}
                                 </strong>
-                                e persone competenti sul lato commerciale e di crescita. Poche persone comprendono in
-                                profondità tutti e due i temi e sanno portare valore ovunque serva a livello sia pratico
-                                che strategico,{' '}
+                                {tFeatured('textMiddle')}{' '}
                                 <strong className='underline decoration-sky-400 underline-offset-4'>
-                                    Matteo è uno di questi unicorni{' '}
+                                    {tFeatured('textUnicorn')}{' '}
                                 </strong>
-                                ”
+                                {tFeatured('textAfter')}
                             </p>
                         </blockquote>
                         <figcaption className='mt-10'>
@@ -55,7 +63,7 @@ export function Testimonials({ className }: Props) {
                                     className='hidden fill-gray-300 md:block'>
                                     <circle cx={1} cy={1} r={1} />
                                 </svg>
-                                <div className='text-gray-300'>ceo @ revenue farm</div>
+                                <div className='text-gray-300'>{tFeatured('role')}</div>
                             </div>
                         </figcaption>
                     </figure>
@@ -65,17 +73,17 @@ export function Testimonials({ className }: Props) {
             {/* Testimonial card */}
             <div className='grid grid-cols-1 gap-4 pt-16 sm:grid-cols-2 lg:grid-cols-3'>
                 <ul className='space-y-4'>
-                    {testimonials.slice(0, 2).map((e) => (
+                    {localized.slice(0, 2).map((e) => (
                         <TestimonialCard key={e.name} testimonial={e} />
                     ))}
                 </ul>
                 <ul className='space-y-4'>
-                    {testimonials.slice(2, 4).map((e) => (
+                    {localized.slice(2, 4).map((e) => (
                         <TestimonialCard key={e.name} testimonial={e} />
                     ))}
                 </ul>
                 <ul className='space-y-4'>
-                    {testimonials.slice(4, 6).map((e) => (
+                    {localized.slice(4, 6).map((e) => (
                         <TestimonialCard key={e.name} testimonial={e} />
                     ))}
                 </ul>

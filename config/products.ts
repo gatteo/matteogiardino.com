@@ -1,7 +1,8 @@
-import { Devv30Links, DevvMaxLinks } from './links'
+import { Devv30Links } from './links'
 
 export const products: Array<{
     id: string
+    i18nKey: string // matches a key under `products.*` in the locale JSONs
     title: string
     url: string
     description: string
@@ -11,18 +12,20 @@ export const products: Array<{
     logoDark: string
     badge?: string
 }> = [
-    {
-        id: 'devv-max',
-        title: 'devv max',
-        url: DevvMaxLinks.homepage,
-        description: 'una piattaforma interattiva per imparare nozioni di programmazione facendo pratica.',
-        pictogram: '/images/projects/devv-max/icon.webp',
-        pictogramDark: '/images/projects/devv-max/icon.webp',
-        logo: '/images/projects/devv-max/logo-extended.png',
-        logoDark: '/images/projects/devv-max/logo-extended.png',
-    },
+    // {
+    //     id: 'devv-max',
+    //     i18nKey: 'devvMax',
+    //     title: 'devv max',
+    //     url: DevvMaxLinks.homepage,
+    //     description: 'una piattaforma interattiva per imparare nozioni di programmazione facendo pratica.',
+    //     pictogram: '/images/projects/devv-max/icon.webp',
+    //     pictogramDark: '/images/projects/devv-max/icon.webp',
+    //     logo: '/images/projects/devv-max/logo-extended.png',
+    //     logoDark: '/images/projects/devv-max/logo-extended.png',
+    // },
     {
         id: 'devv-30',
+        i18nKey: 'devv30',
         title: 'devv 30',
         badge: 'Novità ✨',
         url: Devv30Links.homepage,
@@ -34,6 +37,7 @@ export const products: Array<{
     },
     {
         id: 'programmatore-leggendario',
+        i18nKey: 'programmatoreLeg',
         title: 'programmatore leggendario',
         url: '/programmatore-leggendario',
         description: 'il miglior videocorso italiano per imparare a programmare, al costo di una cena.',
@@ -44,6 +48,7 @@ export const products: Array<{
     },
     {
         id: 'tech-career-launch',
+        i18nKey: 'tcl',
         title: 'tech career launch',
         url: '/tcl',
         description: 'una mentorship 1-1 per prepararsi al colloquio e trovare il primo lavoro.',
@@ -54,6 +59,7 @@ export const products: Array<{
     },
     // {
     //     id: 'tech-career-boost',
+    //     i18nKey: 'tcb',
     //     title: 'tech career boost',
     //     url: '/tcb',
     //     badge: 'Coming soon',

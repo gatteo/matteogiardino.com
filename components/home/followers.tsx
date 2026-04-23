@@ -115,26 +115,16 @@ export function Followers() {
 
             {/* Products */}
             <div className='mt-6 grid auto-rows-fr gap-4 md:grid-cols-2'>
-                {products.map((product) => {
-                    const productKey = product.id === 'devv-max' ? 'devvMax' :
-                                     product.id === 'devv-30' ? 'devv30' :
-                                     product.id === 'programmatore-leggendario' ? 'programmatoreLeg' :
-                                     product.id === 'tech-career-launch' ? 'tcl' : 'tcb'
-
-                    return (
-                        <LinkCard
-                            key={product.id}
-                            title={tProducts(`${productKey}.title`)}
-                            description={tProducts(`${productKey}.description`)}
-                            image={product.pictogramDark}
-                            href={UtmUrl(product.url, {
-                                medium: UtmMediums.Homepage,
-                                content: 'followers',
-                            })}
-                            buttonText={tCommon('learnMore')}
-                        />
-                    )
-                })}
+                {products.map((product) => (
+                    <LinkCard
+                        key={product.id}
+                        title={tProducts(`${product.i18nKey}.title`)}
+                        description={tProducts(`${product.i18nKey}.description`)}
+                        image={product.pictogramDark}
+                        href={UtmUrl(product.url, { medium: UtmMediums.Homepage, content: 'followers' })}
+                        buttonText={tCommon('learnMore')}
+                    />
+                ))}
             </div>
         </section>
     )

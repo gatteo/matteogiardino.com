@@ -30,6 +30,8 @@ import { Badge } from './ui/badge'
 export function Navbar() {
     const pathname = usePathname()
     const t = useTranslations('navigation')
+    const tServices = useTranslations('services.list')
+    const tProducts = useTranslations('products')
 
     return (
         <NavigationMenu className='hidden md:block'>
@@ -60,13 +62,11 @@ export function Navbar() {
                             </li>
                             {services.map((service) => (
                                 <ListItem
-                                    key={service.title}
-                                    href={UtmUrl(service.url, {
-                                        medium: UtmMediums.Navbar,
-                                    })}
-                                    title={service.title}
+                                    key={service.id}
+                                    href={UtmUrl(service.url, { medium: UtmMediums.Navbar })}
+                                    title={tServices(`${service.i18nKey}.title`)}
                                     icon={service.icon}>
-                                    {service.short_desctiption}
+                                    {tServices(`${service.i18nKey}.shortDescription`)}
                                 </ListItem>
                             ))}
                         </ul>
@@ -78,34 +78,33 @@ export function Navbar() {
                     <NavigationMenuTrigger>{t('learningProducts')}</NavigationMenuTrigger>
                     <NavigationMenuContent>
                         <ul className='grid w-[400px] grid-cols-1 gap-2 p-4 md:w-[500px] lg:w-[500px]'>
-                            {products.map((product) => (
-                                <React.Fragment key={product.title}>
-                                    <ListItem
-                                        key={product.title}
-                                        title={product.title}
-                                        href={UtmUrl(product.url, {
-                                            medium: UtmMediums.Navbar,
-                                        })}
-                                        target='_blank'
-                                        image={product.pictogram}
-                                        badge={product.badge}
-                                        className='dark:hidden'>
-                                        {product.description}
-                                    </ListItem>
-                                    <ListItem
-                                        key={product.title + '-dark'}
-                                        title={product.title}
-                                        href={UtmUrl(product.url, {
-                                            medium: UtmMediums.Navbar,
-                                        })}
-                                        target='_blank'
-                                        image={product.pictogramDark}
-                                        badge={product.badge}
-                                        className='hidden dark:block'>
-                                        {product.description}
-                                    </ListItem>
-                                </React.Fragment>
-                            ))}
+                            {products.map((product) => {
+                                const title = tProducts(`${product.i18nKey}.title`)
+                                const description = tProducts(`${product.i18nKey}.description`)
+                                const href = UtmUrl(product.url, { medium: UtmMediums.Navbar })
+                                return (
+                                    <React.Fragment key={product.id}>
+                                        <ListItem
+                                            title={title}
+                                            href={href}
+                                            target='_blank'
+                                            image={product.pictogram}
+                                            badge={product.badge}
+                                            className='dark:hidden'>
+                                            {description}
+                                        </ListItem>
+                                        <ListItem
+                                            title={title}
+                                            href={href}
+                                            target='_blank'
+                                            image={product.pictogramDark}
+                                            badge={product.badge}
+                                            className='hidden dark:block'>
+                                            {description}
+                                        </ListItem>
+                                    </React.Fragment>
+                                )
+                            })}
                         </ul>
                     </NavigationMenuContent>
                 </NavigationMenuItem>

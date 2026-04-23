@@ -1,5 +1,5 @@
 import createMiddleware from 'next-intl/middleware';
-import { defaultLocale, locales } from './i18n';
+import { defaultLocale, localePrefix, locales } from './i18n';
 
 export default createMiddleware({
   // A list of all locales that are supported
@@ -8,8 +8,8 @@ export default createMiddleware({
   // Used when no locale matches
   defaultLocale,
 
-  // Always use the default locale for the root path
-  localePrefix: 'as-needed', // This means '/' = Italian, '/en' = English
+  // '/' = default (Italian), '/en' = English (source of truth: i18n.ts)
+  localePrefix,
 
   // Disable automatic locale detection to prevent unwanted redirects
   localeDetection: false,

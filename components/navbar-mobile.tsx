@@ -4,6 +4,7 @@ import React from 'react'
 import { Link } from '@/lib/navigation'
 import { UtmUrl } from '@/utils/urls'
 import { IconMenu } from '@tabler/icons-react'
+import { useTranslations } from 'next-intl'
 
 import { UtmMediums } from '@/types/links'
 import { HeaderLinks } from '@/config/links'
@@ -15,6 +16,7 @@ import { CalendarButton } from './calendar-button'
 
 export function NavbarMobile() {
     const [open, setOpen] = React.useState(false)
+    const t = useTranslations('navigation')
 
     return (
         <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -30,15 +32,13 @@ export function NavbarMobile() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align='end'>
                 {HeaderLinks.map((link) => (
-                    <DropdownMenuItem key={link.text} asChild>
+                    <DropdownMenuItem key={link.icon} asChild>
                         <Link
-                            href={UtmUrl(link.href, {
-                                medium: UtmMediums.Navbar,
-                            })}
+                            href={UtmUrl(link.href, { medium: UtmMediums.Navbar })}
                             className='m-2 flex items-center gap-3'
                             onClick={() => setOpen(false)}>
                             <Icon name={link.icon} className='size-4' />
-                            <div>{link.text}</div>
+                            <div>{t(link.i18nKey)}</div>
                         </Link>
                     </DropdownMenuItem>
                 ))}

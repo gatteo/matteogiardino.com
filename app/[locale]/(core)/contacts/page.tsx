@@ -3,11 +3,12 @@ import Image from 'next/image'
 import { Link } from '@/lib/navigation'
 import { absoluteUrl } from '@/utils/urls'
 import { IconExternalLink } from '@tabler/icons-react'
-import { getTranslations } from 'next-intl/server'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
 
 import { ContactLinks, SocialLinks } from '@/config/links'
 import { Routes } from '@/config/routes'
 import { CalendarEmbed } from '@/components/calendar-embed'
+import { CopyEmailButton } from '@/components/copy-email-button'
 import { Icon } from '@/components/icon'
 import { PageTitle } from '@/components/page-title'
 
@@ -49,6 +50,7 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
 
 export default async function Page({ params }: Props) {
     const { locale } = await params
+    setRequestLocale(locale)
     const t = await getTranslations({ locale, namespace: 'pages.contacts' })
 
     return (
@@ -64,9 +66,8 @@ export default async function Page({ params }: Props) {
             <div className='mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 md:mt-6'>
                 {ContactLinks.map((link) => {
                     return (
-                        <Link
+                        <div
                             key={link.name}
-                            href={`mailto:${link.mailto}`}
                             className='group flex flex-row items-center space-x-4 rounded-lg border bg-muted p-4 transition-all duration-150 hover:bg-accent'>
                             <Image
                                 src={link.logo}
@@ -75,14 +76,21 @@ export default async function Page({ params }: Props) {
                                 height={32}
                                 className='-mt-1 mr-2 inline-block size-9 rounded-lg border-2'
                             />
-                            <div className='flex grow justify-between'>
-                                <h2 className='text-lg'>{link.mailto}</h2>
-                                <IconExternalLink
-                                    className='text-muted-foreground group-hover:text-accent-foreground'
-                                    size={24}
-                                />
+                            <div className='flex grow items-center justify-between gap-3'>
+                                <Link href={`mailto:${link.mailto}`} className='truncate text-lg hover:underline'>
+                                    {link.mailto}
+                                </Link>
+                                <div className='flex items-center gap-3'>
+                                    <CopyEmailButton email={link.mailto} />
+                                    <Link
+                                        href={`mailto:${link.mailto}`}
+                                        aria-label='open email'
+                                        className='text-muted-foreground group-hover:text-accent-foreground'>
+                                        <IconExternalLink size={24} />
+                                    </Link>
+                                </div>
                             </div>
-                        </Link>
+                        </div>
                     )
                 })}
             </div>

@@ -1,3 +1,5 @@
+import { setRequestLocale } from 'next-intl/server'
+
 import { About } from '@/components/home/about'
 import { BlogPosts } from '@/components/home/blog-posts'
 import { Business } from '@/components/home/business'
@@ -11,7 +13,10 @@ import { Testimonials } from '@/components/home/testimonials'
 // Force static generation for this page
 export const dynamic = 'force-static'
 
-export default function HomePage() {
+export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
+    const { locale } = await params
+    setRequestLocale(locale)
+
     return (
         <>
             <Hero />

@@ -1,7 +1,7 @@
 import { Link } from '@/lib/navigation'
 import { UtmUrl } from '@/utils/urls'
 import { IconArrowRight } from '@tabler/icons-react'
-import { getTranslations } from 'next-intl/server'
+import { getLocale, getTranslations } from 'next-intl/server'
 
 import { UtmMediums } from '@/types/links'
 import { Routes } from '@/config/routes'
@@ -11,7 +11,8 @@ import { PostCard } from '@/components/blog/post-card'
 import { Button } from '../ui/button'
 
 export async function BlogPosts() {
-    const posts = await getAllBlogPosts(4)
+    const locale = await getLocale()
+    const posts = await getAllBlogPosts(4, locale)
     const t = await getTranslations('blogPosts')
 
     return (

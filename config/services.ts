@@ -2,6 +2,7 @@ import { Icons } from '@/components/icon'
 
 type Service = {
     id: string
+    i18nKey: string // matches a key under `services.list.*` in the locale JSONs
     title: string
     short_desctiption: string
     description: string
@@ -13,6 +14,7 @@ type Service = {
 export const services: Service[] = [
     {
         id: 'development',
+        i18nKey: 'development',
         title: 'sviluppo app e web',
         short_desctiption: 'trasformo la tue idea in un prodotto digitale eccezionale.',
         description:
@@ -23,6 +25,7 @@ export const services: Service[] = [
     },
     {
         id: 'product-and-growth-advisory',
+        i18nKey: 'productGrowth',
         title: 'product & growth advisory',
         short_desctiption: 'porto il tuo prodotto a milioni di utenti.',
         description:
@@ -33,6 +36,7 @@ export const services: Service[] = [
     },
     {
         id: 'fractional-cto',
+        i18nKey: 'fractionalCTO',
         title: 'fractional cto',
         short_desctiption: 'gestisco le sfide tecniche del tuo prodotto.',
         description:

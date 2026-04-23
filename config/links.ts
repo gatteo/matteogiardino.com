@@ -5,35 +5,15 @@ import { Routes } from './routes'
 type HeaderLinks = {
     icon: keyof typeof Icons
     href: string
-    text: string
+    i18nKey: string // matches a key under `navigation.*` in the locale JSONs
 }[]
 
 export const HeaderLinks: HeaderLinks = [
-    {
-        icon: 'servicesPage',
-        href: Routes.Services,
-        text: 'per le aziende',
-    },
-    {
-        icon: 'learningProductsPage',
-        href: Routes.LearningProducts,
-        text: 'prodotti di formazione',
-    },
-    {
-        icon: 'projectsPage',
-        href: Routes.Projects,
-        text: 'progetti',
-    },
-    {
-        icon: 'contactsPage',
-        href: Routes.Contact,
-        text: 'contatti',
-    },
-    {
-        icon: 'blogPage',
-        href: Routes.Blog,
-        text: 'articoli',
-    },
+    { icon: 'servicesPage', href: Routes.Services, i18nKey: 'business' },
+    { icon: 'learningProductsPage', href: Routes.LearningProducts, i18nKey: 'learningProducts' },
+    { icon: 'projectsPage', href: Routes.Projects, i18nKey: 'projects' },
+    { icon: 'contactsPage', href: Routes.Contact, i18nKey: 'contacts' },
+    { icon: 'blogPage', href: Routes.Blog, i18nKey: 'articles' },
 ]
 
 type FooterLinkGroups = {
@@ -131,18 +111,6 @@ export const ContactLinks: ContactLinks = [
         mailto: 'hi@matteogiardino.com',
         icon: 'email',
         logo: '/images/mg-logo-white.webp',
-    },
-    {
-        name: 'Wezard',
-        mailto: 'matteo@wezard.it',
-        icon: 'email',
-        logo: '/images/brands/wezard-icon.png',
-    },
-    {
-        name: 'Devv',
-        mailto: 'matteo@devv.it',
-        icon: 'email',
-        logo: '/images/projects/devv/icon.webp',
     },
 ]
 

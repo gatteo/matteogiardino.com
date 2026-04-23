@@ -84,7 +84,11 @@ export function Hero() {
                                             height={24}
                                             className='mr-2 inline-block rounded-sm'
                                         />
-                                        westudents
+                                        westudents{' '}
+                                        <span className='mx-2 text-muted-foreground'>
+                                            {''}·{''}
+                                        </span>
+                                        {t('exitBadge')}
                                     </Link>
                                 </Button>
                                 <div className='flex items-center'>
@@ -122,29 +126,35 @@ export function Hero() {
                     </div>
 
                     <div className='mt-12 flex flex-col gap-10 md:grid md:grid-cols-4 md:grid-rows-1'>
-                        <div className='relative col-span-2 aspect-video md:aspect-auto'>
+                        <div className='relative col-span-2 aspect-video'>
                             <Image
                                 src={GridWideImage}
                                 alt='Matteo Giardino workspace and setup'
                                 placeholder='blur'
                                 priority
+                                fill
+                                sizes='(min-width: 768px) 50vw, 100vw'
                                 className='rounded-lg object-cover drop-shadow-2xl'
                             />
                         </div>
-                        <div className='relative hidden aspect-square md:block'>
+                        <div className='relative hidden aspect-square md:block md:aspect-auto'>
                             <Image
                                 src={GridGifImage}
                                 alt='Matteo Giardino working'
                                 unoptimized
-                                className='rounded-lg drop-shadow-2xl'
+                                fill
+                                sizes='25vw'
+                                className='rounded-lg object-cover drop-shadow-2xl'
                             />
                         </div>
-                        <div className='relative hidden aspect-square md:block'>
+                        <div className='relative hidden aspect-square md:block md:aspect-auto'>
                             <Image
                                 src={GridIconThree}
                                 alt='Matteo at event'
                                 placeholder='blur'
-                                className='rotate-3 rounded-lg drop-shadow-2xl transition-all duration-200 hover:rotate-0'
+                                fill
+                                sizes='25vw'
+                                className='rotate-3 rounded-lg object-cover drop-shadow-2xl transition-all duration-200 hover:rotate-0'
                             />
                         </div>
                     </div>

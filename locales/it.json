@@ -109,6 +109,14 @@
             "description": "una mentorship 1-1 per programmatori che vogliono fare il salto di carriera."
         }
     },
+    "featuredTestimonial": {
+        "textBefore": "\"Ho avuto modo di conoscere persone",
+        "textCompetent": "competenti sul lato tecnico",
+        "textMiddle": "e persone competenti sul lato commerciale e di crescita. Poche persone comprendono in profondità tutti e due i temi e sanno portare valore ovunque serva a livello sia pratico che strategico,",
+        "textUnicorn": "Matteo è uno di questi unicorni",
+        "textAfter": "\"",
+        "role": "ceo @ revenue farm"
+    },
     "testimonials": [
         {
             "name": "Simone Bresciani",
@@ -146,7 +154,10 @@
             "title": "articoli",
             "description": "un remoto angolo del web che posso riempire di articoli, storie e guide. Tanto chi legge i blog nel 2026?",
             "pageTitle": "articoli. storie. guide.",
-            "extendedDescription": "sarò onesto, la scrittura non è il mio punto forte. Non è che non mi piaccia, ma spesso mi spaventa affrontare una pagina bianca da riempire con parole. Proprio per questo, ho deciso di sfidare me stesso creando questo piccolo angolo del web, un posto dove allenarmi a scrivere. Tanto chi legge i blog nel 2026?"
+            "extendedDescription": "sarò onesto, la scrittura non è il mio punto forte. Non è che non mi piaccia, ma spesso mi spaventa affrontare una pagina bianca da riempire con parole. Proprio per questo, ho deciso di sfidare me stesso creando questo piccolo angolo del web, un posto dove allenarmi a scrivere. Tanto chi legge i blog nel 2026?",
+            "allTag": "tutti",
+            "emptyState": "non ci sono ancora articoli per questo tag",
+            "moreTags": "+{count} altri"
         },
         "services": {
             "title": "servizi",
@@ -159,9 +170,11 @@
         "contacts": {
             "title": "come contattarmi",
             "description": "che tu voglia conoscermi, parlarmi di un progetto o una collaborazione, scrivimi. Nasce sempre qualcosa di bello da un messaggio.",
-            "emailHeading": "Email",
-            "chatHeading": "Facciamo due chiacchiere",
-            "socialHeading": "Social"
+            "emailHeading": "email",
+            "chatHeading": "facciamo due chiacchiere",
+            "socialHeading": "Social",
+            "copyEmail": "copia email",
+            "emailCopied": "email copiata"
         },
         "projects": {
             "title": "progetti",
