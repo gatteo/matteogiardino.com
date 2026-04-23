@@ -17,6 +17,8 @@ export type LocalBlogPost = {
     body: MDX
     slug: string
     author: BlogPostAuthor
+    locale?: string
+    translationSlug?: string
 }
 
 export enum BlogPostSource {

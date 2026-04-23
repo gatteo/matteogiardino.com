@@ -4,6 +4,7 @@ import { absoluteUrl } from '@/utils/urls'
 import { setRequestLocale } from 'next-intl/server'
 import { type Article, type WithContext } from 'schema-dts'
 
+import { defaultLocale, locales } from '@/i18n'
 import { BlogPostSource } from '@/types/blog'
 import { Routes } from '@/config/routes'
 import { site } from '@/config/site'
@@ -12,6 +13,29 @@ import { Footer } from '@/components/blog/post-footer'
 import { Header } from '@/components/blog/post-header'
 import { Content } from '@/components/mdx-content'
 import { ScrollIndicator } from '@/components/scroll-indicator'
+
+function blogPostUrl(locale: string, slug: string): string {
+    const path = Routes.LocalBlogPost(slug)
+    return absoluteUrl(locale === defaultLocale ? path : `/${locale}${path}`)
+}
+
+function blogPostAlternates(locale: string, slug: string, translationSlug?: string): Metadata['alternates'] {
+    const canonical = blogPostUrl(locale, slug)
+    const languages: Record<string, string> = { [locale]: canonical }
+
+    if (translationSlug) {
+        const otherLocale = locales.find((l) => l !== locale)
+        if (otherLocale) {
+            const otherUrl = blogPostUrl(otherLocale, translationSlug)
+            languages[otherLocale] = otherUrl
+            languages['x-default'] = locale === defaultLocale ? canonical : otherUrl
+        }
+    } else {
+        languages['x-default'] = canonical
+    }
+
+    return { canonical, languages }
+}
 
 // Force static generation
 export const dynamic = 'force-static'
@@ -44,9 +68,7 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
     return {
         title: post.title,
         description: post.summary,
-        alternates: {
-            canonical: absoluteUrl(Routes.LocalBlogPost(slug)),
-        },
+        alternates: blogPostAlternates(locale, slug, post.translationSlug),
         openGraph: {
             ...previousOpenGraph,
             url: absoluteUrl(Routes.LocalBlogPost(slug)),

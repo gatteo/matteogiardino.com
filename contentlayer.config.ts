@@ -111,6 +111,11 @@ const BlogPost = defineDocumentType(() => ({
             required: false,
             default: 'it',
         },
+        translationSlug: {
+            type: 'string',
+            description: 'Slug of the same post in the other locale (for hreflang pairing)',
+            required: false,
+        },
     },
     computedFields: {
         slug: {
