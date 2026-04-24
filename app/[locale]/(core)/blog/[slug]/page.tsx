@@ -1,6 +1,7 @@
 import { Metadata, ResolvingMetadata } from 'next'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import { absoluteUrl } from '@/utils/urls'
+import { allBlogPosts } from '@/.contentlayer/generated'
 import { setRequestLocale } from 'next-intl/server'
 import { type Article, type WithContext } from 'schema-dts'
 
@@ -14,9 +15,13 @@ import { Header } from '@/components/blog/post-header'
 import { Content } from '@/components/mdx-content'
 import { ScrollIndicator } from '@/components/scroll-indicator'
 
-function blogPostUrl(locale: string, slug: string): string {
+function blogPostPath(locale: string, slug: string): string {
     const path = Routes.LocalBlogPost(slug)
-    return absoluteUrl(locale === defaultLocale ? path : `/${locale}${path}`)
+    return locale === defaultLocale ? path : `/${locale}${path}`
+}
+
+function blogPostUrl(locale: string, slug: string): string {
+    return absoluteUrl(blogPostPath(locale, slug))
 }
 
 function blogPostAlternates(locale: string, slug: string, translationSlug?: string): Metadata['alternates'] {
@@ -112,6 +117,12 @@ export default async function Page({ params }: Props) {
     const post = getLocalBlogPost(slug, locale)
 
     if (!post) {
+        // Slug exists but belongs to a different locale — permanent-redirect
+        // to its real home instead of silently serving the wrong-locale page.
+        const sibling = allBlogPosts.find((p) => p.slug === slug)
+        if (sibling?.locale && sibling.locale !== locale) {
+            permanentRedirect(blogPostPath(sibling.locale, slug))
+        }
         notFound()
     }
 

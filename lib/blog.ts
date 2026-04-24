@@ -12,10 +12,12 @@ type Options = {
     locale?: string
 }
 
+// Strict locale match when `locale` is passed: a slug that only exists in the
+// other locale returns undefined (so callers can redirect or 404 instead of
+// silently serving a wrong-locale article).
 export function getLocalBlogPost(slug: string, locale?: string): LocalBlogPost | undefined {
     if (locale) {
-        const post = allBlogPosts.find((p) => p.slug === slug && p.locale === locale)
-        if (post) return post
+        return allBlogPosts.find((p) => p.slug === slug && p.locale === locale)
     }
     return allBlogPosts.find((p) => p.slug === slug)
 }
