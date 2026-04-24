@@ -42,8 +42,10 @@ function blogPostAlternates(locale: string, slug: string, translationSlug?: stri
     return { canonical, languages }
 }
 
-// Force static generation
-export const dynamic = 'force-static'
+// Allow wrong-locale URLs (slug that only exists in the other locale) to
+// render on-demand so the page handler can 308-redirect them, instead of 404.
+// (Known (locale, slug) combinations are still pre-rendered via generateStaticParams.)
+export const dynamicParams = true
 
 type Props = {
     params: Promise<{
@@ -52,11 +54,11 @@ type Props = {
     }>
 }
 
-export function generateStaticParams() {
-    const posts = getLocalBlogPosts()
-    return posts.map((post) => ({
-        slug: post.slug,
-    }))
+// Only pre-render (locale, slug) combinations that actually exist in that
+// locale. Wrong-locale URLs still work at runtime via the permanent-redirect
+// in the page handler below — they're just not pre-baked into the build.
+export function generateStaticParams({ params }: { params: { locale: string } }) {
+    return getLocalBlogPosts({ locale: params.locale }).map((post) => ({ slug: post.slug }))
 }
 
 export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {

@@ -58,8 +58,9 @@ export function generateStaticParams() {
     return locales.map((locale) => ({ locale }))
 }
 
-// Ensure only static params are allowed
-export const dynamicParams = false
+// Do NOT lock dynamicParams here — it cascades to descendant segments and
+// would prevent the blog-slug route from 308-redirecting wrong-locale URLs.
+// Unknown locales are already rejected by the `notFound()` call below.
 
 export default async function LocaleLayout({
     children,
