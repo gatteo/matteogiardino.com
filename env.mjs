@@ -16,6 +16,8 @@ export const env = createEnv({
         NEXT_PUBLIC_STRIPE_TCL_LINK: z.string().min(1),
         NEXT_PUBLIC_STRIPE_PL_LINK: z.string().min(1),
         NEXT_PUBLIC_GTM_MEASUREMENT_ID: z.string().min(1),
+        NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN: z.string().min(1),
+        NEXT_PUBLIC_POSTHOG_HOST: z.string().min(1),
     },
     runtimeEnv: {
         NODE_ENV: process.env.NODE_ENV,
@@ -26,6 +28,8 @@ export const env = createEnv({
         NEXT_PUBLIC_STRIPE_TCL_LINK: process.env.NEXT_PUBLIC_STRIPE_TCL_LINK,
         NEXT_PUBLIC_STRIPE_PL_LINK: process.env.NEXT_PUBLIC_STRIPE_PL_LINK,
         NEXT_PUBLIC_GTM_MEASUREMENT_ID: process.env.NEXT_PUBLIC_GTM_MEASUREMENT_ID,
+        NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN: process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN,
+        NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
         SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
         SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
         SPOTIFY_REFRESH_TOKEN: process.env.SPOTIFY_REFRESH_TOKEN,

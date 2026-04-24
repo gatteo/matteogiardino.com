@@ -3,6 +3,7 @@ import { z } from 'zod'
 
 import { APIResponse } from '@/lib/api'
 import { capturePayPalPayment } from '@/lib/paypal'
+import { getPostHogClient } from '@/lib/posthog-server'
 import { notifyOfPayPalPurchase } from '@/lib/slack'
 
 const CapturePaymentSchema = z.object({
@@ -27,6 +28,22 @@ export const POST = async (req: NextRequest, { params }: { params: Promise<{ ord
                 order.purchase_units[0].payments.captures[0].seller_receivable_breakdown.net_amount.value,
             )
         } catch (e) {}
+
+        // track payment capture in PostHog
+        const posthog = getPostHogClient()
+        posthog.capture({
+            distinctId: order.payer.email_address,
+            event: 'payment_captured',
+            properties: {
+                order_id: safeParams.orderId,
+                payer_email: order.payer.email_address,
+                payer_name: `${order.payer.name.given_name} ${order.payer.name.surname}`,
+                amount: order.purchase_units[0].payments.captures[0].seller_receivable_breakdown.net_amount.value,
+                currency:
+                    order.purchase_units[0].payments.captures[0].seller_receivable_breakdown.net_amount.currency_code,
+                source: 'paypal',
+            },
+        })
 
         return APIResponse.success(order, 201)
     } catch (error: any) {

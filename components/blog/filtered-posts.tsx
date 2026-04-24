@@ -3,6 +3,7 @@
 import React from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useTranslations } from 'next-intl'
+import posthog from 'posthog-js'
 
 import { type BlogPostPreview } from '@/types/blog'
 import { canonicalizeTag, TAG_QUERY_PARAM } from '@/config/blog-tags'
@@ -36,6 +37,10 @@ export function FilteredPosts({ posts }: { posts: BlogPostPreview[] }) {
     const activeTag = queryTag && tagCounts.some((tc) => tc.tag === queryTag) ? queryTag : null
 
     const setActiveTag = (next: string | null) => {
+        posthog.capture('blog_tag_filtered', {
+            tag: next,
+            previous_tag: activeTag,
+        })
         const params = new URLSearchParams(searchParams)
         if (next) params.set(TAG_QUERY_PARAM, next)
         else params.delete(TAG_QUERY_PARAM)
@@ -48,7 +53,12 @@ export function FilteredPosts({ posts }: { posts: BlogPostPreview[] }) {
     return (
         <>
             <div className='mb-8 flex flex-wrap gap-2'>
-                <TagChip active={activeTag === null} onClick={() => setActiveTag(null)} label={t('allTag')} count={posts.length} />
+                <TagChip
+                    active={activeTag === null}
+                    onClick={() => setActiveTag(null)}
+                    label={t('allTag')}
+                    count={posts.length}
+                />
                 {tagCounts.map(({ tag, count }) => (
                     <TagChip
                         key={tag}

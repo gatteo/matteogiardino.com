@@ -3,6 +3,7 @@
 import * as React from 'react'
 import type { FUNDING_SOURCE } from '@paypal/paypal-js'
 import { FUNDING, PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js'
+import posthog from 'posthog-js'
 
 import { env } from '@/env.mjs'
 import { ApiResponseSuccess, CapturePayPalOrderResponse, CreatePayPalOrderResponse } from '@/types/api'
@@ -66,9 +67,16 @@ export function PayPalButton({ fundingType, productSKU }: Props) {
 
                             const json = (await response.json()) as ApiResponseSuccess<CreatePayPalOrderResponse>
 
+                            posthog.capture('paypal_order_created', {
+                                product_sku: productSKU,
+                                funding_type: fundingType,
+                                order_id: json.data.id,
+                            })
+
                             return json.data.id
                         } catch (error) {
                             console.error(error)
+                            posthog.captureException(error)
                             showErrorMessage(error as string)
                             throw error
                         }
@@ -101,8 +109,21 @@ export function PayPalButton({ fundingType, productSKU }: Props) {
                                 let msg = ''
                                 msg += errorDetail.description ? ' ' + errorDetail.description : ''
                                 msg += json.data.debug_id ? ' - ' + json.data.debug_id + ' ' : ''
+                                posthog.capture('paypal_payment_failed', {
+                                    order_id: data.orderID,
+                                    funding_type: fundingType,
+                                    error_issue: errorDetail.issue,
+                                    error_description: errorDetail.description,
+                                })
                                 showErrorMessage(msg)
                             }
+
+                            posthog.capture('paypal_payment_completed', {
+                                order_id: data.orderID,
+                                funding_type: fundingType,
+                                payer_name: json.data.payer.name.given_name,
+                                payer_email: json.data.payer.email_address,
+                            })
 
                             setDialogTitle(`${json.data.payer.name.given_name}, il pagamento è andato a buon fine 🎉`)
                             setDialogDescription(
@@ -111,12 +132,18 @@ export function PayPalButton({ fundingType, productSKU }: Props) {
                             setDialogOpen(true)
                         } catch (error) {
                             console.error(error)
+                            posthog.captureException(error)
                             // Handle the error or display an appropriate error message to the user
                             showErrorMessage(error as string)
                         }
                     }}
                     onError={(error) => {
                         console.error(error)
+                        posthog.capture('paypal_payment_failed', {
+                            funding_type: fundingType,
+                            error: String(error),
+                        })
+                        posthog.captureException(error)
                         showErrorMessage()
                     }}
                 />
