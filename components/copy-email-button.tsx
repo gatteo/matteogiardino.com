@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { IconCheck, IconCopy } from '@tabler/icons-react'
 import { useTranslations } from 'next-intl'
+import posthog from 'posthog-js'
 import { toast } from 'sonner'
 
 import { cn } from '@/lib/utils'
@@ -15,6 +16,7 @@ export function CopyEmailButton({ email, className }: { email: string; className
         await navigator.clipboard.writeText(email)
         setCopied(true)
         toast.success(t('emailCopied'))
+        posthog.capture('email_copied')
         setTimeout(() => setCopied(false), 2000)
     }
 
