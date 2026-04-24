@@ -44,3 +44,7 @@ next-env.d.ts
 /.unlighthouse/
 
 dev
+.env.local
+
+.claude
+.cursor
