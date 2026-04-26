@@ -1,0 +1,81 @@
+---
+title: 'Orchestrare Sub-Agenti AI con OpenClaw: Guida Definitiva'
+createdAt: '2026-04-26T10:00:00Z'
+modifiedAt: '2026-04-26T10:00:00Z'
+summary: 'Scopri come superare i limiti del context window orchestrando sub-agenti isolati e paralleli in OpenClaw. Una guida pratica per sviluppatori e CTO.'
+image: '/images/blog/orchestrare-sub-agenti-ai-openclaw.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'sub-agents', 'automazione', 'sviluppo', 'cto']
+---
+
+Se stai costruendo workflow complessi con l'AI, prima o poi ti scontrerai con un limite invalicabile: la context window. Mettere troppe informazioni, prompt e istruzioni nello stesso thread confonde anche i modelli più avanzati come Claude 3.5 Sonnet o GPT-4o. 
+
+La soluzione che ho adottato nei miei progetti non è usare modelli con finestre di contesto sempre più ampie, ma dividere il lavoro. È qui che entrano in gioco i **Sub-Agenti di OpenClaw**.
+
+In questo articolo ti mostro come orchestrarli, gestirli e farli comunicare in modo efficiente.
+
+## Perché usare i Sub-Agenti?
+
+In una pipeline AI tradizionale, hai un singolo agente che fa tutto: legge un file, cerca su internet, processa i dati e scrive il risultato. Il problema?
+- **Inquinamento del contesto:** Le informazioni della ricerca si mescolano con le regole di formattazione.
+- **Rischio di fallimento:** Se un task intermedio fallisce, l'intero prompt va ripensato o va in loop.
+- **Lentezza:** I task sequenziali non sfruttano le vere potenzialità delle API.
+
+In OpenClaw, i sub-agenti ti permettono di avviare sessioni completamente isolate. Hanno la loro memoria temporanea, i loro tool abilitati e, soprattutto, partono con una tabula rasa. Fanno una cosa, restituiscono il risultato e spariscono.
+
+<CtaCard
+    title="Vuoi integrare AI nel tuo business?"
+    description="Contattami per una consulenza su come implementare strumenti AI e architetture multi-agente nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Come creare un Sub-Agente
+
+OpenClaw rende l'orchestrazione estremamente pulita grazie al tool `sessions_spawn`. Quando l'agente master si rende conto di dover delegare un task lungo o complesso (ad esempio, analizzare una repository o navigare un sito web), può lanciare un sub-agente.
+
+L'approccio migliore è impostare il `runtime` su `subagent` e usare il `context="isolated"`. 
+
+In questo modo, il sub-agente erediterice l'accesso al workspace (la directory di lavoro), ma non sa nulla della conversazione precedente. Meno distrazioni, più focus sull'obiettivo assegnato tramite il parametro `task`.
+
+## Pattern Pratico: Ricercatore + Scrittore
+
+Vediamo un pattern che utilizzo spessissimo: il duo Ricercatore e Scrittore.
+
+Invece di chiedere all'agente principale di fare tutto, il flusso diventa:
+1. L'agente principale (Scrittore) riceve il task: "Scrivi un report sulle ultime news di AI open source".
+2. Lo Scrittore avvia un sub-agente Ricercatore, passandogli istruzioni rigorose: "Cerca su Hacker News le top 5 notizie sull'AI open source, estrai i link e fammi un riassunto a punti. Usa il web_fetch".
+3. L'agente principale usa `sessions_yield` per mettere in pausa il proprio turno.
+4. Il Ricercatore lavora, usa il browser o le API di fetch, completa il task e restituisce l'output.
+5. Lo Scrittore si risveglia (push-based), legge il riassunto pulito dal Ricercatore e redige il documento finale.
+
+Questo pattern abbassa drasticamente i costi dei token e riduce quasi a zero le allucinazioni.
+
+<CtaCard
+    title="Scopri i miei progetti"
+    description="Dai un occhio ai progetti su cui sto lavorando e alle architetture basate su OpenClaw."
+    primaryButtonText="Vedi Progetti"
+    primaryButtonUrl="/projects"
+    pattern="circles"
+    align="center"
+/>
+
+## Monitorare e Guidare i Sub-Agenti
+
+A volte i task delegati richiedono tempo o, nel peggiore dei casi, vanno in loop su un errore inaspettato.
+
+Come sviluppatore, puoi usare i comandi di gestione per intervenire in tempo reale:
+- **List:** Scopri quali sub-agenti sono attivi.
+- **Steer:** Invia un messaggio direttivo al sub-agente ("Ehi, fermati, usa l'API di ricerca invece di fare scraping manuale").
+- **Kill:** Termina il sub-agente se ha esaurito la sua utilità o si è bloccato.
+
+L'uso di `subagents action=steer` è un vero salvavita quando stai testando nuovi workflow in produzione.
+
+## Il Futuro è Modulare
+
+Trattare i task AI come microservizi isolati è il vero salto di qualità per chi costruisce prodotti basati su LLM. I sub-agenti di OpenClaw non sono solo una feature, ma un vero e proprio cambio di paradigma nello sviluppo.
+
+Hai già provato a delegare task complessi ad agenti isolati? Il prossimo step è automatizzare le tue review del codice o l'analisi dei log. Inizia in piccolo, orchestra in grande.
