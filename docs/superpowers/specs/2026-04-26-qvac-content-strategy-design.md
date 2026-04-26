@@ -213,7 +213,7 @@ The queue is the single source of truth. Both skills read it; both update it.
 | SETUP | npm install fails | retry once with `--force`, then ask user |
 | RUN | code crashes | read error, fix, retry up to 3x, then pause |
 | RUN | output is wrong (model garbage) | don't proceed; ask user (content quality call) |
-| CAPTURE | screenshot blank/missing | re-run; if still missing, ship with placeholder + flag in PR |
+| CAPTURE | screenshot blank/missing | re-run; if still missing, ship with text-only Mermaid/SVG diagram in place of the screenshot + a `<!-- TODO: real screenshot -->` comment + flag in PR description |
 | VALIDATE | Contentlayer build fails | fix frontmatter, retry; if persistent, abort PR, leave files in tree |
 | SHIP | gh pr create fails | leave branch local, log push instructions |
 | Anywhere | unexpected state | write `error.md` with full context to run dir, flip queue status back to pending, halt |
@@ -272,7 +272,7 @@ Pinned facts with last-verified date:
 - Genesis dataset: 148B tokens
 - Public launch: Plan B Forum Lugano, Oct 2025
 
-Updated by `write-qvac-explainer` when fresh docs reveal changes.
+Read by both skills. Only `write-qvac-explainer` updates it (in its RESEARCH phase) — tutorials trust whatever the explainer last wrote.
 
 ### `qvac-shared/image-conventions.md`
 - OG cover: 1200×630 PNG, lives at `/images/blog/<slug>.png`
