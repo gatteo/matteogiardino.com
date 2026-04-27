@@ -123,6 +123,20 @@ export function Navbar() {
                     </NavigationMenuLink>
                 </NavigationMenuItem>
 
+                <NavigationMenuItem key='articles-menu-item'>
+                    <NavigationMenuLink
+                        active={pathname === Routes.Blog}
+                        className={navigationMenuTriggerStyle()}
+                        asChild>
+                        <Link
+                            href={UtmUrl(Routes.Blog, {
+                                medium: UtmMediums.Navbar,
+                            })}>
+                            {t('articles')}
+                        </Link>
+                    </NavigationMenuLink>
+                </NavigationMenuItem>
+
                 <NavigationMenuItem key='contacts-menu-item'>
                     <NavigationMenuLink
                         active={pathname === Routes.Contact}
