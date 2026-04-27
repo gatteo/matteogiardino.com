@@ -157,7 +157,8 @@
             "extendedDescription": "writing has always been a passion. when I code, I write code. when I'm not coding, I write articles. so basically I'm always writing.",
             "allTag": "all",
             "emptyState": "no articles for this tag yet",
-            "moreTags": "+{count} more"
+            "moreTags": "+{count} more",
+            "toc": "On this page"
         },
         "services": {
             "title": "services",
