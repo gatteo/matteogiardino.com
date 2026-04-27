@@ -12,9 +12,9 @@ translationSlug: 'trascrizione-offline-qvac-whisper-macos'
 
 If you want a working **QVAC Whisper transcription** pipeline on macOS today, you can have one in about ten minutes. Install `@qvac/sdk`, load a Whisper model, point it at a `.wav` file, get a string back. No cloud, no API key, no per-minute billing, no audio leaving the laptop. The whole thing fits in twenty lines.
 
-That's the demo. The reason to actually do it is harder to fit on a slide: the second you put cloud transcription into a real product, you start writing privacy reviews. Meeting recordings, voice notes, customer calls, internal interviews — all of it becomes "data we send to a vendor." A local Whisper running through QVAC SDK turns that whole conversation off. The audio never leaves the disk it was recorded on.
+That's the demo. The reason to actually do it is harder to fit on a slide: the second you put cloud transcription into a real product, you start writing privacy reviews. Meeting recordings, voice notes, customer calls, internal interviews - all of it becomes "data we send to a vendor." A local Whisper running through QVAC SDK turns that whole conversation off. The audio never leaves the disk it was recorded on.
 
-This tutorial walks the loop end-to-end. You'll generate a sample with macOS's `say`, transcribe it with `WHISPER_TINY`, swap to a bigger English-only model for accuracy, benchmark both, then wrap the whole thing as a `transcribe <file>` CLI you can drop in `~/bin`. Everything in this post was produced by actually running the code on a Mac on 2026-04-26 — the transcripts, timings, and outputs you'll see are real.
+This tutorial walks the loop end-to-end. You'll generate a sample with macOS's `say`, transcribe it with `WHISPER_TINY`, swap to a bigger English-only model for accuracy, benchmark both, then wrap the whole thing as a `transcribe <file>` CLI you can drop in `~/bin`. Everything in this post was produced by actually running the code on a Mac on 2026-04-26 - the transcripts, timings, and outputs you'll see are real.
 
 ## Why offline transcription on macOS?
 
@@ -22,9 +22,9 @@ Three reasons stack on top of each other:
 
 1. **Privacy.** Cloud APIs see every byte you upload. For anything covered by NDA, GDPR, HIPAA, or just "the legal team would prefer if we didn't," the safest answer is to never put the file on someone else's server. With a local Whisper, the audio file goes from disk → memory → text and never leaves the machine.
 2. **Cost.** OpenAI's `whisper-1` is $0.006/minute. That's nothing for one file and surprisingly real for an app that transcribes a thousand customer calls a week. Local Whisper is free at runtime; you pay once in download bandwidth and disk.
-3. **Latency.** Round-trip to a cloud transcription API is hundreds of milliseconds before any work starts. Local Whisper on Apple Silicon transcribes a 30-second clip in ~400 ms, including model load. For interactive use cases — voice notes, meeting summaries, live captioning — that gap is the difference between "feels instant" and "feels broken."
+3. **Latency.** Round-trip to a cloud transcription API is hundreds of milliseconds before any work starts. Local Whisper on Apple Silicon transcribes a 30-second clip in ~400 ms, including model load. For interactive use cases - voice notes, meeting summaries, live captioning - that gap is the difference between "feels instant" and "feels broken."
 
-QVAC SDK is the cleanest way to wire this up from JavaScript. If you want the broader pitch, I covered it in [What is QVAC SDK?](/blog/what-is-qvac-sdk) — the short version is that the same `loadModel → do thing → unloadModel` shape works for transcription, LLMs, image generation, and six other modalities. This post is the deep dive on the transcription branch.
+QVAC SDK is the cleanest way to wire this up from JavaScript. If you want the broader pitch, I covered it in [What is QVAC SDK?](/blog/what-is-qvac-sdk) - the short version is that the same `loadModel → do thing → unloadModel` shape works for transcription, LLMs, image generation, and six other modalities. This post is the deep dive on the transcription branch.
 
 ## Prerequisites
 
@@ -33,7 +33,7 @@ You'll need:
 - **macOS 14+** with Apple Silicon (Metal-accelerated). Intel Macs work CPU-only and will be slower.
 - **Node.js ≥ 22.17.** Older versions throw at runtime when you call `loadModel()`.
 - **~500 MB of free disk** for the SDK + native binaries + a small Whisper model.
-- **A working internet connection** for the first run only — models download once and cache to `~/.qvac/models/`.
+- **A working internet connection** for the first run only - models download once and cache to `~/.qvac/models/`.
 
 No GPU configuration, no `cmake`, no Python virtualenv. The QVAC native binaries (`whispercpp-transcription`, in this case the `whisper.cpp` fork) ship inside the npm package.
 
@@ -51,7 +51,7 @@ The install pulls in around 200 packages and roughly 2.6 GB of native binaries (
 
 <Image src="/images/blog/qvac-whisper-offline-transcription-macos/01-install.png" alt="QVAC SDK install completing in a fresh sandbox directory on macOS" width={1600} height={1000} />
 
-If you only need transcription and the binary footprint matters — for an Electron app, say — you can later use `qvac bundle sdk` to ship only the engines you actually call. For this tutorial we leave the full bundle in place; the development sandbox doesn't care.
+If you only need transcription and the binary footprint matters - for an Electron app, say - you can later use `qvac bundle sdk` to ship only the engines you actually call. For this tutorial we leave the full bundle in place; the development sandbox doesn't care.
 
 You also need an audio file. Skip the part where you go hunting for a public-domain podcast and just generate one with macOS's built-in `say` command, which outputs WAV directly:
 
@@ -60,7 +60,7 @@ say -v Samantha --data-format=LEI16@16000 -o sample.wav \
     "QVAC SDK runs Whisper transcription locally on your Mac. The quick brown fox jumps over the lazy dog."
 ```
 
-The `--data-format=LEI16@16000` flag is doing real work: it asks for 16-bit little-endian PCM at 16 kHz, which is exactly what Whisper wants. If you skip it, `say` defaults to 22 kHz AIFF and QVAC's internal FFmpeg will resample for you — but it's faster to give Whisper the format it prefers in the first place.
+The `--data-format=LEI16@16000` flag is doing real work: it asks for 16-bit little-endian PCM at 16 kHz, which is exactly what Whisper wants. If you skip it, `say` defaults to 22 kHz AIFF and QVAC's internal FFmpeg will resample for you - but it's faster to give Whisper the format it prefers in the first place.
 
 ## Step 1: Hello-world transcription with WHISPER_TINY
 
@@ -103,7 +103,7 @@ console.log("Done.")
 Three things worth pointing at:
 
 - `WHISPER_TINY` is **not a string**. It's a typed constant from the QVAC model registry that bundles the source URL, expected size (~74 MB), SHA-256 checksum, and engine metadata. Type-checking catches typos before they become runtime errors.
-- `modelType` accepts two forms. The canonical engine name is `"whispercpp-transcription"` — that's what surfaces in SDK logs and what `dist/schemas/model-types.js` calls the canonical literal. The shorter alias `"whisper"` resolves to the same thing through the SDK's built-in `ModelTypeAliases` map and is what most QVAC docs and blog snippets use. I'll stick with the canonical form throughout this post so the engine boundary is visible, but `modelType: "whisper"` is identical at runtime. The full alias set baked into the SDK: `llm`, `whisper`, `embeddings`, `nmt`, `parakeet`, `tts`, `ocr`, `diffusion`.
+- `modelType` accepts two forms. The canonical engine name is `"whispercpp-transcription"` - that's what surfaces in SDK logs and what `dist/schemas/model-types.js` calls the canonical literal. The shorter alias `"whisper"` resolves to the same thing through the SDK's built-in `ModelTypeAliases` map and is what most QVAC docs and blog snippets use. I'll stick with the canonical form throughout this post so the engine boundary is visible, but `modelType: "whisper"` is identical at runtime. The full alias set baked into the SDK: `llm`, `whisper`, `embeddings`, `nmt`, `parakeet`, `tts`, `ocr`, `diffusion`.
 - `audioChunk` is a misleading name. It accepts either a file path **or** a `Buffer`, not just a chunk of audio. Path is simplest for local files.
 
 Run it:
@@ -120,11 +120,11 @@ First time through, the model downloads from the QVAC peer-to-peer registry and 
  QVACSDK runs Whisper Transcription locally on your Mac, the quick brown fox jumps over the lazy dog.
 ```
 
-Notice that `WHISPER_TINY` runs "QVAC SDK" together as `QVACSDK` — the tokenizer doesn't know the brand, and the tiny model doesn't have enough context to guess. That's exactly the kind of small accuracy issue that makes you want to either upgrade the model or feed in a `prompt:` to bias the output toward the right vocabulary. The `transcribe()` call accepts an optional `prompt` parameter for exactly that.
+Notice that `WHISPER_TINY` runs "QVAC SDK" together as `QVACSDK` - the tokenizer doesn't know the brand, and the tiny model doesn't have enough context to guess. That's exactly the kind of small accuracy issue that makes you want to either upgrade the model or feed in a `prompt:` to bias the output toward the right vocabulary. The `transcribe()` call accepts an optional `prompt` parameter for exactly that.
 
 ## Step 2: Benchmark WHISPER_TINY vs WHISPER_EN_BASE on a longer clip
 
-Tiny is great for a quick demo. For anything you'd actually ship, you want a fair benchmark on realistic audio. Let's generate a longer clip — a fake podcast intro that runs about 35 seconds:
+Tiny is great for a quick demo. For anything you'd actually ship, you want a fair benchmark on realistic audio. Let's generate a longer clip - a fake podcast intro that runs about 35 seconds:
 
 ```bash
 say -v Samantha --data-format=LEI16@16000 -o podcast.wav \
@@ -182,7 +182,7 @@ Real numbers from my Mac, after the second run (so model load is from disk, not 
 
 A few things worth noticing:
 
-- Both transcripts are essentially perfect on a clean voice — the only error in either is "Llama" → "Lama", which is a tokenizer issue, not a model issue. A single `prompt: "Llama, GGUF, QVAC, Whisper"` fixes that for production runs.
+- Both transcripts are essentially perfect on a clean voice - the only error in either is "Llama" → "Lama", which is a tokenizer issue, not a model issue. A single `prompt: "Llama, GGUF, QVAC, Whisper"` fixes that for production runs.
 - The English-only Q8-quantized model is **smaller and faster to load** than the multilingual tiny, despite being one tier up the accuracy ladder. Quantization is doing real work.
 - The accuracy difference shows up in punctuation, not in words. `WHISPER_EN_BASE_Q8_0` ends the second sentence with a period; `WHISPER_TINY` runs it on with a comma. For anything you're going to display to a human, that matters.
 - ~110× real-time factor means a 1-hour meeting recording transcribes in about 32 seconds. That's not a typo.
@@ -252,25 +252,25 @@ The full output:
 Welcome to the local AI podcast. Today we are talking about running large language models on your own laptop. The big idea is that you no longer need to send your private documents to a cloud provider. With tools like Whisper and Lama, you can transcribe audio, generate text, and translate languages entirely offline. Let us see how it works in practice.
 ```
 
-Twenty-five lines including imports and error handling, and you have a private speech-to-text tool that runs offline forever. Symlink it into `~/bin/transcribe` and you're done — `transcribe meeting.wav --accurate > notes.md` is now a real workflow on your machine.
+Twenty-five lines including imports and error handling, and you have a private speech-to-text tool that runs offline forever. Symlink it into `~/bin/transcribe` and you're done - `transcribe meeting.wav --accurate > notes.md` is now a real workflow on your machine.
 
 A few production polish ideas the file above leaves out (deliberately, to keep it short):
 
 - **Streaming.** Replace `transcribe()` with `transcribeStream()` to receive text in chunks as Whisper's voice activity detector finds segment boundaries. Useful for long files where you want progress.
-- **Diarization.** If you need "who said what", swap to the Parakeet plugin (`@qvac/sdk/parakeet-transcription/plugin`) — same `loadModel` shape, different `modelType`, and the result includes speaker labels.
+- **Diarization.** If you need "who said what", swap to the Parakeet plugin (`@qvac/sdk/parakeet-transcription/plugin`) - same `loadModel` shape, different `modelType`, and the result includes speaker labels.
 - **Non-WAV inputs.** QVAC's internal FFmpeg decoder (you can see it in the run logs as `FFmpegDecoder`) accepts MP3, MP4, M4A, OGG, FLAC. Just hand it the path; it deals with the format.
-- **Long-running daemon.** Keep one `loadModel` warm in a parent process and accept paths over a Unix socket. The current SDK already runs Whisper in a Bare worker — the model stays loaded across multiple `transcribe()` calls within the same process.
+- **Long-running daemon.** Keep one `loadModel` warm in a parent process and accept paths over a Unix socket. The current SDK already runs Whisper in a Bare worker - the model stays loaded across multiple `transcribe()` calls within the same process.
 
 ## Troubleshooting QVAC Whisper transcription on macOS
 
 The happy path above was clean on my machine. Here are the failure modes you're most likely to hit on yours, with the actual fix:
 
-- **`Cannot find module '@qvac/sdk'` after install.** You're probably on Node ≤ 22.16. Run `node --version` and upgrade. The SDK uses native worker thread features that landed in 22.17. There's no fallback — older Node will fail at import time, before you even reach `loadModel()`.
+- **`Cannot find module '@qvac/sdk'` after install.** You're probably on Node ≤ 22.16. Run `node --version` and upgrade. The SDK uses native worker thread features that landed in 22.17. There's no fallback - older Node will fail at import time, before you even reach `loadModel()`.
 - **Model download stalls at 0%.** The default registry pulls models peer-to-peer over Hyperswarm. If you're behind a corporate firewall blocking UDP, the swarm can't form. Either configure `swarmRelays` in a `qvac.config.ts` (the SDK has built-in blind-relay support for NAT/firewall traversal) or set `QVAC_REGISTRY_HTTP_FALLBACK=1` to force HTTP-only fetches.
 - **Transcript is empty or single character.** Your audio is probably the wrong sample rate. Whisper expects 16 kHz; the SDK's internal FFmpeg resamples for you, but if the input is corrupted (truncated WAV header, zero-length file) it produces garbage. Run `file your-audio.wav` to confirm it's a real WAVE, and `ffprobe -i your-audio.wav` to inspect channels and sample rate.
 - **First call takes minutes, second is instant.** That's expected. The first run downloads weights to `~/.qvac/models/` and validates the SHA-256 checksum. Subsequent runs hit the local cache. To pre-warm a model without transcribing anything, call `loadModel()` and then `unloadModel()` in a setup script.
 
-If you're seeing something else, the SDK exposes `getLogger()` and a `loggingStream()` helper — bumping the level to `debug` will show every call into the Bare worker, which is usually enough to localize the issue.
+If you're seeing something else, the SDK exposes `getLogger()` and a `loggingStream()` helper - bumping the level to `debug` will show every call into the Bare worker, which is usually enough to localize the issue.
 
 ## What you actually shipped
 
@@ -287,9 +287,9 @@ Total time from `npm init` to working CLI on a fresh machine: ten minutes if you
 
 If you want more QVAC depth on adjacent capabilities, I'd point you at:
 
-- The [official QVAC docs](https://docs.qvac.tether.io/) — full API reference, plugin matrix, and the model registry list (~653 models as of v0.9).
-- The [QVAC source on GitHub](https://github.com/tetherto/qvac) — the SDK is Apache-2.0 and the C++ engines (the Whisper fork lives at `qvac-ext-lib-whisper.cpp`) are all there.
-- My broader [chatbots-to-agents shift](/blog/chatbots-to-agents-2026) post — once you have local transcription working, you'll want to wire it into something larger, and that piece covers what "larger" looks like in 2026.
+- The [official QVAC docs](https://docs.qvac.tether.io/) - full API reference, plugin matrix, and the model registry list (~653 models as of v0.9).
+- The [QVAC source on GitHub](https://github.com/tetherto/qvac) - the SDK is Apache-2.0 and the C++ engines (the Whisper fork lives at `qvac-ext-lib-whisper.cpp`) are all there.
+- My broader [chatbots-to-agents shift](/blog/chatbots-to-agents-2026) post - once you have local transcription working, you'll want to wire it into something larger, and that piece covers what "larger" looks like in 2026.
 
 I'll be writing more in this series in the coming weeks: a head-to-head against Ollama for local LLMs, a real on-device RAG build, the iPhone-via-Expo guide. If there's a QVAC angle you want covered next, [say hi](/contacts).
 
