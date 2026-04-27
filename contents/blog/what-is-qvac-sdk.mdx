@@ -1,0 +1,209 @@
+---
+title: "What is QVAC SDK? Tether's local AI framework, explained"
+createdAt: '2026-04-26T00:00:00Z'
+modifiedAt: '2026-04-26T00:00:00Z'
+summary: "What is QVAC SDK? Tether's open-source JavaScript framework that runs LLM, image generation, transcription, RAG and more locally, behind a single import."
+image: '/images/blog/what-is-qvac-sdk.png'
+authorId: matteo
+locale: 'en'
+tags: ['qvac', 'ai', 'local-ai', 'llm', 'sdk']
+translationSlug: 'cos-e-qvac-sdk'
+---
+
+You want to add speech-to-text to your app. You wrestle with `cmake` for a day, get a Whisper binding compiling on your Mac, and ship it. Then the PM says "we need translation too." Different library. Different build system. Different API. Then someone asks about mobile. You sigh, open a fresh terminal, and start over.
+
+That's the developer reality QVAC SDK was built for. **What is QVAC SDK?** It's Tether's new open-source JavaScript framework that runs eight different on-device AI capabilities — LLM completion, image generation, transcription, translation, text-to-speech, OCR, embeddings, and on-device LoRA fine-tuning — behind a single `@qvac/sdk` import. Same API on Node.js, on iPhone, on Android, on macOS, on Linux, on Windows. No cloud round-trip, no per-modality plumbing, no rebuilding from scratch when the spec changes.
+
+Here's what's actually in it, who it's for, and when it's the right tool to reach for.
+
+## What QVAC SDK is, in one paragraph
+
+QVAC SDK (`@qvac/sdk`) is the developer-facing component of Tether's broader QVAC ("Sovereign Mind") initiative — an Apache-2.0 licensed JS/TS package that wires together best-in-class native C++ inference engines (`llama.cpp`, `whisper.cpp`, Bergamot, `stable-diffusion.cpp`, ONNX Runtime) and exposes them through one consistent interface. You call `loadModel`, you call the right verb (`completion`, `transcribe`, `translate`, `generate`, `ragSearch`, …), then you call `unloadModel`. The SDK figures out which engine to dispatch and which native binary to run, on whichever runtime you're on. It launched as the developer SDK on April 9, 2026, after Tether previewed the broader QVAC initiative at the Plan B Forum in Lugano in October 2025.
+
+It runs on three JS runtimes: **Node.js ≥22.17** (servers and CLI tools), **Bare ≥1.24** (Holepunch's lightweight runtime, where native addons run in-process), and **Expo ≥54** (iOS and Android — physical devices only, no Expo Go). It does not target the browser, and that's deliberate: QVAC competes with `transformers.js` and `web-llm` only at the conceptual level. In every other dimension — multi-modality, native engines, P2P model distribution, on-device fine-tuning — it's playing a different game entirely.
+
+<CtaCard
+    title="Need help with AI integration?"
+    description="Get in touch for a consultation on shipping local, private AI in your product."
+    primaryButtonText="Contact me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## The eight capabilities QVAC SDK ships in the box
+
+The headline feature is the one you read about: a single API that does eight things. Here's what ships in the box today.
+
+| Capability | Engine | What you'd use it for |
+|---|---|---|
+| LLM completion | `qvac-fabric-llm.cpp` (Tether's `llama.cpp` fork) | Chat, agents, content generation, multimodal vision |
+| Embeddings | `qvac-fabric-llm.cpp` | RAG, semantic search, classification |
+| Transcription | `whisper.cpp` (or NVIDIA Parakeet via ONNX Runtime) | Speech-to-text, diarization |
+| Translation | Bergamot (Marian) or `nmtcpp` | On-device translation, no cloud |
+| Text-to-speech | ONNX Runtime (Chatterbox, Supertonic) | Voice output for apps |
+| OCR | ONNX Runtime (FastText, CRAFT) | Scanned-doc extraction, receipt scanning |
+| Image generation | `stable-diffusion.cpp` | SD 2.1, SDXL, FLUX.2-klein on-device |
+| LoRA fine-tuning | `qvac-fabric-llm.cpp` | Custom adapters, even on mobile (Tether's first-mover claim) |
+
+The minimal LLM completion looks like this — straight from Tether's [official getting-started](https://docs.qvac.tether.io/):
+
+```ts
+import {
+  loadModel,
+  LLAMA_3_2_1B_INST_Q4_0,
+  completion,
+  unloadModel,
+} from "@qvac/sdk"
+
+const modelId = await loadModel({
+  modelSrc: LLAMA_3_2_1B_INST_Q4_0,
+  modelType: "llm",
+  onProgress: (progress) => console.log(progress),
+})
+
+const result = completion({
+  modelId,
+  history: [
+    { role: "user", content: "Explain quantum computing in one sentence" },
+  ],
+  stream: true,
+})
+
+for await (const token of result.tokenStream) {
+  process.stdout.write(token)
+}
+
+await unloadModel({ modelId })
+```
+
+That `LLAMA_3_2_1B_INST_Q4_0` constant is not a string — it's a typed identifier from a built-in **model registry** with the source URL, expected size, and SHA-256 checksum baked in. The registry is distributed peer-to-peer over Hyperswarm, so models can be shared between devices without bouncing through a central server. As of v0.9.0 there are around 653 models in the registry. You can search it at runtime:
+
+```ts
+import { modelRegistrySearch } from "@qvac/sdk"
+const models = await modelRegistrySearch({ query: "llama" })
+```
+
+Now swap the model type and the same three steps gives you transcription:
+
+```ts
+import { loadModel, transcribe, WHISPER_TINY } from "@qvac/sdk"
+
+const modelId = await loadModel({
+  modelSrc: WHISPER_TINY,
+  modelType: "whisper",
+})
+
+const text = await transcribe({ modelId, audioChunk: "./meeting.wav" })
+console.log(text)
+```
+
+Or RAG, by composing the embeddings plugin with the SDK's built-in vector workspace primitives:
+
+```ts
+import {
+  loadModel,
+  GTE_LARGE_FP16,
+  ragIngest,
+  ragSearch,
+  ragCloseWorkspace,
+} from "@qvac/sdk"
+
+const modelId = await loadModel({
+  modelSrc: GTE_LARGE_FP16,
+  modelType: "embeddings",
+})
+
+await ragIngest({
+  modelId,
+  workspace: "docs",
+  documents: ["First document...", "Second document..."],
+  chunk: false,
+})
+
+const results = await ragSearch({
+  modelId,
+  workspace: "docs",
+  query: "machine learning",
+  topK: 3,
+})
+```
+
+## What makes QVAC SDK different from llama.cpp, Ollama, or MLX
+
+Plenty of local AI runtimes exist. So why ship another one? Three things genuinely set QVAC apart, and I think two of them matter for your decision.
+
+### 1. The plugin system + tree-shaking
+
+Each capability is a separate plugin. You declare which ones you want in `qvac.config.ts`:
+
+```ts
+import { PLUGIN_LLM, PLUGIN_NMT } from "@qvac/sdk"
+
+export default {
+  plugins: [PLUGIN_LLM, PLUGIN_NMT],
+}
+```
+
+Then `qvac bundle sdk` reads that config and produces a worker bundle that ships **only** those engines, plus an `addons.manifest.json` listing the exact native binaries your app needs. No `whisper.cpp`, no `stable-diffusion.cpp`, no ONNX runtime if you didn't ask for them. This matters because each engine is 50–200 MB of native code; "ship only what you use" is the difference between a 30 MB Expo bundle and a 600 MB one.
+
+### 2. Same code on every runtime
+
+I keep coming back to this because it's the part that's hard to appreciate until you've fought against it. Write your `loadModel → completion → unloadModel` once and it runs on Node, on a phone, on Electron. The RPC layer between client and worker is hidden. When you're on Bare, there's no separate worker at all — everything runs in-process. The cross-platform story is roughly what `react-native-executorch` is for ML or what MLX-Swift is on Apple platforms, except you write JS instead of Swift or Kotlin.
+
+This is the thing that, in my experience reading the broader [chatbots-to-agents shift](/blog/chatbots-to-agents-2026), most teams underestimate. Real apps don't need one capability — they need three or four, on three or four surfaces, and that integration cost is where everything stalls. The pattern shows up everywhere — even in the [repository-intelligence work I wrote about earlier this year](/blog/repository-intelligence-ai-maintenance), the friction was less in the AI itself than in stitching modalities and runtimes together.
+
+### 3. P2P model distribution and delegated inference
+
+QVAC bakes in Hyperswarm (the Holepunch P2P stack also used by Keet and Pears). Two things fall out of that:
+
+- **Models distribute peer-to-peer**: the registry is a Hyperdrive over Hyperswarm. You can run your own. You can host your own models in the same way without standing up a CDN.
+- **Delegated inference**: a phone running QVAC can offload inference to a beefy laptop on the same network with one config option:
+  ```ts
+  loadModel({
+    modelSrc: ...,
+    modelType: "llm",
+    delegate: { topic, providerPublicKey, fallbackToLocal: true },
+  })
+  ```
+  No infrastructure, no API gateway, no cloud account. Just two devices on Hyperswarm.
+
+Nobody else in this space has the second one. It's the most QVAC-specific thing in the SDK and the bit I think becomes a real differentiator over time.
+
+## When to pick QVAC SDK
+
+Use QVAC if any of these apply:
+
+- **You're shipping a JS/TS app across Node + mobile + desktop** and want one API for the AI parts.
+- **You need more than one AI modality in the same product.** Chat + transcription + translation, or RAG + image generation, or any pair of those.
+- **Privacy or offline is a hard requirement.** Healthcare, journaling, document analysis, anything that can't legally or ethically leave the device.
+- **You're already an Ollama user and want to upgrade.** QVAC's HTTP server is OpenAI-compatible and runs on `localhost:11434` — same default port as Ollama — so it's a one-line swap for clients like Continue.dev, LangChain, and Open Interpreter.
+- **You want to be in the Holepunch / Pears ecosystem.** QVAC is the AI layer for that stack.
+
+Skip QVAC if:
+
+- **You only need cloud LLM completion.** Use OpenAI / Anthropic / Google directly; QVAC's value is on-device.
+- **You need browser inference.** No WASM target. Use `transformers.js` or `web-llm`.
+- **You're a Python ML researcher.** The Python client is on the roadmap but not shipped.
+- **You only want a chat UI.** Tether ships [QVAC Workbench](https://qvac.tether.io/) as a consumer app for that — you don't need the SDK.
+- **Your hardware doesn't match the matrix.** macOS Intel x64 is CPU-only, iOS/Android emulators don't work (physical devices only), Linux needs Vulkan + g++ ≥13.
+
+## Installing QVAC SDK in 60 seconds
+
+Want to feel it on your machine right now? Three commands:
+
+```bash
+mkdir qvac-test && cd qvac-test
+npm init -y
+npm install @qvac/sdk
+```
+
+Drop the LLM completion snippet from earlier into `index.mjs`, run `node index.mjs`, and you'll see the model download with a progress bar, then stream tokens. The first run pulls the GGUF weights through the registry; subsequent runs hit the local cache. This is the moment most developers realize QVAC isn't "yet another wrapper" — it's a real package boundary that hides genuinely hard cross-platform work.
+
+## Where QVAC SDK fits in the 2026 local-AI stack
+
+The local-AI ecosystem has been picking sides for two years. `llama.cpp` went deep on inference. Ollama went deep on developer ergonomics for desktop chat. MLX went deep on Apple Silicon. `transformers.js` went deep on the browser. QVAC is the first credible attempt to **go wide instead** — multi-modality, multi-runtime, multi-platform, with P2P plumbing as a bonus. If you've watched [the move from chatbots to agents](/blog/chatbots-to-agents-2026) and noticed how quickly real products need transcription + RAG + tool-use + image generation in one app, you can see why an SDK-shaped answer was inevitable.
+
+Whether QVAC becomes the JavaScript answer or just *a* JavaScript answer depends on adoption. The technical groundwork is unusually thorough for a v0.9 release: typed model registry, OpenAI-compat server, on-device LoRA, real P2P, Apache-2.0 license, eight capabilities behind one import. Tether is treating this as foundational infrastructure for "Stable Intelligence", not a side project. Either way, if you ship anything that touches local AI on more than one platform, it's worth an afternoon of your time. Start at the [official QVAC docs](https://docs.qvac.tether.io/) or peek at the [GitHub source](https://github.com/tetherto/qvac).
+
+I'll be writing more QVAC SDK pieces in the coming weeks: a head-to-head against Ollama, a real on-device RAG build, the iPhone-via-Expo guide. If you want to see a specific angle covered, [say hi](/contacts).
