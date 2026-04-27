@@ -49,7 +49,7 @@ npm install @qvac/sdk
 
 The install pulls in around 200 packages and roughly 2.6 GB of native binaries (covering all the QVAC engines: Whisper, llama.cpp, stable-diffusion.cpp, ONNX Runtime, Bergamot). On my Mac it took just under three minutes on a wired connection.
 
-![QVAC SDK install completing in a fresh sandbox directory on macOS](/images/blog/qvac-whisper-offline-transcription-macos/01-install.png)
+<Image src="/images/blog/qvac-whisper-offline-transcription-macos/01-install.png" alt="QVAC SDK install completing in a fresh sandbox directory on macOS" width={1600} height={1000} />
 
 If you only need transcription and the binary footprint matters — for an Electron app, say — you can later use `qvac bundle sdk` to ship only the engines you actually call. For this tutorial we leave the full bundle in place; the development sandbox doesn't care.
 
@@ -112,7 +112,7 @@ Run it:
 node 01-hello.mjs
 ```
 
-![First-run output: WHISPER_TINY transcribing the sample WAV file from disk on macOS](/images/blog/qvac-whisper-offline-transcription-macos/02-first-run.png)
+<Image src="/images/blog/qvac-whisper-offline-transcription-macos/02-first-run.png" alt="First-run output: WHISPER_TINY transcribing the sample WAV file from disk on macOS" width={1600} height={1000} />
 
 First time through, the model downloads from the QVAC peer-to-peer registry and caches to `~/.qvac/models/`. Second run is instant load. The transcript on my machine:
 
@@ -171,7 +171,7 @@ Run it:
 node 03-benchmark.mjs
 ```
 
-![Benchmark of WHISPER_TINY vs WHISPER_EN_BASE_Q8_0 on a 35-second podcast clip transcription](/images/blog/qvac-whisper-offline-transcription-macos/03-benchmark.png)
+<Image src="/images/blog/qvac-whisper-offline-transcription-macos/03-benchmark.png" alt="Benchmark of WHISPER_TINY vs WHISPER_EN_BASE_Q8_0 on a 35-second podcast clip transcription" width={1600} height={1000} />
 
 Real numbers from my Mac, after the second run (so model load is from disk, not network):
 
@@ -244,7 +244,7 @@ chmod +x transcribe.mjs
 ./transcribe.mjs podcast.wav --accurate
 ```
 
-![transcribe CLI running with the --accurate flag, plus error paths for missing args and missing files](/images/blog/qvac-whisper-offline-transcription-macos/04-cli.png)
+<Image src="/images/blog/qvac-whisper-offline-transcription-macos/04-cli.png" alt="transcribe CLI running with the --accurate flag, plus error paths for missing args and missing files" width={1600} height={1000} />
 
 The full output:
 

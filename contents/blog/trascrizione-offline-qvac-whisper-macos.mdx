@@ -49,7 +49,7 @@ npm install @qvac/sdk
 
 L'install tira dentro circa 200 pacchetti e all'incirca 2,6 GB di binari nativi (che coprono tutti gli engine di QVAC: Whisper, llama.cpp, stable-diffusion.cpp, ONNX Runtime, Bergamot). Sul mio Mac ha impiegato poco meno di tre minuti su connessione cablata.
 
-![Installazione di QVAC SDK in una sandbox pulita su macOS per la trascrizione offline](/images/blog/qvac-whisper-offline-transcription-macos/01-install.png)
+<Image src="/images/blog/qvac-whisper-offline-transcription-macos/01-install.png" alt="Installazione di QVAC SDK in una sandbox pulita su macOS per la trascrizione offline" width={1600} height={1000} />
 
 Se ti serve solo la trascrizione e il footprint dei binari conta — per un'app Electron, ad esempio — più avanti puoi usare `qvac bundle sdk` per shippare solo gli engine che chiami davvero. Per questo tutorial lasciamo il bundle completo; al sandbox di sviluppo non interessa.
 
@@ -112,7 +112,7 @@ Eseguilo:
 node 01-hello.mjs
 ```
 
-![Output del primo run: WHISPER_TINY trascrive il file WAV di esempio da disco su macOS](/images/blog/qvac-whisper-offline-transcription-macos/02-first-run.png)
+<Image src="/images/blog/qvac-whisper-offline-transcription-macos/02-first-run.png" alt="Output del primo run: WHISPER_TINY trascrive il file WAV di esempio da disco su macOS" width={1600} height={1000} />
 
 Al primo passaggio, il modello si scarica dal registry peer-to-peer di QVAC e viene cachato in `~/.qvac/models/`. Il secondo run è caricamento istantaneo. Il transcript sulla mia macchina:
 
@@ -171,7 +171,7 @@ Eseguilo:
 node 03-benchmark.mjs
 ```
 
-![Benchmark di WHISPER_TINY vs WHISPER_EN_BASE_Q8_0 su un clip podcast da 35 secondi su macOS](/images/blog/qvac-whisper-offline-transcription-macos/03-benchmark.png)
+<Image src="/images/blog/qvac-whisper-offline-transcription-macos/03-benchmark.png" alt="Benchmark di WHISPER_TINY vs WHISPER_EN_BASE_Q8_0 su un clip podcast da 35 secondi su macOS" width={1600} height={1000} />
 
 Numeri reali dal mio Mac, dopo il secondo run (così il caricamento del modello è da disco, non da rete):
 
@@ -244,7 +244,7 @@ chmod +x transcribe.mjs
 ./transcribe.mjs podcast.wav --accurate
 ```
 
-![CLI transcribe in esecuzione con il flag --accurate, più i percorsi di errore per argomenti mancanti e file mancanti](/images/blog/qvac-whisper-offline-transcription-macos/04-cli.png)
+<Image src="/images/blog/qvac-whisper-offline-transcription-macos/04-cli.png" alt="CLI transcribe in esecuzione con il flag --accurate, più i percorsi di errore per argomenti mancanti e file mancanti" width={1600} height={1000} />
 
 L'output completo:
 
