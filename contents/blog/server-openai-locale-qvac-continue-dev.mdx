@@ -81,6 +81,7 @@ export default {
                 model: 'QWEN3_600M_INST_Q4',
                 default: true,
                 preload: true,
+                config: { ctx_size: 8192 },
             },
         },
     },
@@ -88,6 +89,8 @@ export default {
 ```
 
 L'alias `qwen3-0.6b` è quello che Continue.dev andrà a referenziare. Il valore di `model` deve essere un nome valido di costante SDK dal registry di `@qvac/sdk` - se sbagli a digitarlo, la CLI ritorna un errore "unknown model constant" con un suggerimento.
+
+> **Alza la context size per Continue.dev.** Il `ctx_size` di default nel plugin llamacpp-completion di QVAC è 1024 token. Continue.dev manda ~1500 token di system prompt a ogni request (definizioni dei tool, context del progetto, regole di formattazione). Senza l'override qui sopra vedi `context overflow at prefill step: prompt tokens 1524, max context tokens 1024` nei log del server e un toast "internal error" in Continue. Alzare a 8192 copre Continue più una chat history normale. Per chiamate `curl` dirette con prompt corti il default va bene; per qualunque assistant nell'IDE, impostalo.
 
 ## Avvia il server OpenAI-compatibile
 
