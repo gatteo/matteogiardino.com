@@ -1,0 +1,84 @@
+---
+title: 'Come Automatizzare le Code Review su GitHub con OpenClaw'
+createdAt: '2026-04-27T00:00:00Z'
+modifiedAt: '2026-04-27T00:00:00Z'
+summary: 'Scopri come utilizzare OpenClaw e la CLI di GitHub per creare un agente AI in grado di fare code review in automatico sulle tue Pull Request.'
+image: '/images/blog/automatizzare-code-review-github-openclaw.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'automation', 'sviluppo', 'github']
+---
+
+Una delle cose che mi porta via più tempo durante la giornata è la revisione delle Pull Request (PR) su GitHub. Non parlo delle architetture complesse, ma di quei classici aggiornamenti di dipendenze, refactoring minori o fix di bug isolati.
+
+Recentemente ho configurato un agente su **OpenClaw** per fare una prima passata automatica sulle mie PR usando la CLI ufficiale di GitHub (`gh`). In questo articolo ti mostro come ho impostato l'automazione.
+
+## Prerequisiti
+
+Per iniziare, devi avere OpenClaw in esecuzione sul tuo server (io uso il mio fido Mac Mini) e la CLI di GitHub autenticata.
+
+Se non hai ancora installato la CLI, fallo ed esegui il login:
+
+```bash
+brew install gh
+gh auth login
+```
+
+Assicurati che l'utente che esegue il demone di OpenClaw abbia i permessi corretti per eseguire `gh` nella directory del tuo progetto.
+
+## La Skill GitHub in OpenClaw
+
+OpenClaw ha un'architettura basata su "Skill" (competenze). Per interagire con GitHub, OpenClaw usa la sua skill nativa `github`, che mappa direttamente i comandi della CLI in un formato che l'LLM può comprendere ed eseguire in modo sicuro tramite il tool `exec`.
+
+Non serve configurare token API complicati dentro OpenClaw, l'agente usa semplicemente la sessione locale autenticata.
+
+<CtaCard
+    title="Vuoi integrare AI nel tuo team di sviluppo?"
+    description="Contattami per una consulenza su come implementare strumenti AI e agenti autonomi nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Creare l'Agente Revisore
+
+Il trucco sta nel dare all'agente un prompt di sistema chiaro e limitarne l'area di azione. Puoi lanciare l'agente in una sessione dedicata, passando direttamente l'istruzione. 
+
+Ecco il comando che uso per lanciare la review di una specifica PR (ad esempio la PR numero #42):
+
+```bash
+openclaw exec -- "Usa la CLI di GitHub per scaricare la diff della PR #42. Analizza il codice, cerca bug di sicurezza, problemi di performance e violazioni delle best practice. Se il codice va bene, usa 'gh pr review --approve'. Se ci sono problemi, usa 'gh pr review --request-changes' commentando nel dettaglio gli errori."
+```
+
+In background, OpenClaw eseguirà questi step:
+1. `gh pr diff 42` per leggere il codice cambiato.
+2. Analisi interna tramite l'LLM (io di solito imposto Gemini 3.1 Pro o Claude 3.5 Sonnet come modello di default per i task di coding).
+3. Invio della review formattata tramite `gh pr review`.
+
+## Andare oltre: Esecuzione Programmata
+
+Invece di lanciare il comando manualmente, ho creato uno script bash che viene eseguito tramite Cron ogni mattina. Lo script chiede a OpenClaw di cercare tutte le PR aperte e di fare la review di quelle che non hanno ancora commenti.
+
+```bash
+#!/bin/bash
+cd /path/to/my/project
+openclaw exec -- "Cerca tutte le PR aperte. Per ogni PR senza review, analizza la diff e posta un commento costruttivo sulle modifiche."
+```
+
+Questo pattern è fantastico perché mi permette di svegliarmi, aprire GitHub e trovare già una prima analisi del codice pronta per me. A volte l'agente trova edge-case che mi erano sfuggiti, specialmente nella validazione degli input o nei leak di memoria.
+
+<CtaCard
+    title="Scopri i miei progetti"
+    description="Dai un occhio ai progetti su cui sto lavorando e alle tecnologie che utilizzo ogni giorno."
+    primaryButtonText="Vedi Progetti"
+    primaryButtonUrl="/projects"
+    pattern="waves"
+    align="center"
+/>
+
+## Conclusione
+
+Automatizzare la code review di base non significa sostituire lo sviluppatore senior, ma dargli un "junior instancabile" che fa il lavoro sporco. Con OpenClaw, non devi scrivere integrazioni API custom, l'agente usa gli stessi strumenti a riga di comando che usi tu.
+
+Se sei uno sviluppatore freelance o un CTO, ti consiglio vivamente di provare questo setup. Risparmierai ore di lavoro ogni settimana.

@@ -1,0 +1,84 @@
+---
+title: 'How to Automate GitHub Code Reviews with OpenClaw'
+createdAt: '2026-04-27T00:00:00Z'
+modifiedAt: '2026-04-27T00:00:00Z'
+summary: 'Learn how to use OpenClaw and the GitHub CLI to build an AI agent that automatically reviews your Pull Requests.'
+image: '/images/blog/automate-github-code-review-openclaw.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw', 'automation', 'development', 'github']
+---
+
+One of the things that eats up most of my time during the day is reviewing Pull Requests (PRs) on GitHub. I'm not talking about complex architecture changes, but those classic dependency updates, minor refactoring, or isolated bug fixes.
+
+Recently, I set up an agent on **OpenClaw** to do an automatic first pass on my PRs using the official GitHub CLI (`gh`). In this article, I'll show you exactly how I set up this automation.
+
+## Prerequisites
+
+To get started, you need to have OpenClaw running on your server (I use my trusty Mac Mini) and the GitHub CLI authenticated.
+
+If you haven't installed the CLI yet, do it and log in:
+
+```bash
+brew install gh
+gh auth login
+```
+
+Make sure the user running the OpenClaw daemon has the correct permissions to run `gh` in your project's directory.
+
+## The GitHub Skill in OpenClaw
+
+OpenClaw features a "Skill" based architecture. To interact with GitHub, OpenClaw uses its native `github` skill, which directly maps CLI commands into a format that the LLM can safely understand and execute via the `exec` tool.
+
+There's no need to configure complicated API tokens inside OpenClaw; the agent simply uses your local authenticated session.
+
+<CtaCard
+    title="Need help with AI integration?"
+    description="Get in touch for a consultation on implementing AI tools and autonomous agents in your development team."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Creating the Reviewer Agent
+
+The trick is to give the agent a clear system prompt and limit its scope of action. You can launch the agent in a dedicated session, passing the instruction directly.
+
+Here is the command I use to trigger the review of a specific PR (for example, PR #42):
+
+```bash
+openclaw exec -- "Use the GitHub CLI to download the diff of PR #42. Analyze the code, look for security bugs, performance issues, and best practice violations. If the code is fine, use 'gh pr review --approve'. If there are issues, use 'gh pr review --request-changes' and comment in detail about the errors."
+```
+
+In the background, OpenClaw will execute these steps:
+1. `gh pr diff 42` to read the changed code.
+2. Internal analysis via the LLM (I usually set Gemini 3.1 Pro or Claude 3.5 Sonnet as the default model for coding tasks).
+3. Send the formatted review using `gh pr review`.
+
+## Going Further: Scheduled Execution
+
+Instead of running the command manually, I created a bash script that is executed via Cron every morning. The script asks OpenClaw to find all open PRs and review those that don't have comments yet.
+
+```bash
+#!/bin/bash
+cd /path/to/my/project
+openclaw exec -- "Search for all open PRs. For each PR without a review, analyze the diff and post a constructive comment on the changes."
+```
+
+This pattern is fantastic because it allows me to wake up, open GitHub, and already find an initial code analysis ready for me. Sometimes the agent catches edge-cases I missed, especially around input validation or memory leaks.
+
+<CtaCard
+    title="Check out my projects"
+    description="Take a look at the projects I'm working on and the tech stack I use every day."
+    primaryButtonText="View Projects"
+    primaryButtonUrl="/projects"
+    pattern="waves"
+    align="center"
+/>
+
+## Conclusion
+
+Automating basic code reviews doesn't mean replacing the senior developer; it means giving them an "untiring junior" who does the dirty work. With OpenClaw, you don't have to write custom API integrations; the agent uses the exact same command-line tools that you do.
+
+If you are a freelance developer or a CTO, I highly recommend trying this setup. You'll save hours of work every week.
