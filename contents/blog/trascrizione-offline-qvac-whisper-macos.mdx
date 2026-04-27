@@ -1,7 +1,7 @@
 ---
 title: "Trascrizione offline con QVAC + Whisper su macOS"
 createdAt: '2026-04-26T00:00:00Z'
-modifiedAt: '2026-04-26T00:00:00Z'
+modifiedAt: '2026-04-27T00:00:00Z'
 summary: "Tutorial pratico di trascrizione QVAC + Whisper su macOS: installa @qvac/sdk, trascrivi con WHISPER_TINY e BASE, fai benchmark, costruisci una CLI."
 image: '/images/blog/qvac-whisper-offline-transcription-macos.png'
 authorId: matteo
@@ -103,7 +103,7 @@ console.log("Done.")
 Tre cose da notare:
 
 - `WHISPER_TINY` **non è una stringa**. È una costante tipata dal model registry di QVAC che impacchetta source URL, dimensione attesa (~74 MB), checksum SHA-256 e metadati dell'engine. Il type-checking prende i typo prima che diventino errori a runtime.
-- `modelType: "whispercpp-transcription"` è la literal che lo schema dell'SDK richiede. Vecchie docs e snippet del blog QVAC a volte mostrano `modelType: "whisper"` — è sbagliato rispetto allo schema attuale e tira fuori un errore di validazione. Usa la forma lunga.
+- `modelType` accetta due forme. Il nome canonico dell'engine è `"whispercpp-transcription"` — è quello che vedi nei log dell'SDK ed è quello che `dist/schemas/model-types.js` chiama literal canonica. L'alias più corto `"whisper"` risolve alla stessa cosa tramite la mappa `ModelTypeAliases` integrata nell'SDK ed è quello che usano la maggior parte delle docs e degli snippet del blog QVAC. In questo post resto sulla forma canonica così che il confine dell'engine sia visibile, ma `modelType: "whisper"` è identico a runtime. Il set completo di alias dentro l'SDK: `llm`, `whisper`, `embeddings`, `nmt`, `parakeet`, `tts`, `ocr`, `diffusion`.
 - `audioChunk` è un nome fuorviante. Accetta sia un path di un file **sia** un `Buffer`, non solo un chunk di audio. Il path è la via più semplice per file locali.
 
 Eseguilo:
@@ -267,7 +267,6 @@ Sulla mia macchina la happy path era pulita. Ecco le failure mode più probabili
 
 - **`Cannot find module '@qvac/sdk'` dopo l'install.** Probabilmente sei su Node ≤ 22.16. Lancia `node --version` e fai upgrade. L'SDK usa feature dei worker thread native arrivate in 22.17. Non c'è fallback — Node più vecchio crasha al momento dell'import, prima ancora di arrivare a `loadModel()`.
 - **Il download del modello si blocca a 0%.** Il registry di default tira giù i modelli peer-to-peer via Hyperswarm. Se sei dietro un firewall aziendale che blocca UDP, lo swarm non si forma. O configuri `swarmRelays` in un `qvac.config.ts` (l'SDK ha supporto built-in di blind relay per il NAT/firewall traversal) o setti `QVAC_REGISTRY_HTTP_FALLBACK=1` per forzare i fetch HTTP-only.
-- **`error: invalid model type`.** Hai scritto `modelType: "whisper"` invece di `modelType: "whispercpp-transcription"`. Lo schema Zod rifiuta la forma corta. Usa la literal lunga — è il nome dell'engine, non il nome friendly della capability.
 - **Transcript vuoto o di un singolo carattere.** Il tuo audio ha probabilmente la sample rate sbagliata. Whisper si aspetta 16 kHz; l'FFmpeg interno dell'SDK ti fa il resample, ma se l'input è corrotto (header WAV troncato, file di lunghezza zero) produce spazzatura. Lancia `file your-audio.wav` per confermare che è un WAVE vero, e `ffprobe -i your-audio.wav` per ispezionare canali e sample rate.
 - **La prima chiamata richiede minuti, la seconda è istantanea.** È atteso. Il primo run scarica i pesi in `~/.qvac/models/` e valida il checksum SHA-256. I run successivi colpiscono la cache locale. Per pre-warm di un modello senza trascrivere nulla, chiama `loadModel()` e poi `unloadModel()` in uno script di setup.
 
