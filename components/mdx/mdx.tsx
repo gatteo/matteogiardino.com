@@ -44,6 +44,11 @@ const components: MDXComponents = {
     pre: Pre,
     ul: (props: React.ComponentPropsWithoutRef<'ul'>) => <List {...props} />,
     ol: (props: React.ComponentPropsWithoutRef<'ol'>) => <List typo='ol' {...props} />,
+    table: (props: React.ComponentPropsWithoutRef<'table'>) => (
+        <div className='my-6 overflow-hidden rounded-lg border'>
+            <table {...props} className='!my-0 w-full' />
+        </div>
+    ),
 
     // Custom components
     Alert: (props: React.ComponentPropsWithoutRef<typeof Alert>) => <Alert {...props} />,
