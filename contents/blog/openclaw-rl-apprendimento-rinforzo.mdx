@@ -26,7 +26,21 @@ Il concetto chiave: **il tuo prossimo messaggio in una conversazione è feedback
 
 Il sistema è costruito su quattro componenti asincrone indipendenti che girano in parallelo senza bloccarsi a vicenda:
 
-<Image src="/images/blog/openclaw-rl-reinforcement-learning/openclaw-rl-121.webp" alt="Diagramma architettura OpenClaw-RL con quattro componenti: client OpenClaw, model server, PRM server e training engine" width={1200} height={630} />
+{/* <Image src="/images/blog/openclaw-rl-reinforcement-learning/openclaw-rl-121.webp" alt="Diagramma architettura OpenClaw-RL con quattro componenti: client OpenClaw, model server, PRM server e training engine" width={1200} height={630} /> */}
+<Mermaid caption="OpenClaw-RL: traffico chat e aggiornamenti dei gradienti girano in parallelo senza bloccarsi">
+{`
+flowchart LR
+  Client["Client OpenClaw<br/>il tuo assistente"]
+  Model["Model server<br/>API OpenAI :30000"]
+  PRM["PRM server<br/>process reward model"]
+  Train["Training engine<br/>aggiornamento gradienti"]
+
+  Client <-->|conversazioni| Model
+  Model -->|ogni turno| PRM
+  PRM -->|reward scalare| Train
+  Train -.->|nuovi pesi| Model
+`}
+</Mermaid>
 
 1. **Client OpenClaw** - Il tuo assistente su qualsiasi device, manda le conversazioni al model server
 2. **Model server** - Serve l'agente live come API compatibile OpenAI sulla porta 30000

@@ -73,6 +73,19 @@ Imagine automating a weekly report on a tech trend.
 
 The secret is separation of responsibilities.
 
+<Mermaid caption="Manager + workers + human-in-the-loop - each box owns one concern, with an explicit approval gate before publishing">
+{`
+flowchart TB
+  TRIGGER["Trigger<br/>cron · webhook · manual"]
+  TRIGGER --> RESEARCH["Research worker<br/>browse · extract · summarize"]
+  RESEARCH --> MGR["Manager<br/>review + summarize"]
+  MGR --> HUMAN{"Telegram approval"}
+  HUMAN -->|changes| MGR
+  HUMAN -->|approved| WRITE["Writing worker<br/>finalize report"]
+  WRITE --> DELIVER["Deliver<br/>email · Telegram · file"]
+`}
+</Mermaid>
+
 <CtaCard
     title="Explore my projects"
     description="Check out the projects I'm working on and the technologies I use."

@@ -48,7 +48,27 @@ Three FreeRTOS tasks run concurrently:
 
 This split keeps I/O responsive while the agent processes LLM responses. No context switching overhead from a full OS.
 
-<Image src="/images/blog/mimiclaw-openclaw-esp32/mimiclaw-154.webp" alt="ESP32-S3 dual core architecture diagram" width={1200} height={630} />
+{/* <Image src="/images/blog/mimiclaw-openclaw-esp32/mimiclaw-154.webp" alt="ESP32-S3 dual core architecture diagram" width={1200} height={630} /> */}
+<Mermaid caption="ESP32-S3 dual-core split - network on Core 0, AI on Core 1, shared PSRAM and flash">
+{`
+flowchart LR
+  subgraph C0["Core 0 - Network"]
+    WIFI["Wi-Fi polling"]
+    TG["Telegram I/O"]
+  end
+  subgraph C1["Core 1 - AI"]
+    AGENT["Agent loop"]
+    LLM["LLM calls"]
+    TOOLS["Tool execution"]
+  end
+  subgraph SHARED["Shared resources"]
+    PSRAM["8 MB PSRAM"]
+    FLASH["16 MB flash"]
+  end
+  C0 --- SHARED
+  C1 --- SHARED
+`}
+</Mermaid>
 
 <CtaCard
     title="Need AI integration for your business?"
@@ -76,7 +96,23 @@ The 16 MB flash holds firmware code plus persistent data:
 
 It's remarkably tight. Every byte has a job.
 
-<Image src="/images/blog/mimiclaw-openclaw-esp32/mimiclaw-223.webp" alt="Memory layout diagram showing PSRAM and flash allocation" width={1200} height={630} />
+{/* <Image src="/images/blog/mimiclaw-openclaw-esp32/mimiclaw-223.webp" alt="Memory layout diagram showing PSRAM and flash allocation" width={1200} height={630} /> */}
+<Mermaid caption="MimiClaw memory split - fast volatile work in PSRAM, persistent state in flash">
+{`
+flowchart LR
+  subgraph PSRAM["8 MB PSRAM - working set"]
+    LLMBUF["LLM stream buffer"]
+    CTX["Context buffer<br/>conversation history"]
+    MSG["Message buffers<br/>Telegram I/O"]
+  end
+  subgraph FLASH["16 MB flash - persistent"]
+    HIST["Conversation history"]
+    MEM["Memory files"]
+    SKILLS["Skills"]
+    CRON["Cron jobs"]
+  end
+`}
+</Mermaid>
 
 ## Flash Partitions: Where Everything Lives
 
@@ -91,7 +127,18 @@ Flash storage is carefully partitioned:
 
 After the first USB flash, you never need to plug in a cable again. All updates happen over Wi-Fi.
 
-<Image src="/images/blog/mimiclaw-openclaw-esp32/mimiclaw-282.webp" alt="Flash partition layout showing NVS, app slots, and SPIFFS" width={1200} height={630} />
+{/* <Image src="/images/blog/mimiclaw-openclaw-esp32/mimiclaw-282.webp" alt="Flash partition layout showing NVS, app slots, and SPIFFS" width={1200} height={630} /> */}
+<Mermaid caption="Flash partition layout - credentials in NVS, A/B firmware slots for OTA, agent files in SPIFFS">
+{`
+flowchart LR
+  subgraph FLASH["16 MB flash partition layout"]
+    NVS["NVS · 24 KB<br/>credentials, tokens"]
+    APP0["app0 · 3 MB<br/>primary firmware"]
+    APP1["app1 · 3 MB<br/>OTA update slot"]
+    SPIFFS["SPIFFS · 9+ MB<br/>skills, memory, cron"]
+  end
+`}
+</Mermaid>
 
 ## USB Port Gotcha (Don't Skip This)
 

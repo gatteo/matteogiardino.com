@@ -73,6 +73,19 @@ Immaginiamo di voler automatizzare la creazione di un report settimanale su un t
 
 Il segreto sta nella separazione delle responsabilità.
 
+<Mermaid caption="Manager + worker + human-in-the-loop - ogni blocco ha una sola responsabilità, con un gate di approvazione esplicito prima della pubblicazione">
+{`
+flowchart TB
+  TRIGGER["Trigger<br/>cron · webhook · manuale"]
+  TRIGGER --> RESEARCH["Worker ricerca<br/>naviga · estrai · sintetizza"]
+  RESEARCH --> MGR["Manager<br/>revisione + sommario"]
+  MGR --> HUMAN{"Approvazione su Telegram"}
+  HUMAN -->|modifiche| MGR
+  HUMAN -->|approvato| WRITE["Worker scrittura<br/>finalizza il report"]
+  WRITE --> DELIVER["Consegna<br/>email · Telegram · file"]
+`}
+</Mermaid>
+
 <CtaCard
     title="Scopri i miei progetti"
     description="Dai un occhio ai progetti su cui sto lavorando e alle tecnologie che utilizzo."

@@ -57,6 +57,19 @@ Supporta oltre 30 modelli su sette provider e include profili preconfigurati:
 
 Niente API key richieste. Basta installare e lasciare che indirizzi.
 
+<Mermaid caption="Ogni richiesta viene valutata su 15 dimensioni e instradata al modello più economico capace di gestirla">
+{`
+flowchart TB
+  REQ["Richiesta in arrivo"]
+  SCORE["ClawRouter<br/>scoring 15 dimensioni &lt;1ms"]
+  REQ --> SCORE
+  SCORE -->|economico + capace| ECO["Eco<br/>massimo risparmio"]
+  SCORE -->|carico bilanciato| AUTO["Auto<br/>performance bilanciata"]
+  SCORE -->|task complesso| PREMIUM["Premium<br/>modello frontier"]
+  SCORE -->|nessuna API key| FREE["Free<br/>fallback GPT-OSS 120B"]
+`}
+</Mermaid>
+
 ## Configurare TinyClaw
 
 Prima, assicurati di avere Node.js, tmux e jq installati. Avrai anche bisogno della CLI Anthropic o OpenAI autenticata con una API key valida.

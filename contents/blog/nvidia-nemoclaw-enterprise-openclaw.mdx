@@ -77,6 +77,19 @@ NemoClaw introduces a **privacy router** that dynamically decides which model to
 - Sensitive tasks → local Nemotron models
 - Complex non-sensitive tasks → cloud frontier models
 
+<Mermaid caption="The privacy router classifies each task and picks the right model - sensitive data never leaves the building">
+{`
+flowchart TB
+  TASK["Incoming task"]
+  CLASS{"Privacy<br/>classifier"}
+  TASK --> CLASS
+  CLASS -->|sensitive data| LOCAL["Local Nemotron<br/>on-prem hardware"]
+  CLASS -->|non-sensitive| CLOUD["Cloud frontier API<br/>Claude / GPT / Gemini"]
+  LOCAL --> RESP["Response"]
+  CLOUD --> RESP
+`}
+</Mermaid>
+
 The policies are yours:
 - Which data can leave the system
 - Which models to use for which tasks

@@ -54,6 +54,23 @@ Invece di chiedere all'agente principale di fare tutto, il flusso diventa:
 
 Questo pattern abbassa drasticamente i costi dei token e riduce quasi a zero le allucinazioni.
 
+<Mermaid caption="Ricercatore + Scrittore - l'agente principale cede il turno mentre il sub-agente raccoglie, poi riprende per sintetizzare">
+{`
+sequenceDiagram
+  autonumber
+  participant U as Utente
+  participant W as Scrittore (principale)
+  participant R as Ricercatore (sub)
+  U->>W: scrivi un report su X
+  W->>R: sessions_spawn(task: raccogli fonti)
+  W->>W: sessions_yield (turno in pausa)
+  R->>R: web_search + web_fetch
+  R-->>W: riassunto strutturato
+  W->>W: risveglio · legge le note
+  W-->>U: documento finale
+`}
+</Mermaid>
+
 <CtaCard
     title="Scopri i miei progetti"
     description="Dai un occhio ai progetti su cui sto lavorando e alle architetture basate su OpenClaw."

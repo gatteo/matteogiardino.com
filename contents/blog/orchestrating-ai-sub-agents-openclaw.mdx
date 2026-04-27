@@ -54,6 +54,23 @@ Instead of asking the main agent to do everything, the flow becomes:
 
 This pattern drastically lowers token costs and reduces hallucinations to nearly zero.
 
+<Mermaid caption="Researcher + Writer - the main agent yields while a focused sub-agent gathers, then resumes to synthesize">
+{`
+sequenceDiagram
+  autonumber
+  participant U as User
+  participant W as Writer (main)
+  participant R as Researcher (sub)
+  U->>W: write a report on X
+  W->>R: sessions_spawn(task: gather sources)
+  W->>W: sessions_yield (pause turn)
+  R->>R: web_search + web_fetch
+  R-->>W: structured summary
+  W->>W: wake up · read notes
+  W-->>U: final document
+`}
+</Mermaid>
+
 <CtaCard
     title="Need help with AI integration?"
     description="Get in touch for a consultation on implementing AI tools and multi-agent architectures in your business."

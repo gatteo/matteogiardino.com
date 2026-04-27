@@ -22,6 +22,27 @@ L'ACP è un protocollo integrato in OpenClaw che permette a un agente di istanzi
 
 Invece di eseguire il codice direttamente nell'ambiente principale (col rischio di fare danni o sovrascrivere file sbagliati), puoi delegare il lavoro a una sessione separata con direttive chiare.
 
+<Mermaid caption="Handshake ACP - l'agente principale resta libero mentre il sub-agente di coding lavora in isolamento">
+{`
+sequenceDiagram
+  autonumber
+  participant Parent as Agente padre
+  participant ACP as Layer ACP
+  participant Sub as Sub-agente coding
+  Parent->>ACP: sessions_spawn(task, runtime: acp)
+  ACP->>Sub: handshake + workspace
+  Sub-->>ACP: pronto
+  ACP-->>Parent: agent_id
+  loop fino a completamento
+    Sub->>Sub: leggi · pianifica · modifica
+    Sub->>ACP: tool_call(write / run / test)
+    ACP-->>Sub: risultato
+  end
+  Sub->>ACP: complete(diff, sommario)
+  ACP-->>Parent: risultati
+`}
+</Mermaid>
+
 ## Perché usare i Sub-Agenti per il Coding?
 
 Se hai mai provato a far scrivere un'intera applicazione a un singolo LLM in una chat, sai che dopo un po' perde il contesto. Utilizzando `runtime: "acp"` con `sessions_spawn` ottieni tre vantaggi fondamentali:

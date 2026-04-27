@@ -202,7 +202,24 @@ Drop the LLM completion snippet from earlier into `index.mjs`, run `node index.m
 
 ## Where QVAC SDK fits in the 2026 local-AI stack
 
-The local-AI ecosystem has been picking sides for two years. `llama.cpp` went deep on inference. Ollama went deep on developer ergonomics for desktop chat. MLX went deep on Apple Silicon. `transformers.js` went deep on the browser. QVAC is the first credible attempt to **go wide instead** - multi-modality, multi-runtime, multi-platform, with P2P plumbing as a bonus. If you've watched [the move from chatbots to agents](/blog/chatbots-to-agents-2026) and noticed how quickly real products need transcription + RAG + tool-use + image generation in one app, you can see why an SDK-shaped answer was inevitable.
+The local-AI ecosystem has been picking sides for two years. `llama.cpp` went deep on inference. Ollama went deep on developer ergonomics for desktop chat. MLX went deep on Apple Silicon. `transformers.js` went deep on the browser. QVAC is the first credible attempt to **go wide instead** - multi-modality, multi-runtime, multi-platform, with P2P plumbing as a bonus.
+
+<Mermaid caption="The 2026 local-AI stack: deep specialists vs QVAC's wide play">
+{`
+flowchart TB
+  subgraph deep["Go deep on one axis"]
+    L["llama.cpp<br/>inference"]
+    O["Ollama<br/>desktop ergonomics"]
+    M["MLX<br/>Apple Silicon"]
+    T["transformers.js<br/>browser"]
+  end
+  subgraph wide["Go wide across axes"]
+    Q["QVAC SDK<br/>8 capabilities · 4 runtimes<br/>all platforms · P2P"]
+  end
+  deep -.- wide
+`}
+</Mermaid>
+ If you've watched [the move from chatbots to agents](/blog/chatbots-to-agents-2026) and noticed how quickly real products need transcription + RAG + tool-use + image generation in one app, you can see why an SDK-shaped answer was inevitable.
 
 Whether QVAC becomes the JavaScript answer or just *a* JavaScript answer depends on adoption. The technical groundwork is unusually thorough for a v0.9 release: typed model registry, OpenAI-compat server, on-device LoRA, real P2P, Apache-2.0 license, eight capabilities behind one import. Tether is treating this as foundational infrastructure for "Stable Intelligence", not a side project. Either way, if you ship anything that touches local AI on more than one platform, it's worth an afternoon of your time. Start at the [official QVAC docs](https://docs.qvac.tether.io/) or peek at the [GitHub source](https://github.com/tetherto/qvac).
 

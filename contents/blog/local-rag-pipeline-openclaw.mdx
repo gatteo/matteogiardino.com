@@ -23,6 +23,25 @@ Our pipeline consists of three main components:
 2. **Vector Store:** A local vector database (like ChromaDB or FAISS) to store embeddings.
 3. **Retrieval Agent:** An OpenClaw agent that retrieves relevant chunks based on user questions and passes them to the LLM for synthesis.
 
+<Mermaid caption="Local RAG pipeline - documents become embeddings once, then user questions retrieve and synthesize entirely on-prem">
+{`
+flowchart LR
+  DOCS["Documents<br/>PDF · MD · txt"]
+  INGEST["Ingestion script<br/>chunk + embed"]
+  STORE[("Vector store<br/>ChromaDB / FAISS")]
+  USER["User question"]
+  AGENT["Retrieval agent"]
+  LLM["Local LLM<br/>synthesis"]
+  RESP["Answer"]
+
+  DOCS --> INGEST --> STORE
+  USER --> AGENT
+  AGENT -->|query| STORE
+  STORE -->|relevant chunks| AGENT
+  AGENT --> LLM --> RESP
+`}
+</Mermaid>
+
 ## Step 1: Document Ingestion and Embeddings
 
 First, we need to convert your documents into a searchable format.

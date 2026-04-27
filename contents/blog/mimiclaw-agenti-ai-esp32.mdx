@@ -48,7 +48,27 @@ Tre task FreeRTOS girano concorrentemente:
 
 Questa divisione mantiene l'I/O reattivo mentre l'agente elabora le risposte LLM. Niente overhead di context switching da un OS completo.
 
-<Image src="/images/blog/mimiclaw-openclaw-esp32/mimiclaw-154.webp" alt="Diagramma architettura dual core ESP32-S3" width={1200} height={630} />
+{/* <Image src="/images/blog/mimiclaw-openclaw-esp32/mimiclaw-154.webp" alt="Diagramma architettura dual core ESP32-S3" width={1200} height={630} /> */}
+<Mermaid caption="Divisione dual-core ESP32-S3 - rete su Core 0, AI su Core 1, PSRAM e flash condivise">
+{`
+flowchart LR
+  subgraph C0["Core 0 - Rete"]
+    WIFI["Polling Wi-Fi"]
+    TG["I/O Telegram"]
+  end
+  subgraph C1["Core 1 - AI"]
+    AGENT["Loop agente"]
+    LLM["Chiamate LLM"]
+    TOOLS["Esecuzione tool"]
+  end
+  subgraph SHARED["Risorse condivise"]
+    PSRAM["8 MB PSRAM"]
+    FLASH["16 MB flash"]
+  end
+  C0 --- SHARED
+  C1 --- SHARED
+`}
+</Mermaid>
 
 <CtaCard
     title="Hai bisogno di integrazione AI per la tua azienda?"
@@ -76,7 +96,23 @@ La flash da 16 MB contiene il codice firmware più dati persistenti:
 
 È notevolmente compatto. Ogni byte ha un lavoro.
 
-<Image src="/images/blog/mimiclaw-openclaw-esp32/mimiclaw-223.webp" alt="Diagramma layout memoria che mostra allocazione PSRAM e flash" width={1200} height={630} />
+{/* <Image src="/images/blog/mimiclaw-openclaw-esp32/mimiclaw-223.webp" alt="Diagramma layout memoria che mostra allocazione PSRAM e flash" width={1200} height={630} /> */}
+<Mermaid caption="Divisione memoria MimiClaw - lavoro veloce e volatile in PSRAM, stato persistente in flash">
+{`
+flowchart LR
+  subgraph PSRAM["8 MB PSRAM - working set"]
+    LLMBUF["Buffer stream LLM"]
+    CTX["Buffer contesto<br/>cronologia conversazioni"]
+    MSG["Buffer messaggi<br/>I/O Telegram"]
+  end
+  subgraph FLASH["16 MB flash - persistente"]
+    HIST["Cronologia conversazioni"]
+    MEM["File di memoria"]
+    SKILLS["Skill"]
+    CRON["Cron job"]
+  end
+`}
+</Mermaid>
 
 ## Partizioni Flash: Dove Vive Tutto
 
@@ -91,7 +127,18 @@ Lo storage flash è partizionato con cura:
 
 Dopo il primo flash USB, non hai mai più bisogno di collegare un cavo. Tutti gli aggiornamenti avvengono via Wi-Fi.
 
-<Image src="/images/blog/mimiclaw-openclaw-esp32/mimiclaw-282.webp" alt="Layout partizioni flash che mostra NVS, slot app e SPIFFS" width={1200} height={630} />
+{/* <Image src="/images/blog/mimiclaw-openclaw-esp32/mimiclaw-282.webp" alt="Layout partizioni flash che mostra NVS, slot app e SPIFFS" width={1200} height={630} /> */}
+<Mermaid caption="Layout partizioni flash - credenziali in NVS, slot firmware A/B per OTA, file dell'agente in SPIFFS">
+{`
+flowchart LR
+  subgraph FLASH["Layout partizioni flash 16 MB"]
+    NVS["NVS · 24 KB<br/>credenziali, token"]
+    APP0["app0 · 3 MB<br/>firmware primario"]
+    APP1["app1 · 3 MB<br/>slot aggiornamento OTA"]
+    SPIFFS["SPIFFS · 9+ MB<br/>skill, memoria, cron"]
+  end
+`}
+</Mermaid>
 
 ## Gotcha Porta USB (Non Saltare Questo)
 

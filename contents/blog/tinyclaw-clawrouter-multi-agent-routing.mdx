@@ -57,6 +57,19 @@ It supports 30+ models across seven providers and includes pre-configured profil
 
 No API keys required. Just install and let it route.
 
+<Mermaid caption="Each request is scored across 15 dimensions, then routed to the cheapest model that can handle it">
+{`
+flowchart TB
+  REQ["Incoming request"]
+  SCORE["ClawRouter<br/>15-dimension scoring &lt;1ms"]
+  REQ --> SCORE
+  SCORE -->|cheap + capable| ECO["Eco<br/>maximum savings"]
+  SCORE -->|balanced workload| AUTO["Auto<br/>balanced performance"]
+  SCORE -->|complex task| PREMIUM["Premium<br/>frontier model"]
+  SCORE -->|no API key| FREE["Free<br/>GPT-OSS 120B fallback"]
+`}
+</Mermaid>
+
 ## Setting Up TinyClaw
 
 First, make sure you have Node.js, tmux, and jq installed. You'll also need the Anthropic or OpenAI CLI authenticated with a valid API key.

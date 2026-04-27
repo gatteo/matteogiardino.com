@@ -202,7 +202,24 @@ Butta lo snippet di completion LLM di prima in `index.mjs`, lancia `node index.m
 
 ## Dove il QVAC SDK si colloca nello stack di local AI del 2026
 
-L'ecosistema local-AI sta scegliendo posizioni da due anni. `llama.cpp` è andato in profondità sull'inference. Ollama è andato in profondità sull'ergonomia developer per chat desktop. MLX è andato in profondità su Apple Silicon. `transformers.js` è andato in profondità sul browser. QVAC è il primo tentativo credibile di **andare in larghezza** - multi-modalità, multi-runtime, multi-piattaforma, con plumbing P2P come bonus. Se hai osservato [il passaggio dai chatbot agli agenti](/blog/da-chatbot-ad-agenti-2026) e hai notato quanto velocemente i prodotti reali iniziano ad aver bisogno di trascrizione + RAG + tool-use + generazione immagini in una sola app, capisci perché una risposta in forma di SDK era inevitabile.
+L'ecosistema local-AI sta scegliendo posizioni da due anni. `llama.cpp` è andato in profondità sull'inference. Ollama è andato in profondità sull'ergonomia developer per chat desktop. MLX è andato in profondità su Apple Silicon. `transformers.js` è andato in profondità sul browser. QVAC è il primo tentativo credibile di **andare in larghezza** - multi-modalità, multi-runtime, multi-piattaforma, con plumbing P2P come bonus.
+
+<Mermaid caption="Lo stack AI locale 2026: specialisti deep contro la giocata wide di QVAC">
+{`
+flowchart TB
+  subgraph deep["Vai in profondità su un asse"]
+    L["llama.cpp<br/>inference"]
+    O["Ollama<br/>ergonomia desktop"]
+    M["MLX<br/>Apple Silicon"]
+    T["transformers.js<br/>browser"]
+  end
+  subgraph wide["Vai in larghezza su tutti gli assi"]
+    Q["QVAC SDK<br/>8 capacità · 4 runtime<br/>tutte le piattaforme · P2P"]
+  end
+  deep -.- wide
+`}
+</Mermaid>
+ Se hai osservato [il passaggio dai chatbot agli agenti](/blog/da-chatbot-ad-agenti-2026) e hai notato quanto velocemente i prodotti reali iniziano ad aver bisogno di trascrizione + RAG + tool-use + generazione immagini in una sola app, capisci perché una risposta in forma di SDK era inevitabile.
 
 Se QVAC diventerà la risposta JavaScript o solo *una* risposta JavaScript dipende dall'adozione. Le fondamenta tecniche sono insolitamente solide per una release v0.9: model registry tipato, server OpenAI-compatibile, LoRA on-device, P2P vero, licenza Apache-2.0, otto capability dietro un import. Tether sta trattando questo come infrastruttura fondante per la "Stable Intelligence", non come un side project. In ogni caso, se spedisci qualcosa che tocca AI locale su più di una piattaforma, vale un pomeriggio del tuo tempo. Parti dai [doc ufficiali di QVAC](https://docs.qvac.tether.io/) o dai un'occhiata al [sorgente su GitHub](https://github.com/tetherto/qvac).
 
