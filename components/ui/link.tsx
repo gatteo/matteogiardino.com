@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils'
 export const linkVariants = cva('', {
     variants: {
         variant: {
-            article: 'bg-article-link dark:bg-article-link-dark no-underline',
+            article: 'bg-article-link dark:bg-article-link-dark text-sky-300 no-underline',
             muted: 'text-muted-foreground transition-colors hover:text-foreground',
         },
     },

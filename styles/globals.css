@@ -102,3 +102,10 @@ pre.shiki .highlighted {
     display: inline-block;
     background-color: theme('colors.primary.DEFAULT / 10%');
 }
+
+/* Plain (non-Shiki) code blocks — e.g. ```text — match the horizontal
+ * inset that .line provides for highlighted blocks. */
+pre:not(.shiki) {
+    padding-left: theme(spacing.4);
+    padding-right: theme(spacing.4);
+}

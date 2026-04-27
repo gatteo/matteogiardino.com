@@ -9,7 +9,6 @@ import {
 } from '@tabler/icons-react'
 import posthog from 'posthog-js'
 import {
-    EmailShareButton,
     LinkedinShareButton,
     TelegramShareButton,
     TwitterShareButton,
@@ -29,17 +28,18 @@ export function ShareIcons({ url, title, className }: { url: string; title: stri
         })
     }
 
+    const emailBody = `Leggi questo post di Matteo Giardino, ne vale la pena!\n\n${url}`
+    const mailtoHref = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(emailBody)}`
+
     return (
         <div className={cn('flex justify-center gap-2', className)}>
-            <EmailShareButton
-                url={url}
-                subject={title}
-                body={'Leggi questo post di Matteo Giardino, ne vale la pena!'}
-                onClick={() => handleShare('email')}>
-                <div className={buttonVariants({ size: 'icon', variant: 'outline' })}>
-                    <IconMail className='size-4' />
-                </div>
-            </EmailShareButton>
+            <a
+                href={mailtoHref}
+                onClick={() => handleShare('email')}
+                aria-label='Share via email'
+                className={buttonVariants({ size: 'icon', variant: 'outline' })}>
+                <IconMail className='size-4' />
+            </a>
             <LinkedinShareButton
                 url={url}
                 title={title}
