@@ -13,6 +13,7 @@ import { ImageZoom } from './image-zoom'
 import { ItemGrid } from './item-grid'
 import { LinkCard } from './link-card'
 import { List } from './list'
+import { Mermaid } from './mermaid'
 import { Pre } from './pre'
 import { Table } from './table'
 import { Tree } from './tree'
@@ -62,6 +63,7 @@ const components: MDXComponents = {
     Video,
     LinkCard,
     CtaCard,
+    Mermaid,
 }
 
 const Mdx = ({ code }: MdxProps) => {
