@@ -1,0 +1,106 @@
+---
+title: 'Padroneggiare OpenClaw TaskFlow: Creare Workflow AI Multi-Step'
+createdAt: '2026-04-29T00:00:00Z'
+modifiedAt: '2026-04-29T00:00:00Z'
+summary: 'Scopri come utilizzare OpenClaw TaskFlow per coordinare workflow di agenti AI asincroni e complessi, gestendo stati, contesti e sub-task.'
+image: '/images/blog/padroneggiare-openclaw-taskflow-workflow-multi-step.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'ai tools', 'automazione', 'sviluppo', 'cto']
+---
+
+Quando passi dai semplici chatbot agli agenti AI veri e propri, prima o poi ti scontri con il muro del "timeout". I task complessi  -  come ricercare competitor, scrivere report, compilare dati o fare code review di una PR  -  richiedono tempo. Se ti affidi a una singola sessione sincrona, il tuo agente inevitabilmente andrà in timeout, perderà il contesto o crasherà a metà del lavoro.
+
+È qui che entra in gioco **OpenClaw TaskFlow**. Lo sto usando per orchestrare i miei sistemi multi-agente e cambia completamente il modo in cui strutturi i workflow AI. Invece di sperare che uno script finisca tutto in una volta, TaskFlow ti offre job duraturi e stateful che possono generare processi figli, aspettare l'input umano e riprendersi dai fallimenti.
+
+Ecco una guida pratica su come implementarlo.
+
+## Il Problema degli Agenti Sincroni
+
+Quando ho iniziato a costruire workflow agentici, li trattavo come normali chiamate a funzioni. Dai un input all'agente e aspetti l'output. Funziona benissimo per generare una regex al volo o riassumere un'email.
+
+Ma cosa succede quando chiedi a un agente di "analizzare queste 50 issue su GitHub, preparare le PR per i bug facili e chiedere una review per quelli complessi"?
+
+1. La context window esplode.
+2. I rate limit delle API ti bloccano.
+3. La sessione va in timeout mentre aspetta una compilazione in background.
+
+Ti serve un modo per **distaccare** il lavoro (rendendolo detached), salvare il suo stato e coordinare molteplici sub-agenti.
+
+## Entra in Scena TaskFlow
+
+TaskFlow è la risposta di OpenClaw all'orchestrazione asincrona dei job. Permette a un agente di creare un `Job`, assegnargli un owner e tracciare il suo stato (`pending`, `running`, `blocked`, `completed`, `failed`).
+
+La vera magia è che i job di TaskFlow sono **duraturi**. Se il tuo gateway si riavvia o la tua macchina locale va in stop, i job rimangono nel sistema. Appena il sistema torna online, gli agenti assegnati riprendono esattamente da dove si erano interrotti.
+
+<CtaCard
+    title="Vuoi integrare AI nel tuo business?"
+    description="Contattami per una consulenza su come implementare workflow di agenti AI duraturi nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Costruire un Workflow di Triage per la Inbox
+
+Guardiamo un esempio reale: un agente per il triage della posta. Ricevo centinaia di email al giorno. Alcune sono newsletter, altre richieste di clienti e altre ancora alert urgenti dei server.
+
+Invece di avere un prompt gigantesco che processa tutto, uso TaskFlow per spezzettare il lavoro.
+
+### Step 1: L'Agente Dispatcher
+
+Il primo agente fa da dispatcher. Gira con una schedulazione cron, legge le nuove email tramite l'integrazione Himalaya e crea un job TaskFlow per ciascuna.
+
+```bash
+# Il dispatcher crea un nuovo task
+taskflow create \
+  --title "Triage email da Cliente X" \
+  --type "email_triage" \
+  --context '{"msg_id": "12345", "from": "client@example.com"}' \
+  --owner "agent:triage_worker"
+```
+
+### Step 2: Gli Agenti Worker
+
+Gli agenti `triage_worker` restano in ascolto dei nuovi job a loro assegnati. Quando prendono in carico il task, leggono l'intera email, determinano l'intento e agiscono.
+
+Se è una richiesta semplice, generano una bozza, la salvano e segnano il task come `completed`.
+
+Se richiede il mio input (es. "Vuoi prendere questo lavoro di consulenza?"), il worker cambia lo stato del job in `blocked_on_human` e mi crea una notifica.
+
+### Step 3: Gestire i Sub-Task
+
+A volte un task è troppo grande per un solo worker. Ad esempio, se un'email chiede una proposta tecnica basata su un PDF allegato di 50 pagine.
+
+Il worker può generare dei task figli usando TaskFlow:
+
+```bash
+taskflow create \
+  --title "Analisi allegato PDF" \
+  --parent-id "<job_id>" \
+  --owner "agent:pdf_analyzer"
+```
+
+Il worker principale a quel punto imposta il proprio stato su `waiting_on_child` e cede la sua sessione. Non brucia token o tempo di calcolo mentre aspetta. Una volta che il `pdf_analyzer` ha finito, OpenClaw risveglia il worker padre passandogli i risultati.
+
+## Perché Questo è Cruciale per CTO e Dev
+
+Se stai costruendo prodotti che integrano AI, non puoi affidarti a loop di chat sincroni. Ti serve un'architettura che ricordi i microservizi o le code in background (come Sidekiq o Celery).
+
+TaskFlow fornisce esattamente questo, ma è costruito nativamente per l'imprevedibilità degli LLM. Ti costringe a scrivere agenti modulari, single-purpose, che fanno una cosa bene e riportano il risultato.
+
+<CtaCard
+    title="Scopri i miei progetti"
+    description="Dai un occhio ai progetti su cui sto lavorando e alle tecnologie che utilizzo."
+    primaryButtonText="Vedi Progetti"
+    primaryButtonUrl="/projects"
+    pattern="dots"
+    align="center"
+/>
+
+## Come Iniziare
+
+Per iniziare a usare TaskFlow, non devi installare database esterni o Redis. È integrato direttamente nel toolkit standard di OpenClaw. Ti basta leggere la documentazione della skill `taskflow` nella tua installazione di OpenClaw e iniziare a spezzettare i tuoi prompt monolitici in job più piccoli e asincroni.
+
+Costruire sistemi agentici non significa solo trovare un modello più intelligente; significa costruire un sistema migliore attorno ai modelli che abbiamo già. E la gestione stateful e duratura dei task è le fondamenta di quel sistema.
