@@ -1,0 +1,83 @@
+---
+title: "Automatizzare il Social Media Marketing con OpenClaw e l'AI Generativa"
+createdAt: '2026-04-30T00:00:00Z'
+modifiedAt: '2026-04-30T00:00:00Z'
+summary: 'Come ho costruito un agente AI con OpenClaw capace di generare, pubblicare e ottimizzare post virali su TikTok e Instagram.'
+image: '/images/blog/automatizzare-social-media-marketing-openclaw-ai-generativa.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'ai tools', 'automazione', 'imprenditoria', 'startup']
+---
+
+Se hai un'app o un SaaS, sai benissimo che il marketing organico su TikTok e Instagram Reels è fondamentale. Ma c'è un problema: richiede una quantità disumana di tempo e costanza. Devi produrre contenuti ogni giorno, testare *hook* diversi, analizzare i dati e ricominciare.
+
+Nelle ultime settimane ho sperimentato un approccio diverso: delegare l'intero processo a un agente OpenClaw. Non parlo di un bot che spamma contenuti a caso, ma di un sistema intelligente che fa ricerca sui competitor, genera caroselli fotografici realistici, aggiunge testi ad alta conversione e usa i dati per capire cosa funziona.
+
+Ecco come ho strutturato questa automazione e come puoi replicarla per i tuoi progetti.
+
+## L'architettura del Marketing Agent
+
+Per creare un agente capace di gestire il social media marketing, hai bisogno di combinare diversi strumenti sotto l'orchestrazione di OpenClaw:
+
+1. **OpenAI (`gpt-image-1.5`)** per generare immagini fotorealistiche.
+2. **node-canvas** per l'aggiunta programmatica di testi sulle immagini.
+3. **Postiz** per la pubblicazione cross-platform e, soprattutto, l'analisi dei dati.
+4. **RevenueCat** (opzionale ma consigliato) per chiudere il loop e tracciare le conversioni reali, non solo le visualizzazioni.
+
+<CtaCard
+    title="Vuoi integrare AI nel tuo business?"
+    description="Contattami per una consulenza su come implementare strumenti AI e agenti autonomi nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## 1. Immagini: Il segreto è la coerenza
+
+Su TikTok, i caroselli di immagini (slideshow) ottengono in media il triplo dei commenti rispetto ai video standard. Il problema con l'AI generativa è che tende a produrre immagini "ovviamente finte" o incoerenti tra una slide e l'altra.
+
+La soluzione è duplice. Primo: usare `gpt-image-1.5`. A differenza delle versioni precedenti, produce risultati che sembrano scattati con un iPhone. Secondo: usare **prompt di ancoraggio**.
+
+Se stai promuovendo un'app di interior design, il prompt non deve essere "un bel salotto", ma:
+
+> "iPhone photo of a small galley kitchen with white cabinets, realistic lighting, natural colors, taken on iPhone 15 Pro. No text, no watermarks. Same window on left wall, same grey sofa."
+
+Ripetendo i dettagli architettonici in *ogni* slide generata dall'agente, crei un senso di continuità che inganna l'occhio e ferma lo scroll dell'utente.
+
+## 2. Testi: Il ritmo è tutto
+
+Avere belle immagini non basta. I testi in sovrimpressione sono ciò che guida la narrazione. L'agente OpenClaw usa `node-canvas` per calcolare dinamicamente la dimensione del font e posizionare il testo esattamente al 28% dall'alto (la zona sicura su TikTok e Reels).
+
+Le regole che ho insegnato all'agente per scrivere testi che convertono:
+
+* **Massimo 4-6 parole per riga.** Devono essere scansionabili in un istante.
+* **Reazioni, non descrizioni.** "Aspetta... è davvero la stessa stanza??" funziona cento volte meglio di "Stile minimalista moderno".
+* **Contorno nero spesso** per garantire la leggibilità su qualsiasi sfondo fotografico.
+
+## 3. Il Loop di Feedback (La vera magia)
+
+Qui è dove l'agente OpenClaw brilla davvero. Pubblicare è facile; capire *perché* qualcosa funziona è difficile.
+
+Ogni mattina, l'agente esegue un cron job che interroga le API di Postiz per recuperare visualizzazioni, like e salvataggi degli ultimi 3 giorni. Poi incrocia questi dati con gli abbonamenti tracciati tramite RevenueCat.
+
+Questo crea un loop decisionale autonomo:
+
+* **Alte views + Alte conversioni:** L'agente capisce che il format funziona e genera 3 nuove varianti di quel carosello.
+* **Alte views + Basse conversioni:** L'hook (il gancio iniziale) è ottimo, ma la Call to Action (CTA) è debole. L'agente mantiene la prima slide e testa nuove grafiche o testi per l'ultima slide.
+* **Basse views + Basse conversioni:** Formato scartato. Si riparte con un nuovo angolo d'attacco.
+
+<CtaCard
+    title="Scopri i miei progetti"
+    description="Dai un occhio ai progetti su cui sto lavorando e alle tecnologie che utilizzo."
+    primaryButtonText="Vedi Progetti"
+    primaryButtonUrl="/projects"
+    pattern="circles"
+    align="center"
+/>
+
+## L'era dell'AI Marketing
+
+Affidare il marketing organico a un agente non significa rinunciare alla qualità. Significa scalare il processo di test. Un umano può creare e testare due o tre format a settimana. Un agente OpenClaw può generare, pubblicare e analizzare decine di varianti, ottimizzando costantemente per il ROI.
+
+Se stai costruendo prodotti software oggi, l'acquisizione utenti non dovrebbe essere un processo manuale. Dovrebbe essere una pipeline di dati, e OpenClaw è l'orchestratore perfetto per gestirla.
