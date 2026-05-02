@@ -1,0 +1,59 @@
+---
+title: 'Sicurezza Deep Dive: La Sicurezza Basata su Manifest in OpenClaw'
+createdAt: '2026-05-02T08:00:00Z'
+modifiedAt: '2026-05-02T08:00:00Z'
+summary: 'Scopri come OpenClaw utilizza una sicurezza manifest-driven per impedire agli agenti AI di compiere azioni distruttive e proteggere il tuo sistema.'
+image: '/images/blog/sicurezza-manifest-driven-openclaw.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'sicurezza', 'ai agents', 'enterprise']
+---
+
+Quando inizi a dare autonomia a un agente AI, la prima domanda che ti fai da CTO (o da sviluppatore che tiene ai propri server) è: *"Cosa gli impedisce di fare un `rm -rf /` o di inviare i miei dati sensibili all'esterno?"*.
+
+Fino a poco tempo fa, i framework AI si basavano su prompt engineering per la sicurezza. "Per favore, non cancellare i file." Sappiamo tutti come va a finire: il prompt injection è banale, e un LLM confuso può facilmente ignorare le istruzioni base. 
+
+In OpenClaw abbiamo un approccio completamente diverso: **la sicurezza manifest-driven**. Non ci fidiamo del modello. Ci fidiamo dell'infrastruttura.
+
+## Cos'è la Sicurezza Manifest-Driven?
+
+In OpenClaw, ogni tool, abilità (skill) o sub-agente è definito da un manifest formale. Questo manifest non dice solo *cosa* fa lo strumento, ma definisce *esplicitamente* i confini di ciò che può toccare.
+
+Quando un agente cerca di usare il tool `exec` per lanciare un comando shell, la richiesta non va direttamente al sistema operativo. Passa attraverso il motore delle policy del Gateway OpenClaw. Se il comando, il percorso o l'azione non sono consentiti dai manifest attivi, l'esecuzione viene bloccata. A livello di infrastruttura.
+
+<CtaCard
+    title="Vuoi implementare AI sicura nella tua azienda?"
+    description="Contattami per una consulenza su come costruire agenti AI enterprise-grade e sicuri per il tuo business."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Niente Fiducia Cieca al Modello
+
+Molti framework si affidano al modello stesso per decidere se un'azione è sicura. Questo è un anti-pattern di sicurezza.
+
+In OpenClaw, i controlli di sicurezza operano a un livello **totalmente disaccoppiato dall'LLM**. Questo significa che anche se subisci un attacco di prompt injection perfetto che convince l'agente a estrarre i tuoi database, il tentativo si schianterà contro le policy dei manifest. Il framework restituirà un errore di permesso negato all'LLM e registrerà il tentativo.
+
+## Come Funzionano i Manifest in Pratica
+
+Ogni skill su OpenClaw ha un file `SKILL.md` (per il contesto dell'LLM) e un manifest rigoroso che definisce:
+
+- **Permessi file system:** Quali directory può leggere? In quali può scrivere? 
+- **Tool consentiti:** L'agente ha bisogno di eseguire codice o solo di usare le API di GitHub? Se non gli serve il tool `exec`, il manifest non lo abilita.
+- **Isolamento dell'Ambiente:** I task critici vengono confinati. Se lancio una task per analizzare del codice, l'agente lavora in una sandbox con permessi di sola lettura sulla directory sorgente.
+
+Questo approccio granulare mi permette di dare a un agente accesso a un repository GitHub e al tool per scrivere email, sapendo che matematicamente non può accedere alle chiavi SSH del mio server. 
+
+## Approvazioni Umane nel Loop
+
+Anche con le migliori policy, alcune azioni richiedono un controllo umano. OpenClaw gestisce le approvazioni in modo nativo. Quando un agente cerca di eseguire un comando che rientra nella policy di approvazione (es. un `git push` o una query SQL di tipo `DROP`), l'esecuzione viene sospesa e inoltrata al canale dell'utente (come Telegram).
+
+Il comando attenderà finché non gli darai esplicitamente l'approvazione tramite l'interfaccia. Nessuna scorciatoia. Nessun workaround via shell.
+
+## Il Vantaggio Enterprise
+
+Costruire agenti per uso personale è facile. Portarli in azienda, dove devi superare audit di sicurezza o rispettare la compliance, è un altro sport. La sicurezza manifest-driven di OpenClaw è pensata proprio per questo: trasformare l'AI da una "black box pericolosa" a un "worker deterministico con limiti garantiti".
+
+L'AI è potente. Ma la potenza senza controllo è un disastro annunciato nei tuoi log server.

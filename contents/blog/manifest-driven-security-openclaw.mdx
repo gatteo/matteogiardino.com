@@ -1,0 +1,59 @@
+---
+title: 'Security Deep Dive: Manifest-Driven Security in OpenClaw'
+createdAt: '2026-05-02T08:00:00Z'
+modifiedAt: '2026-05-02T08:00:00Z'
+summary: 'Discover how OpenClaw uses manifest-driven security to prevent AI agents from taking destructive actions and protect your infrastructure.'
+image: '/images/blog/manifest-driven-security-openclaw.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw', 'security', 'ai agents', 'enterprise']
+---
+
+When you start giving autonomy to an AI agent, the first question you ask as a CTO (or a developer who values their servers) is: *"What stops it from running `rm -rf /` or sending my sensitive data outward?"*.
+
+Until recently, AI frameworks relied heavily on prompt engineering for safety. "Please, do not delete files." We all know how that ends: prompt injection is trivial, and a confused LLM can easily ignore basic instructions.
+
+In OpenClaw, we take a fundamentally different approach: **manifest-driven security**. We don't trust the model. We trust the infrastructure.
+
+## What is Manifest-Driven Security?
+
+In OpenClaw, every tool, skill, or sub-agent is defined by a formal manifest. This manifest doesn't just describe *what* the tool does; it *explicitly* defines the hard boundaries of what it can touch.
+
+When an agent tries to use the `exec` tool to run a shell command, the request doesn't go straight to the OS. It passes through the OpenClaw Gateway's policy engine. If the command, the path, or the action isn't permitted by the active manifests, the execution is blocked. At the infrastructure level.
+
+<CtaCard
+    title="Need help with AI security in your enterprise?"
+    description="Get in touch for a consultation on implementing secure, enterprise-grade AI agents in your business."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## No Blind Trust in the Model
+
+Many frameworks rely on the model itself to decide if an action is safe. This is a massive security anti-pattern.
+
+In OpenClaw, security controls operate at a level **entirely decoupled from the LLM**. This means that even if you suffer a perfect prompt injection attack that convinces the agent to exfiltrate your databases, the attempt will crash hard against the manifest policies. The framework will return a permission-denied error to the LLM and log the attempt.
+
+## How Manifests Work in Practice
+
+Every skill in OpenClaw has a `SKILL.md` file (for LLM context) and a rigorous manifest that defines:
+
+- **File System Permissions:** What directories can it read? Where can it write?
+- **Allowed Tools:** Does the agent need to execute code, or just use the GitHub API? If it doesn't need the `exec` tool, the manifest simply doesn't enable it.
+- **Environment Isolation:** Critical tasks are confined. If I launch a task to analyze code, the agent works in a sandbox with strictly read-only permissions on the source directory.
+
+This granular approach allows me to give an agent access to a GitHub repository and an email tool, knowing with mathematical certainty that it cannot access my server's SSH keys.
+
+## Human Approvals in the Loop
+
+Even with the best policies, some actions require human oversight. OpenClaw handles approvals natively. When an agent attempts to execute a command that falls under an approval policy (like a `git push` or a `DROP` SQL query), execution is suspended and forwarded to the user's channel (like Telegram).
+
+The command will wait until you explicitly grant approval via the interface. No shortcuts. No shell workarounds.
+
+## The Enterprise Advantage
+
+Building agents for personal use is easy. Bringing them into a company, where you have to pass security audits or maintain compliance, is a completely different game. OpenClaw's manifest-driven security is designed exactly for this: turning AI from a "dangerous black box" into a "deterministic worker with guaranteed limits".
+
+AI is powerful. But power without strict control is just a disaster waiting in your server logs.
