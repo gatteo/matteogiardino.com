@@ -1,0 +1,67 @@
+---
+title: 'How to Generate Images, Videos, and Music with AI in OpenClaw'
+createdAt: '2026-05-03T00:00:00Z'
+modifiedAt: '2026-05-03T00:00:00Z'
+summary: 'Discover how to use built-in OpenClaw tools to generate multimedia assets: images, video, and music, straight from your AI agents.'
+image: '/images/blog/generate-images-videos-music-ai-openclaw.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw', 'ai agents', 'development', 'automation']
+---
+
+If you think AI agents are just text-in, text-out machines that only run terminal commands, you're missing out on one of **OpenClaw**'s coolest capabilities: native multimedia generation.
+
+I recently configured my agents to automate not just text writing, but the creation of entire visual and audio assets for my projects. OpenClaw now provides built-in tools for generating images (`image_generate`), video (`video_generate`), and music (`music_generate`). The best part? The generated files are automatically saved in the framework's managed storage and delivered right to your chat as attachments.
+
+Here's how these tools work and how you can integrate them into your own automated workflows.
+
+## Image Generation: Beyond Basic Prompts
+
+The `image_generate` tool allows your agent to request illustrations, graphics, or realistic photos on the fly. OpenClaw abstracts away the underlying provider (configured in your preferences under `agents.defaults.imageGenerationModel.primary`), meaning your agent doesn't have to fiddle with specific API syntax.
+
+**What makes it truly useful:**
+- It supports the `background="transparent"` parameter. OpenClaw automatically routes this to models that support transparency (like `gpt-image-1.5` if you're on OpenAI).
+- You can pass reference images for editing workflows using the `image` or `images` array parameters.
+
+<CtaCard
+    title="Need help with AI integration?"
+    description="Get in touch for a consultation on implementing AI tools in your business to scale content creation."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Video Generation: From Idea to Clip in Seconds
+
+Video automation is the holy grail of social media marketing. With `video_generate`, you can simply tell your agent: *"Generate a 5-second 9:16 video of a robot typing code"*.
+
+The tool supports:
+- Hints for resolution (e.g., `1080P`) and aspect ratios.
+- Reference images or videos (perfect for animating a static photo).
+- Optional watermarks.
+
+If you hook this up with providers like Qwen (e.g., `wan2.6-t2v`), the agent can orchestrate entirely autonomous TikTok campaigns: it writes the hook, generates the base image, animates it into a video, and posts it via an API script.
+
+## Generating Background Music
+
+If you're making videos, you need audio. The `music_generate` tool handles exactly that. Instead of wasting time hunting for royalty-free tracks, have your agent compose a custom instrumental piece.
+
+You can specify:
+- `durationSeconds`: the exact length needed to match your video clip.
+- `instrumental`: a boolean toggle to ensure you get a clean background track without unwanted vocals.
+- If the provider supports it, you can even guide sung output by providing `lyrics`.
+
+## The Power of Composed Workflows
+
+The real advantage of having these media tools inside the same framework isn't just one-off generation - it's **orchestration**.
+
+Picture an OpenClaw TaskFlow setup like this:
+1. The agent fetches a trending tech article and writes a summary script.
+2. It uses `image_generate` to create a transparent cover art based on the concepts.
+3. It calls `music_generate` for a 15-second lofi background beat.
+4. It merges everything together (perhaps invoking an `ffmpeg` script via the `exec` tool) and publishes the result online.
+
+This level of autonomy turns a simple chatbot shell into an automated creative agency running right on your server.
+
+Next time you build an agent, don't stop at text. Give it eyes, ears, and a bit of artistic flair.

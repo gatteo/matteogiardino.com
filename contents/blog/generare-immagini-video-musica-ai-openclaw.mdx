@@ -1,0 +1,67 @@
+---
+title: 'Come generare Immagini, Video e Musica con l'AI su OpenClaw'
+createdAt: '2026-05-03T00:00:00Z'
+modifiedAt: '2026-05-03T00:00:00Z'
+summary: 'Scopri come utilizzare i tool integrati in OpenClaw per generare asset multimediali: immagini, video e musica, direttamente dai tuoi agenti AI.'
+image: '/images/blog/generare-immagini-video-musica-ai-openclaw.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'ai agents', 'tecnologia', 'sviluppo']
+---
+
+Se pensi che gli agenti AI siano limitati a leggere testo ed eseguire comandi nel terminale, ti stai perdendo una delle novità più interessanti di **OpenClaw**: la generazione multimediale integrata.
+
+Ho recentemente configurato i miei agenti per automatizzare non solo la scrittura, ma anche la creazione degli asset visivi e sonori per i miei progetti. OpenClaw fornisce ora tool nativi per la generazione di immagini (`image_generate`), video (`video_generate`) e musica (`music_generate`). E la cosa migliore? I file generati vengono salvati automaticamente nello storage gestito dal framework e ti vengono consegnati direttamente in chat come allegati.
+
+In questo post ti mostro come funzionano questi tool e come puoi integrarli nei tuoi workflow automatizzati.
+
+## Generazione di Immagini: Non solo DALL-E
+
+Il tool `image_generate` ti permette di richiedere all'agente di generare illustrazioni, grafiche o foto. OpenClaw astrae il provider sottostante (puoi configurarlo nel file delle preferenze sotto `agents.defaults.imageGenerationModel.primary`), il che significa che il tuo agente non deve preoccuparsi delle API specifiche.
+
+**Cosa lo rende davvero utile:**
+- Supporta il parametro `background="transparent"`. OpenClaw sa automaticamente instradare questa richiesta ai modelli che supportano la trasparenza (come `gpt-image-1.5` se usi OpenAI).
+- Puoi fornire un'immagine di riferimento per l'editing passandola al parametro `image` o un array `images`.
+
+<CtaCard
+    title="Vuoi integrare agenti AI nel tuo processo creativo?"
+    description="Contattami per scoprire come automatizzare la generazione di contenuti e far scalare le tue operazioni."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Video Generation: Dall'idea al clip in pochi secondi
+
+L'automazione del video è il Sacro Graal del social media marketing. Con `video_generate`, puoi dire al tuo agente: *"Generami un video di 5 secondi in formato 9:16 di un robot che scrive codice"*.
+
+Il tool supporta:
+- Suggerimenti per la risoluzione (es. `1080P`) e aspect ratio.
+- Immagini o video di riferimento (per animare una foto fissa, ad esempio).
+- Watermark opzionali.
+
+Se usi provider come Qwen (es. `wan2.6-t2v`), l'agente può orchestrare campagne TikTok completamente autonome: pensa al copy, genera l'immagine di base, la anima in video e infine pubblica il tutto tramite un'API.
+
+## Generare Musica di Sottofondo
+
+Se stai creando video, ti serve l'audio. Il tool `music_generate` è pensato esattamente per questo. Invece di cercare tracce royalty-free, puoi far comporre all'agente un brano strumentale su misura.
+
+Puoi specificare:
+- `durationSeconds`: la durata esatta che ti serve per matchare il tuo video.
+- `instrumental`: un toggle booleano per assicurarti che non ci siano voci indesiderate.
+- Se il provider lo supporta, puoi anche guidare l'output cantato fornendo le `lyrics`.
+
+## Il Potere dei Workflow Composti
+
+Il vero vantaggio di avere tutti questi tool all'interno dello stesso framework non è la generazione fine a se stessa, ma l'**orchestrazione**. 
+
+Immagina un TaskFlow in OpenClaw così strutturato:
+1. L'agente esegue il fetch di un articolo dal web e ne fa un riassunto.
+2. Usa `image_generate` per creare una copertina trasparente basata sui concetti chiave.
+3. Chiama `music_generate` per una traccia lofi di 15 secondi.
+4. Unisce il tutto (magari chiamando uno script `ffmpeg` tramite il tool `exec`) e pubblica il risultato.
+
+Questo livello di autonomia trasforma un semplice chatbot in un'agenzia creativa automatizzata che lavora sul tuo server.
+
+La prossima volta che crei un agente, non fermarti al testo. Dagli occhi, orecchie e un po' di estro artistico.
