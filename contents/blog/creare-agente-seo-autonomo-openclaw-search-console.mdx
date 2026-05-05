@@ -1,0 +1,81 @@
+---
+title: 'Come Creare un Agente SEO Autonomo con OpenClaw e Search Console'
+createdAt: '2026-05-05T00:00:00Z'
+modifiedAt: '2026-05-05T00:00:00Z'
+summary: 'Guida pratica per costruire un assistente AI con OpenClaw che analizza Search Console, trova le keyword migliori e ottimizza il tuo blog in autonomia.'
+image: '/images/blog/creare-agente-seo-autonomo-openclaw-search-console.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'ai agents', 'automazione', 'sviluppo', 'seo']
+---
+
+La SEO (Search Engine Optimization) è uno dei task più ripetitivi per chi gestisce un blog o un prodotto digitale. Devi costantemente analizzare dati, cercare keyword a "portata di clic" (striking distance), capire cosa perde traffico e pianificare nuovi contenuti.
+
+È un lavoro di analisi che richiede pazienza. In altre parole: **è il lavoro perfetto per un agente AI.**
+
+Oggi ti mostro come ho configurato un Agente SEO autonomo utilizzando **OpenClaw** e l'API di Google Search Console. Invece di aprire la dashboard di Google ogni giorno, il mio agente analizza i dati, incrocia i trend e mi dice esattamente cosa devo scrivere per aumentare il traffico.
+
+## Perché un Agente AI per la SEO?
+
+Le dashboard come Google Search Console o Ahrefs sono potenti, ma richiedono che tu sappia cosa cercare. Un agente AI basato su OpenClaw non si limita a mostrarti un grafico. Usa i Large Language Models (LLM) per **ragionare** sui dati.
+
+Può notare che una query specifica sta crescendo negli ultimi 28 giorni, rendersi conto che non hai ancora un articolo dedicato, e proporti direttamente un titolo e una scaletta. Passi dall'avere dati grezzi all'avere task pronti all'azione.
+
+<CtaCard
+    title="Vuoi integrare AI nel tuo business?"
+    description="Contattami per una consulenza su come implementare strumenti AI e automazioni nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Step 1: Esporre i Dati di Search Console a OpenClaw
+
+Per prima cosa, l'agente ha bisogno di accedere ai dati. OpenClaw gestisce l'interazione con l'LLM, ma tu devi fornirgli gli strumenti (Tools/Skills) per dialogare con l'esterno.
+
+Ho creato un semplice script Node.js (`gsc-query.mjs`) che interroga le API di Google Search Console tramite un Service Account. Lo script supporta diverse modalità:
+
+- `opportunities`: trova le query in posizione 8-20 con buone impression.
+- `trends`: confronta gli ultimi 28 giorni con i 28 precedenti per trovare query in ascesa.
+- `cannibalize`: trova query dove due o più tue pagine competono tra loro.
+
+Il trucco è strutturare l'output dello script in formato tabellare o JSON compatto, così che OpenClaw possa leggerlo senza consumare troppi token.
+
+## Step 2: Configurare la Skill in OpenClaw
+
+Una volta che lo script è pronto, creiamo una skill per OpenClaw creando un file `SKILL.md`. Questo file spiega all'agente come e quando usare lo script.
+
+```markdown
+# GSC Tool Skill
+Usa questo strumento per analizzare i dati SEO del sito.
+Esegui `node resources/gsc-query.mjs --mode opportunities` per trovare keyword a portata di mano.
+Cerca sempre query con un alto potenziale e suggerisci una strategia di contenuto basata su questi dati.
+```
+
+OpenClaw legge questo file, capisce che ha a disposizione uno strumento di analisi, e lo utilizza in autonomia quando gli chiedo "Come sta andando il blog oggi?" o quando lo inserisco in un cron job.
+
+## Step 3: Il Prompt di Sistema e l'Automazione
+
+Il vero potere arriva quando combiniamo questi strumenti con una routine. Nel prompt di sistema del mio "Scribe Agent" ho inserito questa istruzione:
+
+**"Inizia ogni sessione eseguendo le query GSC. Identifica i trend in crescita e scrivi un post ottimizzato per la query più promettente."**
+
+Invece di dovergli dire cosa fare, l'agente esegue lo script, analizza l'output, scarta le query fuori target, seleziona una keyword con bassa concorrenza ma buone impression, e inizia a strutturare l'articolo.
+
+<CtaCard
+    title="Scopri i miei progetti"
+    description="Dai un occhio ai progetti su cui sto lavorando e alle tecnologie che utilizzo."
+    primaryButtonText="Vedi Progetti"
+    primaryButtonUrl="/projects"
+    pattern="circles"
+    align="center"
+/>
+
+## Risultati Reali sul Flusso di Lavoro
+
+Da quando ho delegato questa fase di analisi a OpenClaw, non perdo più tempo a scavare tra grafici e tabelle. L'agente individua pattern che io potrei ignorare (ad esempio, una specifica feature tecnica cercata da pochi ma altamente in target) e mi propone il lavoro già masticato.
+
+L'approccio "Agentic SEO" cambia le regole: non si tratta più di generare testo a caso con ChatGPT, ma di usare l'AI per prendere decisioni strategiche basate su dati reali della tua proprietà web, per poi guidare la creazione del contenuto.
+
+Se usi OpenClaw, ti consiglio di provare questo pattern. Connetti le tue fonti di dati primarie agli agenti e lascia che siano loro a proporti le soluzioni. Il ROI in termini di tempo risparmiato è immediato.
