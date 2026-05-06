@@ -1,0 +1,90 @@
+---
+title: 'Usare Notion come Centro di Controllo per gli Agenti AI OpenClaw'
+createdAt: '2026-05-06T00:00:00Z'
+modifiedAt: '2026-05-06T00:00:00Z'
+summary: 'Scopri come usare Notion tramite MCP per creare una dashboard di comando Human-in-the-Loop e gestire i tuoi agenti AI OpenClaw.'
+image: '/images/blog/usare-notion-centro-controllo-agenti-ai-openclaw.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'notion', 'mcp', 'ai agents', 'automazione', 'sviluppo']
+---
+
+Se stai scalando il numero dei tuoi agenti AI, prima o poi ti scontrerai con un problema logistico: la riga di comando inizia a starti stretta. Avere un paio di agenti su terminale è fantastico, ma quando arrivi a gestirne 5, 10 o magari 18, monitorarli tutti tramite stdout o log files diventa un incubo.
+
+È qui che entra in gioco **Notion come centro di comando Human-in-the-Loop**. 
+
+In questo post ti spiego come ho integrato il mio workspace Notion direttamente con OpenClaw sfruttando il **Model Context Protocol (MCP)**, trasformandolo in una vera e propria dashboard per orchestrare task, sbloccare gli agenti quando servono le mie credenziali, e tracciare il loro progresso.
+
+## Perché proprio Notion?
+
+Gli agenti AI autonomi sono geniali finché non si bloccano. Magari un'API è in rate limit, un token è scaduto, o c'è bisogno di approvare manualmente una PR critica su GitHub.
+
+Notion è lo strumento perfetto per la collaborazione asincrona tra te e i tuoi agenti:
+- **Kanban Board:** Gli agenti possono spostare le loro task in "Doing" o "Blocked".
+- **Contesto persistente:** Puoi scrivere istruzioni dettagliate in una pagina e l'agente può leggerle prima di iniziare il lavoro.
+- **Notifiche:** Quando un agente ha bisogno di te, ti tagga o sposta una card in una colonna "Human Needed".
+
+## Come collegare Notion a OpenClaw con MCP
+
+OpenClaw supporta nativamente il protocollo MCP (Model Context Protocol). Questo significa che non devi scrivere complesse integrazioni API o polling server personalizzati. Ti basta usare l'integrazione ufficiale.
+
+Ecco come configurarla in pochi passaggi sul tuo server o Mac Mini:
+
+```bash
+# 1. Installa l'integrazione Notion MCP globale
+npm install -g @modelcontextprotocol/server-notion
+
+# 2. Registrala nella configurazione di OpenClaw
+openclaw gateway config patch --json '{
+  "mcp": {
+    "servers": {
+      "notion": {
+        "command": "mcp-server-notion",
+        "env": {
+          "NOTION_API_KEY": "secret_tua_api_key_qui"
+        }
+      }
+    }
+  }
+}'
+
+# 3. Riavvia il gateway per applicare i cambiamenti
+openclaw gateway restart
+```
+
+Una volta configurato, i tuoi agenti OpenClaw avranno a disposizione gli strumenti standard di Notion: `search_pages`, `read_page`, `create_page` e `update_database_item`.
+
+<CtaCard
+    title="Scopri i miei progetti"
+    description="Dai un occhio ai progetti su cui sto lavorando e alle tecnologie che utilizzo."
+    primaryButtonText="Vedi Progetti"
+    primaryButtonUrl="/projects"
+    pattern="circles"
+    align="center"
+/>
+
+## Il Workflow "Human Blocker"
+
+Nel mio setup, la vera magia accade quando un agente si blocca. Ho creato una regola interna per i miei sub-agenti: se trovano un ostacolo che richiede l'intervento umano, non devono semplicemente fallire o andare in loop infinito. Devono usare la skill `human-blocker`.
+
+Quando un agente è bloccato, esegue un'operazione simile a questa:
+
+1. **Cerca il database Kanban** su Notion tramite MCP.
+2. **Crea una nuova card** nella colonna "Blocked" con un log dettagliato del problema.
+3. **Mette in pausa** la sua sessione (`sessions_yield`) in attesa del mio intervento.
+
+Quando ho tempo, apro Notion dal mio telefono, vedo la task, inserisco la password mancante o approvo il comando, poi sposto la card nella colonna "Resumed". L'agente capisce che l'ostacolo è superato e riprende a lavorare.
+
+## Assegnare Task agli Agenti
+
+Non uso Notion solo per le emergenze. È il mio modo standard per distribuire il lavoro.
+
+Ho una tabella "Agent Tasks". Quando voglio delegare la ricerca di un bug, la stesura di un report, o lo scraping di alcune metriche, creo semplicemente una nuova riga nel database e la assegno allo specifico ID dell'agente (es. `@research-bot`).
+
+L'agente principale che fa da "orchestratore" in OpenClaw ha un cron job ogni 15 minuti. Controlla il database tramite MCP, estrae le task in stato "To Do", le smista ai sub-agenti competenti e aggiorna lo status su "In Progress".
+
+## Conclusione
+
+Collegare Notion a OpenClaw ha trasformato il modo in cui gestisco le automazioni. Non ho più bisogno di monitorare i terminali: l'AI fa il suo lavoro in background, aggiorna Notion, e mi chiama in causa solo quando serve un essere umano.
+
+Se state scalando la vostra infrastruttura locale e i vostri agenti iniziano ad essere troppi, vi consiglio caldamente di provare questo pattern.
