@@ -1,0 +1,66 @@
+---
+title: 'Fish Speech S2 Pro: Guida all''installazione locale e uso creativo'
+createdAt: '2026-05-05T00:00:00Z'
+modifiedAt: '2026-05-05T00:00:00Z'
+summary: 'Scopri come installare localmente Fish Speech S2 Pro, clonare voci ed esplorare l''espressione emotiva in oltre 80 lingue con questo modello TTS open-source.'
+image: '/images/blog/fish-speech-s2-pro-it.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'tts', 'audio', 'fish-speech', 'open-source']
+---
+
+# Fish Speech S2 Pro: Guida all'installazione locale e uso creativo
+
+Il Text-to-Speech (TTS) ha fatto passi da gigante, ma spesso i migliori modelli sono chiusi dietro API costose o vincoli di licenza. **Fish Speech S2 Pro** rompe questo schema, offrendo prestazioni allo stato dell'arte con pesi del modello completamente open-source.
+
+In questa guida, vedremo come installare S2 Pro localmente e iniziare a sperimentare con la clonazione vocale e il controllo emotivo.
+
+## Perché S2 Pro è diverso
+
+S2 Pro non si limita a leggere testo. Supporta il controllo in tempo reale della prosodia e delle emozioni attraverso tag in linguaggio naturale. Vuoi che il modello sussurri? Aggiungi `[whisper]`. Vuoi che rida? Usa `[laugh]`.
+
+## Installazione Locale
+
+L'installazione richiede una GPU con una VRAM decente (almeno 8GB-12GB consigliati per prestazioni ottimali).
+
+1.  **Clona la repository:**
+    ```bash
+    git clone https://github.com/fishaudio/fish-speech
+    cd fish-speech
+    ```
+2.  **Installa le dipendenze:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+3.  **Scarica i pesi del modello:** Segui le istruzioni nella repository per scaricare i checkpoint S2 Pro.
+
+## Clonazione Vocale ed Espressività
+
+La vera potenza di S2 Pro risiede nella capacità di clonare voci con pochi secondi di audio di riferimento e di sovrapporre emozioni complesse.
+
+```bash
+# Esempio di generazione semantica
+python tools/tts/generate_semantic.py \
+    --text "Benvenuto nel mio canale. Oggi testiamo Fish Speech S2 Pro [laugh]." \
+    --ref ref_voice.npy \
+    --output code_0.spk
+```
+
+<CtaCard
+    title="Vuoi integrare AI nel tuo business?"
+    description="Contattami per una consulenza su come implementare strumenti AI nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Uso Creativo
+
+Le possibilità sono infinite: dai podcast automatizzati con voci clonate realistiche, ad assistenti virtuali con una personalità emotiva definita. L'importante è l'etica: usa la clonazione vocale solo con il consenso esplicito dei proprietari delle voci.
+
+## Conclusione
+
+Fish Speech S2 Pro è uno strumento incredibile per chiunque voglia esplorare il futuro della generazione vocale open-source. Installarlo in locale ti dà il controllo totale sui tuoi dati audio senza dipendere da alcun fornitore esterno.
+
+Hai già provato a clonare una voce? Come è andata la qualità dell'espressione emotiva?
