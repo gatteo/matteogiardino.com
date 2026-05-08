@@ -1,0 +1,85 @@
+---
+title: 'Building a Completely Offline AI Voice Assistant with OpenClaw and Whisper'
+createdAt: '2026-05-08T08:00:00Z'
+modifiedAt: '2026-05-08T08:00:00Z'
+summary: 'Learn how to build a private, completely offline AI voice assistant using OpenClaw, Whisper for transcription, and Ollama for reasoning.'
+image: '/images/blog/offline-ai-voice-assistant-openclaw-whisper.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw', 'local ai', 'ai agents', 'automation', 'development']
+---
+
+We have become so accustomed to relying on OpenAI or Google servers for every AI task that we often forget the massive amount of computing power sitting right on our desks. If you think about it, sending every spoken word to the cloud just to turn on a light or summarize a local file isn't just latency-inefficient - it's a massive privacy concern.
+
+Today, I want to show you how I built a **completely offline AI voice assistant** using [OpenClaw](/en/blog/what-is-openclaw-ai-agent-framework), Whisper for speech-to-text, a local LLM via Ollama, and a local Text-to-Speech (TTS) engine. No paid APIs, zero data sent to external servers, and ultra-low latency.
+
+## The Tech Stack
+
+To make everything run smoothly locally, I used this stack:
+1. **OpenClaw**: The orchestrator that glues all the pieces together.
+2. **OpenAI Whisper (Local)**: The open-source model for speech-to-text. With OpenClaw's native skill, it runs directly on your local CPU or GPU.
+3. **Ollama + Qwen 3.5 / Llama 3**: The "brain" of the assistant. It runs locally and handles all the reasoning.
+4. **Local TTS**: Audio generation (e.g., Fish Audio S2 or OpenClaw's built-in TTS tools).
+
+## Step 1: Setting up Whisper Locally
+
+The first step is giving our agent the ability to hear. OpenClaw has a native skill for Whisper that requires zero API keys.
+
+To activate it, simply add it to your agent's manifest:
+
+```yaml
+skills:
+  - name: openai-whisper
+    config:
+      model: "base" # You can use "small" or "medium" if you have enough RAM
+      language: "en"
+```
+
+When you start OpenClaw, the skill will download the Whisper model weights and be ready to transcribe audio files. The beauty of this setup is that you can pipe your microphone input using `sox` or `ffmpeg` via an exec command directly into the skill.
+
+<CtaCard
+    title="Need help with AI integration?"
+    description="Get in touch for a consultation on implementing privacy-first AI tools in your business."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Step 2: Connecting the LLM via Ollama
+
+Now that the agent can "hear", it needs to "think". To keep everything strictly offline, I pointed OpenClaw to my local Ollama server (running on my Mac Mini).
+
+In the OpenClaw gateway `config.json` file, set Ollama as the primary provider:
+
+```json
+{
+  "provider": "ollama",
+  "default_model": "qwen2.5-coder:7b",
+  "api_base": "http://127.0.0.1:11434"
+}
+```
+
+Models like Qwen 2.5 or Llama 3 (8B/7B range) are perfect for this: they are incredibly fast, understand context well, and consume very little VRAM. If you need help with this step, I wrote a dedicated guide on [setting up OpenClaw with Ollama](/en/blog/configurare-openclaw-ollama-agenti-ai-locali).
+
+## Step 3: Giving the Agent a Voice with TTS
+
+Finally, the agent needs to respond out loud. OpenClaw includes a built-in `tts` tool that can route to various providers. For a 100% offline setup, you can hook into macOS's native speech synthesis or an engine like Fish Speech S2.
+
+You just need to instruct the agent through its `SOUL.md`:
+*"You are a voice assistant. Keep your answers concise. After generating your text response, always use the `tts` tool to read your answer out loud. Speak in English."*
+
+```bash
+# Example of an internal tool call by the agent
+call:tts {
+  "text": "I have started the development server as requested. Is there anything else you need?"
+}
+```
+
+## The Final Result
+
+Putting it all together, you get a seamless workflow: you speak into your microphone, a background script saves a temporary audio file and triggers OpenClaw. OpenClaw uses Whisper to transcribe it, passes the text to the local LLM to formulate a response, and finally executes the TTS command to speak back to you.
+
+The latency (from the end of your sentence to the start of the audio response) on my Mac M2 is about 2-3 seconds. Not bad at all for a system that **doesn't use the Internet**, is completely private, and costs absolutely zero in API fees!
+
+Building offline agentic workflows isn't just for hardcore tinkerers anymore. Frameworks like OpenClaw are making this infrastructure accessible to anyone who can write a few lines of configuration.
