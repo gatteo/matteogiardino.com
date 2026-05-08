@@ -1,0 +1,58 @@
+---
+title: 'Guide to Integrating Fish Speech S2 Pro with OpenClaw for Multimodal AI Agents'
+createdAt: '2026-05-08T00:00:00Z'
+modifiedAt: '2026-05-08T00:00:00Z'
+summary: 'Discover how to integrate Fish Speech S2 Pro into OpenClaw to build multimodal AI agents capable of expressive and natural voice communication.'
+image: '/images/blog/integration-fish-speech-openclaw.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw', 'tts', 'multimodal', 'automation']
+---
+
+# Guide to Integrating Fish Speech S2 Pro with OpenClaw for Multimodal AI Agents
+
+In the current landscape of AI agents, multimodality is the new frontier. It's not enough for your agent to "write" responses; it needs to be able to communicate naturally, expressively, and in real time.
+
+In this tutorial, we will see how to integrate **Fish Speech S2 Pro** into an **OpenClaw** workflow to power up your AI agents with advanced voice capabilities.
+
+## Why This Combination?
+
+*   **OpenClaw:** This is the "brain" that manages logic, memory, and tool orchestration.
+*   **Fish Speech S2 Pro:** This is the "voice" that transforms agent responses into expressive, cloned, and emotionally controlled audio.
+
+## Step 1: Setting up the Tool in OpenClaw
+
+We need to create a tool (`skill`) in OpenClaw that can call the Fish Speech local API.
+
+```yaml
+# tools/fish-speech-tool.yaml
+name: "fish_speech_tts"
+description: "Generates expressive audio using Fish Speech S2 Pro."
+endpoint: "http://localhost:8080/v1/generate"
+```
+
+## Step 2: Implementing the Workflow
+
+When the OpenClaw agent generates a response, the workflow should be:
+1.  Agent response in text format.
+2.  Pass the text to the `fish_speech_tts` tool with the desired emotional tags.
+3.  Output the generated audio to the communication platform (e.g., Telegram).
+
+<CtaCard
+    title="Need help with AI integration?"
+    description="Get in touch for a consultation on implementing AI tools in your business."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Advantages of a Multimodal Agent
+
+An agent capable of using voice dynamically can handle situations that would otherwise require direct human contact, reducing wait times and drastically improving the user experience.
+
+## Conclusion
+
+Integrating Fish Speech S2 Pro with OpenClaw opens up massive doors for automation. It is no longer just about reading responses, but about creating interactions that feel alive.
+
+Have you tried making your AI agents "speak" yet? Let's discuss.
