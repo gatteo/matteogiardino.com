@@ -1,0 +1,71 @@
+---
+title: 'Claude Code Desktop: Come Gestire Multi-Tasking e Feature in Parallelo'
+createdAt: '2026-05-09T00:00:00Z'
+modifiedAt: '2026-05-09T00:00:00Z'
+summary: 'Come utilizzo la nuova app Desktop di Claude Code per gestire sessioni parallele, worktree git isolati e tool MCP senza impazzire.'
+image: '/images/blog/claude-code-desktop-gestione-multitasking.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'ai tools', 'sviluppo', 'automation']
+---
+
+Se stai usando agenti AI per programmare, sai qual è il problema numero uno: **il contesto**. Quando hai un agente che lavora sul terminale, solitamente lo tieni focalizzato su un singolo task alla volta. Se provi a fargli fare due cose diverse, rischi di creare conflitti nel codice o fargli perdere il filo.
+
+Di recente ho iniziato a testare in modo intensivo la nuova app Desktop di Claude Code, e devo ammettere che cambia le regole del gioco. Non è solo un terminale con l'LLM collegato, ma un vero e proprio hub di orchestrazione che permette di lavorare su più branch e ticket contemporaneamente, mantenendo tutto isolato.
+
+Ecco come ho configurato il mio workflow per gestire il multi-tasking senza impazzire.
+
+## Worktree Isolati per Sessioni Parallele
+
+La killer feature dell'app Desktop è l'integrazione nativa con i **Git Worktree**. 
+Invece di avere una singola directory di lavoro in cui Claude fa i suoi esperimenti (rischiando di sovrascrivere modifiche non committate), ogni sessione dell'app può girare su un worktree isolato. 
+
+Praticamente Claude clona un branch in una cartella separata trasparente per te. In questo modo, posso avere:
+- Una sessione aperta per il ticket Jira #175 (es. fix di un bug visivo)
+- Una sessione aperta per il ticket Jira #177 (es. refactoring di un endpoint)
+
+Entrambi gli agenti lavorano in parallelo. Quando una sessione finisce e la pull request è pronta, mergio su main e lascio che l'altra sessione sincronizzi le modifiche. È un pattern perfetto per chi gestisce più feature contemporaneamente.
+
+<CtaCard
+    title="Vuoi integrare AI nel tuo team di sviluppo?"
+    description="Contattami per una consulenza su come implementare strumenti come Claude Code e OpenClaw nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Bypass Permissions e Plan Mode
+
+Lavorare con gli agenti richiede equilibrio tra sicurezza e autonomia. Nella sezione Settings di Claude Code Desktop ho attivato due opzioni fondamentali:
+
+1. **Bypass Permissions**: Simile al flag `dangerously_skip_permissions` da terminale, permette a Claude di eseguire comandi e scrivere file senza chiedermi conferma ogni volta. Per i worktree isolati è un rischio calcolato che mi fa risparmiare un sacco di tempo.
+2. **Plan Mode**: Prima di toccare il codice, Claude genera un piano di azione dettagliato. Posso leggerlo rapidamente e, se il piano ha senso, lascio che applichi le modifiche. Se invece sta per prendere una strada assurda, lo fermo prima che faccia danni.
+
+## Anteprime e Log Integrati
+
+Un'altra comodità enorme è l'interfaccia a pannelli. Quando chiedo a Claude di risolvere un bug di UI (ad esempio un bottone non allineato), il bot fa partire il server di sviluppo (es. `npm run dev`) direttamente nel suo ambiente isolato.
+
+L'app ha un pannello **Preview** integrato che mi permette di vedere la web app funzionante affiancata al terminale e alla console dei log. Se una chiamata di rete fallisce o c'è un errore React, lo vedo subito dai log accanto al preview, senza dover impazzire con finestre di Chrome e iTerm separate.
+
+## Connectors e Plugin MCP
+
+Infine, l'app Desktop supporta i server MCP (Model Context Protocol). Nella sezione **Manage Connectors** ho collegato:
+- **Slack e Jira**: Per permettere all'agente di leggere direttamente i dettagli del ticket e aggiornare lo stato.
+- **Sentry**: Se sto chiedendo a Claude di fixare un bug in produzione, può andare a leggersi lo stack trace esatto da Sentry.
+- **Playwright**: Un plugin utilissimo per fargli scrivere ed eseguire test E2E sulla feature appena sviluppata, verificando che la UI si comporti come previsto.
+
+<CtaCard
+    title="Scopri i miei progetti"
+    description="Dai un occhio ai progetti su cui sto lavorando e alle architetture multi-agente che utilizzo."
+    primaryButtonText="Vedi Progetti"
+    primaryButtonUrl="/projects"
+    pattern="circles"
+    align="center"
+/>
+
+## Conclusioni
+
+Claude Code Desktop non è semplicemente una "GUI per l'API". È un ambiente pensato per chi sviluppa e ha bisogno di mantenere il controllo su **molteplici contesti contemporaneamente**. 
+
+Usare i worktree isolati per parallelizzare le task, unito ai plugin MCP per dargli accesso al contesto aziendale (Sentry, Jira), trasforma letteralmente il modo di lavorare. Se stai gestendo più ticket al giorno o sei un Fractional CTO che salta da una codebase all'altra, ti consiglio vivamente di provarlo.
