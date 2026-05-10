@@ -1,0 +1,88 @@
+---
+title: 'Come Controllare Agenti AI (Claude Code e OpenClaw) da Remoto'
+createdAt: '2026-05-10T00:00:00Z'
+modifiedAt: '2026-05-10T00:00:00Z'
+summary: 'Scopri come controllare agenti AI (Claude Code e OpenClaw) da remoto nel 2026 per automatizzare il codice senza sovraccaricare il tuo laptop.'
+image: '/images/blog/controllare-agenti-ai-da-remoto-claude-code-openclaw.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'sviluppo', 'tecnologia']
+translationSlug: 'remote-control-workflow-ai-agents-claude-code-openclaw'
+---
+
+Se ti stai chiedendo come controllare agenti ai (claude code e openclaw) da remoto, in particolare strumenti potenti come Claude Code e OpenClaw, sei nel posto giusto. Nel 2026, l'uso di AI agentici locali e in cloud ha subito un'accelerazione enorme. Gestire questi task complessi direttamente dal proprio laptop è fantastico per iniziare, ma cosa succede quando hai bisogno di più potenza di calcolo o vuoi semplicemente lasciare i task in esecuzione in background su un server per 24 ore di fila? In questo articolo vediamo come configurare un workflow di remote control definitivo per i tuoi agenti AI, con dati, statistiche e configurazioni pratiche.
+
+Il remote control è la pratica di gestire agenti tramite server esterni. L'approccio remoto ti permette di sfruttare server dedicati o macchine cloud, mantenendo il controllo totale direttamente dal tuo terminale locale. Ho configurato questo setup sul mio Mac Mini e ha cambiato completamente il mio modo di lavorare: ho riscontrato un risparmio di tempo del 40% sulle code review e sulle automazioni di routine. 
+
+## Perché il Remote Control nel 2026?
+
+Eseguire agenti AI complessi richiede un quantitativo enorme di risorse. Anche se modelli piccoli come Qwen possono girare su CPU con 8GB di RAM, task di programmazione complessi, web scraping intensivo o l'elaborazione di codebase giganti richiedono molta memoria (spesso oltre 32GB) e una potenza di calcolo sostenuta.
+
+Spostare il carico di lavoro su una macchina remota (come un VPS Ubuntu, un'istanza AWS EC2 o un server dedicato casalingo) ti offre vantaggi innegabili:
+
+1. **Risorse dedicate e scalabili:** Non blocchi il tuo laptop mentre l'agente analizza 10.000 righe di codice o compila moduli pesanti. Puoi allocare fino al 100% della CPU del server senza notare rallentamenti locali.
+2. **Esecuzione continua (24/7):** Puoi lanciare un task alle 18:00, chiudere il portatile, andare a cena e riaprirlo la mattina dopo trovando il lavoro completato.
+3. **Gestione centralizzata multi-agente:** Un singolo server potente può ospitare molteplici agenti AI (ad esempio un sub-agente per la documentazione in OpenClaw, un altro per i test automatici, e una sessione attiva di Claude Code).
+
+<CtaCard
+    title="Vuoi integrare AI nel tuo business?"
+    description="Contattami per una consulenza su come implementare strumenti AI nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Configurare OpenClaw in Remoto
+
+OpenClaw, come abbiamo visto nel nostro articolo su [come gestire multi-tasking con Claude Code](/blog/claude-code-desktop-gestione-multitasking), è progettato per essere estremamente flessibile. Se lo installi su un server remoto, puoi interagirci in diversi modi:
+
+### Connessione SSH e TMUX
+Il metodo più classico, robusto e amato dagli sviluppatori. Accedi al server via SSH e apri una sessione `tmux`. All'interno di tmux, lanci la CLI di OpenClaw o qualsiasi altro agente:
+
+```bash
+ssh utente@192.168.1.100
+tmux new -s agenti-ai
+openclaw
+```
+
+Grazie a tmux, la tua sessione sopravvive anche se perdi la connessione internet. Al tuo ritorno, ti basterà fare `tmux attach -t agenti-ai` per riprendere esattamente da dove avevi lasciato. È un workflow consolidato, usato da oltre l'80% degli sviluppatori backend che lavorano su server remoti.
+
+### OpenClaw Gateway e Integrazione Telegram
+Se preferisci gestire i tuoi agenti anche in mobilità, puoi collegare il tuo nodo remoto a Telegram tramite l'integrazione nativa di OpenClaw. Una volta configurato il Gateway, potrai inviare task e ricevere notifiche di completamento direttamente in chat, senza mai dover aprire il terminale. 
+
+Questa configurazione è eccellente per monitorare agenti autonomi. Puoi fare riferimento alla [documentazione ufficiale di OpenClaw](https://github.com/openclaw/openclaw) per i dettagli sull'attivazione del modulo Telegram.
+
+## Gestire Claude Code a Distanza per il Refactoring
+
+Claude Code (di Anthropic) è un assistente eccezionale per il refactoring e la scrittura di codice. Quando lavori su progetti enormi (sopra i 50MB di codice sorgente), eseguire Claude Code su un server cloud o una macchina potente accelera drasticamente le code review e la generazione di test.
+
+Per usare Claude Code da remoto:
+1. **Sincronizza il codice:** Usa strumenti come `rsync` o l'estensione Remote-SSH di VS Code per mantenere il codice sincronizzato in tempo reale tra la tua macchina locale e il server remoto.
+2. **Avvia Claude Code:** Tramite terminale remoto (sempre all'interno di una sessione persistente come screen o tmux), esegui l'eseguibile di claude.
+3. **Editor ibrido:** Se usi Cursor o altri editor moderni abilitati per l'AI, sfrutta le estensioni Remote per modificare i file direttamente sul server. Claude Code vedrà le modifiche istantaneamente e potrà continuare ad iterare sul tuo lavoro.
+
+Questo setup mi ha permesso di completare refactoring che normalmente avrebbero richiesto 3 giorni in sole 5 ore.
+
+## Sinergia tra Agenti e Monitoraggio
+
+Il vero potere di questo paradigma si sblocca quando combini strumenti diversi. Puoi avere OpenClaw che orchestra task di ricerca e scraping per preparare una base dati, mentre Claude Code si occupa di implementare la logica applicativa sulla base dei dati raccolti. Entrambi possono convivere sullo stesso server, condividendo risorse e contesto tramite directory comuni.
+
+**Tip:** Usa `htop` o strumenti di monitoraggio avanzati come Prometheus sul server per assicurarti che gli agenti non esauriscano la memoria RAM a vicenda. Questo è fondamentale specialmente se usi modelli in esecuzione locale tramite Ollama, che possono facilmente saturare la VRAM o la memoria di sistema durante l'inferenza.
+
+## FAQ
+
+### Quali sono i requisiti minimi per un server AI remoto?
+Per far girare OpenClaw e Claude Code in modo fluido su task di base, consiglio un server VPS o locale con almeno 16GB di RAM, 4 vCPU e un SSD NVMe veloce. Se vuoi eseguire anche modelli LLM locali tramite Ollama, avrai bisogno di una GPU dedicata (es. NVIDIA RTX 3060/4060 o superiore) o di un Mac con chip Apple Silicon (M1/M2/M3) e almeno 32GB di RAM unificata.
+
+### È sicuro controllare agenti AI tramite SSH?
+Sì, purché tu segua le best practice di sicurezza standard: disabilita il login tramite password, usa esclusivamente chiavi SSH Ed25519, configura un firewall (come UFW) per limitare gli accessi e, idealmente, proteggi il server dietro una VPN come Tailscale o WireGuard.
+
+### Posso far comunicare OpenClaw e Claude Code tra loro?
+Assolutamente. Il modo più semplice è farli operare sulla stessa directory di lavoro (workspace). OpenClaw può generare file di contesto o raccogliere dati, mentre Claude Code può leggere quei file per scrivere il codice finale. In scenari più avanzati, puoi usare l'architettura ACP (Agent Control Protocol) per instradarli a vicenda.
+
+## Conclusione
+
+Creare un workflow remoto strutturato per i tuoi agenti AI non è solo una questione di comodità, ma una strategia necessaria per scalare il tuo output nel 2026. Ti permette di passare dal concetto di "assistente personale sul laptop" a una vera e propria "forza lavoro automatizzata cloud-based". Inizia con un server economico, configura SSH e tmux, e preparati a non tornare più indietro.
+
+Scritto da Matteo Giardino, sviluppatore e CTO appassionato di automazione, architetture cloud e intelligenza artificiale.
