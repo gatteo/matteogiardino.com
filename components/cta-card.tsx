@@ -1,3 +1,8 @@
+'use client'
+
+import { usePathname } from 'next/navigation'
+import posthog from 'posthog-js'
+
 import { Link } from '@/lib/navigation'
 import { UtmUrl } from '@/utils/urls'
 
@@ -17,6 +22,12 @@ type Props = {
     align?: 'left' | 'center' | 'right'
 }
 
+function extractBlogSlug(pathname: string | null): string | null {
+    if (!pathname) return null
+    const m = pathname.match(/\/blog\/([^/?#]+)/)
+    return m ? m[1] : null
+}
+
 export function CtaCard({
     title,
     description,
@@ -27,6 +38,19 @@ export function CtaCard({
     pattern = 'circles',
     align = 'center',
 }: Props) {
+    const pathname = usePathname()
+    const slug = extractBlogSlug(pathname)
+
+    const captureClick = (label: string, url: string) => {
+        posthog.capture('cta_click', {
+            slug,
+            pathname,
+            label,
+            url,
+            placement: 'card_cta',
+        })
+    }
+
     return (
         <Card className={cn('w-full not-prose overflow-hidden rounded-xl', shineAnimation)}>
             <div className='relative'>
@@ -43,13 +67,16 @@ export function CtaCard({
                         {secondaryButtonText && secondaryButtonUrl && (
                             <Button variant='outline' asChild>
                                 <Link
-                                    href={UtmUrl(secondaryButtonUrl, { medium: UtmMediums.Blog, content: 'card_cta' })}>
+                                    href={UtmUrl(secondaryButtonUrl, { medium: UtmMediums.Blog, content: 'card_cta' })}
+                                    onClick={() => captureClick(secondaryButtonText, secondaryButtonUrl)}>
                                     {secondaryButtonText}
                                 </Link>
                             </Button>
                         )}
                         <Button asChild>
-                            <Link href={UtmUrl(primaryButtonUrl, { medium: UtmMediums.Blog, content: 'card_cta' })}>
+                            <Link
+                                href={UtmUrl(primaryButtonUrl, { medium: UtmMediums.Blog, content: 'card_cta' })}
+                                onClick={() => captureClick(primaryButtonText, primaryButtonUrl)}>
                                 {primaryButtonText}
                             </Link>
                         </Button>
