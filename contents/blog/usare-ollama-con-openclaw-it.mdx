@@ -1,0 +1,69 @@
+---
+title: 'Usare Ollama con OpenClaw: Guida completa agli agenti IA locali'
+createdAt: '2026-05-11T00:00:00Z'
+modifiedAt: '2026-05-11T00:00:00Z'
+summary: 'Una guida tecnica completa all''esecuzione di agenti IA privati e locali usando OpenClaw e Ollama per applicazioni aziendali sicure e performanti.'
+image: '/images/blog/usare-ollama-con-openclaw-it.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'ollama', 'openclaw', 'local-llm', 'impresa']
+translationSlug: 'using-ollama-with-openclaw-en'
+---
+
+# Usare Ollama con OpenClaw: Guida completa agli agenti IA locali
+
+Scritto da Matteo Giardino - CTO e consulente IA.
+
+Per molte imprese, la scelta è chiara: vuoi la potenza degli LLM, ma non puoi permetterti di inviare dati interni sensibili ad API pubbliche. La combinazione di **Ollama** e **OpenClaw** è diventata lo standard di riferimento per distribuire agenti IA sicuri, performanti e completamente privati sulla propria infrastruttura.
+
+In questa guida, vedremo come configurare i tuoi agenti OpenClaw affinché girino in locale con Ollama.
+
+## Perché Locale?
+
+1. **Totale Sovranità dei Dati:** I tuoi dati non lasciano mai il tuo ambiente.
+2. **Prestazioni Deterministiche:** Nessun collo di bottiglia di rete o limiti di frequenza da API esterne.
+3. **Prevedibilità dei Costi:** Paghi per l'hardware, non per query.
+
+## Installazione
+
+### 1. Installa Ollama
+Assicurati che Ollama sia in esecuzione e accessibile (di default su `http://localhost:11434`).
+
+### 2. Configura OpenClaw
+Aggiorna la configurazione dell'agente OpenClaw per puntare all'endpoint locale di Ollama.
+
+```yaml
+# agent-config.yaml
+model_provider:
+  type: "ollama"
+  endpoint: "http://localhost:11434"
+  model: "llama3" # O il tuo modello locale preferito
+```
+
+<CtaCard
+    title="Vuoi integrare AI nel tuo business?"
+    description="Contattami per una consulenza su come implementare strumenti AI nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Costruire Flussi di Lavoro Agentici
+
+Con Ollama come motore di inferenza, puoi eseguire flussi di lavoro agentici più sofisticati in OpenClaw senza preoccuparti dei costi API. Questo ti permette di:
+- Eseguire enormi catene di analisi documenti.
+- Eseguire compiti di ragionamento ricorsivo.
+- Effettuare chiamate a strumenti ad alta frequenza (es. query automatizzate ai database).
+
+## Scalare in Locale
+
+Il bello del self-hosting è che puoi scalare orizzontalmente. Se hai bisogno di più capacità, aggiungi più nodi al tuo cluster locale. Se hai bisogno di più velocità, ottimizza la configurazione della tua GPU. Hai il controllo di ogni parametro, dalla tokenizzazione alle finestre di contesto.
+
+## Affidabilità di Livello Aziendale
+
+La distribuzione locale non riguarda solo la privacy, ma anche l'affidabilità. Assicuri che i tuoi agenti siano sempre attivi e performanti in modo ottimale, indipendentemente dall'uptime di qualsiasi fornitore cloud.
+
+## Conclusione
+
+Combinare OpenClaw con Ollama trasforma la tua macchina locale o il tuo server in una piattaforma IA di livello produttivo. È sicuro, conveniente e sorprendentemente veloce. Inizia a costruire il tuo ecosistema di agenti privati oggi stesso.

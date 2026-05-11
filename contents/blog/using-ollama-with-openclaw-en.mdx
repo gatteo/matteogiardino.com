@@ -1,0 +1,69 @@
+---
+title: 'Using Ollama with OpenClaw: A Complete Guide to Local AI Agents'
+createdAt: '2026-05-11T00:00:00Z'
+modifiedAt: '2026-05-11T00:00:00Z'
+summary: 'A complete technical guide to running private, local AI agents using OpenClaw and Ollama for secure, performant enterprise applications.'
+image: '/images/blog/using-ollama-with-openclaw-en.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'ollama', 'openclaw', 'local-llm', 'enterprise']
+translationSlug: 'usare-ollama-con-openclaw-it'
+---
+
+# Using Ollama with OpenClaw: A Complete Guide to Local AI Agents
+
+Written by Matteo Giardino - CTO and AI consultant.
+
+For many enterprises, the choice is clear: you want the power of LLMs, but you cannot afford to send sensitive internal data to public APIs. The combination of **Ollama** and **OpenClaw** has become the gold standard for deploying secure, high-performance, and fully private AI agents on your own infrastructure.
+
+In this guide, we'll walk through the setup to make your OpenClaw agents run locally with Ollama.
+
+## Why Local?
+
+1. **Total Data Sovereignty:** Your data never leaves your environment.
+2. **Deterministic Performance:** No network bottlenecks or rate limits from external APIs.
+3. **Cost Predictability:** You pay for hardware, not per-token usage.
+
+## Installation
+
+### 1. Install Ollama
+Ensure Ollama is running and accessible (defaulting to `http://localhost:11434`).
+
+### 2. Configure OpenClaw
+Update your OpenClaw agent config to point to the local Ollama endpoint.
+
+```yaml
+# agent-config.yaml
+model_provider:
+  type: "ollama"
+  endpoint: "http://localhost:11434"
+  model: "llama3" # Or your preferred local model
+```
+
+<CtaCard
+    title="Need help with AI integration?"
+    description="Get in touch for a consultation on implementing AI tools in your business."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Building Agentic Workflows
+
+With Ollama as your inference engine, you can run more sophisticated agentic workflows in OpenClaw without worrying about API costs. This allows you to:
+- Run massive document analysis chains.
+- Execute recursive reasoning tasks.
+- Perform high-frequency tool calls (e.g., automated database queries).
+
+## Scaling Locally
+
+The beauty of self-hosting is that you can scale horizontally. If you need more capacity, add more nodes to your local cluster. If you need more speed, optimize your GPU configuration. You are in control of every parameter, from tokenization to context windows.
+
+## Enterprise-Grade Reliability
+
+Local deployment isn't just about privacy - it's about reliability. You ensure your agents are always-on and performing optimally, entirely independent of any cloud vendor's uptime.
+
+## Conclusion
+
+Combining OpenClaw with Ollama turns your local machine or server into a production-grade AI platform. It is secure, cost-effective, and remarkably fast. Start building your private agent ecosystem today.
