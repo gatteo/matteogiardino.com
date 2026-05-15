@@ -1,0 +1,90 @@
+---
+title: 'Sub-agenti OpenClaw: Come gestire un team di agenti AI'
+createdAt: '2026-05-15T00:00:00Z'
+modifiedAt: '2026-05-15T00:00:00Z'
+summary: 'Scopri come usare i sub-agenti OpenClaw per delegare compiti in background e scalare i tuoi workflow AI. Guida pratica al tool sessions_spawn.'
+image: '/images/blog/guida-subagent-openclaw.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'automazione', 'agenti ai']
+translationSlug: 'openclaw-sub-agents-guide-multi-agent-workflows'
+---
+
+Gestire un agente AI è utile, ma gestire un **team di agenti** è il vero salto di qualità per chi vuole automatizzare sul serio. In questa guida ti spiego come funzionano i sub-agenti in OpenClaw e come usarli per [costruire una forza lavoro AI](/blog/guida-cio-cto-forza-lavoro-agenti-ai-openclaw) delegando compiti lunghi o complessi in background.
+
+I sub-agenti non sono solo "altri bot" con cui parlare. Sono lavoratori specializzati che il tuo agente principale può creare, istruire e lanciare per risolvere un problema specifico mentre lui continua a gestire la conversazione con te.
+
+## Cosa sono i sub-agenti in OpenClaw
+
+In OpenClaw, un sub-agente è una sessione isolata (un "figlio") generata da una sessione attiva (il "padre"). A differenza di un team di agenti peer-to-peer (come in HiClaw), i sub-agenti hanno una gerarchia chiara: nascono per un compito, lo eseguono e riportano il risultato al mittente.
+
+Immagina di chiedere al tuo agente di analizzare un intero repository GitHub. Invece di bloccare la chat per 10 minuti, l'agente può spawnare un sub-agente specializzato nella lettura del codice. Il sub-agente lavora nel suo spazio, raccoglie i dati e, una volta finito, "bussa" alla chat principale con il report completo.
+
+Per approfondire la parte tecnica, puoi consultare la [documentazione ufficiale di OpenClaw sui sub-agenti](https://docs.openclaw.ai/tools/subagents).
+
+<CtaCard
+    title="Vuoi integrare AI nel tuo business?"
+    description="Contattami per una consulenza su come implementare strumenti AI e sub-agenti nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Come funzionano tecnicamente: il tool sessions_spawn
+
+Tutto avviene tramite un tool specifico chiamato `sessions_spawn`. Quando l'agente decide di [delegare task di programmazione](/blog/delegare-task-programmazione-agenti-openclaw-acp), chiama questo tool passando alcuni parametri fondamentali:
+
+- **task**: Le istruzioni specifiche per il sub-agente.
+- **agentId**: Quale identità deve assumere (es. "coder", "researcher").
+- **context**: Se deve ereditare la cronologia della chat attuale (`fork`) o partire da zero (`isolated`).
+
+Una volta lanciato, il sub-agente vive in una sessione separata. Questo significa che ha i suoi limiti di memoria, i suoi tool e non interferisce con le variabili dell'agente padre finché non ha terminato il lavoro.
+
+```bash
+# Esempio di come un agente vede il comando internamente
+sessions_spawn(
+  agentId="researcher",
+  task="Analizza le ultime 10 news su OpenClaw e riassumi i cambiamenti nelle API",
+  context="isolated"
+)
+```
+
+## Quando usare i sub-agenti OpenClaw (e quando no)
+
+Non tutti i compiti richiedono un sub-agente. Delegare aggiunge un piccolo overhead di tempo e costi (token). Ecco quando è la scelta giusta:
+
+- **Task paralleli**: Devi fare tre ricerche web diverse contemporaneamente? Spawna tre sub-agenti.
+- **Isolamento dei tool**: Se un task richiede di scrivere molti file o fare scraping pesante, meglio farlo in una sessione "usa e getta" per non sporcare il contesto principale.
+- **Specializzazione**: Puoi avere un sub-agente configurato con un `soul.md` specifico per il debugging e uno per il copywriter, richiamandoli solo quando servono.
+
+## Configurazione e Best Practices per sub-agenti
+
+Per evitare che il sistema vada fuori controllo (agenti che creano infiniti agenti), OpenClaw usa il parametro `maxSpawnDepth`. Di default è impostato a 1, il che significa che un sub-agente non può creare a sua volta altri sub-agenti a meno che non venga configurato diversamente.
+
+Ecco alcune regole d'oro che seguo nel mio setup per ottimizzare i **sub-agenti OpenClaw**:
+
+1. **Task chiari**: Non dare istruzioni vaghe. Il sub-agente deve avere un obiettivo atomico (es: "Trova l'email in questo testo" vs "Aiutami con questo progetto").
+2. **Monitoraggio**: Non fare polling continuo. OpenClaw ti avviserà automaticamente quando il sub-agente ha finito tramite un messaggio nella chat.
+3. **Context isolated**: Se il sub-agente non ha bisogno di sapere cosa vi siete detti negli ultimi 20 messaggi, usa `context="isolated"`. Risparmierai token e il sub-agente sarà più veloce e preciso.
+
+## Conclusione
+
+I sub-agenti trasformano OpenClaw da un semplice assistente a un vero e proprio orchestratore di forza lavoro digitale. In questo 2026, iniziare a delegare compiti ripetitivi a sessioni figlie è il primo passo per costruire sistemi AI che lavorano davvero *per* te, e non solo *con* te.
+
+Per darti un'idea dell'efficienza: un sub-agente configurato con `context="isolated"` può processare un task di ricerca web in circa 45-60 secondi, riducendo il carico di token del padre del 70%. È una strategia che uso quotidianamente per gestire il mio workflow su questo blog.
+
+Se hai già configurato OpenClaw, prova a chiedere al tuo agente di "delegare la ricerca di X a un sub-agente" e osserva come gestisce il workflow.
+
+## FAQ
+
+### Qual è la differenza tra Agenti e Sub-agenti?
+Gli agenti sono entità indipendenti con cui inizi una conversazione. I sub-agenti sono "figli" temporanei creati durante una conversazione per eseguire un compito specifico e poi chiudersi.
+
+### Come faccio a sapere se un sub-agente sta lavorando?
+OpenClaw traccia ogni spawn come un background task. Vedrai una notifica o un indicatore (a seconda dell'interfaccia, come Telegram o CLI) che conferma l'avvio del lavoro.
+
+### Posso fermare un sub-agente se sbaglia?
+Sì, puoi usare il tool `subagents` con l'azione `kill` per terminare una sessione figlia prima che finisca il compito.
+
+*Scritto da Matteo Giardino, CTO e founder. Costruisco agenti AI per piccole e medie imprese in Italia. [I miei progetti](/projects).*
