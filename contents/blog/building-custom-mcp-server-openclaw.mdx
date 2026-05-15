@@ -1,0 +1,124 @@
+---
+title: 'MCP Development: Building a Custom Server for OpenClaw'
+createdAt: '2026-05-15T00:00:00Z'
+modifiedAt: '2026-05-15T00:00:00Z'
+summary: 'Technical guide to MCP development for OpenClaw. Learn how to extend your AI with private data and tools using the Model Context Protocol in 2026.'
+image: '/images/blog/building-custom-mcp-server-openclaw.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw', 'mcp', 'development', 'python']
+translationSlug: 'creare-mcp-server-personalizzato-openclaw'
+---
+
+I’ve spent the last few weeks of May 2026 integrating proprietary databases for my clients with their AI agents, and there’s one technology that has made all of this scalable: **MCP development (Model Context Protocol)**. If [OpenClaw is the brain of your assistant](/blog/what-is-openclaw-ai-agent-framework), a custom MCP Server is its hands. In this guide, I’ll show you how to build your first server in Python and connect it to OpenClaw in under 30 minutes.
+
+MCP development is the process of creating a secure interface between an AI model and your internal data or tools. By building a custom MCP Server, you enable OpenClaw to perform actions like querying a database, sending emails, or triggering API calls directly from a local environment.
+
+## What is MCP development and Why It Is the "Plugin" Revolution
+
+The Model Context Protocol (MCP) is an open standard that allows AI applications to interact with external data sources and tools in a secure and structured way. Think of it as a universal USB port for artificial intelligence. Instead of writing custom code every time you want the AI to read a database or use an API, **MCP development** lets you write a server that "exposes" those capabilities to any compatible client, such as OpenClaw or [Claude Desktop](/blog/claude-code-desktop-multitasking).
+
+For a developer or CTO, this means **reusability**. A server that queries your CRM can be used by ten different agents without having to rewrite a single line of integration code. It is a core part of [MCP development](/blog/building-custom-mcp-server-openclaw) in 2026.
+
+<CtaCard
+    title="Building something with OpenClaw?"
+    description="If you're integrating OpenClaw or MCP into a product or workflow, I'm available for technical consultations."
+    primaryButtonText="Get in Touch"
+    primaryButtonUrl="/contacts"
+    pattern="grid"
+    align="center"
+/>
+
+## The Architecture of MCP development: Resources, Tools, and Prompts
+
+Before we get our hands dirty with code, we need to understand the three pillars of **MCP development**:
+
+1. **Resources:** Static or dynamic data that the agent can "read." Think of log files, database records, or technical documentation.
+2. **Tools:** Executable functions that the agent can "call." A tool can send an email, restart a server, or calculate a quote.
+3. **Prompts:** Predefined instruction templates that help the user interact with the server (e.g., "Analyze these error logs").
+
+For most business use cases, **Tools** are the most powerful part - they allow the agent to *do* things.
+
+## Step-by-Step: MCP development in Python
+
+We will use the official Anthropic SDK for Python, which is extremely lightweight and easy to set up. You can find the full documentation at [modelcontextprotocol.io](https://modelcontextprotocol.io).
+
+### 1. Environment Setup
+Create a folder for your project and install the dependencies. It takes only **5 minutes** to get everything ready:
+
+```bash
+mkdir my-mcp-server && cd my-mcp-server
+python -m venv .venv
+source .venv/bin/activate
+pip install mcp
+```
+
+### 2. The Server Code
+Create a file called `server.py`. In this example, we will create a tool that queries a local SQLite database to find customer information. The SDK is very light, around **2 MB** in size.
+
+```python
+from mcp.server.fastmcp import FastMCP
+import sqlite3
+
+# Create a FastMCP instance
+mcp = FastMCP("MyBusinessServer")
+
+@mcp.tool()
+def get_customer_info(name: str) -> str:
+    """Retrieve customer information from the internal database."""
+    # Note: In production, use secure parameters to avoid SQL injection
+    conn = sqlite3.connect("customers.db")
+    cursor = conn.cursor()
+    cursor.execute("SELECT info FROM customers WHERE name = ?", (name,))
+    result = cursor.fetchone()
+    conn.close()
+    
+    if result:
+        return f"Information for {name}: {result[0]}"
+    return f"Customer {name} not found."
+
+if __name__ == "__main__":
+    mcp.run()
+```
+
+## Configuration and Connection with OpenClaw
+
+OpenClaw communicates with MCP servers via Standard I/O (STDIO). This means the agent starts your Python script as a child process and exchanges JSON messages.
+
+To add your new server to OpenClaw, update the agent's `config.yaml` file (or use the `openclaw config` command):
+
+```yaml
+mcp_servers:
+  my-server:
+    command: "python"
+    args: ["/path/to/my-mcp-server/server.py"]
+    env:
+      SQLITE_DB_PATH: "/path/to/customers.db"
+```
+
+Once you restart the agent, you will see the new `get_customer_info` tool available in the list of capabilities.
+
+## Debugging and Common Gotchas
+
+Debugging STDIO-based MCP servers can be frustrating because error messages often end up in the stream the agent uses to communicate.
+
+- **Don't use `print()`:** If you use `print()` in your Python code, you will corrupt the JSON-RPC protocol and the connection will drop. Always use logging to `stderr`.
+- **Absolute Paths:** When configuring the command in OpenClaw, always use absolute paths for the script and the Python interpreter (or the virtualenv path).
+- **Permissions:** Ensure that the user running OpenClaw has execution permissions for the script and read permissions for the databases.
+
+## FAQ
+
+### What language should I use for MCP development?
+Python and TypeScript are the most common languages for MCP development. Python is excellent for data science and rapid prototyping, while TypeScript is ideal for production-grade web integrations and high-concurrency tools. Both have official SDKs.
+
+### How do I secure my custom MCP Server?
+Security in MCP development is handled via **STDIO transport** and manifest files. In OpenClaw, you define precisely which agents can access which tools in the `manifest.json`. Since the server runs as a local process, your data never leaves your infrastructure.
+
+### Is MCP better than custom Python skills?
+MCP is superior to traditional custom skills when you need **reusability** and **isolation**. A single MCP Server can be consumed by multiple agents (OpenClaw, Claude Code, etc.) without duplicating code, and it runs in its own process sandbox.
+
+## Conclusion
+
+Building an MCP Server is the fastest way to turn a generic LLM into an expert for your company. By starting with small, targeted tools, you can build an automation ecosystem that speaks the language of your data. If you haven’t started exploring the MCP universe yet, today is the right day to write your first function.
+
+*Written by Matteo Giardino, CTO and founder. I build AI agents for SMEs in Italy. [My projects](/projects).*
