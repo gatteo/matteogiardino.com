@@ -1,0 +1,81 @@
+---
+title: 'OpenClaw Multi-Agent Architecture: Spawning Nativo vs HiClaw'
+createdAt: '2026-05-16T09:00:00Z'
+modifiedAt: '2026-05-16T09:00:00Z'
+summary: 'Guida alle architetture multi-agente in OpenClaw: scopri quando usare lo spawning nativo e quando passare alla collaborazione manager-worker con HiClaw.'
+image: '/images/blog/modelli-multi-agente-openclaw-hiclaw.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'hiclaw', 'automazione', 'cto']
+translationSlug: 'openclaw-multi-agent-patterns-native-vs-hiclaw'
+---
+
+Usa lo spawning nativo di OpenClaw se hai bisogno di agenti rapidi ed effimeri per task isolati; passa a HiClaw se stai costruendo un team collaborativo a lungo termine con supervisione umana costante. Ho implementato entrambi i pattern nel mio server Mac Mini per gestire workflow di ricerca e coding, e la scelta dell'architettura cambia radicalmente l'efficienza dei token.
+
+## TL;DR - confronto in 5 righe
+
+| Criterio | OpenClaw Native | HiClaw |
+| --- | --- | --- |
+| Pattern | Spawning effimero | Manager-Worker Collaborativo |
+| Canale | Sessioni CLI / Sub-agenti | Matrix / Element (IM-based) |
+| Latenza | Bassissima (processi locali) | Media (Matrix overhead) |
+| Governance | Rigida (manifest-driven) | Flessibile (Human-in-the-loop) |
+| Ideale per | Micro-servizi AI e utility | Team di supporto e Operations |
+
+## L'evoluzione verso i Team di Agenti
+
+Nel 2026, non parliamo più di "un bot" che fa tutto. L'approccio moderno, che sto usando per scalare i miei progetti, è la scomposizione dei problemi in team di agenti specializzati, un concetto alla base del [workflow semi-autonomo](/blog/workflow-semi-autonomi-openclaw-agenti). Tuttavia, c'è molta confusione su *come* farli collaborare.
+
+In OpenClaw, abbiamo due strade principali: lo spawning nativo (quello che succede quando un agente lancia un altro agente via tool) e l'orchestrazione collaborativa di HiClaw.
+
+<CtaCard
+    title="Vuoi integrare AI nel tuo business?"
+    description="Contattami per una consulenza su come implementare strumenti AI nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Pattern 1: Spawning Nativo (Il "Telefono Senza Fili")
+
+In OpenClaw, lo spawning nativo è il cuore del sistema. Un agente riceve un task e, rendendosi conto di non avere gli strumenti o il tempo, lancia un sub-agente (`sessions_spawn`). Ho già parlato di come orchestrare un team di agenti AI sia la chiave per scalare la complessità senza perdere il controllo.
+
+È come delegare un compito a un assistente che scompare una volta finito il lavoro. Questo pattern è estremamente efficiente per task di coding - vedi la guida su come [delegare task di programmazione con ACP](/blog/delegare-task-programmazione-agenti-openclaw-acp) - o per la ricerca web rapida. Il vantaggio principale è l'isolamento: ogni sub-agente ha il suo workspace e i suoi limiti di sicurezza.
+
+## Pattern 2: HiClaw Manager-Worker (L'Ufficio Virtuale)
+
+HiClaw non è un'alternativa a OpenClaw, ma uno strato di gestione (un "Collaborative OS") che gira sopra di esso. Qui il pattern cambia: abbiamo un **Manager Agent** che supervisiona diversi **Worker Agents** in una stanza chat (Matrix).
+
+La differenza fondamentale è la persistenza e la visibilità. In HiClaw, tu come umano puoi entrare nella stanza Matrix, vedere il Manager che assegna i compiti ad Alice e Bob (i worker), e intervenire se vedi che stanno andando fuori strada. È l'architettura perfetta per processi aziendali che richiedono "Human-in-the-loop".
+
+## Pattern 3: Directed-Graph Routing (Efficienza Enterprise)
+
+C'è poi una terza via per gestire team di agenti: il routing deterministico via `ClawRouter`. Invece di far decidere a un LLM "a chi chiedere", configuriamo delle regole (il grafo) che mandano il messaggio direttamente all'agente giusto in base all'intento.
+
+Questo evita il "token overhead" di dover spiegare ogni volta a un Manager Agent cosa fare. Se il messaggio riguarda "fatturazione", va all'agente Admin. Se riguarda "bug", va al Dev Agent. È il pattern che consiglio per sistemi enterprise dove il costo dei token e la prevedibilità sono critici.
+
+## Cosa è andato storto nei miei test
+
+Con lo **spawning nativo**, il rischio è il "loop di deleghe": un agente lancia un sub-agente, che ne lancia un altro, consumando crediti in modo invisibile finché non controlli i log.
+
+Con **HiClaw**, la difficoltà iniziale è la configurazione del server Matrix (Synapse o Dendrite). Non è un "click and run" come OpenClaw CLI, richiede una comprensione minima di come funzionano le chat federate.
+
+## Verdetto finale
+
+Scegli lo **spawning nativo** di OpenClaw per workflow tecnici, script di automazione e task che devono essere eseguiti velocemente "sotto il cofano".
+
+Scegli **HiClaw** se stai costruendo la "forza lavoro" della tua startup, dove la trasparenza e la capacità per un umano di saltare nella conversazione sono più importanti della pura velocità di esecuzione.
+
+## Domande frequenti (FAQ)
+
+### Qual è la differenza principale tra OpenClaw e HiClaw?
+OpenClaw è il motore di esecuzione (il framework degli agenti), mentre HiClaw è uno strato di collaborazione che gestisce più agenti OpenClaw in stanze chat Matrix. Usa OpenClaw per task puri e HiClaw per la collaborazione team umano-AI.
+
+### Posso eseguire workflow multi-agente in locale?
+Sì. Sia lo spawning nativo che HiClaw possono essere configurati per usare provider LLM locali come Ollama, rendendo l'intera orchestrazione privata e offline.
+
+### Il routing a grafo diretto è migliore dell'orchestrazione basata su LLM?
+Il routing è più efficiente in termini di token e prevedibile per i casi d'uso aziendali, mentre l'orchestrazione basata su LLM è più flessibile per la delega di task creativi o imprevedibili.
+
+*Written by Matteo Giardino, CTO and founder. [My projects](/projects).*
