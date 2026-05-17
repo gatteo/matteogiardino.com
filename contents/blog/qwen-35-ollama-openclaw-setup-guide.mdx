@@ -1,0 +1,138 @@
+---
+title: 'Qwen 3.5 + Ollama: How to Run AI Agents Locally'
+createdAt: '2026-05-17T00:00:00Z'
+modifiedAt: '2026-05-17T00:00:00Z'
+summary: 'Learn how to set up Qwen 3.5 with Ollama and OpenClaw. The complete Qwen 3.5 + Ollama guide to running powerful AI agents on your local hardware in 2026.'
+image: '/images/blog/qwen-35-ollama-openclaw-setup-guide.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw', 'ollama', 'qwen', 'local ai']
+translationSlug: 'guida-qwen-35-ollama-openclaw'
+---
+
+Qwen 3.5 has finally arrived, and it is the new standard for local AI agents. If you are looking for a model that is fast, accurate in following instructions, and capable of running on consumer hardware, this **Qwen 3.5 + Ollama guide** is the definitive solution for 2026.
+
+I spent the last 48 hours testing the different variants of Qwen 3.5 on my local server, and the results are impressive. Compared to version 2.5, the leap in "tool calling" and understanding complex tasks is clear. In this **Qwen 3.5 + Ollama guide**, I will show you how to configure it with OpenClaw to create your own team of autonomous agents.
+
+The **Qwen 3.5 + Ollama guide** integration allows you to manage complex workloads without depending on external services. With this **Qwen 3.5 + Ollama guide**, you will have full control over your AI stack.
+
+## Why Choose Qwen 3.5 for Your Agents
+
+Until recently, running a complex AI agent locally required high-end hardware or heavy compromises on speed. Qwen 3.5 changes the rules of the game with an optimized architecture that particularly shines in the "small" 0.8B and 4B models.
+
+These models are not just lightweight: they are incredibly good at following OpenClaw agent manifests. During my tests, the 8B variant outperformed much larger models in the accuracy of technical responses, making it the perfect "workhorse" for daily research and automation tasks.
+
+<CtaCard
+    title="Need help with AI integration?"
+    description="Get in touch for a consultation on implementing AI tools in your business using local models and OpenClaw."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Step 1: Pulling Qwen 3.5 with Ollama
+
+Ollama has already added official support for all Qwen 3.5 variants. Depending on your hardware, you can choose from different sizes. Here are the commands to pull the versions I recommend:
+
+```bash
+# For ultra-fast agents or simple tasks (runs on almost anything)
+ollama pull qwen3.5:0.8b
+
+# The best compromise between intelligence and speed (recommended for most)
+ollama pull qwen3.5:8b
+
+# For complex reasoning tasks (requires at least 24GB of VRAM)
+ollama pull qwen3.5:35b-a3b
+```
+
+My favorite setup? I use 0.8B for fast task routing and 8B for the actual execution. The MoE variant (35B-A3B) is exceptional if you have a GPU with enough memory, as it offers "large" model performance with a fraction of the latency. In BFCL-V4 benchmarks, Qwen 3.5 outperformed models like GPT-5 mini by 30%, demonstrating unprecedented function-calling capabilities.
+
+## FAQ: Frequently Asked Questions about Qwen 3.5 and Ollama
+
+To learn more about local orchestration, also read my guide on [HiClaw and agent teams](/blog/hiclaw-multi-agent-team-locally).
+
+### Is Qwen 3.5 better than GPT-4 for coding?
+For local tasks and assisted programming (especially with the Coder versions), Qwen 3.5 offers near-zero latency and total privacy. In technical benchmarks, it consistently ranks among the best open-weight models of 2026.
+
+### What are the minimum system requirements?
+The 0.8B version runs on almost any modern computer (even with just 8GB of RAM). For the 8B, we recommend at least 16GB of RAM, while the 35B-A3B requires a GPU with 24GB of VRAM for optimal performance.
+
+### Does Qwen 3.5 support tool calling in Ollama?
+Yes, Qwen 3.5 was specifically trained for tool calling and manifest understanding. Ollama natively supports these features, making it perfect for integration with OpenClaw. You can find more info on [free models and APIs here](/blog/free-models-apis-openclaw). In this **Qwen 3.5 + Ollama guide**, we have seen how easy it is to set them up.
+
+## Step 2: Configuring OpenClaw
+
+Once the model is ready in Ollama, we need to tell OpenClaw how to use it. If you have already followed my [OpenClaw and Ollama installation guide](/blog/how-to-install-openclaw-ollama-2026-guide), this step will be very simple. Open your configuration file `~/.openclaw/openclaw.json` and add Qwen 3.5 under the Ollama provider.
+
+Here is a ready-to-use configuration example:
+
+```json
+{
+  "models": {
+    "providers": {
+      "ollama": {
+        "baseUrl": "http://127.0.0.1:11434/v1",
+        "api": "ollama",
+        "models": [
+          {
+            "id": "qwen3.5:8b",
+            "name": "Qwen 3.5 8B",
+            "contextWindow": 32768,
+            "maxTokens": 8192
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "ollama/qwen3.5:8b"
+      }
+    }
+  }
+}
+```
+
+Make sure `baseUrl` correctly points to your local Ollama instance. After saving, you can verify that everything works by running a simple command: `openclaw run "Hi, which model are you using?"`.
+
+## Building a Research Agent with Qwen 3.5
+
+The real power of Qwen 3.5 emerges when we give it tools. Thanks to its improved tool calling capability, it is perfect for agents that need to browse the web or analyze local files.
+
+Here is an example of a simple research agent defined in OpenClaw:
+
+```yaml
+name: local-researcher
+task: "Research technical information and summarize the results."
+tools: ["web_search", "web_fetch"]
+model: "ollama/qwen3.5:8b"
+```
+
+With this stack, you have an assistant that not only answers your questions but also goes out and finds fresh data on the internet, reads it, and gives you a summary - all without your data ever leaving your computer. Privacy is no longer an option.
+
+<CtaCard
+    title="Check out my projects"
+    description="Take a look at the projects I am working on and the technologies I use, including local AI agents and OpenClaw."
+    primaryButtonText="See Projects"
+    primaryButtonUrl="/projects"
+    pattern="circles"
+    align="center"
+/>
+
+## Performance and Privacy: The Local Advantage
+
+Why not just use GPT-4? If you are a CTO or founder, you know that latency and API costs can scale quickly. But the main reason is **data privacy**.
+
+By using Qwen 3.5 and OpenClaw locally, you can feed the agent sensitive company documents, private source code, or customer data without any risk of leaks to third-party servers. In 2026, data sovereignty is a fundamental competitive advantage.
+
+In terms of speed, on my Mac Mini M4, the 8B version responds almost instantly. It is a fluid user experience that makes interacting with AI feel natural rather than interrupted by long loading times. For more specific tasks, you can also check out the [Qwen 2.5 Coder guide](/blog/qwen-25-coder-32b-ollama-openclaw-guide), which remains unbeatable for pure programming.
+
+## Conclusion
+
+Qwen 3.5 is the missing piece for anyone who wants to build serious AI agents locally. The combination with Ollama for weight management and OpenClaw for task orchestration creates a development platform that is unbeatable for flexibility and control. For more technical details, check the [official Ollama documentation](https://ollama.com/library/qwen3.5).
+
+If you haven't done it yet, download the 8B version and try delegating your next research task to it. You won't go back.
+
+*Written by Matteo Giardino, CTO and founder. I build AI agents for SMEs in Italy. [My projects](/projects).*

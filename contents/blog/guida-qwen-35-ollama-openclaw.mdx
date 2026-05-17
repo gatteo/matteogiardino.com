@@ -1,0 +1,138 @@
+---
+title: 'Guida Qwen 3.5 + Ollama: Come Eseguire Agenti AI in Locale'
+createdAt: '2026-05-17T00:00:00Z'
+modifiedAt: '2026-05-17T00:00:00Z'
+summary: 'Scopri come configurare Qwen 3.5 con Ollama e OpenClaw. La guida Qwen 3.5 + Ollama completa per far girare potenti agenti AI sul tuo hardware locale nel 2026.'
+image: '/images/blog/guida-qwen-35-ollama-openclaw.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'ollama', 'qwen', 'local ai']
+translationSlug: 'qwen-35-ollama-openclaw-setup-guide'
+---
+
+Qwen 3.5 è finalmente arrivato ed è il nuovo standard per gli agenti AI locali. Se cerchi un modello che sia veloce, preciso nel seguire le istruzioni e capace di girare su hardware consumer, questa **guida Qwen 3.5 + Ollama** è la soluzione definitiva per il 2026.
+
+Ho passato le ultime 48 ore a testare le diverse varianti di Qwen 3.5 sul mio server locale e i risultati sono impressionanti. Rispetto alla versione 2.5, il salto di qualità nel "tool calling" e nella comprensione dei task complessi è netto. In questa **guida Qwen 3.5 + Ollama** ti mostro come configurarlo con OpenClaw per creare il tuo team di agenti autonomi.
+
+L'integrazione di **guida Qwen 3.5 + Ollama** permette di gestire carichi di lavoro complessi senza dipendere da servizi esterni. Con questa **guida Qwen 3.5 + Ollama**, avrai il pieno controllo del tuo stack AI.
+
+## Perché scegliere Qwen 3.5 per i tuoi agenti
+
+Fino a ieri, far girare un agente AI complesso in locale richiedeva hardware di fascia alta o pesanti compromessi sulla velocità. Qwen 3.5 cambia le regole del gioco grazie a un'architettura ottimizzata che brilla particolarmente nei modelli "small" da 0.8B e 4B.
+
+Questi modelli non sono solo leggeri: sono incredibilmente bravi a seguire i manifest degli agenti OpenClaw. Durante i miei test, la variante da 8B ha superato modelli molto più grandi nella precisione delle risposte tecniche, rendendola il perfetto "workhorse" per compiti di ricerca e automazione quotidiana.
+
+<CtaCard
+    title="Vuoi integrare AI nel tuo business?"
+    description="Contattami per una consulenza su come implementare strumenti AI nella tua azienda utilizzando modelli locali e OpenClaw."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Passo 1: Scaricare Qwen 3.5 con Ollama
+
+Ollama ha già aggiunto il supporto ufficiale per tutte le varianti di Qwen 3.5. A seconda del tuo hardware, puoi scegliere tra diverse dimensioni. Ecco i comandi per scaricare le versioni che ti consiglio:
+
+```bash
+# Per agenti ultra-veloci o compiti semplici (gira su quasi tutto)
+ollama pull qwen3.5:0.8b
+
+# Il miglior compromesso tra intelligenza e velocità (consigliato per la maggior parte)
+ollama pull qwen3.5:8b
+
+# Per task di ragionamento complessi (richiede almeno 24GB di VRAM)
+ollama pull qwen3.5:35b-a3b
+```
+
+Il mio setup preferito? Uso la 0.8B per il routing veloce dei task e la 8B per l'esecuzione vera e propria. La variante MoE (35B-A3B) è eccezionale se hai una GPU con abbastanza memoria, poiché offre prestazioni da modello "large" con una frazione della latenza. Nei benchmark BFCL-V4, Qwen 3.5 ha superato modelli come GPT-5 mini del 30%, dimostrando una capacità di function-calling senza precedenti.
+
+## FAQ: Domande frequenti su Qwen 3.5 e Ollama
+
+Per approfondire l'orchestrazione locale, leggi anche la mia guida su [HiClaw e i team di agenti](/blog/hiclaw-team-multi-agente-locale).
+
+### Qwen 3.5 è meglio di GPT-4 per il coding?
+Per i task locali e la programmazione assistita (soprattutto con le versioni Coder), Qwen 3.5 offre una latenza quasi nulla e una privacy totale. Nei benchmark tecnici, si posiziona costantemente tra i migliori modelli open-weight del 2026.
+
+### Quali sono i requisiti minimi di sistema?
+La versione da 0.8B gira su quasi ogni computer moderno (anche con soli 8GB di RAM). Per la 8B consigliamo almeno 16GB di RAM, mentre la 35B-A3B richiede una GPU con 24GB di VRAM per prestazioni ottimali.
+
+### Qwen 3.5 supporta il tool calling in Ollama?
+Sì, Qwen 3.5 è stato addestrato specificamente per il tool calling e la comprensione dei manifest. Ollama supporta nativamente queste funzionalità, rendendolo perfetto per l'integrazione con OpenClaw. Puoi trovare maggiori informazioni sui [modelli gratuiti configurabili qui](/blog/modelli-gratuiti-api-openclaw). In questa **guida Qwen 3.5 + Ollama**, abbiamo visto quanto sia semplice configurarli.
+
+## Passo 2: Configurare OpenClaw
+
+Una volta che il modello è pronto in Ollama, dobbiamo dire a OpenClaw come usarlo. Se hai già seguito la mia [guida all'installazione di OpenClaw e Ollama](/blog/guida-installazione-openclaw-ollama-2026), questo passaggio sarà semplicissimo. Apri il tuo file di configurazione `~/.openclaw/openclaw.json` e aggiungi Qwen 3.5 sotto il provider Ollama.
+
+Ecco un esempio di configurazione pronta all'uso:
+
+```json
+{
+  "models": {
+    "providers": {
+      "ollama": {
+        "baseUrl": "http://127.0.0.1:11434/v1",
+        "api": "ollama",
+        "models": [
+          {
+            "id": "qwen3.5:8b",
+            "name": "Qwen 3.5 8B",
+            "contextWindow": 32768,
+            "maxTokens": 8192
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "ollama/qwen3.5:8b"
+      }
+    }
+  }
+}
+```
+
+Assicurati che `baseUrl` punti correttamente alla tua istanza locale di Ollama. Dopo aver salvato, puoi verificare che tutto funzioni lanciando un semplice comando: `openclaw run "Ciao, quale modello stai usando?"`.
+
+## Creare un Agente Ricercatore con Qwen 3.5
+
+La vera potenza di Qwen 3.5 emerge quando gli diamo degli strumenti. Grazie alla sua capacità di tool calling migliorata, è perfetto per agenti che devono navigare il web o analizzare file locali.
+
+Ecco un esempio di un semplice agente ricercatore definito in OpenClaw:
+
+```yaml
+name: ricercatore-locale
+task: "Ricerca informazioni tecniche e sintetizza i risultati."
+tools: ["web_search", "web_fetch"]
+model: "ollama/qwen3.5:8b"
+```
+
+Con questo stack, hai un assistente che non solo risponde alle tue domande, ma va a cercare i dati freschi su internet, li legge e ti propone una sintesi - tutto senza che i tuoi dati lascino mai il tuo computer. La privacy non è più un optional.
+
+<CtaCard
+    title="Scopri i miei progetti"
+    description="Dai un occhio ai progetti su cui sto lavorando e alle tecnologie che utilizzo, inclusi agenti AI locali e OpenClaw."
+    primaryButtonText="Vedi Progetti"
+    primaryButtonUrl="/projects"
+    pattern="circles"
+    align="center"
+/>
+
+## Performance e Privacy: Il vantaggio locale
+
+Perché non usare semplicemente GPT-4? Se sei un CTO o un founder, sai che la latenza e i costi delle API possono scalare velocemente. Ma il motivo principale è la **privacy dei dati**.
+
+Usando Qwen 3.5 e OpenClaw in locale, puoi dare in pasto all'agente documenti aziendali sensibili, codice sorgente privato o dati dei clienti senza alcun rischio di leak verso server di terze parti. Nel 2026, la sovranità dei dati è un vantaggio competitivo fondamentale.
+
+In termini di velocità, sul mio Mac Mini M4, la versione da 8B risponde quasi istantaneamente. È un'esperienza d'uso fluida che rende l'interazione con l'AI naturale e non interrotta da lunghi caricamenti. Per compiti ancora più specifici, puoi dare un'occhiata alla [guida su Qwen 2.5 Coder](/blog/qwen-25-coder-32b-ollama-openclaw-guida), che rimane imbattibile per la programmazione pura.
+
+## Conclusioni
+
+Qwen 3.5 è il tassello mancante per chi vuole costruire agenti AI seri in locale. La combinazione con Ollama per la gestione dei pesi e OpenClaw per l'orchestrazione dei task crea una piattaforma di sviluppo imbattibile per flessibilità e controllo. Per maggiori dettagli tecnici, consulta la [documentazione ufficiale di Ollama](https://ollama.com/library/qwen3.5).
+
+Se non l'hai ancora fatto, scarica la versione da 8B e prova a delegargli il tuo prossimo task di ricerca. Non tornerai più indietro.
+
+*Scritto da Matteo Giardino, CTO e founder. Costruisco agenti AI per piccole e medie imprese in Italia. [I miei progetti](/projects).*
