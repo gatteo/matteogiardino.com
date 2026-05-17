@@ -1,0 +1,73 @@
+---
+title: 'HiClaw Advanced: Pattern Multi-Agente Avanzati per OpenClaw'
+createdAt: '2026-05-17T00:00:00Z'
+modifiedAt: '2026-05-17T00:00:00Z'
+summary: 'Scopri come ottimizzare i tuoi flussi di lavoro con HiClaw Advanced: pattern multi-agente per architetture aziendali resilienti.'
+image: '/images/blog/hiclaw-advanced-patterns-it.png'
+authorId: matteo
+locale: 'it'
+translationSlug: 'hiclaw-advanced-patterns-en'
+tags: ['ai', 'openclaw', 'hiclaw', 'multi-agent']
+---
+
+Scritto da Matteo Giardino - CTO e consulente IA.
+
+## Introduzione: Cosa sono i pattern HiClaw Advanced?
+
+Se hai già utilizzato [HiClaw](/blog/hiclaw-team-multi-agente-locale) per orchestrare semplici agenti, sai che la potenza risiede nella collaborazione locale. Ma nel 2026, la sfida è creare architetture che non siano solo "funzionanti", ma *resilienti*. I pattern **HiClaw Advanced** definiscono come scalare queste orchestrazioni, trasformando script sperimentali in sistemi pronti per la produzione aziendale.
+
+<CtaCard
+    title="Hai bisogno di consulenza su sistemi multi-agente?"
+    description="Ottimizza la tua architettura AI aziendale con consulenze tecniche mirate."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## 1. Il Pattern Supervisor-Worker (Architettura "Brain")
+
+In sistemi complessi, evitare che l'agente principale sia oberato è cruciale. Il pattern **Supervisor-Worker** separa la logica di controllo dall'esecuzione.
+
+### Implementazione Logica
+L'agente "Supervisore" (Brain) ha il solo compito di:
+1. **Analizzare:** Ricevere il prompt utente.
+2. **Decomporre:** Dividere il task in sotto-task logici.
+3. **Delegare:** Inviare i sotto-task agli agenti "Worker" specializzati.
+
+```python
+# Esempio concettuale di configurazione HiClaw
+# Supervisore che delega task specifici
+workflow = TaskFlow(
+    supervisor="brain_agent",
+    workers=["researcher_agent", "coder_agent", "qa_agent"]
+)
+```
+
+## 2. Resilienza tramite Retry Logic e Circuit Breakers
+
+Uno dei problemi principali nei sistemi multi-agente è il fallimento a cascata. Se un worker fallisce, il supervisore deve sapere come reagire. 
+
+### La nostra strategia di resilienza:
+1. **Retry Esponenziale:** Non arrenderti al primo fallimento. HiClaw permette di configurare tentativi automatici.
+2. **Circuit Breaker:** Se un worker non risponde, il supervisore deve "isolarlo" per non sprecare risorse su una componente morta.
+
+## Integrazione con RAG e Database Vettoriali
+
+Un pattern avanzato che spesso trascuriamo è la **memoria condivisa**. Invece di inviare tutto il contesto a ogni agente, usiamo un database vettoriale (es. Qdrant) tramite [MCP (Model Context Protocol)](/blog/building-custom-mcp-server-openclaw).
+
+Ogni agente interroga il database per recuperare solo le informazioni necessarie per il suo task. Questo riduce drasticamente il consumo di token e aumenta la velocità di esecuzione.
+
+## Domande Frequenti (FAQ)
+
+### Qual è il vantaggio principale di HiClaw Advanced?
+La modularità. Puoi aggiornare un singolo "Worker" (es. sostituire il modello locale da Qwen a DeepSeek) senza toccare la logica del supervisore.
+
+### È difficile implementare un sistema multi-agente?
+No, se segui un approccio dichiarativo. [OpenClaw](/blog/cos-e-openclaw-framework-agenti-ai) e HiClaw rendono questa complessità trasparente.
+
+### Come gestisco i costi di calcolo?
+Utilizzando modelli locali gestiti via Ollama, il costo per query è quasi nullo. Il supervisore può decidere di delegare compiti pesanti a modelli più grandi solo quando strettamente necessario.
+
+---
+*Vuoi implementare HiClaw Advanced nel tuo progetto? [Contattami per una consulenza](/contacts).*
