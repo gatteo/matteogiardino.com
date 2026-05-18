@@ -1,0 +1,43 @@
+---
+title: 'OpenClaw TaskFlow: Guida ai Workflow AI Multi-Step Resilienti'
+createdAt: '2026-05-18T00:00:00Z'
+modifiedAt: '2026-05-18T00:00:00Z'
+summary: 'Ottimizza l'automazione aziendale con OpenClaw TaskFlow: guida pratica ai workflow multi-step per agenti AI resilienti.'
+image: '/images/blog/openclaw-taskflow-it.png'
+authorId: matteo
+locale: 'it'
+translationSlug: 'openclaw-taskflow-en'
+tags: ['ai', 'openclaw', 'automation', 'taskflow']
+---
+
+Scritto da Matteo Giardino - CTO e consulente IA.
+
+## Perché i Workflow Multi-Step falliscono?
+
+Spesso gli agenti AI vengono configurati per task atomici: "leggi email", "rispondi", "salva nel CRM". Ma quando questi task si concatenano, il sistema diventa fragile. Un errore nel secondo passaggio blocca l'intero processo. Con [OpenClaw TaskFlow](/blog/mastering-openclaw-taskflow-multi-step-workflows), possiamo trasformare questa sequenza in un workflow resiliente.
+
+<CtaCard
+    title="Hai workflow AI complessi?"
+    description="Contattami per ottimizzare la resilienza dei tuoi agenti."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Pattern 1: Validazione a Ogni Step
+
+Non passare mai l'output di un agente direttamente all'agente successivo senza validazione. 
+- **Il Pattern:** Inserisci un nodo di validazione (usando un modello leggero come Qwen) che controlla se l'output rispetta lo schema JSON richiesto.
+- **Il Vantaggio:** Se la validazione fallisce, il sistema riprova o notifica un umano, evitando che errori propagati corrompano il database finale.
+
+## Pattern 2: Checkpoint di Stato
+
+OpenClaw TaskFlow ti permette di salvare lo stato del workflow su disco. Se il processo va in crash (es. mancanza di corrente o riavvio del server), puoi ripartire esattamente dallo step fallito.
+
+## Domande Frequenti
+
+- **TaskFlow è difficile da configurare?** No, è puramente dichiarativo.
+- **Supporta workflow asincroni?** Sì, TaskFlow gestisce nativamente code di lavoro.
+
+*Vuoi integrare TaskFlow nella tua azienda? [Contattami per una consulenza](/contacts).*
