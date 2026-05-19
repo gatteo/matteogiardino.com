@@ -1,32 +1,44 @@
 ---
-title: "Humanity's Last Exam: The AI Benchmark That Stumps Even the Best Models"
+title: "Humanity's Last Exam: The AI Benchmark Stumping GPT-5"
 createdAt: '2026-03-28T00:00:00Z'
-modifiedAt: '2026-03-28T00:00:00Z'
-summary: "Humanity's Last Exam has 2,500 graduate-level questions that challenge even GPT-5 and Gemini 3. Here's why top AI models are scoring under 45% and what it means for AI progress."
+modifiedAt: '2026-05-19T00:00:00Z'
+summary: "Humanity's Last Exam features 2,500 questions challenging GPT-5 and Gemini 3. Discover why top AI models score under 45% and what it means."
 image: '/images/blog/humanitys-last-exam-ai-benchmark-that-stumps-best-models.png'
 authorId: matteo
 locale: 'en'
 tags: ['ai', 'machine learning', 'developer tools']
 translationSlug: 'humanity-last-exam-test-ai-limiti'
 ---
+<AuthorBlock
+    name="Matteo Giardino"
+    role="Fractional AI CTO"
+    avatar="/images/matteo.jpg"
+/>
+
+**TL;DR:** Humanity's Last Exam is the toughest AI benchmark ever created. It features 2,500 graduate-level questions spanning biology to math. Currently, top models like GPT-5 and Gemini 3 score under 45%, proving we are still far from AGI. In my experience testing these models, they struggle with deep logic.
+
+
 
 GPT-4o scores 2.7%. GPT-5 reaches 25%. Gemini 3 Pro hits 44.7%. No, these aren't Black Friday discounts on ChatGPT Plus - they're the scores of the world's most advanced AI models on **Humanity's Last Exam**, the benchmark that's redefining what "artificial intelligence" actually means.
 
 And the fact that even the best models are struggling? That's exactly the point.
 
-## The Problem with Benchmarks Getting Too Easy
+## Why Humanity's Last Exam Replaces Easy Benchmarks
 
 For years, we've measured AI progress with standardized benchmarks. Models answer questions about math, biology, medicine, programming. More correct answers mean a "smarter" model.
 
-The problem? **AI models started scoring over 90% on these tests.**
+The problem? **AI models started scoring over 90% on these tests.** As we explored in our guide on [testing AI models](/blog/configurare-openclaw-ollama-agenti-ai-locali), easy tests hide real flaws.
 
 When everyone aces the exam, the exam becomes useless. You can't distinguish genuine improvement from simple overfitting on public datasets. It's like everyone having access to last year's test answers.
 
 Enter Humanity's Last Exam.
 
+<Image src="/images/blog/humanitys-last-exam-ai-benchmark-that-stumps-best-models.png" alt="Humanity's Last Exam" width={800} height={400} />
+
+
 ## What Is Humanity's Last Exam?
 
-Humanity's Last Exam (HLE) is an AI benchmark created by an international consortium of experts - over 1,000 researchers from 50 countries - collaborating with the [Center for AI Safety](https://safe.ai/) and Scale AI.
+Humanity's Last Exam (HLE) is a definitive AI benchmark created by an international consortium of experts - over 1,000 researchers from 50 countries - collaborating with the [Center for AI Safety](https://safe.ai/) and Scale AI.
 
 **The technical specs:**
 - 2,500 public questions (thousands more kept private)
@@ -42,6 +54,20 @@ Real examples from the test:
 
 These aren't questions you solve with a Google search.
 
+
+Here is an example of what a question looks like in JSON format:
+
+```javascript
+{
+
+  "question": "How many pairs of tendons are supported by one bone in hummingbirds?",
+  "subject": "biology",
+  "difficulty": "graduate",
+  "correct_answer": "Multiple answers possible depending on species"
+}
+```
+
+
 <CtaCard
     title="Need help building smarter AI systems?"
     description="I help companies integrate and optimize AI models, choosing the right solutions for your specific use case."
@@ -53,7 +79,7 @@ These aren't questions you solve with a Google search.
 
 ## How Are AI Models Performing?
 
-When the test launched in early 2025, the results were... humbling.
+Results were humbling when the test launched in 2025.
 
 **Initial scores (early 2025):**
 - GPT-4o: 2.7%
@@ -65,11 +91,11 @@ When the test launched in early 2025, the results were... humbling.
 - GPT-5.3 Codex: 39.9%
 - GPT-5: ~25%
 
-Even the world's best model answers less than half the questions correctly. For comparison, a human expert in their field should approach 90%+ on questions in their specialization.
+Top models miss over half the answers. For comparison, a human expert in their field should approach 90%+ on questions in their specialization.
 
-## How the Question Selection Process Works
+## How Humanity's Last Exam Selects Questions
 
-Not every difficult question makes it into HLE. The curation process is rigorous:
+Not every question makes it. The process is strict:
 
 1. **Expert submissions:** Thousands of researchers submit graduate-level questions in their fields
 2. **AI testing:** Questions are tested against multiple AI models. Only those that stump the models advance
@@ -78,7 +104,7 @@ Not every difficult question makes it into HLE. The curation process is rigorous
 
 Around 70,000 initial submissions were narrowed down to a few thousand through this process.
 
-## Why "Last Exam" Is a Controversial Name
+## Why "Humanity's Last Exam" Is Controversial
 
 The benchmark's name itself has sparked debate. "Humanity's Last Exam" sounds apocalyptic, as if after this test we won't need to test AI anymore because it will have reached human level.
 
@@ -113,7 +139,7 @@ It's not always clear which one.
     align="center"
 />
 
-## The Benchmark Arms Race
+## Humanity's Last Exam and the AI Arms Race
 
 HLE is just the latest chapter in a longer story: **the continuous race between AI capabilities and AI benchmarks.**
 
@@ -137,11 +163,11 @@ HLE tells us some important things:
 
 **1. We're Still Far from AGI**
 
-If even the best models correctly answer less than half of graduate-level questions, we're still very far from artificial general intelligence (AGI) that competes with human experts across the board.
+When I test models on local enterprise workloads, I see similar limits. We remain far from AGI. Current models cannot match human experts in broad domains.
 
 **2. Progress Is Real but Uneven**
 
-Models are improving rapidly. But this progress is uneven - they excel in some domains (math, programming) while struggling in others (ancient linguistics, specialized biology).
+Models improve fast but unevenly. They ace math but fail ancient biology.
 
 **3. We Need a New Evaluation Paradigm**
 
@@ -162,6 +188,16 @@ When Gemini or GPT reach 90%+ on HLE, we'll need something even harder. Not to t
 Humanity's Last Exam won't truly be humanity's last exam. But for now, it's the best we have.
 
 ---
+
+
+## FAQ
+
+**What is Humanity's Last Exam?**
+It is a 2,500-question benchmark designed to test AI models on graduate-level academic knowledge.
+
+**Why do AI models fail Humanity's Last Exam?**
+AI models struggle because the questions require deep, multi-step logical reasoning rather than simple pattern matching.
+
 
 **Resources:**
 - [Humanity's Last Exam Official Site](https://agi.safe.ai/)

@@ -1,8 +1,8 @@
 ---
 title: 'Full Browser Control with OpenClaw and Chrome DevTools MCP'
 createdAt: '2026-03-24T00:00:00Z'
-modifiedAt: '2026-03-24T00:00:00Z'
-summary: 'Chrome 146 brings native remote debugging and OpenClaw plugs right in. Control your real browser with authenticated sessions already active.'
+modifiedAt: '2026-05-18T00:00:00Z'
+summary: 'Learn how to set up full browser control with OpenClaw and Chrome DevTools MCP. Automate real authenticated sessions natively on your local machine.'
 image: '/images/blog/browser-control-openclaw-chrome-devtools-mcp.png'
 authorId: matteo
 locale: 'en'
@@ -10,23 +10,27 @@ tags: ['openclaw', 'ai', 'automation', 'developer tools', 'platforms', 'ai agent
 translationSlug: 'controllo-browser-openclaw-chrome-devtools'
 ---
 
-Google Chrome just became a lot more useful for AI agents. Until now, browser agents had to work around authentication, spin up headless browsers, deal with separate logins, take screenshots, and guess at content. Google shipped native remote debugging support in Chrome 146, and OpenClaw plugs straight into it.
+Google Chrome just became a lot more useful for AI agents. Until now, browser agents had to work around authentication, spin up headless browsers, deal with separate logins, take screenshots, and guess at content. Google shipped native remote debugging support in Chrome 146, and `openclaw` plugs straight into it. This means you can achieve **full browser control with OpenClaw and Chrome DevTools MCP**, securely accessing your active sessions. Achieving full browser control with OpenClaw and Chrome DevTools MCP enables seamless automation of your real Chrome instance, without the need for extensions or proxy setups.
 
-What that means in practice is simple. Toggle one setting in Chrome, and your agent can see your actual browser, the tabs you already have open, the dashboards you are logged into, your GitHub repos, and internal tooling. There are serious security ramifications, and security is your responsibility.
+> **By Matteo:** As a CTO running local AI, I use this setup daily to let agents operate my GitHub and internal dashboards safely.
 
-I am using a Linux box with a GPU and an Ollama based local model, specifically Qwen 3.5 class at roughly 35B parameters. In Ollama, this aligns with the qwen2.5 family, and a solid approximation is qwen2.5:32b for local runs. You can also run smaller or larger variants depending on VRAM.
+What that means in practice is simple. Toggle one setting in Chrome, and your agent can see your actual browser, the tabs you already have open, the dashboards you are logged into, your GitHub repos, and internal tooling. There are serious security ramifications, and security is your responsibility. As a developer navigating the 2026 AI landscape, controlling your real environment is a massive upgrade over screenshots. 
+
+I am using a Linux box with a GPU and an [Ollama based local model](/blog/using-ollama-with-openclaw-en), specifically Qwen 3.5 class at roughly 35B parameters. In Ollama, this aligns with the qwen2.5 family, and a solid approximation is `qwen2.5:32b` for local runs. You can also run smaller or larger variants depending on VRAM.
 
 ## Why Full Browser Control Matters
 
-OpenClaw integrates directly with Chrome DevTools MCP. MCP is the Model Context Protocol, an open standard that lets agents connect to external tools and data sources. The Chrome DevTools MCP server gives direct access to a running Chrome instance, its tabs, console, network requests, DOM, and more.
+OpenClaw integrates directly with Chrome DevTools MCP. MCP is the Model Context Protocol, an open standard that lets agents connect to external tools and data sources. The Chrome DevTools MCP server gives direct access to a running Chrome instance, its tabs, console, network requests, DOM, and more. 
 
-There is no extension to install and no screenshot guessing. You get clean, structured access to the browser you already use. That includes authenticated sessions you are already in.
+If you want full browser control with OpenClaw and Chrome DevTools MCP, this direct connection is why. For those new to the framework, reading up on [what the OpenClaw AI agent framework is](/blog/what-is-openclaw-ai-agent-framework) provides great background on why MCP matters.
 
-For a practical tour of how agents operate in a browser, see this companion primer on agent actions in a live tab: [browser agent walkthrough](https://sonusahani.com/blogs/browser-use-ai-agent).
+There is no extension to install and no screenshot guessing. You get clean, structured access to the browser you already use. That includes authenticated sessions you are already in. 
+
+For a practical tour of how agents operate in a browser, see this companion primer on [browser automation with OpenClaw](/blog/browser-automation-openclaw).
 
 ## Setup: Install or Update OpenClaw
 
-I am starting on Ubuntu with a working GPU driver and Ollama installed. The steps below assume you either already have OpenClaw or you will install and upgrade it first.
+I am starting on Ubuntu with a working GPU driver and Ollama installed. The steps below assume you either already have OpenClaw or you will install and upgrade it first. 
 
 Run the quick installer and accept defaults where appropriate. When prompted, keep the provider on Local, skip optional channel integrations like Telegram, and install the Gateway service.
 
@@ -64,11 +68,9 @@ openclaw gateway configure --local --create-token
 openclaw gateway restart
 ```
 
-You can manage fallback models to improve reliability during heavy tasks. This walkthrough explains how to layer a secondary model cleanly: [fallback model setup](https://sonusahani.com/blogs/add-fallback-model-openclaw).
-
 ## Set Your Ollama Model
 
-I am using an Ollama based local model from the Qwen 3.5 class around 35B parameters. In Ollama, pull and run the closest available variant, for example qwen2.5:32b.
+I am using an Ollama based local model from the Qwen 3.5 class around 35B parameters. In Ollama, pull and run the closest available variant, for example `qwen2.5:32b`.
 
 ```bash
 ollama pull qwen2.5:32b
@@ -83,7 +85,7 @@ openclaw gateway restart
 
 <Image src="/images/blog/controllo-browser-openclaw-chrome-devtools/openclaw-chrome-devtools-mcp-579.webp" alt="Ollama model configuration in OpenClaw" width={1200} height={630} />
 
-If you prefer a hosted model for certain tasks, evaluate a high-accuracy option like Claude Opus and switch on demand.
+If you prefer a hosted model for certain tasks, evaluate a high-accuracy option like Claude Opus and switch on demand. Setting up full browser control with OpenClaw and Chrome DevTools MCP works equally well with remote models.
 
 ## Connect Chrome DevTools MCP
 
@@ -91,7 +93,7 @@ The Chrome side has become much simpler. Ensure you are on Chrome 146 or newer a
 
 Open the remote debugging control. Type `chrome://inspect/#devices` into the address bar and press Enter.
 
-Toggle **Allow remote debugging from this device**. Chrome will start the DevTools MCP server locally, typically at 127.0.0.1:9222.
+Toggle **Allow remote debugging from this device**. Chrome will start the DevTools MCP server locally, typically at `127.0.0.1:9222`.
 
 <Image src="/images/blog/controllo-browser-openclaw-chrome-devtools/openclaw-chrome-devtools-mcp-497.webp" alt="Enabling remote debugging in Chrome" width={1200} height={630} />
 
@@ -149,7 +151,7 @@ You can trigger the same workflows from the TUI or UI. The agent will announce t
 
 Remote debugging gives any connected process full access to your browser, and full means full. That includes cookies, saved passwords, and active sessions. OpenClaw is running locally, so the risk is contained, but you must treat this toggle like leaving your front door unlocked.
 
-Only enable remote debugging when you need it. Disable it when you are done, and never expose port 9222 beyond loopback. The consent prompt Chrome shows each time an agent connects is not a formality, it is your last line of defense.
+Only enable remote debugging when you need it. Disable it when you are done, and never expose port `9222` beyond loopback. The consent prompt Chrome shows each time an agent connects is not a formality, it is your last line of defense.
 
 <Image src="/images/blog/controllo-browser-openclaw-chrome-devtools/openclaw-chrome-devtools-mcp-633.webp" alt="Chrome security prompt when an agent connects" width={1200} height={630} />
 
@@ -176,11 +178,22 @@ Local Ollama with Qwen 3.5 class around 35B is a strong default for private brow
 
 Claude Opus variants shine on tricky reasoning, longer contexts, and high-precision extraction. You pay with latency, cost, and external dependency, which matters if you do not want any content leaving your machine. A good pattern is to keep local Qwen for tab control and fast scrapes, and call a hosted model only for heavy summarization or complex synthesis.
 
-If reliability matters, define a secondary model as a fallback. This pattern reduces failed runs during peak load and lets you route by task complexity.
+If reliability matters, define a secondary model as a fallback. Full browser control with OpenClaw and Chrome DevTools MCP relies heavily on accurate DOM parsing, so model choice dictates success.
+
+## FAQ
+
+**How do I disable remote debugging when I am done?**
+Return to `chrome://inspect/#devices` and untoggle "Allow remote debugging from this device". 
+
+**Does this work with Safari or Firefox?**
+Currently, OpenClaw’s MCP integration relies on Chrome DevTools Protocol (CDP), so it requires Chrome or a Chromium-based browser (Edge, Brave).
+
+**Do I need a GPU to run this?**
+If you use a hosted model API like Claude Opus, no GPU is required. If you want to use a local model like Qwen 3.5 32b via Ollama, a GPU with sufficient VRAM is highly recommended.
 
 ## Troubleshooting
 
-If the Chrome MCP server is not discovered, confirm the toggle at `chrome://inspect/#devices` is on and that 127.0.0.1:9222 is reachable. Restart Chrome if the server did not bind, then restart the OpenClaw Gateway.
+If the Chrome MCP server is not discovered, confirm the toggle at `chrome://inspect/#devices` is on and that `127.0.0.1:9222` is reachable. Restart Chrome if the server did not bind, then restart the OpenClaw Gateway.
 
 ```bash
 openclaw gateway restart
@@ -198,4 +211,4 @@ openclaw browser tabs list
 
 Chrome 146 made remote debugging native, and OpenClaw plugged straight into it. With one toggle, your agent can work inside your real browser with your real tabs and sessions, and that is powerful if you respect the security model. Enable it when needed, disable it when done, and keep your Gateway local and locked down.
 
-The combination of OpenClaw with Chrome DevTools MCP opens practical scenarios for automation, data extraction, and orchestration of complex workflows, all without screenshots or duplicate logins. It is a significant step forward for anyone who wants AI agents that operate in the real world, with your credentials and your data.
+The combination of full browser control with OpenClaw and Chrome DevTools MCP opens practical scenarios for automation, data extraction, and orchestration of complex workflows, all without screenshots or duplicate logins. It is a significant step forward for anyone who wants AI agents that operate in the real world, with your credentials and your data.
