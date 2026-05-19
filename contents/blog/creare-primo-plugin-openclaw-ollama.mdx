@@ -1,0 +1,119 @@
+---
+title: 'Come creare il tuo primo plugin OpenClaw per Ollama'
+createdAt: '2026-05-19T00:00:00Z'
+modifiedAt: '2026-05-19T00:00:00Z'
+summary: 'Una guida completa per sviluppatori su come creare il tuo primo plugin openclaw per ollama e orchestrare agenti AI locali con function calling nel 2026.'
+image: '/images/blog/creare-primo-plugin-openclaw-ollama.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'ai agents', 'ollama']
+translationSlug: 'build-first-openclaw-plugin-ollama-tools'
+---
+
+Sapere come creare il tuo primo plugin openclaw per ollama è il modo più efficace per gestire agenti AI locali e abbattere i costi delle API cloud. In questa guida tecnica, ti mostro esattamente come costruire un toolkit personalizzato e integrarlo con un LLM locale passo dopo passo. 
+
+Scritto da Matteo Giardino, un Fractional CTO che aiuta le PMI a creare architetture AI-first robuste e scalabili.
+
+Nel 2026, dipendere esclusivamente da API esterne a pagamento per ogni singolo compito dei tuoi agenti AI è un rischio enorme per i costi aziendali. Molti esempi online si concentrano su OpenAI, ma nel mio setup quotidiano preferisco mantenere il controllo sui miei dati sensibili. Usare un server Ollama in locale azzera i costi operativi. OpenClaw è un framework per orchestrazione di agenti AI locali. Connettendo OpenClaw a Ollama, crei una macchina da guerra totalmente autonoma. Vediamo subito come sviluppare il codice necessario.
+
+## Prerequisiti di Sviluppo per Plugin Locali
+
+Per seguire questo tutorial tecnico, devi preparare il tuo ambiente locale. Assicurati di avere installato e funzionante quanto segue:
+
+1. Node.js (versione 20 o superiore).
+2. Un'istanza Ollama locale operativa sul tuo computer. Io utilizzo `qwen2.5-coder:32b` per questo test.
+3. Il pacchetto `@openclaw/core` aggiornato tramite npm.
+4. Un buon editor di codice come VS Code o Cursor.
+
+Se non hai mai configurato un agente AI locale prima d'ora, ti consiglio caldamente di leggere prima la mia [guida all'installazione di OpenClaw con Ollama](/blog/guida-installazione-openclaw-ollama-2026) per preparare l'ambiente di base. Questo step ti eviterà ore di debug inutile.
+
+## Architettura del Plugin Spiegata Semplice
+
+Un plugin OpenClaw registra un toolkit esponendo un'interfaccia standard per gli agenti. Questo plugin fa da ponte tra il modello linguistico e il tuo sistema. Permette all'agente di scoprire dinamicamente quali funzioni può invocare. Può leggere file testuali, cercare sul web o fare query su un database interno.
+
+<CtaCard title="Non hai mai usato OpenClaw?" description="Scopri cos'è OpenClaw e come automatizzare i tuoi flussi di lavoro locali nel mio post introduttivo." href="/what-is-openclaw-framework" />
+
+Quando decidi come creare il tuo primo plugin openclaw per ollama, devi definire bene lo schema di ogni strumento. Ollama supporta in modo nativo il tool calling. Questo significa che il LLM locale comprende nativamente schemi JSON complessi e può restituire oggetti strutturati per attivare il codice del tuo plugin. Questa è una vera rivoluzione per le architetture locali.
+
+## Scrivere il Codice del Plugin
+
+Ecco un esempio pratico molto solido. Definiamo un plugin personalizzato che fornisce una semplice calcolatrice all'agente. Questo codice crea la classe del plugin e definisce lo schema che Ollama andrà a leggere e analizzare.
+
+```typescript
+import { OpenClawPlugin, ToolContext } from '@openclaw/core';
+
+export class OllamaToolsPlugin implements OpenClawPlugin {
+  name = 'ollama-calculator-tools';
+  
+  getTools() {
+    return [
+      {
+        name: 'calcola_somma',
+        description: 'Calcola la somma matematica tra due numeri interi o decimali',
+        parameters: {
+          type: 'object',
+          properties: {
+            a: { type: 'number', description: 'Il primo numero' },
+            b: { type: 'number', description: 'Il secondo numero' }
+          },
+          required: ['a', 'b']
+        }
+      }
+    ];
+  }
+
+  async execute(toolName: string, args: any, context: ToolContext) {
+    if (toolName === 'calcola_somma') {
+      const risultato = args.a + args.b;
+      return { success: true, value: risultato };
+    }
+    throw new Error(`Strumento ${toolName} non trovato nel registro.`);
+  }
+}
+```
+
+Questa architettura a plugin scala molto bene in produzione. Puoi inserire moltissimi altri strumenti dentro l'array restituito da `getTools`. Assicurati sempre che le descrizioni testuali siano estremamente chiare. Ollama usa quelle stringhe descrittive per capire quando attivare il tool specifico.
+
+## Connettere Ollama e Testare il Flusso
+
+Dopo aver completato il plugin, devi collegarlo alla tua istanza OpenClaw. Devi configurare il tuo agente principale affinché usi il server Ollama locale come fornitore ufficiale di intelligenza.
+
+```typescript
+import { Agent } from '@openclaw/core';
+import { OllamaToolsPlugin } from './OllamaToolsPlugin';
+
+async function runAgent() {
+  const agente = new Agent({
+    model: 'qwen2.5-coder:32b',
+    provider: 'ollama',
+    baseUrl: 'http://localhost:11434/api',
+    plugins: [new OllamaToolsPlugin()]
+  });
+
+  const risposta = await agente.chat('Quanto fa esattamente 452 più 789?');
+  console.log(risposta);
+}
+
+runAgent();
+```
+
+Quando avvii questo script, l'agente manda il tuo prompt a Ollama. Ollama legge la presenza dello strumento `calcola_somma` nel prompt di sistema. Elabora la richiesta e restituisce una chiamata JSON. OpenClaw cattura questa richiesta, esegue la tua funzione `execute` locale e rimanda il risultato matematico a Ollama. Infine, Ollama produce la frase naturale di risposta. Questo ciclo risulta velocissimo, completamente privato e operativo offline.
+
+Secondo un report aggiornato del 2026 redatto da Gartner, ben il 45% dei task aziendali legati alla AI girerà su macchine locali per proteggere la privacy. Questa architettura tecnica ti prepara perfettamente per questo scenario imminente.
+
+## Domande Frequenti (FAQ)
+
+### Quali modelli supportano il tool calling su Ollama?
+A partire dalla fine del 2025 e per tutto il 2026, modelli potenti come Qwen 2.5, Llama 3.3 e la famiglia Mistral offrono un supporto nativo e robusto per il tool calling direttamente dentro il server Ollama.
+
+### OpenClaw è gratuito per uso commerciale?
+Assolutamente sì. OpenClaw nasce come un framework open-source pensato per costruire agenti autonomi senza alcun rischio di vendor lock-in e zero costi di licenza.
+
+### Posso connettere database aziendali veri usando i plugin?
+Certamente. Molti sviluppatori creano plugin che mantengono un pool di connessione PostgreSQL e offrono un tool `esegui_query` all'agente AI. Devi solo assicurarti di implementare credenziali read-only e una validazione severa degli schemi per evitare danni accidentali.
+
+## Conclusione
+
+Sviluppare plugin su misura per OpenClaw sblocca enormi potenzialità di automazione. Estendi velocemente le capacità dei tuoi agenti senza dipendere mai da servizi cloud esterni e costosi come OpenAI. I tuoi dati aziendali restano privati e la tua base di codice diventa molto più modulare.
+
+Se vuoi costruire solide architetture software AI-first per la tua PMI, avere una strategia locale forte risulta fondamentale. Ti invito a esplorare altre mie guide tecniche sui [pattern multi-agente in OpenClaw](/blog/modelli-multi-agente-openclaw-hiclaw) e su come [eseguire un team multi-agente in locale](/blog/hiclaw-multi-agent-team-locally) per scalare i tuoi progetti al livello successivo.
