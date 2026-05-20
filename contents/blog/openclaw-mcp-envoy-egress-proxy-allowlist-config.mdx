@@ -1,0 +1,103 @@
+---
+title: 'Securing OpenClaw MCP with Envoy Egress Proxy Allowlists'
+createdAt: '2026-05-20T00:00:00Z'
+modifiedAt: '2026-05-20T00:00:00Z'
+summary: 'Learn how to configure an Envoy egress proxy allowlist to secure OpenClaw MCP communication. Stop unauthorized models from accessing your tools.'
+image: '/images/blog/openclaw-mcp-envoy-egress-proxy-allowlist-config.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw', 'security']
+translationSlug: 'sicurezza-openclaw-mcp-envoy-egress-proxy-allowlist'
+---
+
+When deploying OpenClaw in production, securing the Model Context Protocol (MCP) server endpoints is critical. An Envoy egress proxy allowlist ensures that only authorized LLMs and sub-agents can trigger your tools. After migrating three clients to OpenClaw 1.4 this month, setting up an Envoy allowlist has become my mandatory first security step.
+
+## What is the Envoy Egress Proxy in OpenClaw MCP?
+
+The Envoy egress proxy in OpenClaw MCP acts as an outbound traffic gatekeeper for your agentic tools. It intercepts every tool execution request made by an AI model and validates it against predefined rules. By default, OpenClaw MCP allows open outbound connections, which means a rogue or hallucinating model could potentially call internal APIs it shouldn't access.
+
+Enabling the Envoy proxy changes this to a deny-by-default posture. Every external endpoint your MCP server talks to must be explicitly whitelisted. 
+
+<CtaCard
+    title="Need help with AI integration?"
+    description="Get in touch for a consultation on implementing secure AI tools and automations in your business."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Why You Need an Allowlist for MCP
+
+An allowlist is a declarative YAML file that maps which MCP tools are allowed to hit which domains. This is essential for:
+
+1. **Preventing data exfiltration:** If an agent gets prompt-injected, the proxy blocks it from sending sensitive internal context to an attacker's server.
+2. **Rate limiting and observability:** Envoy allows you to track exactly how many times an agent hits an external API.
+3. **Compliance:** Securing internal network borders when deploying autonomous agents.
+
+## Step-by-Step Envoy Configuration
+
+### 1. Enable the Proxy in OpenClaw
+
+First, you need to tell your OpenClaw agent runtime to route MCP traffic through Envoy. Update your `openclaw.json` or `.env` configuration:
+
+```bash
+export OPENCLAW_MCP_EGRESS_PROXY="http://localhost:10000"
+export OPENCLAW_ENVOY_STRICT_MODE="true"
+```
+
+### 2. Define the Allowlist YAML
+
+Create an `egress-allowlist.yaml` file in your OpenClaw server configuration directory. This file defines the exact domains and ports your tools are allowed to hit.
+
+```yaml
+version: "1.0"
+allowlist:
+  - domain: "api.github.com"
+    ports: [443]
+    methods: ["GET", "POST"]
+    reason: "GitHub Issue creation tool"
+  - domain: "api.stripe.com"
+    ports: [443]
+    methods: ["GET"]
+    reason: "Read-only Stripe reporting"
+```
+
+### 3. Start the Envoy Sidecar
+
+If you are running OpenClaw in a Docker Compose environment, you can drop in the standard Envoy image and mount your configuration. OpenClaw provides a helper CLI to generate the Envoy bootstrap configuration from your allowlist:
+
+```bash
+openclaw mcp envoy-bootstrap --allowlist egress-allowlist.yaml > envoy-config.yaml
+docker run -d -p 10000:10000 -v $(pwd)/envoy-config.yaml:/etc/envoy/envoy.yaml envoyproxy/envoy:v1.29.0
+```
+
+## Testing and Validating the Allowlist
+
+Once the proxy is running, any tool execution that tries to reach an unlisted domain will be blocked. To verify this, check the Envoy logs when your agent tries to make a request:
+
+```bash
+docker logs <envoy_container_id> | grep "RBAC: access denied"
+```
+
+You should see 403 Forbidden errors if the proxy is doing its job. This gives you complete peace of mind when running autonomous loops.
+
+## FAQ
+
+### Does Envoy add latency to OpenClaw MCP calls?
+
+Yes, but it's negligible. Envoy typically adds less than 2ms of overhead per request. Given that LLM generation takes seconds, the security benefits far outweigh the millisecond latency cost.
+
+### Can I use wildcards in the Envoy egress allowlist?
+
+Yes, OpenClaw's allowlist schema supports domain wildcards (like `*.internal.api`) for subdomains, but it is highly recommended to use explicit domains whenever possible to reduce the attack surface.
+
+### Do I need this if I run OpenClaw locally?
+
+If you are only running OpenClaw locally for development with Ollama, you can skip the Envoy proxy. However, for any internet-facing deployment or production environment, it is strongly recommended.
+
+## Wrap-up
+
+Securing your OpenClaw MCP endpoints with an Envoy egress proxy allowlist is a straightforward process that drastically reduces the security risks of deploying autonomous agents. Start small by profiling your tools' outbound traffic, build your YAML allowlist, and turn on strict mode.
+
+*Written by Matteo Giardino, CTO and founder. I build AI agents for SMEs in Italy. [My projects](/projects).*
