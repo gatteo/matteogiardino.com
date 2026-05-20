@@ -1,0 +1,129 @@
+---
+title: 'Securing OpenClaw MCP: Envoy Egress Proxy Allowlist Config'
+createdAt: '2026-05-19T00:00:00Z'
+modifiedAt: '2026-05-19T00:00:00Z'
+summary: 'Learn how to secure OpenClaw MCP using Envoy egress proxy allowlists. A step-by-step tutorial to restrict model access and prevent unauthorized calls.'
+image: '/images/blog/securing-openclaw-mcp-envoy-egress-proxy.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw']
+translationSlug: 'sicurezza-openclaw-mcp-envoy-egress-proxy'
+---
+
+When deploying OpenClaw in a production environment, securing outbound traffic from your MCP servers is critical. I've spent the last week locking down my agents, and configuring an Envoy egress proxy with strict allowlists is the best way to prevent unauthorized access to external APIs or models.
+
+## What is the Envoy Egress Proxy in OpenClaw MCP?
+
+The Envoy egress proxy is a security layer that intercepts all outbound traffic from an OpenClaw Model Context Protocol (MCP) server. Instead of letting your agent connect to any endpoint on the internet, Envoy acts as a gatekeeper.
+
+By default, an open egress configuration can expose your infrastructure to data exfiltration or unintended API billing. The allowlist ensures the agent can only reach approved endpoints.
+
+<CtaCard
+    title="Building something with OpenClaw?"
+    description="If you're integrating OpenClaw into a product or workflow, I'm available for short engagements."
+    primaryButtonText="Get in Touch"
+    primaryButtonUrl="/contacts"
+    pattern="grid"
+    align="center"
+/>
+
+## Why You Need an Allowlist for MCP
+
+Running AI agents locally or in cloud environments introduces a new attack vector: the agent itself. If an agent is compromised or fed a malicious prompt, it might attempt to POST sensitive context to a third-party server. An Envoy allowlist blocks this at the network level. 
+
+This approach provides a reliable zero-trust boundary, ensuring your agents only communicate with your predefined endpoints - such as your local Ollama instance or your company's internal knowledge base.
+
+## Step-by-Step Envoy Configuration
+
+### Step 1: Define the Envoy Cluster
+
+First, you need to define the allowed clusters in your Envoy configuration file (`envoy.yaml`).
+
+```yaml
+clusters:
+  - name: allowed_api_cluster
+    connect_timeout: 5s
+    type: STRICT_DNS
+    lb_policy: ROUND_ROBIN
+    load_assignment:
+      cluster_name: allowed_api_cluster
+      endpoints:
+        - lb_endpoints:
+            - endpoint:
+                address:
+                  socket_address:
+                    address: api.your-approved-service.com
+                    port_value: 443
+```
+
+### Step 2: Configure the Route Allowlist
+
+Next, map your listeners to ensure only specific domains or paths are permitted. Any request not matching these routes will receive an HTTP 403 Forbidden.
+
+```yaml
+listeners:
+  - name: egress_listener
+    address:
+      socket_address:
+        address: 0.0.0.0
+        port_value: 10000
+    filter_chains:
+      - filters:
+          - name: envoy.filters.network.http_connection_manager
+            typed_config:
+              "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+              stat_prefix: egress_http
+              route_config:
+                name: local_route
+                virtual_hosts:
+                  - name: backend
+                    domains: ["*"]
+                    routes:
+                      - match:
+                          prefix: "/"
+                          headers:
+                            - name: ":authority"
+                              exact_match: "api.your-approved-service.com"
+                        route:
+                          cluster: allowed_api_cluster
+```
+
+## Testing and Validating the Allowlist
+
+After applying the configuration, testing is straightforward. Start your proxy and use curl to verify the access controls.
+
+A successful request to an allowed domain:
+
+```bash
+curl -v -x http://localhost:10000 https://api.your-approved-service.com/status
+# Expected: HTTP 200 OK
+```
+
+A blocked request to an unauthorized domain:
+
+```bash
+curl -v -x http://localhost:10000 https://example.com
+# Expected: HTTP 403 Forbidden
+```
+
+Check your OpenClaw server logs. You should see blocked requests clearly flagged by Envoy, confirming that your MCP server is secure.
+
+## FAQ
+
+### Does Envoy add latency to OpenClaw MCP requests?
+
+Envoy is highly optimized and typically adds less than a millisecond of latency. The security benefits far outweigh this negligible overhead.
+
+### Can I allowlist dynamic IP addresses?
+
+Envoy supports STRICT_DNS and LOGICAL_DNS, which automatically resolve and update IP addresses for your allowlisted domains without requiring a proxy restart.
+
+### Does this work with local Ollama instances?
+
+Yes. You can route traffic to `localhost:11434` or your Docker network gateway to ensure OpenClaw only talks to your local models.
+
+## Wrap-up
+
+Configuring an Envoy egress proxy is a mandatory step for production-ready OpenClaw deployments. It guarantees that your AI agents remain within their designated network boundaries.
+
+*Written by Matteo Giardino, CTO and founder. I build AI agents for SMEs in Italy. [My projects](/projects).*
