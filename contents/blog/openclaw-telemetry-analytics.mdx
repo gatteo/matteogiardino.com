@@ -1,0 +1,169 @@
+---
+title: 'OpenClaw Telemetry and Analytics: Monitoring Local AI Agents'
+createdAt: '2026-05-21T08:00:00Z'
+modifiedAt: '2026-05-21T08:00:00Z'
+summary: 'How to set up native telemetry and analytics in OpenClaw. Track token usage and ship events directly to PostHog or Prometheus.'
+image: '/images/blog/openclaw-telemetry-analytics.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw']
+translationSlug: 'openclaw-telemetria-analytics'
+---
+
+I run six agents on a Mac Mini, orchestrating everything from SEO audits to [multi-agent coding workflows](/en/blog/orchestrating-ai-sub-agents-openclaw). After the first week of deploying OpenClaw in production, I realized a massive gap: visibility. When an agent fails or token costs spike, logs aren't enough. You need telemetry.
+
+OpenClaw makes this easier than most frameworks because it emits structural telemetry natively. In this guide, I'll show you exactly how to capture these events and route them to PostHog for product analytics, or Prometheus for infrastructure monitoring.
+
+## Why Local AI Agents Need Telemetry
+
+When you use [local models like Qwen 2.5 Coder via Ollama](/en/blog/qwen-25-coder-32b-ollama-openclaw-guide), token costs are free. But compute time is not. If a multi-agent team falls into a reasoning loop, your server CPU pins to 100% and blocks other tasks. 
+
+If you're using an API model via OpenClaw, token consumption can burn a hole in your budget overnight if left unchecked. 
+
+Telemetry gives you:
+- **Token usage per agent**: See exactly which sub-agent consumes the most context.
+- **Latency tracking**: Find out if the bottleneck is your vector DB or the LLM inference.
+- **Error clustering**: Group MCP tool failures to see if an external API is down.
+
+<CtaCard 
+  title="Build Production-Ready AI Agents" 
+  description="I help CTOs and engineering teams design and deploy local AI architectures with OpenClaw. If you want to skip the trial and error, let's talk." 
+  buttonText="Book a Consultation" 
+  buttonLink="/consulting" 
+/>
+
+## OpenClaw's Native Telemetry Architecture
+
+Under the hood, OpenClaw doesn't force you into a proprietary dashboard. It uses a clean event-emitter pattern. Every time a tool is called, a context window is shifted, or a response is generated, OpenClaw fires an event.
+
+You can listen to these events globally in your agent's entry file:
+
+```typescript
+import { OpenClaw } from '@openclaw/core';
+
+const agent = new OpenClaw({
+  model: 'qwen2.5-coder',
+  telemetry: true // Enables event emission
+});
+
+agent.on('tool_call', (event) => {
+  console.log(`Tool ${event.toolName} invoked in ${event.durationMs}ms`);
+});
+
+agent.on('token_usage', (event) => {
+  console.log(`Used ${event.totalTokens} tokens for task ${event.taskId}`);
+});
+```
+
+This raw event stream is the foundation. Now, let's wire it up to something useful.
+
+## Setting up PostHog for OpenClaw
+
+I use PostHog for almost everything. It's open-source, runs locally if you want it to, and handles custom events beautifully.
+
+To send OpenClaw telemetry to PostHog, you don't need a heavy middleware. Just use the standard Node.js PostHog client inside the event listeners.
+
+First, install the client:
+
+```bash
+npm install posthog-node
+```
+
+Then, initialize and map the events:
+
+```typescript
+import { PostHog } from 'posthog-node';
+import { OpenClaw } from '@openclaw/core';
+
+const posthog = new PostHog(process.env.POSTHOG_API_KEY, { host: 'https://eu.posthog.com' });
+
+const agent = new OpenClaw({ model: 'qwen2.5-coder', telemetry: true });
+
+agent.on('token_usage', (event) => {
+  posthog.capture({
+    distinctId: 'openclaw-server-1',
+    event: 'agent_token_usage',
+    properties: {
+      agent_id: event.agentId,
+      prompt_tokens: event.promptTokens,
+      completion_tokens: event.completionTokens,
+      total_tokens: event.totalTokens,
+      model: event.model
+    }
+  });
+});
+```
+
+With this running, you can open PostHog and create a time-series chart of `agent_token_usage` broken down by `agent_id`. You'll immediately see which agent is the heavy lifter.
+
+## Monitoring Token Costs and Agent Latency
+
+While tokens are the primary metric, latency is the silent killer in UX. If an agent takes 45 seconds to respond, users leave. 
+
+OpenClaw emits a `run_completed` event that includes end-to-end duration. Combine this with the `tool_call` events to spot the exact bottleneck.
+
+```typescript
+agent.on('run_completed', (event) => {
+  posthog.capture({
+    distinctId: 'openclaw-server-1',
+    event: 'agent_run_completed',
+    properties: {
+      task_id: event.taskId,
+      success: event.success,
+      duration_ms: event.durationMs,
+      tool_calls_count: event.toolCalls.length
+    }
+  });
+});
+```
+
+If the `duration_ms` spikes, but the `tool_calls_count` is low, your LLM inference is choking. If the inference is fast but tool calls are slow, check your MCP servers.
+
+## Building Custom Dashboards with Prometheus
+
+For infrastructure teams, PostHog might not be the right fit. If you are already running Grafana and Prometheus, OpenClaw integrates nicely using a simple Express metric endpoint.
+
+Using the `prom-client` package, you can expose a `/metrics` route:
+
+```bash
+npm install prom-client express
+```
+
+```typescript
+import express from 'express';
+import client from 'prom-client';
+import { OpenClaw } from '@openclaw/core';
+
+const app = express();
+const register = new client.Registry();
+
+const tokenCounter = new client.Counter({
+  name: 'openclaw_tokens_total',
+  help: 'Total tokens consumed by agents',
+  labelNames: ['agent', 'model']
+});
+register.registerMetric(tokenCounter);
+
+const agent = new OpenClaw({ telemetry: true });
+
+agent.on('token_usage', (event) => {
+  tokenCounter.inc({ agent: event.agentId, model: event.model }, event.totalTokens);
+});
+
+app.get('/metrics', async (req, res) => {
+  res.set('Content-Type', register.contentType);
+  res.end(await register.metrics());
+});
+
+app.listen(9090);
+```
+
+Point Prometheus to port `9090`, and you can instantly build a Grafana dashboard showing live token consumption rates.
+
+## Closing thoughts
+
+Flying blind with AI agents is a recipe for unpredictable costs and hard-to-debug loops. By tapping into OpenClaw's native event emitter, you can set up PostHog or Prometheus in under 30 minutes. 
+
+Start by tracking total tokens and end-to-end latency. Once you have a baseline, you can drill down into specific tool failures and optimize the exact step that's slowing your agents down.
+
+*Written by Matteo Giardino, CTO and software engineer who builds AI automation and local architectures. He runs matteogiardino.com on a Mac Mini server and shares real-world engineering guides.*
