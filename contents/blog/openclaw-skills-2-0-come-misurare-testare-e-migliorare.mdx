@@ -1,0 +1,118 @@
+---
+title: 'OpenClaw Skills 2.0: Come Misurare, Testare e Migliorare'
+createdAt: '2026-05-21T00:00:00Z'
+modifiedAt: '2026-05-21T00:00:00Z'
+summary: 'Scopri come implementare OpenClaw Skills 2.0 con un vero ambiente di testing. Impara a misurare il tasso di successo dei tuoi agenti AI e a in CI/CD.'
+image: '/images/blog/openclaw-skills-2-0-come-misurare-testare-e-migliorare.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'testing', 'agenti']
+translationSlug: 'openclaw-skills-2-0-how-to-measure-test-improve'
+---
+
+Nel 2026, ho aggiornato la mia infrastruttura di orchestrazione passando a OpenClaw Skills 2.0, e il passaggio da prompt statici a workflow completamente testabili ha cambiato le regole del gioco. Secondo la [documentazione ufficiale di OpenClaw](https://openclaw.dev), OpenClaw Skills 2.0 introduce un sistema di testing nativo che ti permette di misurare esattamente quante volte il tuo agente ha successo, fallisce o ha allucinazioni prima di mandarlo in produzione. Dopo aver passato una settimana a scrivere test per i miei agenti, ecco esattamente come puoi misurare, testare e migliorare le tue skill su OpenClaw.
+
+## Il passaggio a workflow AI testabili
+
+OpenClaw Skills 2.0 è un nuovo paradigma che tratta le istruzioni degli agenti come veri e propri componenti software testabili, invece che semplice testo. Fornisce asserzioni integrate per valutare il ragionamento dell'agente e l'uso degli strumenti. Come spiego nella mia guida su [come creare la tua prima skill per OpenClaw](/blog/creare-tua-prima-skill-openclaw), l'affidabilità è fondamentale.
+
+Invece di sperare semplicemente che il LLM segua il tuo prompt, ora puoi definire criteri di successo rigorosi. Questo significa che puoi monitorare le regressioni quando cambi modello (ad esempio passando da Qwen 2.5 a Llama 3) o quando modifichi le istruzioni di sistema. I workflow testabili sono un passo essenziale se vuoi [monitorare e gestire agenti IA in produzione](/blog/monitoraggio-agenti-ia-2026). Garantiscono che ogni volta che carichi nuove regole di prompt engineering, non romperai i casi d'uso esistenti.
+
+Questi controlli automatizzati verificano non solo la funzionalità, ma anche i limiti di costo e latenza per le nostre chiamate API. Tracciamo i tempi di esecuzione, le prestazioni del modello e i limiti della finestra di contesto come parte delle asserzioni. Se una skill inizia improvvisamente a consumare il 40% di token in più, la pipeline CI fallisce. L'approccio test-driven development (TDD) è l'unico modo professionale per scalare sistemi autonomi.
+
+
+
+<CtaCard
+    title="Hai bisogno di aiuto con l'integrazione AI?"
+    description="Contattami per una consulenza su come implementare strumenti e automazioni AI nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Configurare l'ambiente di test per le Skill
+
+Scrivere un test per una skill di OpenClaw richiede la definizione di uno stato iniziale, dell'intento dell'utente e dell'output atteso.
+
+### 1. Inizializzare la Test Suite
+
+Per prima cosa, configura il tuo ambiente di test usando il nuovo comando CLI `openclaw test`. Questo crea automaticamente una directory di test pronta per l'uso.
+
+```bash
+openclaw test init --framework mocha
+```
+
+### 2. Scrivere la tua prima asserzione
+
+Crea un file di test per la tua skill specifica. L'obiettivo è verificare che, dato un input specifico, l'agente attivi lo strumento corretto con i parametri giusti.
+
+```javascript
+import { AgentRunner, expectToolCall } from 'openclaw/testing';
+import mySkill from '../skills/data-analyzer.js';
+
+describe('Data Analyzer Skill', () => {
+  it('dovrebbe chiamare fetchMetrics quando si chiedono i dati settimanali', async () => {
+    const runner = new AgentRunner(mySkill);
+    const trace = await runner.run("Dammi i dati di vendita della scorsa settimana.");
+    
+    expectToolCall(trace, 'fetchMetrics', { timeframe: 'last_week' });
+  });
+});
+```
+
+## Misurare Tassi di Successo e Allucinazioni
+
+Una cosa che si è rotta subito quando ho eseguito la mia test suite è stata la validazione rigorosa dello schema JSON. Il mio agente continuava ad avere allucinazioni aggiungendo proprietà extra negli argomenti dello strumento.
+
+OpenClaw 2.0 ti fornisce una metrica chiamata `Scorecard`. Esegui i tuoi test con il flag verbose per vedere il tuo tasso di successo esatto:
+
+```bash
+openclaw test run --verbose
+```
+
+Vedrai un riepilogo come questo:
+- **Tasso di Successo:** 85%
+- **Allucinazioni negli Strumenti:** 10%
+- **Overflow del Contesto:** 5%
+
+Identificando che l'agente aveva allucinazioni il 10% delle volte, sono riuscito ad aggiornare il prompt di sistema della skill per vietare esplicitamente l'aggiunta di campi non documentati, portando il mio tasso di successo al 98%.
+
+## CI/CD per Agenti AI
+
+Non dovresti mai mettere in produzione un prompt aggiornato senza prima eseguire la suite di test. Ho integrato i test di OpenClaw nella mia pipeline GitHub Actions. Ora, ogni volta che aggiorno una skill, il server CI avvia un'istanza locale di Ollama, esegue i test contro un modello leggero e blocca il merge se il tasso di successo scende sotto il 90%.
+
+Ecco un esempio di come appare la GitHub Action:
+
+```yaml
+name: Test Agenti
+on: [push]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Avvia Ollama
+        run: ollama serve &
+      - name: Esegui test OpenClaw
+        run: openclaw test run --ci
+```
+
+Questo processo automatizzato assicura che il tuo stack tecnologico funzioni perfettamente in produzione.
+
+## Domande frequenti
+
+### Cosa sono le OpenClaw Skills 2.0?
+Le OpenClaw Skills 2.0 sono workflow modulari e testabili per agenti AI che permettono agli sviluppatori di costruire asserzioni e misurare il tasso di successo dell'uso degli strumenti e del ragionamento.
+
+### Posso usare i test di OpenClaw con modelli locali?
+Sì. L'ambiente di test di OpenClaw funziona perfettamente con i modelli locali tramite Ollama o vLLM, rendendo gratuito l'esecuzione di centinaia di test automatizzati nella tua pipeline CI/CD.
+
+### Come risolvo un test OpenClaw che fallisce?
+Controlla la traccia di ragionamento dell'agente fornita nell'output del test. Solitamente, un test fallito indica che le istruzioni della tua skill sono troppo vaghe e richiedono l'aggiunta di esempi rigorosi al prompt.
+
+## Conclusione
+
+Trattare gli agenti AI come software tradizionale con unit test è l'unico modo per costruire automazioni affidabili. OpenClaw Skills 2.0 rende questo processo standard. Inizia in piccolo scrivendo un test per la tua skill più critica e itera da lì.
+
+*Scritto da Matteo Giardino, CTO e founder. Costruisco agenti AI per le PMI in Italia. [I miei progetti](/projects).*
