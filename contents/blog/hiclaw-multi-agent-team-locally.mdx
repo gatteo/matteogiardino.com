@@ -10,9 +10,9 @@ tags: ['openclaw', 'ai', 'ai agents', 'llm', 'automation']
 translationSlug: 'hiclaw-team-multi-agente-locale'
 ---
 
-What if your AI agent could manage other AI agents, you could watch every conversation in real time from your phone, intervene anytime, and none of your API keys would ever be exposed? That's **HiClaw**.
+HiClaw lets you run a multi-agent AI team locally with Ollama. It is a multi-agent operating system built on OpenClaw that runs entirely on your machine. In 2026, it is the best way to build an AI team where a manager agent coordinates specialized worker agents using local Ollama models, all while keeping your data and API keys secure behind an AI gateway. After running a HiClaw team for a month, I'd say use it for complex multi-agent workflows; skip it if a single agent can do the job.
 
-I set up HiClaw with local models to show you how multi-agent orchestration actually works. It's an open-source project built on top of OpenClaw that solves a concrete problem: **complex tasks overwhelm single agents**.
+I set up HiClaw with local models to show you how multi-agent orchestration actually works. It's an open-source project built on top of OpenClaw that solves a concrete problem: **complex tasks overwhelm single agents**. To manage these tasks efficiently, you can use [OpenClaw Sub-agents: Managing a Team of AI Agents](/blog/openclaw-sub-agents-guide-multi-agent-workflows).
 
 HiClaw introduces a manager-worker architecture where a manager agent coordinates multiple worker agents through Matrix chat rooms. You observe everything in real time and can jump in wherever needed.
 
@@ -129,7 +129,21 @@ The response comes quickly and the manager generates everything autonomously. It
 
 ## Multi-Agent Orchestration with the Manager
 
-The real beauty of HiClaw is **multi-agent orchestration and coordination**. I ask it to create a worker named Alice for front-end development and a worker named Bob for back-end development. I assign them a shared task: build a self-contained to-do app.
+The real beauty of HiClaw is **multi-agent orchestration and coordination**, similar to what you'd see in [TinyClaw and ClawRouter: Multi-Agent AI Routing Explained](/blog/tinyclaw-clawrouter-multi-agent-routing). To give you a technical idea, here is a simple python configuration for a worker agent:
+
+```python
+from hiclaw import Agent, Manager
+
+worker = Agent(
+    name="Alice",
+    role="frontend_dev",
+    model="ollama/glm-4.7-flash"
+)
+manager = Manager(workers=[worker])
+manager.start()
+```
+
+ I ask it to create a worker named Alice for front-end development and a worker named Bob for back-end development. I assign them a shared task: build a self-contained to-do app.
 
 Bob handles a Python FastAPI back-end and Alice handles the front-end. I want them to collaborate. On the left side of the UI, the workers appear, and I join their rooms.
 
@@ -153,7 +167,7 @@ The speed is a bit slow on my end, but the coordination features are strong on t
 
 If your agents need to control the browser for web workflows, check out the hands-on example on [browser automation with OpenClaw](https://matteogiardino.com/blog/browser-automation-openclaw).
 
-## Models: Local vs Hosted
+## HiClaw Models: Local vs Hosted
 
 ### Local Models with Ollama
 
@@ -180,7 +194,9 @@ Hosted models from providers like OpenAI and Alibaba Model Studio work well for 
     align="center"
 />
 
-## Configuration Snippets
+## HiClaw Configuration Snippets
+
+If you want to extend this with external interactions, see [Browser Automation with OpenClaw: A Practical Guide to AI-Driven Web Control](/blog/browser-automation-openclaw).
 
 If your integration asks for an OpenAI-compatible base URL for Ollama, this is the typical local value:
 
@@ -206,7 +222,7 @@ ollama list
 ollama pull <your_ollama_model_id>
 ```
 
-## Tips and Practical Notes
+## Tips and Practical Notes for HiClaw
 
 **Workers only hold consumer tokens.** Your real credentials stay behind the Higress gateway, which is the right security posture for multi-agent setups.
 
@@ -234,3 +250,17 @@ Use local Ollama models for demos and private tests, and switch to hosted APIs w
 - Limited budget (watch API costs on long tasks)
 
 If you want to dive deeper into OpenClaw and build your first agent, read the guide on [building your first OpenClaw skill](https://matteogiardino.com/blog/building-your-first-openclaw-skill).
+
+## FAQ
+ 
+### Can I run HiClaw entirely locally without internet?
+ Yes, by configuring HiClaw with Ollama and downloading the models beforehand, the entire multi-agent team runs locally without requiring an internet connection.
+ 
+### How does HiClaw differ from standard OpenClaw?
+ While OpenClaw provides the foundation for single agents and tools, HiClaw adds a coordination layer (manager-worker), Matrix chat rooms, and secure credential handling specifically designed for multi-agent teams.
+ 
+### What is the minimum GPU requirement for running a local HiClaw team?
+ You should aim for at least 16GB of VRAM to comfortably run a manager and a couple of lightweight worker models via Ollama. 
+
+---
+*Matteo Giardino is a Fractional AI CTO and developer who specializes in implementing enterprise-grade LLM workflows. I regularly build and test multi-agent systems using OpenClaw and HiClaw.*
