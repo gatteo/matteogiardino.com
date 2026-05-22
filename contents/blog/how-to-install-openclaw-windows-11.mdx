@@ -1,0 +1,92 @@
+---
+title: 'How to Install OpenClaw and Ollama on Windows 11'
+createdAt: '2026-05-22T08:00:00Z'
+modifiedAt: '2026-05-22T08:00:00Z'
+summary: 'The ultimate guide to setting up OpenClaw with Ollama on Windows 11. Fix WSL2, PowerShell, and Windows Firewall issues in minutes.'
+image: '/images/blog/how-to-install-openclaw-windows-11.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw', 'windows', 'ollama', 'tutorial']
+translationSlug: 'come-installare-openclaw-windows-11'
+---
+
+Do you want to install OpenClaw and Ollama on Windows 11 but are stuck with PowerShell or WSL2 errors? You are in the right place. In this guide, I show you exactly how to configure your Windows environment to run local AI agents in less than five minutes. Unlike Mac and Linux systems, Windows requires a few extra steps related to the Linux subsystem and network ports.
+
+After testing various configurations on my secondary PC, I optimized the process. No endless procedures: let's get straight to the point.
+
+## 1. WSL2: The fundamental prerequisite
+
+<CtaCard title="Stay updated on OpenClaw" description="Join my newsletter to receive advanced AI agents and OpenClaw tutorials every week." buttonText="Subscribe now" href="/newsletter" />
+
+Before running any OpenClaw script, Windows needs a compatible environment. The Windows Subsystem for Linux (WSL2) is the best solution. If you don't have it yet, open PowerShell as an administrator and type:
+
+```powershell
+wsl --install
+```
+
+Restart your computer. This step is essential because some Python packages and OpenClaw network dependencies run much better in a native Linux environment, even when you are on Windows.
+
+## 2. Installing Ollama on Windows
+
+Ollama released a native Windows installer that makes things incredibly simple. Download the executable from the official website and install it like a normal application. Once finished, open PowerShell and verify the installation:
+
+```powershell
+ollama run qwen:0.5b
+```
+
+This command will download a very lightweight model to ensure that local inference works correctly. If you see the model's prompt reply, Ollama is ready.
+
+## 3. Launching OpenClaw via PowerShell
+
+With Ollama running in the background (you will see the llama icon in the system tray), it is time to initialize OpenClaw. Open your terminal and use the new unified command:
+
+```powershell
+npx openclaw launch
+```
+
+OpenClaw will automatically detect your local Ollama instance. It will guide you through an interactive setup to choose your default model and configure your first agent. Use the keyboard arrows to navigate.
+
+## 4. Fixing Firewall issues
+
+The most common issue on Windows 11 involves the Windows Defender Firewall blocking local ports (usually 11434 for Ollama or 3000 for the OpenClaw dashboard). If you receive a "Connection Refused" error:
+
+1. Open the **Windows Defender Firewall** settings.
+2. Click on **Allow an app or feature through Windows Defender Firewall**.
+3. Make sure that **Ollama** and **Node.js** have checkmarks on both Private and Public networks.
+
+You now have a complete, high-performance setup on Windows 11. Your local AI agent is ready to work for you, leveraging all the power of your hardware.
+
+Matteo is a Fractional CTO specialized in AI agent implementation for businesses.
+
+## Advanced Configuration and Code Examples
+
+If you want to test the network integration between WSL2 and Windows, here is a PowerShell script to verify that port 11434 is open:
+
+```powershell
+Test-NetConnection -ComputerName localhost -Port 11434
+```
+
+To initialize OpenClaw with specific configurations, you can use Node.js (ensure you have installed version 20+):
+
+```bash
+node -v
+npm i -g openclaw
+openclaw start --port 3000
+```
+
+These technical steps are essential. Also, make sure you have at least 16GB of RAM if you intend to run large local models (like Llama 3 8B) along with the OpenClaw framework on Windows 11. For more details on how to scale resources, see the official WSL2 documentation on GitHub. System optimization is crucial for a good AI workflow. This concludes the guide. I hope it was helpful for fixing your installation issues on Windows 11!
+
+Remember that local generative artificial intelligence guarantees absolute privacy. When you configure `ollama run`, your data never leaves your machine, which is perfect for processing sensitive corporate documents.
+
+### FAQ: Frequently Asked Questions on Windows 11
+
+**Why does OpenClaw require WSL2?**
+In 2026, the AI-related Python ecosystem is still highly optimized for Linux. WSL2 ensures that network calls to the local Ollama API (on port 11434) happen with minimal latency, offering superior performance compared to native Windows builds.
+
+**Can I use PowerShell without WSL2?**
+Yes, but you might encounter issues with some advanced OpenClaw plugins that depend on C++ libraries not always compiled for Windows. My direct field experience, working with various SMEs, shows that the WSL2 approach is the most stable in the long term.
+
+**How do I update OpenClaw in the future?**
+You can simply run `npm update -g openclaw` from your terminal, or read our guide on [how to update OpenClaw](/blog/aggiornare-openclaw).
+
+Written by Matteo Giardino, Fractional CTO specialized in AI integrations and autonomous agents for SMEs in 2026.
