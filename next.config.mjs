@@ -32,6 +32,16 @@ const nextConfig = {
                 destination: '/blog/creare-un-prodotto-innovativo-nel-2026-guida-ai',
                 permanent: true,
             },
+            {
+                source: '/blog/costruire-prodotto-innovativo-2026',
+                destination: '/blog/creare-un-prodotto-innovativo-nel-2026-guida-ai',
+                permanent: true,
+            },
+            {
+                source: '/en/blog/building-autonomous-workflows-openclaw-agents',
+                destination: '/en/blog/orchestrating-ai-sub-agents-openclaw',
+                permanent: true,
+            },
         ]
     },
     async rewrites() {
