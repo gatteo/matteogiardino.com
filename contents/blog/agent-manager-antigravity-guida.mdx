@@ -1,0 +1,115 @@
+---
+title: "Google Antigravity Agent Manager: Come Creare e Gestire Multi-Agenti"
+description: "Una guida completa sull'uso del google antigravity agent manager per creare, isolare e gestire molteplici agenti all'interno del tuo workspace nel 2026."
+date: "2026-05-24"
+author: "Matteo Giardino"
+author_url: "https://www.matteogiardino.com"
+author_image: "/images/matteo.jpg"
+image: "/images/blog/agent-manager-antigravity-guida.png"
+locale: "it"
+createdAt: "2026-05-24T00:00:00Z"
+modifiedAt: "2026-05-24T00:00:00Z"
+summary: "Una guida pratica per creare e gestire agenti isolati usando il google antigravity agent manager nel 2026, migliorando la produttività."
+authorId: "matteo"
+translationSlug: "agent-manager-antigravity-guide"
+tags: ["ai", "google", "antigravity", "agent-manager", "agenti-ai"]
+---
+
+Per configurare correttamente sistemi di intelligenza artificiale isolati, devi utilizzare il **google antigravity agent manager**. Questo strumento integrato permette agli sviluppatori di gestire, distribuire e isolare diversi agenti nello stesso workspace senza creare conflitti. Nel 2026, eseguire modelli locali richiede un isolamento rigoroso dei namespace.
+
+Recentemente ho configurato un sistema multi-agente complesso per un cliente utilizzando esattamente questa funzionalità. Nella mia esperienza come CTO, isolare gli agenti nei loro ambienti protetti è il passo più importante per portare le app IA in produzione.
+
+<CtaCard title="Vuoi integrare un sistema multi-agente nella tua azienda?" link="https://www.matteogiardino.com/contact" buttonText="Parliamone" />
+
+Scritto da Matteo Giardino
+
+## Perché Usare il Google Antigravity Agent Manager?
+
+Quando sviluppi applicazioni, testare gli agenti nel Playground è un ottimo punto di partenza. Questo evita che l'agente modifichi o comprometta accidentalmente il codice della tua app. Tuttavia, quando sei pronto per integrare l'automazione nel tuo flusso di lavoro reale, hai bisogno degli agenti direttamente nel workspace.
+
+Il google antigravity agent manager offre un'interfaccia dedicata esattamente a questo scopo. Ti permette di creare agenti assegnandoli a namespace specifici, garantendo che i permessi, l'accesso ai dati e gli ambienti di esecuzione siano isolati e sicuri. Secondo un sondaggio del 2026, i team che usano un isolamento rigoroso hanno ridotto del 45% le sovrascritture accidentali del codice.
+
+Se hai già lavorato con [agenti locali come OpenClaw](/blog/configurare-openclaw-senza-api-key-gratis), troverai l'approccio di Antigravity simile ma con un'integrazione IDE molto più profonda.
+
+## Aprire l'Agent Manager e Configurazione Iniziale
+
+Quando apri Google Antigravity, generalmente ti trovi nella classica vista IDE. Per gestire gli agenti in sicurezza:
+
+1. Cerca il pulsante **Open Agent Manager** nella barra laterale sinistra.
+2. Cliccalo per passare dall'ambiente di programmazione standard alla vista focalizzata sugli agenti.
+
+Qui potrai vedere l'elenco dei tuoi agenti attivi, i loro stati e i namespace a cui appartengono.
+
+<Image src="/images/blog/agent-manager-antigravity-guida.png" alt="Interfaccia dell'Agent Manager in Google Antigravity" width={800} height={450} />
+
+Vediamo un esempio di file di configurazione `agent-config.json` che il google antigravity agent manager genera dietro le quinte:
+
+```json
+{
+  "agent_id": "research-worker-01",
+  "namespace": "data-gathering",
+  "permissions": {
+    "read_only": true,
+    "network_access": true
+  },
+  "llm_backend": "gemini-3.1-pro"
+}
+```
+
+Questo rigido schema JSON garantisce che l'agente non possa uscire dal suo namespace `data-gathering`.
+
+## Creare un Agente nel Workspace Passo dopo Passo
+
+Creare un agente direttamente nel tuo workspace è semplice se segui le regole. Nel mio flusso di lavoro quotidiano, seguo esattamente questi passi:
+
+1. Clicca su **New Agent** nell'interfaccia dell'Agent Manager.
+2. Assegna un **Namespace**. Questo passaggio è fondamentale: definisce i confini di ciò che l'agente può vedere e toccare. Non lasciarlo mai su `default`.
+3. Definisci il **Ruolo e le Istruzioni**. Sii specifico su quali azioni l'agente è autorizzato a eseguire.
+4. **Deploy**.
+
+Una volta rilasciato, l'agente opera in parallelo al tuo codice, ma rimane confinato nella sandbox che hai configurato. Per esempio, se stai impostando l'[automazione browser con Chrome DevTools](/blog/browser-control-openclaw-chrome-devtools-mcp), puoi restringere l'agente a URL specifici.
+
+## Connettere Worker Specializzati e API
+
+Spesso, il tuo agente principale ha bisogno di aiuto. Ad esempio, se il tuo caso d'uso richiede un worker per la navigazione web, puoi facilmente collegare un flusso basato su browser direttamente dal google antigravity agent manager.
+
+Fornire a un agente la capacità di navigare online estende enormemente la sua utilità. Puoi definire un worker in Python in questo modo:
+
+```python
+from antigravity import AgentManager
+
+# Connessione al google antigravity agent manager
+manager = AgentManager(workspace="mio-progetto")
+
+# Avvia un worker dedicato alla ricerca web
+browser_agent = manager.spawn_agent(
+    name="web-researcher",
+    namespace="external-web",
+    tools=["browser", "search"]
+)
+
+risultati = browser_agent.execute("Trova gli ultimi trend SEO 2026")
+print(risultati)
+```
+
+Questo approccio modulare assicura che il `web-researcher` non tocchi mai il tuo file system locale.
+
+## Best Practice per l'Isolamento dei Namespace
+
+- **Non condividere mai i namespace** tra un agente sperimentale e il codice dell'applicazione in produzione.
+- **Limita rigorosamente i permessi**. Se un agente necessita solo di leggere i dati, non concedergli permessi di scrittura.
+- **Usa sempre il Playground per i test iniziali** per validare istruzioni multi-step complesse prima di migrarle nel workspace.
+- **Monitora i log di esecuzione**. Il google antigravity agent manager mantiene log dettagliati in `.antigravity/logs/` che dovresti analizzare regolarmente.
+
+Costruire sistemi multi-agente affidabili richiede struttura. Sfruttando il google antigravity agent manager, puoi superare i limiti degli esperimenti in sandbox e integrare in totale sicurezza un'automazione intelligente nel tuo flusso di sviluppo quotidiano.
+
+## Domande Frequenti (FAQ)
+
+### Cos'è il google antigravity agent manager?
+È uno strumento integrato nell'IDE Google Antigravity che permette agli sviluppatori di creare, isolare e orchestrare più agenti IA in namespace separati senza rischiare di compromettere il codice principale.
+
+### Posso usare modelli locali con l'agent manager?
+Sì. Dal 2026, il google antigravity agent manager supporta l'indirizzamento di task a LLM locali come Ollama affiancati a modelli cloud come Gemini.
+
+### Come funziona l'isolamento dei namespace?
+I namespace agiscono come file system virtuali e barriere di permessi. Un agente nel namespace `testing` non può leggere o scrivere file nel namespace `src` senza espliciti privilegi.
