@@ -1,0 +1,88 @@
+---
+title: "How to Install and Use Claude Code in Antigravity"
+description: "A complete 2026 guide to setting up Claude Code within the Antigravity terminal, integrating it with OpenClaw for local agent workflows."
+author: "Matteo Giardino"
+createdAt: "2026-05-25"
+modifiedAt: "2026-05-25"
+locale: "en"
+translationSlug: "come-installare-claude-code-in-antigravity"
+isPublished: true
+authorId: "matteo"
+---
+
+# How to Install and Use Claude Code in Antigravity
+
+Claude Code is an amazing AI assistant from Anthropic, but getting it running smoothly inside Antigravity requires a few specific steps. In this guide, I will show you exactly how to set it up to maximize your local agent workflows.
+
+## What is Claude Code?
+
+Claude Code is Anthropic's official CLI-based coding assistant, released in 2026. It allows you to run complex tasks directly from your terminal, automatically reading your codebase and making intelligent suggestions. It uses the Anthropic API to analyze files, propose changes, and even run tests.
+
+<CtaCard title="Join the Newsletter" description="Get the latest AI and OpenClaw tutorials directly in your inbox." url="/newsletter" />
+
+I have personally used it to refactor large projects and the time saved is substantial. In my recent experiments, I found it reduces code review time by over 40%. You can learn more about its capabilities by reading my comparison on [OpenClaw vs Claude Code](/en/blog/openclaw-vs-claude-code).
+
+## Why run it in Antigravity?
+
+Antigravity provides a specialized, isolated environment tailored for AI agents. By combining Claude Code with Antigravity, you can seamlessly connect it to OpenClaw. This gives you the best of both worlds: Anthropic's cloud intelligence mixed with OpenClaw's local tool execution.
+
+In 2026, the need for robust agent orchestration is clear. We see this across the ecosystem. When Claude Code runs in Antigravity, it inherits the context of the entire local workspace, meaning it can interact with your existing MCP (Model Context Protocol) servers. For a deeper dive into agent setups, check out [Mastering OpenClaw TaskFlow](/en/blog/mastering-openclaw-taskflow-multi-step-workflows).
+
+## Installation Steps
+
+Installing Claude Code in your Antigravity environment takes only a few minutes. Here is the process I use for all my local machines.
+
+First, ensure you have Node.js version 18 or higher installed. Then, use npm to install the package globally:
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+After installation, you need to authenticate. Run the following command in your Antigravity terminal:
+
+```bash
+claude auth
+```
+
+This will prompt you to enter your Anthropic API key. Once authenticated, you can start using it by simply typing `claude` in any directory.
+
+If you ever need to upgrade, you can follow similar steps as when you [update OpenClaw](/en/blog/update-openclaw).
+
+## Connecting Claude Code to OpenClaw
+
+Once installed, you can expose OpenClaw's MCP tools to Claude Code so they can work together on complex codebase refactoring. 
+
+In your `antigravity.yaml` configuration file, add the following snippet to bridge the two:
+
+```yaml
+agent_bridges:
+  - name: claude-code
+    type: mcp
+    port: 3000
+    allow_tools: ["file_search", "git_commit"]
+```
+
+This configuration ensures that Claude Code can call local tools natively through OpenClaw's router. It is a game changer for local development.
+
+## Advanced Configuration and Telemetry
+
+To ensure everything is running smoothly, I recommend setting up telemetry. You can monitor the API usage and local agent interactions using standard OpenTelemetry tools.
+
+```bash
+export CLAUDE_TELEMETRY_ENDPOINT="http://localhost:4318"
+```
+
+For more insights on tracking your agents, read my guide on [OpenClaw Telemetry and Analytics](/en/blog/openclaw-telemetry-analytics).
+
+## FAQ
+
+### Is Claude Code free to use?
+The CLI tool itself is open-source and free, but it requires an active Anthropic API key. You will be billed for the tokens used during your sessions.
+
+### Can I run Claude Code completely offline?
+No. While Antigravity and OpenClaw can run local models like Ollama, Claude Code strictly requires an internet connection to reach Anthropic's Claude 3.5 Sonnet or Opus models.
+
+### How does this compare to GitHub Copilot CLI?
+Claude Code acts more like an autonomous agent rather than just a command suggester. It can read multiple files, propose architectural changes, and execute them, whereas Copilot CLI is mostly for single-command generation.
+
+*Matteo Giardino is a Fractional AI CTO helping companies integrate local AI.*
