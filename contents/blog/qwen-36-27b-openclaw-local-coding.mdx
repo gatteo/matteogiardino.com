@@ -1,0 +1,101 @@
+---
+title: 'Qwen 3.6 27B & OpenClaw: Local Multifile Coding Guide'
+createdAt: '2026-05-26T00:00:00Z'
+modifiedAt: '2026-05-26T00:00:00Z'
+summary: 'How to set up Qwen 3.6 27B with OpenClaw for local multifile coding. A practical guide to hardware requirements and the complete workflow.'
+image: '/images/blog/qwen-36-27b-openclaw-local-coding.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw', 'qwen', 'local ai', 'coding']
+translationSlug: 'qwen-36-27b-openclaw-coding-locale'
+---
+
+Developing entire applications locally, managing multiple files simultaneously without paid APIs. This was my challenge when I first explored multifile coding. Qwen 3.6 27B changes everything: it has a perfect context window and reasoning capabilities that rival heavier closed-source models.
+
+In this guide, I'll show you how I configured Qwen 3.6 27B alongside OpenClaw to handle complex refactorings directly on my Mac Mini.
+
+## What is Qwen 3.6 27B and why it's perfect for coding
+
+Qwen 3.6 27B is the latest open-weight model that balances excellent performance with reasonable hardware requirements for local use. Compared to 70B models, you can run it on machines with less VRAM, while maintaining superior logical understanding compared to smaller 8B models.
+
+The true strength of this model is coding. It perfectly understands project structure, architectural patterns, and manages to maintain context when working across multiple files simultaneously - which is essential for multifile coding with AI agents.
+
+<CtaCard
+    title="Building something with OpenClaw?"
+    description="If you're integrating OpenClaw into a product or workflow, I'm available for short engagements."
+    primaryButtonText="Get in Touch"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Hardware requirements for running 27B locally
+
+Running a 27 billion parameter model requires adequate resources (as we already saw with [Qwen 2.5 Coder 32B](/en/blog/qwen-25-coder-32b-ollama-openclaw-guide)), but thanks to modern quantization, you don't need a supercomputer.
+
+- **RAM/VRAM:** At least 32 GB of unified memory (like on Apple Silicon Macs) or a dedicated GPU with 24 GB of VRAM (e.g., RTX 4090 or RTX 3090).
+- **Quantization:** I recommend 4-bit quantization (Q4_K_M) which takes up about 16 GB, leaving plenty of room for context.
+- **Processor:** Any modern processor will do the job, but you get the best performance when the entire model resides in VRAM.
+
+Personally, I use a Mac Studio with 64 GB of unified memory, and the model runs smoothly, generating dozens of tokens per second.
+
+## Configuring OpenClaw and Ollama for Qwen 3.6
+
+The first step is to download the model via Ollama. If you haven't done this before, I recommend reading my [setup guide for OpenClaw and Ollama](/en/blog/openclaw-ollama-setup-local-ai-agents) first. Open your terminal and type:
+
+```bash
+ollama run qwen:3.6-27b
+```
+
+Once the download is complete, you need to connect it to OpenClaw. In your `~/.openclaw/openclaw.json` file (or equivalent depending on your setup), add Ollama as a provider and specify the Qwen model:
+
+```json
+{
+  "models": {
+    "providers": {
+      "ollama-local": {
+        "baseUrl": "http://127.0.0.1:11434/v1",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "qwen:3.6-27b",
+            "name": "Qwen 3.6 27B (Local)",
+            "contextWindow": 128000,
+            "maxTokens": 8192
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+## The Multifile Coding workflow
+
+The real advantage of using OpenClaw is that the agent isn't limited to reading a single file. It can navigate your project, analyze dependencies, and propose distributed changes.
+
+When you start a coding session, the agent uses OpenClaw's tools to read and write files. For example, you can ask: "Analyze the Dashboard component structure and update all API calls to use the new axios-client library."
+
+Qwen 3.6 27B will read the necessary files, generate the updated code, and use the `patch` or `write_file` tool to apply the changes directly to your project files, maintaining consistency across modules.
+
+## Practical example: React component refactoring
+
+Let's imagine we need to convert an old class-based React component into a functional one with Hooks, while also updating its associated test files.
+
+Just ask OpenClaw:
+
+```bash
+openclaw "Rewrite the src/components/UserProfile.jsx component using functional components and hooks. Then update the src/tests/UserProfile.test.jsx file to reflect the changes."
+```
+
+The model will:
+1. Read `UserProfile.jsx`.
+2. Generate the new version and overwrite it.
+3. Read `UserProfile.test.jsx`.
+4. Rewrite the tests and apply the changes.
+
+Everything happens locally, without sending your code to external servers, with a precision that until a few months ago was only possible with GPT-4 or Claude Opus.
+
+Adopting models like Qwen 3.6 27B alongside autonomous frameworks like OpenClaw is closing the gap between cloud-assisted coding and local coding, returning total privacy and control to developers.
+
+*Written by Matteo Giardino, CTO and founder. I build AI agents for SMEs in Italy. [My projects](/projects).*

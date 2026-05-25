@@ -1,0 +1,101 @@
+---
+title: 'Qwen 3.6 27B e OpenClaw: Multifile Coding in Locale'
+createdAt: '2026-05-26T00:00:00Z'
+modifiedAt: '2026-05-26T00:00:00Z'
+summary: 'Come configurare Qwen 3.6 27B con OpenClaw per il coding multifile in locale. Guida pratica ai requisiti hardware e al workflow completo.'
+image: '/images/blog/qwen-36-27b-openclaw-coding-locale.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'qwen', 'local ai', 'coding']
+translationSlug: 'qwen-36-27b-openclaw-local-coding'
+---
+
+Sviluppare applicazioni intere in locale, gestendo più file contemporaneamente senza API a pagamento, richiede il modello giusto. Qwen 3.6 27B e OpenClaw formano l'accoppiata perfetta per il coding multifile locale nel 2026. Questo modello cambia tutto: ha una context window enorme (128k) e capacità di ragionamento che si avvicinano ai modelli closed-source più pesanti.
+
+In questa guida ti mostro come ho configurato Qwen 3.6 27B insieme a OpenClaw per gestire refactoring complessi direttamente sul mio Mac Mini, differenziandolo dalle vecchie versioni 3.5 che faticavano sul context management a lungo termine. Rispetto a un setup con Qwen 3.5, la versione 3.6 mantiene la coerenza su 10+ file contemporaneamente, rendendolo ideale per chi lavora su progetti React o Python complessi senza dover ricorrere a Claude Opus o GPT-4o.
+
+## Cos'è Qwen 3.6 27B e perché è perfetto per il coding
+
+Qwen 3.6 27B è l'ultimo modello open-weight che bilancia prestazioni eccellenti con requisiti hardware ragionevoli per l'uso locale. Rispetto ai modelli da 70B, puoi farlo girare su macchine con meno VRAM, mantenendo però una comprensione logica superiore rispetto ai piccoli modelli da 8B.
+
+La vera forza di questo modello è il coding. Comprende perfettamente la struttura dei progetti, i pattern architetturali e riesce a mantenere il contesto quando lavora su più file contemporaneamente, essenziale per il multifile coding con agenti AI.
+
+<CtaCard
+    title="Vuoi integrare AI nel tuo business?"
+    description="Contattami per una consulenza su come implementare strumenti AI nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Requisiti hardware per far girare 27B in locale
+
+Far girare un modello da 27 miliardi di parametri richiede risorse adeguate (come avevamo già visto per [Qwen 2.5 Coder 32B](/blog/qwen-25-coder-32b-ollama-openclaw-guida)), ma grazie alle quantizzazioni moderne non serve un supercomputer.
+
+- **Memoria RAM/VRAM:** Almeno 32 GB di memoria unificata (come sui Mac Apple Silicon) o una GPU dedicata con 24 GB di VRAM (es. RTX 4090 o RTX 3090).
+- **Quantizzazione:** Consiglio la quantizzazione a 4-bit (Q4_K_M) che occupa circa 16 GB, lasciando spazio al contesto.
+- **Processore:** Qualsiasi processore moderno farà il suo lavoro, ma le performance migliori si hanno quando l'intero modello risiede in VRAM.
+
+Personalmente uso un Mac Studio con 64 GB di RAM unificata, e il modello gira fluido generando decine di token al secondo.
+
+## Configurare OpenClaw e Ollama per Qwen 3.6
+
+Il primo passo è scaricare il modello tramite Ollama. Se non l'hai mai fatto, ti consiglio di leggere prima la [guida pratica per agenti AI locali con Ollama](/blog/configurare-openclaw-ollama-agenti-ai-locali). Apri il terminale e digita:
+
+```bash
+ollama run qwen:3.6-27b
+```
+
+Una volta terminato il download, devi collegarlo a OpenClaw. Nel tuo file `~/.openclaw/openclaw.json` (o equivalente a seconda della tua configurazione), aggiungi Ollama come provider e specifica il modello Qwen:
+
+```json
+{
+  "models": {
+    "providers": {
+      "ollama-local": {
+        "baseUrl": "http://127.0.0.1:11434/v1",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "qwen:3.6-27b",
+            "name": "Qwen 3.6 27B (Locale)",
+            "contextWindow": 128000,
+            "maxTokens": 8192
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+## Il workflow del Multifile Coding
+
+Il vero vantaggio di usare OpenClaw è che l'agente non è limitato a leggere un singolo file. Può navigare nel tuo progetto, analizzare le dipendenze e proporre modifiche distribuite.
+
+Quando avvii una sessione di coding, l'agente usa gli strumenti di OpenClaw per leggere e scrivere i file. Ad esempio, puoi chiedere: "Analizza la struttura del componente Dashboard e aggiorna tutte le chiamate API per usare la nuova libreria axios-client."
+
+Qwen 3.6 27B leggerà i file necessari, genererà il codice aggiornato e utilizzerà lo strumento `patch` o `write_file` per applicare i cambiamenti direttamente ai file del progetto, mantenendo coerenza tra i vari moduli.
+
+## Esempio pratico: Refactoring di un componente React
+
+Immaginiamo di dover convertire un vecchio componente React basato su classi in uno a funzioni con Hooks, aggiornando anche i file di test associati.
+
+Basta chiedere a OpenClaw:
+
+```bash
+openclaw "Riscrivi il componente src/components/UserProfile.jsx usando functional components e hooks. Poi aggiorna il file src/tests/UserProfile.test.jsx per riflettere le modifiche."
+```
+
+Il modello:
+1. Legge `UserProfile.jsx`.
+2. Genera la nuova versione e la sovrascrive.
+3. Legge `UserProfile.test.jsx`.
+4. Riscrive i test e applica le modifiche.
+
+Tutto in locale, senza inviare il tuo codice a server esterni, con una precisione che fino a qualche mese fa era prerogativa solo di GPT-4 o Claude Opus.
+
+L'adozione di modelli come Qwen 3.6 27B insieme a framework autonomi come OpenClaw sta chiudendo il gap tra il coding assistito su cloud e quello locale, restituendo totale privacy e controllo agli sviluppatori.
+
+*Scritto da Matteo Giardino, CTO e founder. Costruisco agenti AI per piccole e medie imprese in Italia. [I miei progetti](/projects).*
