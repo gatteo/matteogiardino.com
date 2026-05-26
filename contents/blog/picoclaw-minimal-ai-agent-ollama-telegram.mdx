@@ -1,0 +1,76 @@
+---
+title: "PicoClaw: Minimal AI Agent with Ollama and Telegram"
+description: "How to set up PicoClaw, the lightweight version of OpenClaw, to run local AI agents using Ollama and interact with them via Telegram using minimal RAM."
+summary: "Learn how to install PicoClaw for minimalist AI agents with Ollama and Telegram in 2026."
+image: "/images/blog/picoclaw-minimal-ai-agent-ollama-telegram.png"
+authorId: "matteo"
+locale: "en"
+publishedAt: "2026-05-26"
+createdAt: "2026-05-26T00:00:00Z"
+modifiedAt: "2026-05-26T00:00:00Z"
+translationSlug: "picoclaw-agente-ai-minimalista-ollama-telegram"
+---
+
+If you are trying to run an AI agent on hardware with limited resources (like a Raspberry Pi or an old laptop), standard OpenClaw might be too heavy. The solution is **PicoClaw**: a minimalist variant designed to use up to 60% less RAM, relying on Ollama for inference and Telegram as the user interface.
+
+In this guide, we will look at exactly what PicoClaw is and how to set it up in under 10 minutes.
+
+<CtaCard title="Join the Telegram Community" description="We discuss local AI, OpenClaw, and automation in our Telegram group." url="https://t.me/matteogiardino_it" />
+
+## What is PicoClaw?
+
+PicoClaw is a lightweight fork of the OpenClaw framework. It has been stripped of all enterprise dependencies (such as the heavy web dashboard and distributed queue system) to focus on a single operation: receiving input from Telegram, processing it through a local LLM (via Ollama), and returning the response.
+
+This makes it the ideal candidate for edge devices or home servers where every megabyte of memory counts.
+
+## Prerequisites
+
+Before starting, make sure you have:
+- **Ollama** installed and running on your system.
+- A downloaded model (I recommend `ollama run qwen:0.5b` for quick tests, or explore [building OpenClaw plugins with Ollama](/blog/configurare-openclaw-ollama-agenti-ai-locali)).
+- A **Telegram Bot Token** (created for free via BotFather on Telegram).
+
+## Step-by-Step Installation
+
+The installation is extremely fast thanks to the lightweight nature of the project.
+
+```bash
+# 1. Clone the PicoClaw repository
+git clone https://github.com/openclaw/picoclaw.git
+cd picoclaw
+
+# 2. Install minimal dependencies
+npm install
+```
+
+### Configuring Environment Variables
+
+Create a `.env` file in the project root and insert the basic configurations:
+
+```bash
+TELEGRAM_BOT_TOKEN="your-token-here"
+OLLAMA_BASE_URL="http://localhost:11434"
+DEFAULT_MODEL="qwen:0.5b"
+```
+
+## Running and Testing the Agent
+
+Once configured, start the agent:
+
+```bash
+npm start
+```
+
+If everything is correct, you will see the message `[PicoClaw] Bot connected to Telegram` in the terminal.
+At this point:
+1. Open Telegram and search for your bot.
+2. Send a message (e.g., "Hello, who are you?").
+3. The bot will forward the request to Ollama and reply directly in the chat.
+
+## Final Thoughts
+
+PicoClaw is a fantastic tool for those who want to get into agentic automation without having to manage complex infrastructure. For complex business workflows and [remote agent control](/blog/remote-control-workflow-ai-agents-claude-code-openclaw), OpenClaw remains the undisputed king, but for personal tasks, prototypes, and home automation, PicoClaw is unbeatable in terms of efficiency.
+
+I tested PicoClaw on my local server, and the responsiveness is impressive, especially when paired with small and fast models like Qwen.
+
+*Matteo Giardino is a Fractional CTO and developer specializing in local artificial intelligence and automation.*
