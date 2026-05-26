@@ -1,0 +1,91 @@
+---
+title: 'Fix Lost Conversation History in Antigravity: A Quick Guide'
+createdAt: '2026-05-26T00:00:00Z'
+modifiedAt: '2026-05-26T00:00:00Z'
+summary: 'If your Antigravity chat history is missing, you can fix the SQLite database to recover your conversations. Learn how to locate and repair corrupted history.'
+image: '/images/blog/fix-lost-conversation-history-antigravity.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw']
+translationSlug: 'recuperare-cronologia-conversazioni-antigravity'
+---
+
+I recently opened Antigravity only to find my entire chat history had vanished. To fix the lost conversation history in Antigravity, you need to locate the local SQLite database where chats are stored and either restore a backup or repair the file. After digging through the file system, here is exactly how you can get your local AI conversations back.
+
+## Where does Antigravity store chat history?
+
+Antigravity saves all conversation history locally in a SQLite database file, rather than in the cloud. By default, this file is stored deep in your system's application data folder.
+
+On macOS, you can find the history database here:
+`~/Library/Application Support/Antigravity/conversations.db`
+
+On Windows, it's typically located at:
+`%APPDATA%\Antigravity\conversations.db`
+
+If this file gets corrupted (often due to sudden power loss or forcing the app to quit while an agent is generating a response), Antigravity will create a fresh, empty database on the next launch, making it look like your history is lost.
+
+<CtaCard
+    title="Need a Fractional AI CTO?"
+    description="If your company is looking to build reliable, local AI solutions and multi-agent workflows, let's talk. I help SMEs turn AI hype into working software."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## How to recover a corrupted SQLite database
+
+If your history disappeared, the original file might still be there but corrupted, or it might have been renamed to `conversations.db.corrupt`.
+
+### Check the directory for backups
+
+Open your terminal and navigate to the Antigravity data folder. Look for any files ending in `.bak` or `.corrupt`.
+
+```bash
+cd ~/Library/Application\ Support/Antigravity
+ls -la | grep conversations
+```
+
+If you see a backup file like `conversations.db.bak`, you can restore it simply by renaming it:
+
+```bash
+mv conversations.db conversations.db.empty
+cp conversations.db.bak conversations.db
+```
+
+### Repairing the database manually
+
+If you only have a corrupted file and no backup, you can use the SQLite command-line tool to try and dump the intact data into a new database.
+
+```bash
+sqlite3 conversations.db.corrupt ".dump" | sqlite3 conversations_recovered.db
+mv conversations_recovered.db conversations.db
+```
+
+Restart Antigravity after doing this. If the recovery was successful, your chats will reappear in the sidebar.
+
+## Why this happens and how to prevent it
+
+The most common reason for a corrupted Antigravity database is shutting down your machine while the OpenClaw backend or a local Ollama model is still streaming tokens to the UI. The database connection is interrupted mid-write.
+
+To prevent this from happening again, I highly recommend setting up an automatic cron job to back up the directory. A simple script copying the database once a day to a safe location will save you hours of frustration. 
+
+## FAQ
+
+### Does Antigravity sync chat history across devices?
+
+No. Currently, Antigravity stores all conversation data locally on your device in a SQLite file. There is no cloud sync, which makes local backups essential.
+
+### Can I export my Antigravity conversations?
+
+Yes, you can query the `conversations.db` file using any SQLite viewer to extract your chats in JSON or CSV format, even if the UI is having trouble rendering them.
+
+### What happens if I delete the conversations.db file?
+
+If you delete the file, Antigravity will simply create a new, empty one the next time you launch the application. All previous history will be permanently lost unless you have a backup.
+
+## Wrap-up
+
+Losing your local AI chat history is frustrating, but since Antigravity uses standard SQLite databases, recovery is often possible if you catch it early. Always keep a backup of your application data folder if you rely heavily on local agents.
+
+*Written by Matteo Giardino, CTO and founder. I build AI agents for SMEs in Italy. [My projects](/projects).*

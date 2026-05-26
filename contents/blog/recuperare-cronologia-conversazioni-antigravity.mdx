@@ -1,0 +1,91 @@
+---
+title: 'Come recuperare la cronologia conversazioni su Antigravity'
+createdAt: '2026-05-26T00:00:00Z'
+modifiedAt: '2026-05-26T00:00:00Z'
+summary: 'Se la cronologia delle chat su Antigravity è sparita, puoi ripristinare il database SQLite per recuperare le tue conversazioni locali. Ecco come fare passo per passo.'
+image: '/images/blog/recuperare-cronologia-conversazioni-antigravity.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw']
+translationSlug: 'fix-lost-conversation-history-antigravity'
+---
+
+Di recente ho aperto Antigravity per cercare un vecchio prompt, solo per scoprire che tutta la cronologia delle mie chat era svanita. Per recuperare la cronologia delle conversazioni persa su Antigravity, devi individuare il database SQLite locale dove vengono salvate le chat e ripristinare un backup oppure tentare la riparazione del file. Dopo aver scavato nei file di sistema, ecco esattamente come ho fatto per riavere indietro le mie conversazioni IA locali.
+
+## Dove salva la cronologia Antigravity?
+
+A differenza di servizi cloud come ChatGPT, Antigravity salva l'intero storico delle conversazioni localmente in un file database SQLite. Di default, questo file si trova nascosto nella cartella dei dati applicazione del tuo sistema operativo.
+
+Su macOS, puoi trovare il database della cronologia qui:
+`~/Library/Application Support/Antigravity/conversations.db`
+
+Su Windows, si trova tipicamente in:
+`%APPDATA%\Antigravity\conversations.db`
+
+Se questo file si corrompe (spesso a causa di uno spegnimento improvviso o di un'interruzione forzata dell'app mentre un agente sta generando una risposta), al riavvio successivo Antigravity creerà un database nuovo e vuoto, facendoti credere che la cronologia sia persa per sempre.
+
+<CtaCard
+    title="Cerchi un Fractional CTO esperto in IA?"
+    description="Se la tua azienda vuole implementare soluzioni di intelligenza artificiale locali e sicure, parliamone. Aiuto le PMI a trasformare l'hype dell'IA in software reale."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/it/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Come recuperare un database SQLite corrotto
+
+Se la tua cronologia è sparita, il file originale potrebbe essere ancora lì ma danneggiato, oppure potrebbe essere stato rinominato in `conversations.db.corrupt`.
+
+### Controlla la presenza di file di backup
+
+Apri il terminale e naviga nella cartella dei dati di Antigravity. Cerca eventuali file che terminano con `.bak` o `.corrupt`.
+
+```bash
+cd ~/Library/Application\ Support/Antigravity
+ls -la | grep conversations
+```
+
+Se vedi un file di backup come `conversations.db.bak`, puoi ripristinarlo semplicemente rinominandolo:
+
+```bash
+mv conversations.db conversations.db.empty
+cp conversations.db.bak conversations.db
+```
+
+### Riparare il database manualmente
+
+Se hai a disposizione solo il file corrotto e nessun backup, puoi usare lo strumento da riga di comando di SQLite per tentare un dump dei dati intatti all'interno di un nuovo database.
+
+```bash
+sqlite3 conversations.db.corrupt ".dump" | sqlite3 conversations_recovered.db
+mv conversations_recovered.db conversations.db
+```
+
+Riavvia Antigravity dopo aver completato l'operazione. Se il recupero è andato a buon fine, le tue chat riappariranno immediatamente nella barra laterale.
+
+## Perché succede e come prevenirlo
+
+Il motivo più comune per cui il database di Antigravity si corrompe è lo spegnimento della macchina mentre il backend di OpenClaw o un modello locale su Ollama sta ancora scrivendo i token nell'interfaccia. La connessione al database viene interrotta a metà di una scrittura.
+
+Per evitare che questo accada di nuovo, ti consiglio vivamente di impostare un cron job automatico per il backup della directory. Un semplice script che copia il database una volta al giorno in una cartella sicura ti risparmierà ore di frustrazione.
+
+## FAQ
+
+### Antigravity sincronizza la cronologia chat tra più dispositivi?
+
+No. Al momento, Antigravity salva tutti i dati delle conversazioni localmente sul tuo dispositivo all'interno di un file SQLite. Non essendoci sincronizzazione cloud, i backup locali sono fondamentali.
+
+### Posso esportare le mie conversazioni di Antigravity?
+
+Sì, puoi interrogare il file `conversations.db` usando qualsiasi visualizzatore SQLite per estrarre le tue chat in formato JSON o CSV, anche se l'interfaccia utente ha problemi a caricarle.
+
+### Cosa succede se elimino il file conversations.db?
+
+Se elimini il file, Antigravity ne creerà semplicemente uno nuovo e vuoto al prossimo avvio dell'applicazione. Tutta la cronologia precedente andrà persa in modo permanente a meno che tu non disponga di un backup.
+
+## Conclusione
+
+Perdere la cronologia locale delle proprie chat IA è fastidioso, ma dal momento che Antigravity utilizza standard aperti come SQLite, il recupero è spesso possibile se si interviene per tempo. Tieni sempre un backup della cartella dei dati dell'applicazione se fai affidamento sugli agenti locali per il tuo lavoro quotidiano.
+
+*Scritto da Matteo Giardino, CTO e founder. Sviluppo agenti IA per le PMI in Italia. [I miei progetti](/it/projects).*
