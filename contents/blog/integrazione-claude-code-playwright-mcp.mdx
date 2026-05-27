@@ -1,0 +1,71 @@
+---
+title: "Integrazione Claude Code e Playwright MCP: Web Scraping Autonomo"
+description: "Scopri come integrare il server Playwright MCP con la CLI di Claude Code per abilitare il web scraping e l'automazione del browser direttamente dal tuo terminale."
+date: 2026-05-27
+locale: it
+image: /images/blog/claude-code-playwright-mcp.jpg
+tags: ["AI", "Claude Code", "MCP", "Playwright", "Automazione"]
+---
+
+# Integrazione Claude Code e Playwright MCP: Web Scraping Autonomo
+
+Integrare Claude Code con il Model Context Protocol (MCP) e Playwright apre possibilità incredibili per il controllo autonomo del browser direttamente dalla tua riga di comando. Che tu debba eseguire test end-to-end, fare scraping di siti web o gestire automazioni complesse, questa integrazione permette a Claude Code di "vedere" e interagire con il web proprio come un utente umano.
+
+In questa guida, esploreremo come configurare il server Playwright MCP con Claude Code, gestire il contesto e costruire un agente per il web scraping nel mondo reale.
+
+## Cos'è Playwright MCP?
+
+Playwright è un framework potente per i test end-to-end e l'automazione del browser. Quando è integrato in un server **MCP (Model Context Protocol)**, Playwright espone le sue capacità — come navigare verso un URL, cliccare elementi, fare screenshot ed estrarre testo — come strumenti standardizzati che gli agenti AI possono richiamare nativamente.
+
+Se utilizzi Claude Code, la CLI ufficiale di Anthropic, aggiungere il server Playwright MCP significa che il tuo assistente alla programmazione locale può ora consultare documentazione, testare le applicazioni web che stai sviluppando o estrarre dati da siti esterni senza interruzioni. (Per un concetto simile usando OpenClaw, dai un'occhiata alla nostra guida sul [Controllo del Browser con OpenClaw e Chrome DevTools MCP](/blog/browser-control-openclaw-chrome-devtools-mcp)).
+
+<CtaCard title="Vuoi implementare flussi di lavoro basati su Agenti?" description="Come Fractional AI CTO, aiuto le aziende a integrare l'AI locale e l'automazione nelle loro organizzazioni." buttonText="Contattami" buttonLink="/contact" />
+
+## Installazione del Server Playwright MCP
+
+Il server Playwright MCP può essere installato a livello globale usando `npm`. Assicurati di avere Node.js installato, quindi esegui:
+
+```bash
+npm install -g @mcp/playwright
+```
+
+Una volta installato, dovrai scaricare i binari del browser che Playwright utilizza dietro le quinte:
+
+```bash
+npx playwright install --with-deps
+```
+
+## Configurare Claude Code per l'uso del Server MCP
+
+Claude Code supporta MCP in modo nativo, ma devi avviare esplicitamente il server Playwright affinché Claude possa scoprire i suoi strumenti.
+
+Per avviare Claude Code con il server Playwright MCP collegato, usa semplicemente il flag `--mcp`:
+
+```bash
+claude --mcp "npx @mcp/playwright"
+```
+
+Una volta all'interno del prompt di Claude Code, puoi verificare che gli strumenti siano disponibili digitando `/tools`. Dovresti vedere nuovi strumenti per l'automazione del browser come `navigate`, `click`, `fill` ed `evaluate`.
+
+## Esempio reale: Web Scraping Autonomo
+
+Chiediamo a Claude Code di estrarre dei dati da un sito web. Nel tuo terminale con Claude Code in esecuzione, puoi scrivere:
+
+> "Naviga su Hacker News, estrai i titoli dei primi 5 articoli e salvali in un file chiamato `top_news.json`."
+
+Claude Code, in modo autonomo:
+1. Chiamerà lo strumento Playwright MCP per avviare un browser headless e navigare su `https://news.ycombinator.com/`.
+2. Utilizzerà gli strumenti `evaluate` o `extract` per leggere la struttura del DOM e catturare i titoli.
+3. Chiamerà gli strumenti standard del filesystem per scrivere i risultati in `top_news.json`.
+
+Poiché Claude ha capacità di ragionamento, se la struttura della pagina cambia o incontra un banner per i cookie, spesso può leggere il DOM (o fare uno screenshot) e adattare il suo approccio dinamicamente.
+
+## Gestione del contesto e limiti
+
+Sebbene questa integrazione sia incredibilmente potente, ci sono alcune cose da tenere a mente riguardo ai limiti di contesto:
+
+1. **Dimensione del DOM:** Le pagine web moderne hanno alberi DOM massicci. Passare l'intera struttura HTML a Claude Code può esaurire rapidamente la finestra di contesto e far lievitare i costi dei token. Il server Playwright MCP mitiga questo problema fornendo rappresentazioni semplificate della pagina (come alberi di accessibilità o conversioni in Markdown).
+2. **Screenshot vs Testo:** Quando possibile, preferisci l'estrazione di testo rispetto all'analisi degli screenshot della pagina da parte di Claude, poiché i token immagine sono costosi e più lenti da elaborare.
+3. **Persistenza della sessione:** Per impostazione predefinita, Playwright potrebbe avviare un nuovo contesto browser in incognito per ogni attività. Se hai bisogno di rimanere loggato in una sessione, dovrai configurare Playwright affinché utilizzi una directory di dati utente persistente.
+
+L'integrazione di Claude Code e Playwright MCP trasforma la tua CLI in un agente web completamente autonomo. Provalo nel tuo prossimo progetto e scopri la potenza dell'automazione tramite browser guidata dall'IA!
