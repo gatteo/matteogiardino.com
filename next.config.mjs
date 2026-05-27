@@ -28,6 +28,16 @@ const nextConfig = {
     async redirects() {
         return [
             {
+                source: '/projects/devv-30',
+                destination: '/projects/devv',
+                permanent: true,
+            },
+            {
+                source: '/en/projects/devv-30',
+                destination: '/en/projects/devv',
+                permanent: true,
+            },
+            {
                 source: '/blog/guida-per-lanciare-un-prodotto-digitale',
                 destination: '/blog/creare-un-prodotto-innovativo-nel-2026-guida-ai',
                 permanent: true,
