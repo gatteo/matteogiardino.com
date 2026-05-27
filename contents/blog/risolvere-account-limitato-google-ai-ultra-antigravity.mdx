@@ -1,0 +1,64 @@
+---
+title: "Risolvere l'Errore Account Limitato per Google AI Ultra in Antigravity"
+createdAt: '2026-05-27T00:00:00Z'
+modifiedAt: '2026-05-27T00:00:00Z'
+summary: "Una guida rapida per risolvere l'errore imprevisto di 'Account Limitato' quando si usano Google AI Ultra e OpenClaw nella CLI Antigravity."
+image: '/images/blog/risolvere-account-limitato-google-ai-ultra-antigravity.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'tutorial']
+translationSlug: 'fix-account-restricted-google-ai-ultra-antigravity'
+---
+
+Scritto da **Matteo Giardino**.
+
+Se usi la CLI Antigravity per collegare Google AI Ultra con OpenClaw, potresti improvvisamente imbatterti in un avviso di "Account limitato" senza alcun preavviso. Questo può bloccare istantaneamente il tuo setup di agenti locali, negandoti l'accesso alle API.
+
+La soluzione più rapida è revocare immediatamente qualsiasi connessione di app di terze parti, eliminare i token locali di Antigravity e inviare un ricorso a Google. Una volta che l'ambiente è pulito e conforme, la restrizione viene solitamente rimossa in poco tempo.
+
+Ecco esattamente come risolvo questo problema quando capita nel mio flusso di sviluppo.
+
+## Capire la Restrizione
+
+Google monitora rigorosamente l'uso delle API da parte di wrapper non ufficiali. L'avviso di "Account limitato" in Antigravity significa solitamente che il modello di traffico delle API o la gestione dei token ha fatto scattare una rete di sicurezza automatica. Se il sintomo è un errore di "Permesso negato" in AI Studio, si tratta di un problema diverso legato ai ruoli IAM.
+
+La restrizione effettiva è legata al tuo account Google, non solo alla CLI. Continuare a martellare l'endpoint con richieste bloccate non farà altro che aumentare il tempo di penalità.
+
+## Passo 1: Rimuovere l'Accesso di Terze Parti
+
+La prima cosa da fare è interrompere la connessione che ha causato il blocco.
+
+1. Vai alle impostazioni di sicurezza del tuo Account Google.
+2. Vai su "App di terze parti con accesso all'account".
+3. Individua eventuali integrazioni relative ad Antigravity, OpenClaw o wrapper API personalizzati.
+4. Revoca completamente l'accesso.
+
+Questo segnala a Google che hai protetto l'account e fermato l'applicazione problematica.
+
+## Passo 2: Pulire i Token Locali
+
+Antigravity salva i token di autenticazione localmente. Se lasci un token compromesso sul tuo sistema, i futuri tentativi di connessione potrebbero essere segnalati automaticamente.
+
+Esegui questo comando per pulire lo stato locale:
+
+```bash
+antigravity auth clean --all
+```
+
+Dopo averlo fatto, controlla i tuoi file `~/.openclaw/openclaw.json` o `.env` per assicurarti che non siano rimaste vecchie chiavi API di Google AI Studio. Ripartiamo da zero.
+
+<CtaCard title="Potenzia i tuoi workflow AI" description="Iscriviti alla mia newsletter per tutorial settimanali su OpenClaw, AI locale e automazione con Antigravity." buttonText="Iscriviti gratis" buttonLink="https://matteogiardino.com/newsletter" />
+
+## Passo 3: Ricorso e Risoluzione
+
+Con un ambiente pulito, devi ora chiedere una revisione a Google.
+
+1. Vai al supporto di Google AI Studio o alla pagina di recupero dell'account linkata nell'email di restrizione.
+2. Spiega che stavi usando una CLI di sviluppo locale (Antigravity) e hai attivato un limite automatico.
+3. Conferma di aver revocato tutti gli accessi di terze parti e di aver eliminato i token locali.
+
+Se Google conferma una sospensione definitiva su quel progetto specifico, la tua migliore opzione è ripartire da zero su un nuovo progetto Google Cloud. Per evitare che accada di nuovo, assicurati di rimanere entro i limiti di frequenza e di usare client supportati.
+
+Per altri consigli sulla gestione sicura delle quote, dai un'occhiata alla mia guida su [come gestire le quote API in Antigravity](/blog/come-installare-claude-code-in-antigravity).
+
+Lavorare con agenti AI locali richiede di destreggiarsi tra questi rigidi limiti API, ma mantenere uno stato dei token pulito di solito previene i blocchi peggiori.

@@ -1,0 +1,73 @@
+---
+title: "Fix Account Restricted Error for Google AI Ultra in Antigravity"
+createdAt: '2026-05-27T00:00:00Z'
+modifiedAt: '2026-05-27T00:00:00Z'
+summary: "A quick troubleshooting guide to resolve the unexpected 'Account Restricted' error when using Google AI Ultra and OpenClaw in Antigravity CLI."
+image: '/images/blog/fix-account-restricted-google-ai-ultra-antigravity.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw', 'tutorial']
+translationSlug: 'risolvere-account-limitato-google-ai-ultra-antigravity'
+---
+
+Written by **Matteo Giardino**.
+
+If you use Antigravity CLI to connect Google AI Ultra with OpenClaw, you might suddenly encounter an "Account restricted" warning without any prior notice. This can bring your local agent setup to a sudden halt, blocking API access completely. To fix account restricted error for Google AI Ultra in Antigravity, you need a precise sequence of actions.
+
+The short answer is to revoke any third-party app connections immediately, purge your local Antigravity tokens, and submit an appeal to Google. Once the environment is clean and compliant, the restriction is usually lifted quickly.
+
+Here is exactly how I fix this issue when it happens in my development workflow in 2026.
+
+## Understanding the Restriction and Rate Limits
+
+Google strictly monitors API usage from third-party wrappers, processing over 1.5 million requests daily. The "Account restricted" warning in Antigravity usually means your API traffic pattern or token handling triggered an automated safety net. If the symptom is a "Permission denied" error in AI Studio, that is a different issue related to IAM roles.
+
+The actual restriction is tied to your Google account, not just the CLI. Continuing to hammer the endpoint with blocked requests will only increase the penalty time from 24 hours to potentially 7 days.
+
+## Step 1: Remove Third-Party Access to Fix Account Restricted Error for Google AI Ultra in Antigravity
+
+The very first action is to sever the connection that caused the flag. This is crucial for account security and compliance.
+
+1. Go to your Google Account security settings.
+2. Navigate to "Third-party apps with account access".
+3. Locate any integrations related to Antigravity, OpenClaw, or custom API wrappers.
+4. Revoke access completely. 
+
+This signals to Google that you have secured the account and stopped the offending application from making unauthorized requests. It is the number one fix account restricted error for Google AI Ultra in Antigravity.
+
+## Step 2: Purge Local Tokens
+
+Antigravity stores authentication tokens locally. If you leave a tainted token on your system, future connection attempts might get flagged automatically by the Antigravity CLI.
+
+Run the following command to clean your local state:
+
+```bash
+antigravity auth clean --all
+```
+
+After doing this, check your `~/.openclaw/openclaw.json` or `.env` files to ensure no old Google AI Studio API keys are lingering. Start fresh.
+
+<CtaCard title="Boost your AI workflows" description="Join my newsletter for weekly tutorials on OpenClaw, local AI, and Antigravity automation." buttonText="Subscribe for free" buttonLink="https://matteogiardino.com/newsletter" />
+
+## Step 3: Appeal and Remediation
+
+With a clean environment, you now need to ask Google for a review to fully fix account restricted error for Google AI Ultra in Antigravity.
+
+1. Go to Google AI Studio support or the account recovery page linked in the restriction email.
+2. Explain that you were using a local development CLI (Antigravity) and triggered an automated limit.
+3. Confirm that you have revoked all third-party access and purged the local tokens.
+
+If Google confirms a final suspension on that specific project, your best option is to start fresh on a new Google Cloud project. To prevent this from happening again, ensure you stay within rate limits and use supported clients.
+
+For more tips on managing quotas safely, check out my guide on [handling API quotas in Antigravity](/blog/claude-code-antigravity-setup). Working with local AI agents requires navigating these strict API limits, but keeping a clean token state usually prevents the worst lockouts.
+
+## FAQ
+
+**Why did my Google AI Ultra account get restricted?**
+Usually, it is due to rate limit violations or irregular token refreshing patterns detected when using third-party tools like Antigravity.
+
+**How long does the restriction last?**
+It can range from 24 hours to a permanent ban if not appealed properly. Always appeal after cleaning your environment.
+
+**Will I lose my projects?**
+If you act quickly to revoke third-party access, Google typically restores access to your AI Studio projects without data loss.
