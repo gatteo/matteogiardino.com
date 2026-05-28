@@ -1,0 +1,55 @@
+---
+title: 'I 6 Modi Migliori per Usare Claude Code nel 2026: Guida Pratica'
+createdAt: '2026-05-28T00:00:00Z'
+modifiedAt: '2026-05-28T00:00:00Z'
+summary: 'Workflow pratici per Claude Code nel 2026 basati su esperienza reale: dalla modalità plan e skill esplicite fino alle review automatiche delle PR.'
+image: '/images/blog/modi-migliori-usare-claude-code-2026.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'ai tools', 'sviluppo', 'automation', 'claude']
+translationSlug: 'best-ways-use-claude-code-2026'
+---
+
+Negli ultimi mesi ho usato intensamente Claude Code per sviluppare progetti e tool interni. Non lo uso per fare live coding; preferisco pianificare attentamente e mantenere sempre il controllo. Ecco i 6 modi migliori con cui uso Claude Code nel 2026 per massimizzare la produttività.
+
+<CtaCard title="Aumenta la tua produttività con OpenClaw">Scopri come OpenClaw può ottimizzare i workflow AI della tua azienda.</CtaCard>
+
+## 1. Usa sempre la modalità Plan
+
+C'è molto entusiasmo attorno all'idea di far girare Claude Code in loop continuo. Ci ho provato, ma i risultati raramente convincono. Invece, **usa la modalità Plan**.
+
+Questa modalità previene l'esecuzione immediata. Obbliga l'AI a esplorare la tua codebase, leggere la documentazione e proporre un piano che devi approvare. Se il tuo prompt era impreciso, ti farà domande invece di distruggere il codice. **Non accettare mai un piano alla cieca.** Leggi la diagnosi e modifica le azioni proposte prima di eseguire. Sistemare modifiche a sorpresa brucia token e fa perdere tempo.
+
+## 2. Sii esplicito con Agenti e Skill
+
+Claude Code ti permette di definire sub-agenti con finestre di contesto isolate. Io uso spesso un agente "Docs Explorer" dotato di web search.
+
+Non sperare semplicemente che l'AI trovi la documentazione giusta. **Sii esplicito**. Se voglio implementare l'autenticazione Google con BetterAuth in Next.js, comando esplicitamente all'agente Docs Explorer di leggere prima la documentazione di BetterAuth. Fornisci file skill specifici del progetto con i tuoi pattern architetturali. Le skill vengono caricate solo quando servono (lazy loading), mantenendo il contesto principale leggero.
+
+## 3. Setup essenziale e trucchi da terminale
+
+Se vuoi usare Claude Code tutti i giorni, ottimizza il tuo terminale.
+
+- **Salta i permessi:** Avvialo con `claude --dangerously-skip-permissions` per evitare noiosi prompt a ogni modifica dei file.
+- **Pulisci il contesto:** Digita `/clear` spesso. Non serve avere tutta la cronologia incollata a ogni prompt. La compaction richiede tempo e denaro.
+- **Metti in coda:** Inserisci in coda i tuoi prossimi prompt mentre quello attuale è in esecuzione. Claude si metterà in pausa se ha bisogno del tuo input, permettendoti di parallelizzare il lavoro.
+
+## 4. Automatizza le review delle PR
+
+Poiché l'uso dell'AI aumenta il volume delle tue Pull Request, automatizza le review. Claude può analizzare le PR e individuare bug reali che sfuggono agli umani.
+
+Installa l'app GitHub e configura `claude-code-review.yaml` affinché si concentri solo su bug e vulnerabilità di sicurezza, ignorando le minuzie stilistiche. Questo riduce il rumore mantenendo alta la qualità del codice.
+
+## 5. Hook personalizzati e comandi Slash
+
+Crea un file di configurazione con gli hook predefiniti per build, test e lint. Obbliga Claude a eseguire Prettier e i type check prima di proporre modifiche definitive.
+
+Puoi anche creare comandi slash personalizzati in `.claude/commands/`. Aggiungi prompt in linguaggio naturale come `test.md` e usa `{args}` all'interno. Chiamando `/test` potrai creare immediatamente le utility necessarie senza dover riscrivere lunghe istruzioni. Usa file `Claude.md` gerarchici per salvare in modo permanente le memorie specifiche del progetto.
+
+## 6. Puoi ancora scrivere codice
+
+L'AI è uno strumento, non un sostituto. Ti è ancora permesso scrivere codice.
+
+Non sprecare token costosi per chiedere a Claude di cambiare un margine da `0.5rem` a `1rem`. Se fai una review adeguata, rimettere mano al codice è banale. Scrivi codice quando il task è semplice o quando l'AI è in difficoltà. Fidati dell'AI, ma verifica tutto con test unitari e E2E.
+
+*Scritto da Matteo Giardino. È un fractional CTO che aiuta le startup a implementare workflow AI e automazione enterprise.*

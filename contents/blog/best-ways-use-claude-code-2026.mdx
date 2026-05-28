@@ -1,0 +1,55 @@
+---
+title: '6 Best Ways to Use Claude Code in 2026: A Developer's Guide'
+createdAt: '2026-05-28T00:00:00Z'
+modifiedAt: '2026-05-28T00:00:00Z'
+summary: 'Practical workflows for Claude Code in 2026 based on real experience: from plan mode and explicit skills to automated pull request reviews.'
+image: '/images/blog/best-ways-use-claude-code-2026.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'ai tools', 'sviluppo', 'automation', 'claude']
+translationSlug: 'modi-migliori-usare-claude-code-2026'
+---
+
+Over the last few months, I've used Claude Code extensively to build projects and internal tools. I don't use it for live coding; instead, I rely on thoughtful planning and staying in control. Here are the 6 best ways I use Claude Code in 2026 to maximize productivity without losing my mind.
+
+<CtaCard title="Boost your productivity with OpenClaw">Discover how OpenClaw can streamline your enterprise AI workflows.</CtaCard>
+
+## 1. Always Use Plan Mode
+
+There's a lot of hype about running Claude Code in an infinite loop. I've tried it, and the results are rarely convincing. Instead, **use Plan Mode**. 
+
+Plan mode prevents instant execution. It forces the AI to explore your codebase, read documentation, and propose a plan that you must approve. If your prompt was poor, plan mode will ask follow-up questions instead of breaking your code. **Never blindly accept the plan.** Read the diagnosis and edit the proposed changes before hitting execute. Fixing surprise changes burns tokens and wastes time.
+
+## 2. Be Explicit with Agents and Skills
+
+Claude Code lets you define custom sub-agents with isolated context windows. I use a specific "Docs Explorer" agent equipped with web search. 
+
+Don't just hope the AI finds the right docs. **Be explicit**. If I want to implement Google authentication with BetterAuth in Next.js, I explicitly command the Docs Explorer agent to read the BetterAuth docs first. Provide project-specific skill files detailing your expected architectural patterns. Skills are discovered lazily, keeping the main context lean and focused.
+
+## 3. Essential Setup and Terminal Tricks
+
+If you want to use Claude Code daily, optimize your terminal setup. 
+
+- **Skip permissions:** Launch it with `claude --dangerously-skip-permissions` to prevent annoying prompts on every file edit. 
+- **Clear context:** Type `/clear` often. You don't need your entire chat history glued to every prompt. Compaction takes time and money.
+- **Queue messages:** Queue your next prompts while the current one is running. Claude will pause if it needs your input, letting you batch your work.
+
+## 4. Automate PR Reviews
+
+Since using AI increases your pull request volume, automate the reviews. Claude can review PRs and catch real bugs that humans miss.
+
+Install the GitHub app and configure `claude-code-review.yaml` to focus purely on bugs and security vulnerabilities, ignoring minor stylistic nits. This keeps the noise down while maintaining high code quality.
+
+## 5. Custom Hooks and Slash Commands
+
+Create a settings file with default hooks for your build, test, and lint commands. Force Claude to run Prettier and type checks before proposing final edits.
+
+You can also create custom slash commands in `.claude/commands/`. Add natural language prompts like `test.md` and use `{args}` inside them. Calling `/test` will instantly scaffold the necessary utilities without re-typing lengthy instructions. Use a hierarchical `Claude.md` file to store project-specific memories permanently.
+
+## 6. You Can Still Write Code
+
+AI is a tool, not a replacement. You are still allowed to write code. 
+
+Don't waste expensive tokens asking Claude to change a margin from `0.5rem` to `1rem`. If you review the code properly, jumping back into the codebase is trivial. Write code when the task is simple or when the AI struggles. Trust the AI, but verify everything with unit and E2E tests.
+
+*Written by Matteo Giardino. He is a fractional CTO helping startups implement AI workflows and enterprise automation.*
