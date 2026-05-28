@@ -1,0 +1,70 @@
+---
+title: 'Risolvere l''errore 1024 Tokens Not Thinking in Antigravity'
+createdAt: '2026-05-28T00:00:00Z'
+modifiedAt: '2026-05-28T00:00:00Z'
+summary: 'Scopri come risolvere l''errore "1024 tokens is not thinking" in Antigravity, causato dai limiti di ragionamento dei provider AI.'
+image: '/images/blog/risolvere-errore-1024-token-not-thinking-antigravity.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'antigravity', 'debugging']
+translationSlug: 'fix-1024-tokens-not-thinking-error-antigravity'
+---
+
+# Risolvere l'errore "1024 Tokens is Not Thinking" in Antigravity
+
+Scritto da Matteo Giardino - CTO e consulente IA.
+
+Se stai visualizzando l'errore "1024 tokens is not thinking" in Antigravity, non sei il solo. Recentemente, i principali provider di intelligenza artificiale hanno impostato un limite silenzioso al budget di ragionamento interno, fissandolo a 1.024 token. Questo significa che i task complessi ora falliscono, si bloccano o subiscono un drastico calo di qualità.
+
+Ecco perché succede e come risolverlo immediatamente nel tuo ambiente Antigravity.
+
+## Perché si verifica l'errore
+
+Di recente, i provider (come Anthropic) hanno applicato un limite lato server (`max_thinking_length` ≈ 1024). Quando Antigravity invia richieste per analisi approfondite che superano questo budget di "ragionamento", il provider rifiuta o tronca la richiesta.
+
+**I sintomi più comuni includono:**
+- Qualità dell'analisi degradata su input lunghi.
+- Errori `400` o `422` che menzionano token di "thinking" o "reasoning".
+- Blocchi improvvisi degli agenti durante l'esecuzione (hard-stop).
+
+## Come risolverlo
+
+Il problema si attiva quando la richiesta supera il limite di ragionamento imposto dal provider. La soluzione più rapida è limitare esplicitamente il budget di ragionamento a 1024 token o disabilitarlo del tutto.
+
+### 1. Verifica il limite imposto
+Usa una chiamata API minimale (es. Messages API di Anthropic) per verificare dove il provider rifiuta la richiesta. Se fallisce oltre i 1024 token, hai trovato il tuo limite massimo.
+
+### 2. Limita il budget di ragionamento
+Aggiorna la configurazione di Antigravity per impostare esplicitamente il budget. 
+
+Se usi i modelli Anthropic, assicurati di configurare:
+```json
+{
+  "max_tokens": 4096,
+  "thinking": {
+    "type": "enabled",
+    "budget_tokens": 1024
+  }
+}
+```
+
+<CtaCard
+    title="Vuoi scalare i tuoi agenti AI in produzione?"
+    description="Se affronti crash continui o vuoi un'infrastruttura enterprise, parliamone."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Soluzioni alternative per task lunghi
+
+Essendo vincolato a 1024 token di ragionamento, devi ristrutturare le operazioni più lunghe.
+
+1. **Chunking:** Dividi i documenti voluminosi in sezioni più piccole e processale in sequenza.
+2. **Riassunti iterativi:** Fai riassumere all'agente le parti dell'input prima di un'analisi finale.
+3. **Disabilita il ragionamento:** Se l'operazione non richiede passaggi logici profondi, disabilita il budget di ragionamento e affidati al completamento standard.
+
+## Conclusione
+
+L'errore "1024 tokens is not thinking" è una conseguenza diretta delle misure di sicurezza dei provider. Limitando il budget e adattando la strategia di esecuzione dei task, riporterai Antigravity alla massima efficienza.
