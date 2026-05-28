@@ -1,0 +1,89 @@
+---
+title: "Agente AI Locale con Llama 3 e OpenClaw: Guida"
+description: "Come eseguire un agente AI completamente locale, privato e veloce utilizzando Llama 3 8B, Ollama e il framework OpenClaw."
+summary: "Scopri come costruire un agente AI locale potente usando Llama 3 8B, Ollama e OpenClaw per workflow privati e veloci."
+createdAt: "2026-05-27T00:00:00Z"
+modifiedAt: "2026-05-27T00:00:00Z"
+authorId: "matteo"
+image: "/images/blog/agente-ai-locale-llama-3-openclaw.png"
+locale: "it"
+translationSlug: "llama-3-openclaw-local-ai-agent"
+---
+
+Eseguire agenti AI in locale non è mai stato così facile e veloce. Con il rilascio di Llama 3 8B, abbiamo finalmente un modello open source che può girare su hardware di fascia consumer pur essendo abbastanza intelligente da gestire complessi workflow autonomi. Se abbinato a OpenClaw, ottieni un assistente potente e privato.
+
+In questa guida, ti mostrerò come configurare un agente AI locale utilizzando Llama 3 e OpenClaw.
+
+## Perché Llama 3 8B per Agenti Locali?
+
+Llama 3 8B offre il perfetto equilibrio tra velocità e capacità. Eseguire in locale significa:
+- **Zero Costi API:** Non paghi per token.
+- **Privacy:** I tuoi dati non escono mai dal tuo computer.
+- **Velocità:** L'inferenza su un Mac M-series o su una GPU dedicata è incredibilmente veloce.
+
+<CtaCard title="Cerchi Aiuto per l'Integrazione AI?" description="Aiuto le aziende ad adottare agenti AI in modo sicuro ed efficiente." buttonText="Parliamone" buttonLink="/contact" />
+
+## Prerequisiti: Ollama e OpenClaw
+
+Per iniziare, hai bisogno di due software:
+1. **Ollama:** Il motore che esegue il modello Llama 3 in locale.
+2. **OpenClaw:** Il framework che trasforma l'LLM in un agente autonomo capace di utilizzare strumenti.
+
+## Step 1: Scaricare Llama 3
+
+Prima di tutto, installa Ollama dal sito ufficiale. Una volta installato, apri il terminale e scarica il modello:
+
+```bash
+ollama run llama3
+```
+
+Questo scaricherà il modello da 8B (circa 4.7GB). Assicurati che funzioni correttamente inviando un prompt di prova.
+
+## Step 2: Configurare l'Agente OpenClaw
+
+Successivamente, configura il tuo ambiente OpenClaw. Nella directory del tuo progetto, installa il framework:
+
+```bash
+npm install openclaw
+```
+
+Crea un nuovo file chiamato `agent.js` e configura OpenClaw per utilizzare l'istanza locale di Ollama:
+
+```javascript
+import { Agent } from 'openclaw';
+
+const agent = new Agent({
+  model: 'llama3',
+  provider: 'ollama',
+  baseUrl: 'http://localhost:11434'
+});
+```
+
+## Step 3: Aggiungere Strumenti all'Agente
+
+Un modello AI è solo un chatbot finché non gli fornisci degli strumenti (tools). Diamo al nostro agente Llama 3 la capacità di leggere file locali:
+
+```javascript
+agent.addTool({
+  name: 'readFile',
+  description: 'Legge un file locale',
+  execute: async (path) => {
+    return fs.readFileSync(path, 'utf-8');
+  }
+});
+```
+
+Ora, la tua istanza locale di Llama 3 può ispezionare autonomamente i file sul tuo disco per rispondere a domande o scrivere codice basato sui file esistenti.
+
+## Domande Frequenti
+
+**Quanta RAM serve per far girare Llama 3 8B in locale?**
+Servono almeno 8GB di RAM, anche se 16GB sono caldamente consigliati per far girare fluidamente sia il modello che il livello di orchestrazione OpenClaw.
+
+**OpenClaw può utilizzare altri modelli?**
+Sì, OpenClaw supporta Qwen, DeepSeek e molti altri modelli open-weight tramite Ollama.
+
+**Llama 3 è adatto per compiti di programmazione?**
+Sì, Llama 3 8B è sorprendentemente capace nel coding, specialmente se guidato da un framework come OpenClaw che può verificare l'output.
+
+Scritto da Matteo Giardino. *Matteo Giardino è un Fractional CTO specializzato in agenti AI locali, adozione di LLM e infrastrutture. Sviluppa soluzioni AI sicure e private per startup moderne.*
