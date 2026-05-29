@@ -48,6 +48,11 @@ const nextConfig = {
                 permanent: true,
             },
             {
+                source: '/blog/cosa-fa-cto-2026',
+                destination: '/blog/chi-e-il-cto-guida-completa-al-ruolo-del-chief-technology-officer',
+                permanent: true,
+            },
+            {
                 source: '/en/blog/building-autonomous-workflows-openclaw-agents',
                 destination: '/en/blog/orchestrating-ai-sub-agents-openclaw',
                 permanent: true,
