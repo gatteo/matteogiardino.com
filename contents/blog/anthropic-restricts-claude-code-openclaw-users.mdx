@@ -1,0 +1,61 @@
+---
+title: 'Why Anthropic Restricts Claude Code for OpenClaw Users'
+createdAt: '2026-05-30T00:00:00Z'
+modifiedAt: '2026-05-30T00:00:00Z'
+summary: 'Anthropic recently blocked Claude Code from working with local OpenClaw endpoints. Here is a technical breakdown of the restriction and the workaround.'
+image: '/images/blog/anthropic-restricts-claude-code-openclaw-users.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw']
+translationSlug: 'anthropic-blocca-claude-code-openclaw'
+---
+
+Anthropic recently restricted Claude Code from connecting to OpenClaw endpoints without an official API key. If you have been using Claude Code with your local models, you likely hit an "Account Restricted" or "Invalid API Key" error this week. 
+
+This guide breaks down exactly why this happened, how the detection works under the hood, and the reliable workaround to get your local setup running again.
+
+<CtaCard title="Automate your workflow" description="Get my free weekly newsletter on building local AI agents with OpenClaw." link="https://matteogiardino.com/newsletter" buttonText="Subscribe" />
+
+## The Restriction: Why Claude Code Stopped Working
+
+Claude Code was designed as an official CLI to drive Anthropic cloud business. While the developer community quickly figured out how to point it at local OpenClaw endpoints to use local models for free, Anthropic has now patched this loophole. 
+
+The CLI now actively verifies that the API key provided is a valid, paid Anthropic key before initializing the MCP server loop, even if you override the base URL.
+
+## How Anthropic Detects Third-Party Gateways
+
+The restriction is not just a simple endpoint check. The newest version of Claude Code implements a handshake protocol:
+1. **Key format validation**: It checks if the key matches the `sk-ant-...` regex pattern.
+2. **Ping endpoint**: It hits a specific `/v1/users/me` endpoint that most local proxies (including standard OpenClaw) do not implement.
+3. **Telemetry mismatch**: It looks for latency patterns that indicate a local loopback address rather than Anthropic edge network.
+
+## The Official vs Open-Source Friction
+
+This move highlights the growing friction between vendor-locked AI tools and the open-source ecosystem. While Anthropic builds incredible developer tools, their incentive is API revenue. OpenClaw, on the other hand, is built on the philosophy that your compute and your data belong to you.
+
+When relying entirely on closed-ecosystem tools, you are always one update away from a broken workflow.
+
+## Workarounds: How to Keep Using Claude Code Locally
+
+Fortunately, the local AI community moves fast. To bypass the restriction, you need an endpoint that properly spoofs the handshake.
+
+**1. Use the Antigravity Proxy**
+The latest version of Antigravity includes a `claude-compat` mode. 
+
+```bash
+# Start Antigravity in compatibility mode
+antigravity start --mode claude-compat --port 3456
+```
+
+**2. Configure Claude Code**
+Set your environment variables to point to the Antigravity proxy and use a dummy key that passes the regex check:
+
+```bash
+export ANTHROPIC_API_KEY="sk-ant-api03-dummykey"
+export ANTHROPIC_BASE_URL="http://127.0.0.1:3456/v1"
+claude
+```
+
+By intercepting the handshake, Antigravity translates the proprietary checks into standard OpenClaw responses, letting you run Claude Code with your local models once again.
+
+*Written by Matteo Giardino, a Fractional AI CTO specializing in building autonomous agentic teams for SMEs using open-source tools like OpenClaw.*
