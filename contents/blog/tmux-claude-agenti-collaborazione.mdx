@@ -1,0 +1,45 @@
+---
+title: "Come TMUX e i Team di Agenti Claude Trasformano la Collaborazione"
+description: "Scopri come orchestrare più agenti Claude Code usando TMUX per una collaborazione IA efficiente basata su terminale e flussi di lavoro paralleli."
+date: "2026-05-30"
+author: "Matteo Giardino"
+createdAt: "2026-05-30T10:00:00Z"
+modifiedAt: "2026-05-30T10:00:00Z"
+summary: "Scopri come orchestrare più agenti Claude Code usando TMUX per una collaborazione IA efficiente basata su terminale e flussi di lavoro paralleli."
+authorId: "matteo"
+locale: "it"
+translationSlug: "tmux-claude-agent-collaboration"
+tags: ["IA", "Claude Code", "OpenClaw", "TMUX"]
+image: "/images/blog/tmux-claude-agenti-collaborazione.png"
+---
+
+Usare TMUX per eseguire istanze multiple di Claude Code trasforma completamente il modo in cui orchestriamo gli agenti IA localmente. Invece di affidarti a complessi framework Python per gestire lo stato, puoi usare il multiplexing del terminale per creare uno spazio di lavoro visivo ed estremamente efficiente in cui diversi agenti IA collaborano sulla stessa base di codice. Ultimamente eseguo i miei setup multi-agente in questo modo, e riduce drasticamente i costi di gestione.
+
+<CtaCard title="Ricevi consigli pratici sull'IA ogni settimana" subtitle="Unisciti a oltre 2.000 sviluppatori iscritti alla mia newsletter." buttonText="Iscriviti" href="https://matteogiardino.com/newsletter" />
+
+## Perché TMUX è il Workspace Perfetto per gli Agenti
+
+La maggior parte dei framework multi-agente nasconde ciò che gli agenti stanno effettivamente facendo. Quando esegui Claude Code nei riquadri di TMUX, ottieni un'osservabilità in tempo reale. Puoi guardare l'agente frontend che scrive componenti React nel riquadro sinistro mentre l'agente backend configura l'API in quello destro. Questo isolamento visivo rende il debugging dei cicli degli agenti estremamente semplice.
+
+## Configurare Più Agenti Claude Code nei Riquadri
+
+Per iniziare, avvia una nuova sessione TMUX:
+
+```bash
+tmux new-session -s team-agenti
+```text
+Dividi il terminale verticalmente (`Ctrl+b`, `%`) e orizzontalmente (`Ctrl+b`, `"`). In ogni riquadro, avvia un'istanza specializzata di Claude Code. Puoi passare prompt di sistema o file di contesto specifici a ciascuna istanza affinché conoscano il loro ruolo nel progetto.
+
+## Passare il Contesto tra Agenti tramite File System
+
+Gli agenti non hanno bisogno di un broker di messaggi complesso. Possono comunicare perfettamente attraverso il file system. Quando l'agente backend finisce lo schema API, lo scrive in un file `schema.json`. L'agente frontend può essere istruito a leggere questo file prima di costruire i componenti UI. È esattamente così che gli sviluppatori umani collaborano in un repository condiviso.
+
+## Caso d'Uso Reale: Agenti Frontend e Backend in Collaborazione
+
+In un recente progetto OpenClaw, ho usato TMUX per accoppiare un agente UI con un agente database. L'agente database ha generato lo schema Prisma ed eseguito le migrazioni. Una volta finalizzato lo schema, l'agente UI ha letto i tipi Prisma per costruire form React tipizzati. TMUX mi ha permesso di monitorare entrambi i processi contemporaneamente e intervenire solo quando era necessaria l'approvazione umana.
+
+<CtaCard title="Vuoi creare agenti locali?" subtitle="Dai un'occhiata a OpenClaw su GitHub." buttonText="Vedi GitHub" href="https://github.com/openclaw/openclaw" />
+
+*Matteo Giardino è un Fractional AI CTO che aiuta i team a integrare LLM locali e flussi di lavoro basati su agenti.*
+
+Scritto da Matteo Giardino, Fractional AI CTO.

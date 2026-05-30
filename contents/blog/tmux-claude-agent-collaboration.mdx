@@ -1,0 +1,45 @@
+---
+title: "How TMUX and Claude Agent Teams Transform Collaboration"
+description: "Discover how to orchestrate multiple Claude Code agents using TMUX for efficient, terminal-based AI collaboration and parallel workflows."
+date: "2026-05-30"
+author: "Matteo Giardino"
+createdAt: "2026-05-30T10:00:00Z"
+modifiedAt: "2026-05-30T10:00:00Z"
+summary: "Discover how to orchestrate multiple Claude Code agents using TMUX for efficient, terminal-based AI collaboration and parallel workflows."
+authorId: "matteo"
+locale: "en"
+translationSlug: "tmux-claude-agenti-collaborazione"
+tags: ["AI", "Claude Code", "OpenClaw", "TMUX"]
+image: "/images/blog/tmux-claude-agent-collaboration.png"
+---
+
+Using TMUX to run multiple Claude Code instances completely transforms how we orchestrate AI agents locally. Instead of relying on complex Python frameworks to manage state, you can use terminal multiplexing to create a visual, highly efficient workspace where different AI agents collaborate on the same codebase. I've been running my multi-agent setups this way, and it drastically reduces overhead.
+
+<CtaCard title="Get practical AI tips every week" subtitle="Join 2,000+ devs reading my newsletter." buttonText="Subscribe" href="https://matteogiardino.com/newsletter" />
+
+## Why TMUX is the Perfect Agent Workspace
+
+Most multi-agent frameworks obscure what the agents are actually doing. When you run Claude Code in TMUX panes, you get real-time observability. You can watch the frontend agent writing React components in the left pane while the backend agent sets up the API in the right pane. This visual isolation makes debugging agent loops trivial.
+
+## Setting up Multiple Claude Code Agents in Panes
+
+To get started, spin up a new TMUX session:
+
+```bash
+tmux new-session -s agent-team
+```text
+Split your terminal vertically (`Ctrl+b`, `%`) and horizontally (`Ctrl+b`, `"`). In each pane, start a specialized instance of Claude Code. You can pass specific system prompts or context files to each instance so they know their role in the project.
+
+## Passing Context Between Agents via File System
+
+Agents don't need a complex message broker. They can communicate perfectly well through the file system. When the backend agent finishes the API schema, it writes it to a `schema.json` file. The frontend agent can be instructed to read this file before building the UI components. This is exactly how human developers collaborate in a shared repository.
+
+## Real-World Use Case: Frontend and Backend Agents Cooperating
+
+In a recent OpenClaw project, I used TMUX to pair a UI agent with a database agent. The database agent generated the Prisma schema and ran migrations. Once the schema was finalized, the UI agent read the Prisma types to build strictly-typed React forms. TMUX allowed me to monitor both processes simultaneously and step in only when human approval was needed.
+
+<CtaCard title="Want to build local agents?" subtitle="Check out OpenClaw on GitHub." buttonText="View GitHub" href="https://github.com/openclaw/openclaw" />
+
+*Matteo Giardino is a Fractional AI CTO helping teams integrate local LLMs and agentic workflows.*
+
+Written by Matteo Giardino, Fractional AI CTO.
