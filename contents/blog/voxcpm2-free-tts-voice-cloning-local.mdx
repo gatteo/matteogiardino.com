@@ -1,0 +1,55 @@
+---
+title: "VoxCPM2: Free TTS and Local Voice Cloning Guide"
+description: "How to use VoxCPM2, the tokenizer-free multilingual TTS from OpenBMB, for zero-shot voice cloning and 48kHz audio generation locally."
+publishedAt: "2026-05-30"
+locale: "en"
+translationSlug: "voxcpm2-tts-gratis-clonazione-voce-locale"
+category: "AI Tools"
+author: "Matteo Giardino"
+createdAt: "2026-05-30"
+modifiedAt: "2026-05-30"
+summary: "A deep dive into VoxCPM2 for local voice cloning."
+image: "/images/blog/voxcpm2-free-tts-voice-cloning-local.png"
+authorId: "matteogiardino"
+---
+
+VoxCPM2 is a revolutionary tokenizer-free TTS model by OpenBMB that delivers 48kHz studio-quality speech generation and zero-shot voice cloning. In this guide, I will show you how to set it up locally to replace expensive paid APIs with a powerful open-source alternative.
+
+<CtaCard title="general-newsletter" />
+
+## What is VoxCPM2?
+
+VoxCPM2 builds upon the MiniCPM-4 architecture, taking a unique approach to speech synthesis. Unlike traditional models that rely on complex tokenizers to break down text and audio, VoxCPM2 uses hierarchical language modeling. This tokenizer-free design allows it to natively process 30+ languages and generate incredibly natural, context-aware speech. 
+
+After trying it out on my local machine, the difference in latency and expressiveness compared to older open-source models is striking.
+
+## Key Features: Voice Design and Zero-Shot Cloning
+
+There are three main modes that make VoxCPM2 stand out:
+1. **Voice Design:** Generate brand-new, unique voices by mixing different characteristics.
+2. **Controllable Cloning:** Clone a voice with precise control over emotion, pitch, and pacing.
+3. **Ultimate Cloning:** Zero-shot cloning that requires only a few seconds of reference audio to perfectly mimic a speaker's timbre.
+
+All of this happens locally, ensuring complete privacy for your voice data.
+
+## How to Install and Run VoxCPM2 Locally
+
+To get started, you'll need Python and a dedicated environment. You can clone the official repository from OpenBMB:
+
+```bash
+git clone https://github.com/OpenBMB/VoxCPM.git
+cd VoxCPM
+pip install -r requirements.txt
+```
+
+Once installed, you can download the model weights and start generating 48kHz audio immediately. The open-source community is already building UI wrappers, making it easier than ever to interact with the model without writing custom inference scripts.
+
+## VoxCPM2 vs Other Open-Source TTS Models
+
+When I compared VoxCPM2 to other solutions like Fish Speech S2 Pro, the tokenizer-free architecture of VoxCPM2 showed a distinct advantage in multilingual transitions. While Fish Audio excels in specific stylistic generations, VoxCPM2's 1.8 million hours of bilingual training data make it exceptionally robust for long-form content generation in multiple languages.
+
+## Conclusion
+
+Running VoxCPM2 locally gives you an enterprise-grade TTS engine without the recurring costs. Whether you are building an AI agent or automating video voiceovers, it's an essential tool in the modern AI stack.
+
+*Matteo Giardino is a Fractional AI CTO helping businesses integrate advanced local AI models into their workflows.*
