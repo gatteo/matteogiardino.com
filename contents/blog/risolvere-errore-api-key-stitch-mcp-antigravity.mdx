@@ -1,0 +1,92 @@
+---
+title: "Come risolvere l'errore API Key di Stitch MCP su Antigravity"
+description: "Guida passo-passo per risolvere gli errori legati all'API key quando si collega Stitch MCP ad Antigravity IDE, con i percorsi dei file di configurazione e gli errori più comuni."
+date: 2026-05-31
+author: matteo
+locale: it
+translationSlug: fix-stitch-mcp-api-key-antigravity
+createdAt: "2026-05-31T08:00:00Z"
+modifiedAt: "2026-05-31T08:00:00Z"
+summary: "Come risolvere gli errori API key di Stitch MCP su Antigravity"
+image: "/images/blog/risolvere-errore-api-key-stitch-mcp-antigravity.png"
+authorId: "matteo"
+
+tags:
+  - openclaw
+  - antigravity
+  - mcp
+---
+
+Se stai cercando di collegare Stitch MCP ad Antigravity e ti ritrovi bloccato da un errore relativo all'API key, non sei il solo. Il problema nasce quasi sempre dal modo in cui Antigravity gestisce le variabili d'ambiente per i server MCP (Model Context Protocol) rispetto alla versione standard di OpenClaw. Ecco come ho risolto l'errore "API key missing or invalid" e come puoi rimettere in funzione il tuo agente in pochi minuti.
+
+<CtaCard title="Hai bisogno di orchestrare più agenti? Leggi la guida ad HiClaw" url="/blog/hiclaw-team-multi-agente-locale" />
+
+## Perché si verifica l'errore dell'API Key con Stitch MCP
+
+Antigravity IDE isola l'ambiente di esecuzione dei suoi server MCP per evitare problemi di sicurezza e fuga di token. Se ti limiti a esportare la tua `STITCH_API_KEY` nel file `.bashrc` o `.zshrc`, il demone di Antigravity non la leggerà quando avvia l'integrazione di Stitch. 
+
+A differenza della CLI standard di OpenClaw (che eredita direttamente l'ambiente della tua shell), Antigravity richiede una configurazione esplicita nel suo file interno dedicato alle impostazioni MCP. Puoi approfondire questo aspetto leggendo la [guida agli errori comuni di OpenClaw](/blog/debugging-openclaw-common-errors).
+
+## Passaggio 1: Trovare il file di configurazione MCP di Antigravity
+
+Per prima cosa, assicurati che Antigravity sia completamente chiuso. Dopodiché, apri il terminale e naviga nella directory di configurazione di Antigravity.
+
+Su macOS e Linux:
+```bash
+nano ~/.antigravity/mcp-servers.json
+```
+
+Su Windows:
+```bash
+notepad %USERPROFILE%\.antigravity\mcp-servers.json
+```
+
+Se il file non esiste ancora, crealo. Questo è il punto in cui Antigravity registra i tool esterni come Stitch.
+
+## Passaggio 2: Aggiungere l'API Key al blocco Env
+
+Cerca la voce relativa a `stitch-mcp`. Dovrebbe avere un aspetto simile a quello qui sotto. Il tuo obiettivo è aggiungere il blocco `env` e inserire al suo interno la tua API key:
+
+```json
+{
+  "mcpServers": {
+    "stitch": {
+      "command": "npx",
+      "args": ["-y", "@stitch/mcp-server"],
+      "env": {
+        "STITCH_API_KEY": "sk-la-tua-api-key-qui"
+      }
+    }
+  }
+}
+```
+
+Assicurati di sostituire `"sk-la-tua-api-key-qui"` con la tua vera chiave fornita da Stitch. Non lasciare virgole finali, perché Antigravity richiede una sintassi JSON estremamente rigorosa.
+
+## Passaggio 3: Verificare la connessione
+
+Riavvia Antigravity. Se sei interessato a capire come funziona il protocollo sotto il cofano, potresti trovare utile l'articolo su [come creare un server MCP personalizzato](/blog/creare-mcp-server-personalizzato-openclaw). Apri l'IDE, vai nel pannello **Agents**, inizia una nuova chat e chiedi all'agente:
+
+*"Puoi elencarmi i tool disponibili tramite Stitch MCP?"*
+
+Se hai configurato correttamente l'API key, l'agente ti risponderà con l'elenco degli strumenti di Stitch (come `stitch_create_project` o `stitch_sync`). Se invece ti risponde "MCP server disconnected", ricontrolla la sintassi del tuo file JSON.
+
+## Errori comuni da evitare
+
+- **Virgolette mancanti:** Il formato JSON richiede le doppie virgolette sia per le chiavi che per i valori.
+- **Nome della chiave errato:** Assicurati di usare esattamente `STITCH_API_KEY` e non `STITCH_KEY` o `API_KEY`.
+- **Mancato riavvio del demone:** Su macOS, chiudere semplicemente l'interfaccia di Antigravity non interrompe il demone in background. Usa `pkill -f antigravity-daemon` prima di riaprire l'app, così sarai sicuro che legga la nuova configurazione.
+
+<AuthorBio />
+
+## Domande Frequenti (FAQ)
+
+**Dove posso trovare l'API Key di Stitch?**
+Puoi generare una nuova API key per Stitch direttamente dalla tua dashboard sviluppatore, nella sezione "API Credentials". Ricorda di mantenerla segreta e di non caricarla mai su repository pubblici.
+
+**Antigravity supporta altri server MCP?**
+Assolutamente sì. Antigravity IDE sfrutta lo standard Model Context Protocol, il che significa che puoi aggiungere qualsiasi server MCP (come Playwright, GitHub o Postgres) al file `mcp-servers.json` seguendo la stessa identica struttura.
+
+**Perché Antigravity isola le variabili d'ambiente?**
+Principalmente per garantire la massima sicurezza ed evitare la fuga di token sensibili. Obbligandoti a dichiarare esplicitamente le variabili nel file `mcp-servers.json`, Antigravity si assicura che solo i tool approvati possano accedere a specifiche credenziali.
+
