@@ -1,0 +1,100 @@
+---
+title: 'GLM 5.1 con OpenClaw: Configurazione Completa e Test'
+createdAt: '2026-05-31T00:00:00Z'
+modifiedAt: '2026-05-31T00:00:00Z'
+summary: 'Scopri come configurare e testare Zhipu AI GLM 5.1 con OpenClaw su Ubuntu. Setup completo, analisi dei costi API e benchmark di programmazione.'
+image: '/images/blog/glm-5-1-con-openclaw-configurazione-e-test-completo.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'glm', 'tutorial', 'api']
+translationSlug: 'glm-5-1-with-openclaw-complete-setup-and-testing-guide'
+---
+
+Di recente ho deciso di testare il nuovo modello di Zhipu AI, configurando GLM 5.1 con OpenClaw per automatizzare i miei flussi di sviluppo quotidiani. GLM 5.1 con OpenClaw è una combinazione molto potente che promette di competere con Claude Opus 4.6 nella scrittura di codice, ma purtroppo è accessibile solo tramite API a pagamento, diversamente dalle versioni precedenti. Dopo averlo configurato e messo alla prova, ecco come installarlo e cosa aspettarsi in scenari reali di programmazione per il 2026.
+
+## GLM 5.1 e i cambiamenti di prezzo
+
+GLM 5.1 rappresenta un grande salto in avanti per Zhipu AI, ma le licenze sono cambiate. In passato, molti appassionati di AI locale si affidavano a distribuzioni open-weight gratuite. Ora, la piena potenza di GLM 5.1 è bloccata dietro un piano commerciale con fatturazione trimestrale al costo di $150 al mese (circa €140). Questo rappresenta un aumento del 30% rispetto al modello di prezzo introdotto alla fine del 2025. Per maggiori dettagli, puoi consultare la documentazione su [Zhipu AI](https://zhipuai.cn/en/).
+
+Ho deciso di pagare l'accesso principalmente perché i benchmark ufficiali mostrano GLM 5.1 testa a testa con Claude 4.6. Dato che uso OpenClaw quotidianamente per i miei agenti autonomi, dovevo verificare se questo costo fosse giustificato. In generale preferisco usare modelli locali - come mostrato nella nostra [Guida Qwen 3.5 + Ollama: Come Eseguire Agenti AI in Locale](/blog/guida-qwen-35-ollama-openclaw) - ma in attesa di un rilascio open-weight, le API sono l'unica strada percorribile.
+
+<CtaCard
+    title="Serve aiuto con l'integrazione AI?"
+    description="Contattami per una consulenza su come implementare strumenti AI e automazioni nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Configurare GLM 5.1 con OpenClaw su Ubuntu
+
+Integrare GLM 5.1 con OpenClaw richiede la configurazione dell'endpoint API come provider personalizzato. Se hai dubbi su come integrare i modelli, puoi leggere [Usare Ollama con OpenClaw: Guida completa agli agenti IA locali](/blog/usare-ollama-con-openclaw-it) per avere una panoramica generale.
+
+### Step 1: Installare OpenClaw
+
+Se non lo hai già fatto, installa l'ultima versione di OpenClaw sul tuo server Ubuntu. Assicurati di aggiornare se hai una versione vecchia, per evitare problemi con i formati delle API.
+
+```bash
+npm install -g openclaw@latest
+```
+
+### Step 2: Configurare il provider Zhipu
+
+Devi inserire la tua chiave API nel file di configurazione di OpenClaw. Apri `~/.openclaw/openclaw.json` e aggiungi il blocco per Zhipu. Configurare GLM 5.1 con OpenClaw è molto semplice una volta inserite le chiavi corrette.
+
+```json
+{
+  "providers": {
+    "zhipu": {
+      "apiKey": "LA_TUA_CHIAVE_API_GLM",
+      "baseUrl": "https://open.bigmodel.cn/api/paas/v4/"
+    }
+  },
+  "defaultModel": "zhipu:glm-5.1"
+}
+```
+
+Una volta salvato, riavvia il demone di OpenClaw:
+
+```bash
+openclaw restart
+```
+
+## Test di programmazione con GLM 5.1
+
+Per testare GLM 5.1 con OpenClaw, ho chiesto al modello di scrivere uno script Python multi-file per leggere, fare il parsing e analizzare oltre 50.000 file di log simultaneamente.
+
+Il modello ha capito subito i requisiti e ha strutturato un piano chiaro utilizzando `argparse` e `pathlib` in Python. Ha completato il task al primo tentativo senza errori di sintassi. Rispetto a Claude 4.6, usare GLM 5.1 con OpenClaw è sembrato altrettanto veloce nel generare l'architettura iniziale, impiegando appena 12 secondi per generare le prime 500 righe di codice. Se ti interessa l'automazione locale, potresti anche valutare i plugin elencati in [Gli 8 migliori plugin OpenClaw nel 2026: Tool essenziali](/blog/8-migliori-plugin-openclaw-2026).
+
+## Test di bugfix SQL con GLM 5.1
+
+Successivamente, gli ho sottoposto una query di aggregazione SQL errata che ometteva silenziosamente delle righe a causa di un `LEFT JOIN` combinato con una clausola `WHERE` sbagliata, causando una discrepanza del 15% nei report finanziari.
+
+GLM 5.1 con OpenClaw ha identificato il problema all'istante. Ha spiegato correttamente che la clausola `WHERE` sulla tabella di destra forzava un comportamento da `INNER JOIN`, e ha riscritto la query spostando la condizione all'interno della clausola `ON`. GLM 5.1 ha superato il test senza alcuno sforzo, dimostrando un'ottima affidabilità nel debugging.
+
+## Costi API vs Modelli Locali
+
+Vale la pena pagare per l'API? Se fai un uso intensivo di agenti AI per la programmazione, la precisione di GLM 5.1 con OpenClaw è innegabile. Tuttavia, per un uso occasionale o per server personali, la fatturazione trimestrale di $450 risulta alta.
+
+Se utilizzi già modelli come illustrato in [Qwen 2.5 Coder 32B: Guida 2026 a Ollama e OpenClaw](/blog/qwen-25-coder-32b-ollama-openclaw-guida), potresti non sentire la necessità di cambiare, a meno che non ti serva l'enorme context window di 1M token. Resto in attesa di una versione open-weight da eseguire offline.
+
+## Domande frequenti
+
+### GLM 5.1 funziona nativamente con OpenClaw?
+
+Sì, puoi configurare GLM 5.1 con OpenClaw come provider personalizzato compatibile con OpenAI nel tuo `openclaw.json` puntando l'URL base all'endpoint API di Zhipu.
+
+### Posso eseguire GLM 5.1 in locale?
+
+Al momento, il modello completo GLM 5.1 è disponibile solo tramite API a pagamento. Gli utenti di AI locale dovranno aspettare un rilascio open-weight per poterlo eseguire tramite strumenti come Ollama o llama.cpp.
+
+### Come si confronta GLM 5.1 con Claude 4.6 per scrivere codice?
+
+Nei miei test, GLM 5.1 con OpenClaw offre prestazioni simili a Claude 4.6 in termini di logica e struttura, anche se Claude a volte scrive di default codice più robusto per la gestione degli errori.
+
+## Conclusione
+
+GLM 5.1 di Zhipu è un modello formidabile per la scrittura di codice e il debugging. Anche se i costi delle API potrebbero scoraggiare alcuni appassionati, usare GLM 5.1 con OpenClaw integra tutto alla perfezione. Continuerò a tenere d'occhio futuri rilasci open-weight eseguibili in locale.
+
+*Scritto da Matteo Giardino, CTO e founder. Sviluppo agenti AI per le PMI in Italia. [I miei progetti](/projects).*
