@@ -1,0 +1,57 @@
+---
+title: "Claude Code Source Leak: Fake Tools and Frustration Regexes"
+summary: "An analysis of the recent Claude Code source map leak, revealing undercover modes, frustration detection, and fake tools used by Anthropic."
+createdAt: "2026-05-31T00:00:00Z"
+modifiedAt: "2026-05-31T00:00:00Z"
+authorId: "matteo"
+image: "/images/blog/claude-code-source-leak-fake-tools-frustration-regexes.png"
+locale: "en"
+translationSlug: "claude-code-source-leak-fake-tools-regex-frustrazione"
+---
+
+The recent accidental leak of the Claude Code source map via NPM has given developers an unprecedented look under the hood of Anthropic's flagship CLI agent.
+
+What the community found wasn't just a highly capable LLM backend, but a complex layer of "frustration regexes", fake tools, and telemetry mechanisms designed to steer the model and manage user sentiment.
+
+Written by Matteo Giardino.
+
+## The NPM Map File Leak Explained
+
+In modern web development, source maps are often used to debug minified code. Anthropic accidentally published the `.map` files for the Claude Code CLI in their NPM registry. This allowed developers to reconstruct the original TypeScript source code, exposing the inner workings of the CLI.
+
+While the backend model (Claude 3.7 Sonnet) remains a black box API, the client-side logic orchestrating the agent loop was laid bare.
+
+<CtaCard title="Need to build a robust local AI agent?" subtitle="I offer Fractional CTO consulting for startups adopting OpenClaw." buttonText="Let's Talk" buttonLink="/contact" />
+
+## What are Frustration Regexes?
+
+One of the most fascinating discoveries was the use of "frustration regexes." Anthropic built regular expressions directly into the CLI to parse the user's terminal inputs for signs of anger, cursing, or repeated stops.
+
+When a user typed "stop", "halt", or used expletives, the CLI didn't just pass the text to the LLM. It intercepted the command, flagged the user state as "frustrated", and triggered specific empathetic prompts or fallback modes to de-escalate the situation.
+
+## Fake Tools and Undercover Mode
+
+The leak also revealed the use of "fake tools". These are tools defined in the system prompt that don't actually execute code but instead act as behavioral guardrails. If Claude attempts to call a fake tool (like trying to access restricted system settings), the CLI intercepts the call and gently guides the model back on track without the user ever seeing the failure.
+
+Additionally, an "undercover mode" was found, which seems to handle silent telemetry and performance logging without cluttering the main standard output.
+
+## Implementing Frustration Detection in OpenClaw
+
+For developers building their own local AI agents using OpenClaw, these tricks offer a blueprint for better user experience. Instead of relying purely on the LLM to handle frustrated users, you can build an interception layer.
+
+```python
+import re
+
+FRUSTRATION_PATTERN = re.compile(r"\b(stop|halt|stupid|fail)\b", re.IGNORECASE)
+
+def handle_input(user_text):
+    if FRUSTRATION_PATTERN.search(user_text):
+        return "I see this isn't working as expected. Let's pause and reset."
+    return send_to_llm(user_text)
+```
+
+By applying these patterns in OpenClaw, your agents become more resilient to edge cases and user fatigue.
+
+## Conclusion: The Future of Agentic UX
+
+The Claude Code leak proves that building a great AI agent is about more than just intelligence. It's about orchestration, guardrails, and anticipating human behavior.
