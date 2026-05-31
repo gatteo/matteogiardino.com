@@ -1,0 +1,88 @@
+---
+title: 'Using Gemini API Free Tier with OpenClaw (2026 Guide)'
+createdAt: '2026-05-31T00:00:00Z'
+modifiedAt: '2026-05-31T00:00:00Z'
+summary: 'Learn how to configure OpenClaw to use the Google Gemini 3.1 Pro API for free. Step-by-step tutorial to run powerful AI agents without paying for API calls.'
+image: '/images/blog/using-gemini-api-free-openclaw.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw', 'tutorial']
+translationSlug: 'configurare-gemini-api-gratis-openclaw'
+---
+
+Running AI agents locally is great, but the best reasoning models often require expensive hardware or paid API keys. The Google Gemini API offers a generous free tier (15 requests per minute), making it the perfect engine for OpenClaw agents without spending a dime. After configuring my own agents on this setup, here is exactly how to set up the keys and models in your configuration file.
+
+## Why Gemini's Free Tier is a Game Changer for OpenClaw
+
+The free Gemini API (which includes the 3.1 Pro and Flash models) is ideal for developers testing complex agent workflows without burning through a prepaid budget. Unlike OpenAI's API, which strictly requires upfront credits, Google AI Studio's free tier is always active.
+
+The biggest advantage is the massive context window (up to 2 million tokens), allowing you to feed the agent entire codebases without worrying too much about prompt optimization and context pruning.
+
+<CtaCard
+    title="Need autonomous AI agents for your business?"
+    description="Discover how I can help you implement AI-driven automations in your daily workflows."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## How to Get Your Free Gemini API Key
+
+### 1. Access Google AI Studio
+
+The first step is creating a key. Head over to [Google AI Studio](https://aistudio.google.com/) and log in with your Google account. You don't even need a credit card on file for the free tier.
+
+### 2. Generate the Key
+
+Click on "Get API key" and then "Create API key". Copy the generated alphanumeric string. Keep it safe - you will need it for the OpenClaw configuration file.
+
+## Configuring OpenClaw to Use Gemini
+
+Now that you have the key, we need to tell OpenClaw to use it. Open the main OpenClaw configuration file. By default, it is located at `~/.openclaw/openclaw.json`.
+
+You need to add the key under the `env` object and set Gemini as the primary model for your agents.
+
+```json
+{
+  "env": {
+    "GEMINI_API_KEY": "YOUR_API_KEY_HERE",
+    "GEMINI_MODEL_TIMEOUT_SECONDS": "600"
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "google/gemini-3.1-pro-preview"
+      }
+    }
+  }
+}
+```
+
+Save the file. OpenClaw will automatically reload the configuration, or you can force it by restarting the gateway.
+
+## Limitations and Workarounds (The Quota Problem)
+
+There is a catch: the free tier is strictly limited to 15 RPM (requests per minute) and 1,500 RPD (per day). If your OpenClaw agent does too many fast loops, you will hit rate limiting errors (Quota Exceeded).
+
+A practical solution I adopted is to increase the delay between agent actions or combine Gemini with lightweight local models for trivial tasks. If you want to dig deeper, you can read how I manage [Antigravity quotas with Gemini 3.1 Pro](/en/blog/agent-manager-antigravity-guide).
+
+## Frequently Asked Questions
+
+### How much does the Gemini API cost?
+
+The base plan for developers on Google AI Studio is completely free and grants access to Gemini 1.5 Flash and Gemini 1.5 Pro, capped at 15 requests per minute. No credit card is required.
+
+### Can I use the free Gemini API for commercial purposes?
+
+Google's free tier terms of service allow usage for prototyping and development. However, be aware: data sent through the free API may be used by Google to train their models. If you handle sensitive corporate data, consider [free open-source local solutions](/en/blog/setup-openclaw-without-paid-api-key-free).
+
+### What happens if I exceed 15 requests per minute?
+
+The API will return an HTTP 429 (Too Many Requests) error. OpenClaw, if configured with proper retry policies, will wait a few seconds before backing off and trying again.
+
+## Conclusion
+
+Setting up Gemini on OpenClaw is the fastest and cheapest way to access a frontier-class AI model with zero operating costs. With 15 requests per minute, you have plenty of room to test complex agents. Just make sure to monitor your quotas if you decide to scale into production.
+
+*Written by Matteo Giardino, CTO and founder. I build AI agents for SMEs. [View my projects](/en/projects).*
