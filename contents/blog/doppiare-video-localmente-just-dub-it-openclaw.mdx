@@ -1,0 +1,84 @@
+---
+title: 'Doppiare video localmente con Just-Dub-It e OpenClaw'
+createdAt: '2026-06-01T00:00:00Z'
+modifiedAt: '2026-06-01T00:00:00Z'
+summary: 'Scopri come automatizzare il doppiaggio video in locale usando Just-Dub-It, il nuovo modello del SIGGRAPH 2026, orchestrando il tutto con OpenClaw.'
+image: '/images/blog/doppiare-video-localmente-just-dub-it-openclaw.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw']
+translationSlug: 'automating-video-dubbing-locally-just-dub-it-openclaw'
+---
+
+Se hai mai provato a doppiare un video in un'altra lingua mantenendo sincronizzati i movimenti delle labbra del parlante, sai bene quanto sia difficile. I flussi di lavoro tradizionali sono complessi e richiedono strumenti separati per la trascrizione, la traduzione, il text-to-speech e il lip-sync. Ma le cose sono appena diventate molto più semplici con il rilascio di **Just-Dub-It**.
+
+Accettato al SIGGRAPH 2026, Just-Dub-It è un modello di diffusione congiunto audio-visivo che adatta un modello di base tramite una LoRA leggera per il doppiaggio da video a video. In questo tutorial, ti mostrerò come far girare Just-Dub-It in locale e automatizzare l'intero flusso di lavoro utilizzando OpenClaw.
+
+## Cos'è Just-Dub-It?
+
+La maggior parte delle soluzioni di doppiaggio video esistenti si basa su molteplici passaggi fragili. Se un passaggio fallisce (magari il text-to-speech non cattura l'emozione originale, o la sincronizzazione labiale sembra innaturale), il risultato finale ne risente.
+
+Just-Dub-It adotta un approccio diverso. Utilizza un'architettura a singolo modello addestrata su video multilingue. Sfruttando il ricco prior generativo di un modello audio-visivo (come LTX2.3), preserva l'identità del parlante e la sincronizzazione labiale rimanendo robusto ai movimenti complessi.
+
+<CtaCard
+    title="Vuoi automatizzare il tuo business con l'AI?"
+    description="Aiuto piccole e medie imprese italiane a integrare agenti AI nei processi quotidiani. Parliamone."
+    primaryButtonText="Prenota una call"
+    primaryButtonUrl="/contacts"
+    pattern="grid"
+    align="center"
+/>
+
+## Perché automatizzare il doppiaggio video in locale?
+
+Far girare questi processi in locale ha dei vantaggi enormi:
+- **Privacy**: I tuoi video e audio grezzi non lasciano mai la tua macchina.
+- **Costo**: Nessun limite API o costosi abbonamenti cloud per minuto di video.
+- **Controllo**: Puoi perfezionare i pesi della LoRA e i parametri finché l'output non è perfetto.
+
+Introducendo OpenClaw nel mix, possiamo trasformare un processo manuale di esecuzione script in un flusso di lavoro completamente autonomo.
+
+## Impostare la pipeline di automazione
+
+Per automatizzare il tutto, useremo un agent OpenClaw che si occuperà dei passaggi preparatori. Il flusso è questo:
+1. L'agent estrae la trascrizione usando Whisper in locale.
+2. L'agent traduce la trascrizione nella lingua di destinazione.
+3. L'agent invoca la pipeline di inferenza di Just-Dub-It con il nuovo testo.
+
+### Il workflow di OpenClaw
+
+Ecco come puoi configurare il task in OpenClaw:
+
+```typescript
+import { OpenClaw } from 'openclaw';
+
+const agent = new OpenClaw({
+  model: 'local/gemini-3.1-pro-preview',
+  tools: ['terminal', 'read_file', 'write_file']
+});
+
+async function runDubbingWorkflow(videoPath: string, targetLanguage: string) {
+  await agent.run(
+    `Traduci il video in ${videoPath} in ${targetLanguage}. 
+    1. Estrai l'audio e trascrivilo.
+    2. Traduci il testo.
+    3. Esegui la pipeline di Just-Dub-It su LTX2.3 con il testo tradotto.`
+  );
+}
+```
+
+L'agent usa il suo strumento terminale per eseguire i comandi bash necessari, inclusa l'invocazione finale della CLI di `justdubit`.
+
+## Domande frequenti
+
+### Just-Dub-It supporta più parlanti?
+Sì, grazie al suo modello di diffusione di base, gestisce dinamiche complesse del mondo reale meglio dei rigidi strumenti di lip-sync basati sui punti di riferimento facciali.
+
+### Quali sono i requisiti hardware?
+Avrai bisogno di una GPU con almeno 16GB di VRAM per far girare comodamente il modello base LTX2.3 e la LoRA di Just-Dub-It.
+
+## Considerazioni finali
+
+Combinare modelli locali all'avanguardia come Just-Dub-It con framework di orchestrazione come OpenClaw ci permette di costruire pipeline video interamente locali e pronte per la produzione. Stiamo passando da un mondo in cui si concatenano API a uno in cui basta dare a un agent un video e una lingua di destinazione.
+
+*Scritto da Matteo Giardino, CTO e founder. Costruisco agenti AI per piccole e medie imprese in Italia. [I miei progetti](/projects).*

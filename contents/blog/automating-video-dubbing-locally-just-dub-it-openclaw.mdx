@@ -1,0 +1,84 @@
+---
+title: 'Automating Video Dubbing Locally with Just-Dub-It and OpenClaw'
+createdAt: '2026-06-01T00:00:00Z'
+modifiedAt: '2026-06-01T00:00:00Z'
+summary: 'Learn how to automate video dubbing locally using Just-Dub-It, the new SIGGRAPH 2026 model, and orchestrate the pipeline with OpenClaw.'
+image: '/images/blog/automating-video-dubbing-locally-just-dub-it-openclaw.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw']
+translationSlug: 'doppiare-video-localmente-just-dub-it-openclaw'
+---
+
+If you've ever tried to dub a video into another language while keeping the speaker's lip movements in sync, you know the struggle. Traditional pipelines are complex, requiring separate tools for transcription, translation, text-to-speech, and lip-syncing. But things just got significantly easier with the release of **Just-Dub-It**.
+
+Accepted at SIGGRAPH 2026, Just-Dub-It is a joint audio-visual diffusion model that adapts a foundational audio-video model for video-to-video dubbing via a lightweight LoRA. In this tutorial, I'll show you how to run Just-Dub-It locally and automate the entire workflow using OpenClaw.
+
+## What is Just-Dub-It?
+
+Most existing video dubbing solutions rely on multiple fragile steps. If one step fails - say, the text-to-speech doesn't capture the original emotion, or the lip-syncing looks unnatural - the final result suffers.
+
+Just-Dub-It takes a different approach. It uses a single-model architecture trained on multilingual videos with language switches within a single clip. By leveraging the rich generative prior of an audio-visual model (like LTX2.3), it preserves speaker identity and lip synchronization while remaining robust to complex motions.
+
+<CtaCard
+    title="Building something with OpenClaw?"
+    description="If you're integrating OpenClaw into a product or workflow, I'm available for short engagements."
+    primaryButtonText="Get in Touch"
+    primaryButtonUrl="/contacts"
+    pattern="grid"
+    align="center"
+/>
+
+## Why Automate Video Dubbing Locally?
+
+Running video dubbing pipelines locally has a few massive advantages:
+- **Privacy**: Your raw videos and audio never leave your machine.
+- **Cost**: No API limits or expensive cloud rendering costs per minute of video.
+- **Control**: You can tweak the LoRA weights and parameters until the output is perfect.
+
+By introducing OpenClaw to the mix, we can transform a manual script-execution process into a fully autonomous workflow.
+
+## Setting Up the Automation Pipeline
+
+To automate this, we will use an OpenClaw agent to handle the preparation steps. The pipeline looks like this:
+1. The agent extracts the transcript using Whisper locally.
+2. The agent translates the transcript to the target language.
+3. The agent invokes the Just-Dub-It inference pipeline with the new text.
+
+### The OpenClaw Workflow
+
+Here is how you can set up the OpenClaw task:
+
+```typescript
+import { OpenClaw } from 'openclaw';
+
+const agent = new OpenClaw({
+  model: 'local/gemini-3.1-pro-preview',
+  tools: ['terminal', 'read_file', 'write_file']
+});
+
+async function runDubbingWorkflow(videoPath: string, targetLanguage: string) {
+  await agent.run(
+    `Translate the video at ${videoPath} into ${targetLanguage}. 
+    1. Extract audio and transcribe it.
+    2. Translate the text.
+    3. Run the Just-Dub-It inference pipeline on LTX2.3 with the translated text.`
+  );
+}
+```
+
+The agent uses its terminal tool to run the necessary bash commands, including the final `justdubit` CLI invocation.
+
+## FAQ
+
+### Does Just-Dub-It support multiple speakers?
+Yes, thanks to its foundational diffusion model, it handles complex real-world dynamics better than strict facial-landmark-based lip-sync tools.
+
+### What are the hardware requirements?
+You will need a GPU with at least 16GB of VRAM to comfortably run the LTX2.3 base model and the Just-Dub-It LoRA. 
+
+## Final Thoughts
+
+Combining cutting-edge local models like Just-Dub-It with orchestration frameworks like OpenClaw allows us to build production-ready, entirely local video pipelines. We're moving from a world of chaining APIs to simply giving an agent a video and a target language.
+
+*Written by Matteo Giardino, CTO and founder. I build AI agents for SMEs in Italy. [My projects](/projects).*
