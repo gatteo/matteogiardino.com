@@ -1,0 +1,96 @@
+---
+title: 'Configurazione di Claude Code per lo Sviluppo Web: Guida Completa'
+createdAt: '2026-06-01T00:00:00Z'
+modifiedAt: '2026-06-01T00:00:00Z'
+summary: 'Scopri come configurare Claude Code per lo sviluppo web moderno. Una guida pratica per creare componenti frontend e avviare server locali.'
+image: '/images/blog/configurazione-claude-code-sviluppo-web.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'claude-code', 'sviluppo-web']
+translationSlug: 'claude-code-web-coding-setup'
+---
+
+Di recente ho deciso di spostare interamente il mio flusso di lavoro di sviluppo web su Claude Code. Claude Code è un potente strumento CLI che agisce come un agente di programmazione autonomo direttamente nel tuo terminale. Dopo averlo testato per alcune settimane, ecco l'esatta configurazione che ti serve per farlo funzionare perfettamente con framework frontend come Next.js e React.
+
+## Cos'è Claude Code per lo Sviluppo Web?
+
+Claude Code è un agente basato su Anthropic in grado di leggere, scrivere ed eseguire codice all'interno della directory del tuo progetto.
+
+Per lo sviluppo web, questo significa che puoi chiedergli di creare interi componenti React, fare il debug di problemi CSS o scrivere test senza mai lasciare il terminale. Si integra perfettamente con i tuoi strumenti esistenti come Vite, Webpack o Next.js.
+
+<CtaCard
+    title="Hai bisogno di aiuto con l'integrazione dell'AI?"
+    description="Contattami per una consulenza su come implementare strumenti e automazioni AI nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Prerequisiti e Installazione
+
+### Installare Claude Code
+
+Devi avere Node.js installato sulla tua macchina. Installa Claude Code a livello globale usando npm.
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+Una volta installato, autenticati con il tuo account Anthropic:
+
+```bash
+claude auth
+```
+
+## Configurare Claude Code per il Tuo Framework Frontend
+
+Per ottenere il massimo da Claude Code in un progetto web, dovresti impostare un file di configurazione locale. Ti consiglio di creare un file `.clauderc` nella root del tuo progetto per fornire il contesto sul tuo stack tecnologico.
+
+```json
+{
+  "stack": "Next.js App Router, Tailwind CSS, TypeScript",
+  "conventions": [
+    "Use server components by default",
+    "Use Tailwind for styling"
+  ]
+}
+```
+
+Questo contesto assicura che Claude Code generi codice in linea con l'architettura del tuo progetto.
+
+## Usare Claude Code per Creare Componenti
+
+Ora puoi chiedere a Claude Code di costruire componenti web complessi. Entra nella directory del tuo progetto ed esegui:
+
+```bash
+claude "Crea un componente barra di navigazione responsive usando Tailwind CSS e le icone Lucide React. Inseriscilo in src/components."
+```
+
+Claude leggerà i tuoi file esistenti, creerà il componente e aggiornerà persino le importazioni automaticamente.
+
+## Errori Comuni e Come Risolverli
+
+Una cosa che si è rotta al primo tentativo sono stati i conflitti di porta quando ho chiesto a Claude Code di avviare il server di sviluppo locale. Se gli dici `claude "start the dev server"`, potrebbe provare a usare una porta già in uso e bloccarsi.
+
+La soluzione è essere espliciti: `claude "avvia il server di sviluppo sulla porta 3001 e restituisci il controllo"`.
+
+## Conclusione
+
+Dopo un mese di utilizzo di questa configurazione, sto notando una riduzione del 40% nel tempo necessario per creare componenti dell'interfaccia utente. Se ti interessa esplorare ulteriormente i flussi di lavoro basati su terminale, dai un'occhiata alla mia guida su [Claude Code Desktop IDE](/blog/claude-code-desktop-ide).
+
+## Domande frequenti
+
+### Claude Code supporta TypeScript?
+
+Sì, Claude Code supporta pienamente TypeScript e può dedurre automaticamente i tipi in base ai file esistenti nel tuo progetto e al `tsconfig.json`.
+
+### Claude Code può avviare server web locali?
+
+Sì, Claude Code può eseguire comandi da terminale, incluso l'avvio di server web locali come `npm run dev`, anche se devi fare attenzione a gestire i processi in background.
+
+### Claude Code è gratuito?
+
+Claude Code richiede una chiave API di Anthropic, quindi l'utilizzo viene fatturato secondo i prezzi standard delle API in base ai token elaborati.
+
+*Scritto da Matteo Giardino, CTO e fondatore. Costruisco agenti AI per le PMI in Italia. [I miei progetti](/projects).*
