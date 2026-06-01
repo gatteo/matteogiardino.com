@@ -28,6 +28,11 @@ const nextConfig = {
     async redirects() {
         return [
             {
+                source: '/blog/strategia-adozione-ia-pmi-fractional-cto',
+                destination: '/blog/fractional-cto-guida-completa-ai-benefici-per-la-tua-azienda',
+                permanent: true,
+            },
+            {
                 source: '/projects/devv-30',
                 destination: '/projects/devv',
                 permanent: true,
