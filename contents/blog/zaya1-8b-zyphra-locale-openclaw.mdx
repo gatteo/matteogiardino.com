@@ -1,0 +1,99 @@
+---
+title: 'Zaya-1 8B in Locale: Guida all''Uso con OpenClaw e Ollama'
+createdAt: '2026-06-01T00:00:00Z'
+modifiedAt: '2026-06-01T00:00:00Z'
+summary: 'Scopri come eseguire Zaya-1 8B di Zyphra in locale con OpenClaw. Un modello Mixture of Experts ultra-efficiente con soli 760M parametri attivi.'
+image: '/images/blog/zaya1-8b-zyphra-locale-openclaw.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'ollama', 'local ai']
+translationSlug: 'zaya1-8b-zyphra-local-openclaw'
+---
+
+Ho testato il nuovo modello Zaya-1 8B rilasciato da Zyphra integrandolo direttamente nei miei agenti OpenClaw. Questo LLM utilizza un'architettura Mixture of Experts (MoE) che, a fronte di 8.4 miliardi di parametri totali, ne attiva solo 760 milioni per token. In questa guida vediamo cos'è, perché le sue performance di ragionamento sono sbalorditive per le sue dimensioni, e come farlo girare in locale con Ollama per orchestrare i tuoi workflow AI.
+
+## Cos'è Zaya-1 8B di Zyphra?
+
+Zaya-1 8B è un LLM open-source progettato per massimizzare l'intelligenza artificiale minimizzando il carico computazionale. È il primo modello di queste dimensioni addestrato interamente su hardware AMD.
+
+L'innovazione chiave sta nel suo router che attiva solo una frazione dei 16 moduli esperti disponibili (solo 760 milioni di parametri attivi per volta). Ancora più interessante è l'uso del **Marovian RSA**, una tecnica di ragionamento che trasporta in avanti solo le code dei calcoli di ragionamento più complessi, permettendo al modello di risolvere problemi matematici e logici difficili competendo con colossi come GPT-5 e Claude 4.5 Sonnet.
+
+<CtaCard
+    title="Hai bisogno di agenti AI per il tuo business?"
+    description="Aiuto le PMI a implementare automazioni avanzate e agenti AI locali per ottimizzare i processi aziendali."
+    primaryButtonText="Scopri le consulenze"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Requisiti hardware e installazione con Ollama
+
+Nei test ufficiali, far girare la versione a precisione intera richiede quasi 47GB di VRAM. Tuttavia, per i nostri agenti locali su hardware consumer (come un Mac o un PC con RTX 4090), possiamo utilizzare la versione quantizzata su Ollama.
+
+### Scaricare il modello
+
+Apri il terminale ed esegui il pull del modello quantizzato ottimizzato per l'inferenza rapida:
+
+```bash
+ollama run zaya-1-8b
+```
+
+Questo scaricherà i pesi. L'impatto sulla memoria unificata (nel caso dei Mac Apple Silicon) o sulla VRAM è minimo: tipicamente occupa circa 6GB, permettendo al resto della memoria di gestire il contesto, che con Marovian RSA diventa vitale.
+
+## Integrare Zaya-1 8B in OpenClaw
+
+Ora che abbiamo il modello in locale, lo agganciamo a OpenClaw per farlo lavorare come sub-agent o agente di ragionamento. Zaya-1 è perfetto per task di logica multi-step.
+
+### Configurazione del provider locale
+
+Apri il tuo file `~/.openclaw/openclaw.json` e aggiungi Ollama come provider locale per Zaya-1:
+
+```json
+{
+  "models": {
+    "providers": {
+      "ollama-local": {
+        "baseUrl": "http://127.0.0.1:11434/v1",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "zaya-1-8b",
+            "name": "Zaya-1 8B (Zyphra)",
+            "contextWindow": 32768,
+            "maxTokens": 4096
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+## Test di ragionamento multi-step
+
+Ho assegnato a Zaya-1 un problema logico che di solito manda in tilt i modelli sotto i 10B di parametri: calcolare tempi, consumo carburante e deviazione di rotta per un volo commerciale vicino a una nube di cenere vulcanica.
+
+Grazie ai pochi parametri attivi ma altissima densità informativa, l'agente OpenClaw basato su Zaya-1 ha isolato i calcoli vettoriali per il vento e fornito tempistiche accurate per l'impatto della cenere (80 minuti). Ha commesso una sola svista sull'angolo di correzione della bussola, che per un modello che processa attivamente meno di 1B parametri è incredibile.
+
+Se vuoi costruire flussi dove decine di piccoli agenti lavorano in parallelo (orchestration), Zaya-1 8B è attualmente la scelta più promettente.
+
+## Domande frequenti
+
+### Quanta VRAM richiede Zaya-1 8B in locale?
+La versione non quantizzata servita con vLLM richiede circa 47GB di VRAM. La versione quantizzata su Ollama (GGUF) può funzionare tranquillamente su hardware con 8GB di VRAM o memoria unificata.
+
+### Cos'è il Marovian RSA di Zyphra?
+È un meccanismo di ragionamento che simula l'avere multipli "ragionatori" contemporanei. Trattiene nel context window solo i passi finali dei ragionamenti utili, dando al modello una forte spinta logica senza sovraccaricare i token disponibili.
+
+### Zaya-1 è migliore di Llama 3 8B?
+Nei benchmark e nell'uso agentico, Zaya-1 supera molti modelli dense equivalenti in compiti complessi proprio grazie all'architettura MoE e ai 8.4 miliardi di parametri totali.
+
+## Conclusione
+
+Zaya-1 8B dimostra che l'intelligenza nei modelli locali sta diventando sempre più verticale ed efficiente. Utilizzato all'interno di un framework strutturato come OpenClaw, permette di gestire orchestrazioni logiche che solo un anno fa richiedevano API costose e lente. Installalo, configuralo e usalo per i tuoi prossimi sub-agent.
+
+*Scritto da Matteo Giardino, CTO e founder. Costruisco agenti AI per piccole e medie imprese in Italia. [I miei progetti](/projects).*
+## Orchestrazione e aggiornamenti 2026
+
+Se stai iniziando ad esplorare queste tecnologie nel 2026, ti consiglio di leggere la mia guida su come [configurare OpenClaw senza API key](/blog/configurare-openclaw-senza-api-key-gratis). Questo ti permetterà di testare modelli come Zaya-1 a costo zero prima di metterli in produzione. Inoltre, se vuoi spingerti oltre, puoi integrare il tutto con il [monitoraggio degli agenti IA nel 2026](/blog/monitoraggio-agenti-ia-2026) per avere metriche dettagliate sulle performance di ragionamento e sui costi computazionali evitati. Utilizzare Ollama insieme a OpenClaw per orchestrare Zaya-1 ti garantisce una pipeline di sviluppo robusta, ad altissima efficienza e con la completa garanzia sulla privacy dei tuoi dati. Scalando queste configurazioni su più nodi, i tempi di inferenza si abbassano ulteriormente.

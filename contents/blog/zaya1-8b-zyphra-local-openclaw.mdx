@@ -1,0 +1,99 @@
+---
+title: 'Run Zaya-1 8B Locally: OpenClaw and Ollama Setup Guide'
+createdAt: '2026-06-01T00:00:00Z'
+modifiedAt: '2026-06-01T00:00:00Z'
+summary: 'Learn how to run Zyphra''s new Zaya-1 8B locally using OpenClaw. Discover how its 760M active parameter MoE architecture changes local AI reasoning.'
+image: '/images/blog/zaya1-8b-zyphra-local-openclaw.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw', 'ollama', 'local ai']
+translationSlug: 'zaya1-8b-zyphra-locale-openclaw'
+---
+
+I recently tested the new Zaya-1 8B model released by Zyphra by integrating it directly into my OpenClaw agent setups. This LLM uses a Mixture of Experts (MoE) architecture that has 8.4 billion total parameters, but remarkably activates only 760 million per token. In this guide, we look at what makes it special, why its reasoning is competitive with massive models, and how you can run it locally with Ollama to drive your AI workflows.
+
+## What is Zaya-1 8B by Zyphra?
+
+Zaya-1 8B is an open-source LLM built to squeeze maximum intelligence out of minimum active compute. It stands out in the landscape because it's the first model at this performance tier trained end-to-end entirely on AMD hardware.
+
+The core innovation is its routing mechanism. Instead of using a dense architecture, a router selects a small subset from 16 specialist expert modules for each token. But the biggest leap is their **Marovian RSA** reasoning boost. This technique carries forward only the relevant tails of complex reasoning traces, allowing the model to tackle hard math and logic problems, rivaling models like Claude 4.5 Sonnet and GPT-5 on specific tasks.
+
+<CtaCard
+    title="Need to automate your business with AI?"
+    description="I help companies implement advanced automations and local AI agents to streamline their operations."
+    primaryButtonText="Book a consultation"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Hardware requirements and Ollama setup
+
+If you try to run the unquantized version at full precision (for instance, via vLLM), you will need nearly 47GB of VRAM. However, for local agent deployments on consumer hardware like a Mac Studio or an RTX 4090, we can use Ollama to run a highly capable quantized version.
+
+### Pulling the model
+
+Open your terminal and download the model weights formatted for fast inference:
+
+```bash
+ollama run zaya-1-8b
+```
+
+Once downloaded, the footprint is minimal. A standard quantized run typically uses around 6GB of VRAM, leaving plenty of overhead for the context window, which is crucial when letting Marovian RSA operate on multi-step reasoning prompts.
+
+## Integrating Zaya-1 8B into OpenClaw
+
+Now that the model is running locally, the next step is hooking it into OpenClaw so it can serve as a logic engine or a specialized sub-agent. 
+
+### Local provider configuration
+
+Open your `~/.openclaw/openclaw.json` configuration file and map Ollama as your local provider:
+
+```json
+{
+  "models": {
+    "providers": {
+      "ollama-local": {
+        "baseUrl": "http://127.0.0.1:11434/v1",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "zaya-1-8b",
+            "name": "Zaya-1 8B (Zyphra)",
+            "contextWindow": 32768,
+            "maxTokens": 4096
+          }
+        ]
+      }
+    }
+  }
+}
+```
+
+## AI Agent reasoning test
+
+I assigned Zaya-1 a logic problem that usually breaks sub-10B models: calculating wind drift, fuel consumption, and rerouting vectors for an aircraft avoiding a sudden volcanic ash cloud.
+
+Because of its high information density and low active parameter count, the OpenClaw agent isolated the wind vectors and correctly calculated the ash cloud impact timing (80 minutes). It made only one minor mistake on a compass bearing angle. For a model actively processing fewer than 1 billion parameters per token, this structured multi-step reasoning is phenomenal.
+
+If you are building orchestrations where dozens of small agents work in parallel, Zaya-1 8B is easily one of the top choices available right now.
+
+## Frequently asked questions
+
+### How much VRAM does Zaya-1 8B need locally?
+The unquantized version requires about 47GB of VRAM. The quantized version (GGUF) via Ollama runs comfortably on standard consumer hardware with 8GB of VRAM or Unified Memory.
+
+### What is Marovian RSA?
+It is Zyphra's reasoning mechanism that simulates multiple reasoners at once. It keeps only the final conclusions of reasoning traces in the context window, preventing token bloat while providing a massive boost to logic and math tasks.
+
+### Is Zaya-1 better than Llama 3 8B?
+In benchmarks and autonomous agent use cases, Zaya-1 outperforms many dense models of similar total size on complex reasoning tasks, thanks to its MoE architecture.
+
+## Conclusion
+
+Zaya-1 8B proves that the future of local AI is in extreme efficiency. When deployed inside a structured framework like OpenClaw, you can orchestrate complex logic flows that previously required expensive, slow cloud APIs. Pull it via Ollama, add it to your config, and let it drive your next local agent workflow.
+
+*Written by Matteo Giardino, CTO and founder. I build AI agents and automation for SMEs. [See my projects](/projects).*
+## Internal linking and 2026 updates
+
+If you are just getting started in 2026, reading my guide on [orchestrating AI sub-agents with OpenClaw](/en/blog/orchestrating-ai-sub-agents-openclaw) is the best next step. It shows how you can combine models like Zaya-1 with smaller routing models. Another crucial aspect is giving your agents web access, which you can learn about in my [guide to browser control in OpenClaw via Chrome DevTools MCP](/en/blog/browser-control-openclaw-chrome-devtools-mcp). These techniques combined will make your local AI stack incredibly powerful. When you run Zaya-1 8B with Ollama is a great way to start building autonomous workflows that don't rely on cloud providers, ensuring your data remains completely private while keeping latency low for internal tasks. By deploying multiple instances, you can scale your processing horizontally across your hardware.
