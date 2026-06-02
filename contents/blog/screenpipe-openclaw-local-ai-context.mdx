@@ -1,0 +1,88 @@
+---
+title: 'Screenpipe and OpenClaw: 24/7 Local AI Context'
+createdAt: '2026-06-02T00:00:00Z'
+modifiedAt: '2026-06-02T00:00:00Z'
+summary: 'Give your OpenClaw agents 24/7 screen and mic context locally. How to integrate Screenpipe with Ollama without sacrificing your privacy to the cloud.'
+image: '/images/blog/screenpipe-openclaw-local-ai-context.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw']
+translationSlug: 'screenpipe-openclaw-contesto-ai-locale'
+---
+
+I used to spend half my time copy-pasting terminal errors or VS Code snippets to AI agents so they knew what I was working on. Screenpipe changes that completely by recording your screen and mic 24/7 into a local database. After connecting it to OpenClaw and Ollama, my agents can instantly "see" what I was looking at 10 minutes ago, entirely offline.
+
+## The Context Problem
+
+AI agents fail when they lack context. If you ask an agent to "draft an email based on the Zoom meeting I just had," a standard setup hits a wall. It has no idea what happened on your screen or what was said.
+
+You either have to write a massive prompt explaining everything, or use a proprietary cloud tool that records everything you do and sends it to servers you don't control. Neither is ideal for privacy or workflow speed.
+
+<CtaCard
+    title="Need help with AI integration?"
+    description="Get in touch for a consultation on implementing AI tools and automations in your business."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## What is Screenpipe?
+
+Screenpipe is an open-source tool that continuously captures your screen and microphone. Unlike commercial alternatives, it stores all this data locally in a SQLite database and exposes it via a local API. It processes OCR and speech-to-text directly on your machine.
+
+By connecting this local API to OpenClaw via MCP (Model Context Protocol), you give your AI agent a perfect memory of your digital day.
+
+## The Architecture
+
+When OpenClaw runs a local model (like Llama 3 via Ollama), it needs a way to query Screenpipe.
+
+1. **Screenpipe** records screen (OCR) and mic (STT).
+2. **OpenClaw MCP Server** exposes an API to search the last X hours of activity.
+3. **OpenClaw Agent** queries this tool whenever it needs context.
+
+## Setting up the Integration
+
+### 1. Install Screenpipe
+
+First, get Screenpipe running on your machine. Ensure it has the right permissions (Screen Recording and Microphone).
+
+```bash
+curl -sL https://screenpi.pe/install.sh | bash
+screenpipe start
+```
+
+### 2. Configure the OpenClaw MCP Skill
+
+Create a new skill in OpenClaw that queries the local Screenpipe API (default port `3030`).
+
+```json
+{
+  "name": "screenpipe_context",
+  "description": "Search the user's screen history for recent context.",
+  "command": "curl -s 'http://localhost:3030/search?q={query}&limit=5'"
+}
+```
+
+Now, when you ask your agent "What was the error in VS Code 5 minutes ago?", it automatically searches Screenpipe, reads the OCR text, and gives you the solution.
+
+## Privacy vs Utility
+
+The only safe way to have an "always-on" AI memory is to run it locally. By combining Ollama with Screenpipe, your screen data never leaves your MacBook. You get the utility of a second brain without uploading your private keys or meeting notes to the cloud.
+
+## FAQ
+
+### Does Screenpipe slow down my Mac?
+Screenpipe is optimized for Apple Silicon and runs efficiently in the background, typically using less than 10% CPU.
+
+### Can I filter what gets recorded?
+Yes, you can configure Screenpipe to ignore specific apps like password managers or private browsers.
+
+### Does it work with Windows?
+Yes, Screenpipe supports Windows, macOS, and Linux, making it a great cross-platform solution for local context.
+
+## Wrap-up
+
+Integrating Screenpipe with OpenClaw removes the friction of manual prompting. Your agents become proactive partners rather than reactive chatbots. If you want to dive deeper into local setups, check out my guide on running local AI.
+
+*Written by Matteo Giardino, CTO and founder. I build AI agents for SMEs in Italy. [My projects](/projects).*
