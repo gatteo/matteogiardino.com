@@ -1,0 +1,54 @@
+---
+title: 'Come usare Agent Manager in Antigravity?'
+createdAt: '2026-06-02T21:36:22Z'
+modifiedAt: '2026-06-02T21:36:22Z'
+summary: 'Scopri come creare e gestire multipli agenti AI utilizzando l\'Agent Manager di Google Antigravity. Guida passo-passo per isolare gli agenti nel tuo workspace.'
+image: '/images/blog/come-usare-agent-manager-in-antigravity.png'
+authorId: matteo
+locale: 'it'
+translationSlug: 'how-to-use-agent-manager-in-antigravity'
+tags: ['ai', 'antigravity', 'agent manager', 'google', 'tutorial']
+---
+
+# Come usare Agent Manager in Antigravity?
+
+Oggi voglio tornare su come creare multipli agenti in Google Antigravity. L'ho già trattato in una serie precedente, ma ho notato che alcuni sviluppatori hanno ancora difficoltà con i passaggi. Questa guida chiarisce il processo con un walkthrough più lento direttamente nel tuo workspace.
+
+La volta scorsa ho avviato gli agenti nel Playground per isolarli dal codice normale. Questo ha impedito agli agenti di toccare il codice dell'app mentre testavo le idee. Oggi, invece, lo farò all'interno del tuo workspace in modo che tutto viva nei namespace corretti.
+
+<CtaCard title="Vuoi integrare agenti AI nella tua azienda?" description="Aiuto CTO e founder a costruire workflow autonomi con OpenClaw e Antigravity." buttonText="Parliamone" url="mailto:mat.gia.dev@gmail.com" />
+
+## Aprire Agent Manager in Antigravity
+
+Quando apri Google Antigravity, potresti atterrare nella vista IDE tradizionale. Se non sei in Agent Manager, clicca sul pulsante con l'etichetta **Open Agent Manager**. Questo ti porterà nella vista focalizzata sugli agenti.
+
+## Aprire un workspace
+
+All'interno dell'Agent Manager:
+1. Clicca su **Open Workspace**.
+2. Clicca su **Open New Workspace** se non ne hai già uno attivo.
+3. Dai un nome al tuo workspace basato sul tuo progetto (es. `marketing-agents`).
+
+## Iniziare le conversazioni
+
+Una volta aperto il workspace, puoi iniziare una conversazione. Qui è dove configuri il prompt iniziale e il contesto del tuo agente.
+
+### Creare il primo agente
+
+1. Clicca su **New Agent**.
+2. Assegnagli un ruolo specifico, come `Assistente Ricerca`.
+3. Fornisci il system prompt e collegalo ai file del tuo workspace.
+
+### Aggiungere altri agenti
+
+Per aggiungere altri agenti, ripeti semplicemente il processo. Vivranno all'interno dello stesso workspace ma manterranno il proprio contesto e la cronologia delle conversazioni. Puoi passare da un agente all'altro usando la barra laterale.
+
+## Gestire le notifiche
+
+Mentre usi Agent Manager in Antigravity, potresti ricevere notifiche quando gli agenti completano task in background. Puoi gestirle nel menu **Settings > Notifications** per evitare di essere sommerso.
+
+## Considerazioni finali
+
+Usare Agent Manager direttamente nel tuo workspace invece che nel Playground ti permette di mantenere tutto organizzato nei namespace e più vicino al tuo codice reale. Prova ad avviare un paio di agenti oggi stesso e vedi come migliora il tuo workflow!
+
+*Matteo Giardino è un software engineer e consulente AI specializzato in agenti autonomi e deployment di AI in locale.*
