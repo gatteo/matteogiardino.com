@@ -28,6 +28,11 @@ const nextConfig = {
     async redirects() {
         return [
             {
+                source: '/blog/chi-e-il-cto-guida-completa-al-ruolo-del-chief-technology-officer',
+                destination: '/blog/guida-ruolo-cto',
+                permanent: true,
+            },
+            {
                 source: '/blog/strategia-adozione-ia-pmi-fractional-cto',
                 destination: '/blog/fractional-cto-guida-completa-ai-benefici-per-la-tua-azienda',
                 permanent: true,
@@ -54,7 +59,7 @@ const nextConfig = {
             },
             {
                 source: '/blog/cosa-fa-cto-2026',
-                destination: '/blog/chi-e-il-cto-guida-completa-al-ruolo-del-chief-technology-officer',
+                destination: '/blog/guida-ruolo-cto',
                 permanent: true,
             },
             {
