@@ -10,7 +10,7 @@ tags: ['ai', 'openclaw', 'llm']
 translationSlug: 'run-qwen35-08b-openclaw-ollama-cpu'
 ---
 
-Ho installato e configurato Qwen 3.5 0.8B con OpenClaw e Ollama su Ubuntu, tutto su CPU. Nessuna GPU coinvolta. Il modello pesa circa 1 GB e risponde via Telegram in pochi secondi.
+Ho installato e configurato Qwen 3.5 0.8B con [OpenClaw](/blog/guida-cio-cto-forza-lavoro-agenti-ai-openclaw) e Ollama su Ubuntu, tutto su CPU. Nessuna GPU coinvolta. Il modello pesa circa 1 GB e risponde via Telegram in pochi secondi.
 
 Se ti stai chiedendo come eseguire qwen 3.5 0.8b in locale con openclaw e ollama su cpu, sei nel posto giusto. Questa guida esplora in dettaglio le prestazioni di questo modello da 800 milioni di parametri in contesti a basse risorse, fornendo metriche reali sul mio server domestico. Il setup funziona su qualsiasi macchina recente con CPU decente, ideale per test, sviluppo o deployment su VPS economici.
 
@@ -319,10 +319,13 @@ Ho installato Qwen 3.5 0.8B su CPU con OpenClaw e Ollama. Il setup è veloce (15
 Se vuoi un modello locale, piccolo e funzionante senza GPU, Qwen 3.5 0.8B è un ottimo punto di partenza. Parti da qui, testa il tuo workflow, e poi scala a modelli più grandi se serve.
 
 
-## FAQ: Qwen 3.5 su CPU
+## Domande frequenti
 
-**Come eseguire Qwen 3.5 0.8B in locale con OpenClaw e Ollama su CPU?**
-Basta installare Ollama, tirare il modello (`ollama pull qwen3.5:0.8b`) e configurare il provider `ollama` in `config.yaml` di OpenClaw. Gira tutto su CPU senza problemi.
+### Come eseguire Qwen 3.5 0.8B in locale con OpenClaw e Ollama su CPU?
+Basta installare Ollama, scaricare il modello tramite il comando `ollama pull qwen3.5:0.8b` e impostare il provider `ollama` nel file di configurazione `config.yaml` di OpenClaw. Questo setup funziona interamente su processori tradizionali senza richiedere schede video dedicate.
 
-**Qual è la latenza media su un sistema senza GPU?**
-Dipende dal processore. Su un Mac Mini M4, parliamo di 2-3 secondi, su un server economico Linux circa 5-8 secondi.
+### Qual è la latenza media su un sistema senza GPU?
+Le prestazioni variano in base al processore. Su un Mac Mini con chip M4, i tempi di risposta medi si aggirano intorno ai 2-3 secondi, mentre su un server Linux virtuale di fascia economica (VPS) i tempi arrivano a circa 5-8 secondi.
+
+### Quanta memoria RAM serve per Qwen 3.5 0.8B?
+Il modello Qwen 3.5 0.8B è estremamente leggero e pesa solo circa 1 GB. Con l'aggiunta di OpenClaw e Ollama, è possibile far girare l'intero ambiente in modo stabile con appena 2 GB di RAM libera, risultando ideale per Raspberry Pi o vecchi portatili.

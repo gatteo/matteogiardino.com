@@ -2,7 +2,7 @@
 title: 'Run Qwen 3.5 0.8B Locally with OpenClaw and Ollama on CPU'
 createdAt: '2026-03-27T08:00:00Z'
 modifiedAt: '2026-03-27T08:00:00Z'
-summary: 'Step-by-step guide to integrate Qwen 3.5 0.8B with OpenClaw and Ollama. An 800M parameter model that runs on CPU, no GPU needed, with Telegram support.'
+summary: 'Learn how to run qwen 3.5 0.8b locally with openclaw and ollama on cpu. A complete guide to running 800M parameter models without a GPU.'
 image: '/images/blog/run-qwen35-08b-openclaw-ollama-cpu.png'
 authorId: matteo
 locale: 'en'
@@ -10,11 +10,18 @@ tags: ['ai', 'openclaw', 'llm']
 translationSlug: 'qwen35-08b-openclaw-ollama-locale'
 ---
 
-I installed and configured Qwen 3.5 0.8B with OpenClaw and Ollama on Ubuntu, running entirely on CPU. No GPU involved. The model weighs about 1 GB and responds via Telegram in a few seconds.
+I installed and configured Qwen 3.5 0.8B with [OpenClaw](/en/blog/cio-cto-guide-agentic-workforce-openclaw) and Ollama on Ubuntu, running entirely on CPU. No GPU involved. The model weighs about 1 GB and responds via Telegram in a few seconds.
 
 If you are looking for a small, fast, and fully local model, this guide shows you how to integrate Qwen 3.5 0.8B with OpenClaw. The setup works on any recent machine with decent CPU, ideal for testing, development, or deployment on budget VPS.
 
 <Image src="/images/blog/qwen35-08b-openclaw-ollama-locale/qwen3-5-openclaw-ollama-locally-1.webp" alt="Qwen 3.5 0.8B with OpenClaw and Ollama local architecture" width={1200} height={630} />
+
+<Author
+  name="Matteo Giardino"
+  role="CTO & AI Engineer"
+/>
+
+Written by **Matteo Giardino**.
 
 ## Why Qwen 3.5 0.8B
 
@@ -311,3 +318,14 @@ I installed Qwen 3.5 0.8B on CPU with OpenClaw and Ollama. The setup is quick (1
 **When to avoid it**: complex reasoning, advanced code generation, elaborate creative output.
 
 If you want a local, small, working model without GPU, Qwen 3.5 0.8B is a great starting point. Start here, test your workflow, then scale to larger models if needed.
+
+## Frequently Asked Questions
+
+### How to run Qwen 3.5 0.8B locally with OpenClaw and Ollama on CPU?
+Simply install Ollama, pull the model using the command `ollama pull qwen3.5:0.8b`, and configure the `ollama` provider in OpenClaw's `config.yaml`. The entire environment runs smoothly on standard CPU processors without requiring dedicated GPUs.
+
+### What is the average latency on a system without a GPU?
+Performance depends on your processor. On a Mac Mini M4, the average response time is about 2-3 seconds, while on an affordable Linux VPS server it's roughly 5-8 seconds.
+
+### How much RAM is required for Qwen 3.5 0.8B?
+The Qwen 3.5 0.8B model is incredibly lightweight, taking up only about 1 GB of space. Along with OpenClaw and Ollama, the entire setup runs perfectly fine with just 2 GB of free RAM, making it ideal for Raspberry Pi or older laptops.
