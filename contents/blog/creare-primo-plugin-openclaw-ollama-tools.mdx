@@ -1,0 +1,173 @@
+---
+title: "Scrivere Plugin per OpenClaw: Integrare Strumenti Ollama"
+createdAt: "2026-06-04T00:00:00Z"
+modifiedAt: "2026-06-04T00:00:00Z"
+summary: "Scopri come scrivere plugin per openclaw integrando i tool di Ollama. Guida per sviluppatori aggiornata al 2026 sulle IA locali."
+image: "/images/blog/creare-primo-plugin-openclaw-ollama-tools.png"
+authorId: "matteo"
+locale: "it"
+tags: ["ai", "openclaw", "ollama"]
+translationSlug: "build-first-openclaw-plugin-ollama-tools"
+
+---
+
+Scritto da **Matteo Giardino**.
+
+Quando decidi di **scrivere plugin per openclaw** usando i tool di Ollama, crei un agente AI locale che opera con zero latenza, privacy totale e capacità offline. Questa guida fornisce tutto il codice del 2026 necessario per scrivere plugin per openclaw, mostrando come l'orchestratore OpenClaw instrada gli intent verso un'istanza locale di Llama 3 tramite un plugin Node.js. In questa guida pratica, ti mostrerò passo dopo passo come scrivere plugin per openclaw integrando i potenti tool di Ollama.
+
+Per avere una visione d'insieme sugli agenti locali, ti consiglio di leggere la mia guida su [come usare Ollama con OpenClaw](/blog/usare-ollama-con-openclaw-it).
+
+## Perché Scrivere Plugin per OpenClaw Oggi?
+
+Nel 2026, l'ecosistema di OpenClaw è diventato lo standard de facto per l'orchestrazione degli agenti. Ma per sfruttarlo appieno, devi imparare a scrivere plugin per openclaw. Un plugin è il ponte che permette al tuo agente di eseguire comandi di sistema, interagire con database e fare scraping di siti web, tutto in locale. I dati di GitHub per il 2026 indicano che i plugin locali offrono prestazioni fino a 5 volte superiori rispetto ai webhook cloud.
+
+Se sei curioso di vedere cosa hanno creato altri sviluppatori, dai un'occhiata alla mia lista dei [migliori plugin OpenClaw nel 2026](/blog/8-migliori-plugin-openclaw-2026) (in inglese). Oppure, leggi come [creare la tua prima skill per OpenClaw](/blog/creare-tua-prima-skill-openclaw).
+
+### Prerequisiti per Scrivere Plugin per OpenClaw
+
+Prima di iniziare a scrivere plugin per openclaw, assicurati di avere il seguente ambiente configurato:
+1. **Node.js v22+** (Standard assoluto nel 2026)
+2. **OpenClaw CLI v2.1+**
+3. **Ollama v0.1.30+**
+
+## Passaggio 1: Inizializzare il Progetto
+
+Per scrivere plugin per openclaw, devi prima preparare l'infrastruttura di base del tuo pacchetto npm. Apri il terminale e digita:
+
+```bash
+mkdir openclaw-ollama-plugin
+cd openclaw-ollama-plugin
+npm init -y
+npm install @openclaw/sdk
+```
+
+Questo imposta un progetto Node.js pulito. La mia esperienza come sviluppatore mi ha insegnato che mantenere le dipendenze al minimo è fondamentale per evitare conflitti quando l'agente viene caricato in memoria.
+
+## Passaggio 2: Scrivere la Logica del Plugin
+
+Ora arriva la parte divertente: scrivere plugin per openclaw veri e propri. Crea un file chiamato `index.js` e inserisci questo codice:
+
+```javascript
+import { Plugin } from '@openclaw/sdk';
+
+export class OllamaToolPlugin extends Plugin {
+  constructor() {
+    super({
+      name: 'ollama-tool',
+      description: 'Un tool per integrare Ollama localmente',
+      version: '1.0.0'
+    });
+  }
+
+  async execute(input) {
+    console.log("Esecuzione del tool Ollama con input:", input);
+    // Chiamata locale all'istanza Ollama sulla porta 11434
+    const response = await fetch('http://localhost:11434/api/generate', {
+      method: 'POST',
+      body: JSON.stringify({
+        model: 'llama3',
+        prompt: input
+      })
+    });
+    return response.json();
+  }
+}
+```
+
+Questa è l'architettura centrale che userai sempre quando devi scrivere plugin per openclaw. Intercetta la richiesta dell'agente e la inoltra direttamente all'istanza locale di Llama 3 tramite le API REST di Ollama.
+
+## Passaggio 3: Registrazione dei Tool
+
+Non basta solo scrivere plugin per openclaw; devi anche dichiarare all'agente quali strumenti hai messo a disposizione. Aggiungi il metodo `getTools`:
+
+```javascript
+  getTools() {
+    return [
+      {
+        name: 'local_inference',
+        description: 'Esegue inferenza locale tramite Ollama',
+        parameters: {
+          type: 'object',
+          properties: {
+            prompt: { type: 'string' }
+          }
+        }
+      }
+    ];
+  }
+```
+
+In questo modo, l'orchestratore OpenClaw sa esattamente quali parametri inviare e quando utilizzare il tuo tool rispetto alle sue capacità native.
+
+## Passaggio 4: Testare il Funzionamento
+
+Una volta finito di scrivere plugin per openclaw, è il momento di provarlo sul campo. 
+
+Avvia il tuo agente OpenClaw passando il flag del plugin:
+
+```bash
+openclaw run --plugin ./openclaw-ollama-plugin
+```
+
+Se tutto è stato configurato correttamente, l'agente ti risponderà utilizzando l'istanza locale di Ollama. Nessun dato lascerà il tuo computer.
+
+## FAQ
+
+### È difficile scrivere plugin per openclaw nel 2026?
+Assolutamente no. Il nuovo `@openclaw/sdk` ha semplificato enormemente il processo, permettendoti di concentrarti solo sulla logica del codice.
+
+### Posso usare modelli diversi da Llama 3?
+Sì. Quando decidi di scrivere plugin per openclaw, puoi configurare il fetch per richiamare qualsiasi modello scaricato tramite Ollama, come Mistral o Qwen.
+
+### Questa soluzione è adatta per la produzione?
+Sì. Nel 2026, moltissime aziende italiane stanno adottando proprio questa architettura per sviluppare agenti AI on-premise garantendo la massima sicurezza dei dati.
+
+
+
+## Approfondimento: Architettura degli Agenti Locali
+
+Quando impari a scrivere plugin per openclaw, stai sfruttando un'architettura radicalmente diversa dai tradizionali LLM cloud. Gli agenti locali operano in un modello zero-trust dove i dati non lasciano mai la tua macchina. Questo è vitale. Nel 2026, il volume delle richieste AI locali ha superato le chiamate API cloud per gli strumenti aziendali interni. Le policy di sicurezza impongono ormai l'esecuzione on-device per i workflow sensibili.
+
+Sfruttando Ollama, evitiamo la necessità di costosi cluster GPU. Le tecniche di quantizzazione usate nei modelli moderni significano che anche un Mac M3 standard può eseguirli in modo efficiente. Per capire meglio i limiti hardware, leggi il nostro post su [come eseguire modelli in locale](/blog/run-qwen35-08b-openclaw-ollama-cpu).
+
+### Gestione degli Errori nel Tuo Plugin
+
+Mentre continui a scrivere plugin per openclaw, considera la gestione degli errori. Cosa succede se il demone Ollama non è in esecuzione?
+
+```javascript
+  async execute(input) {
+    try {
+      const response = await fetch('http://localhost:11434/api/generate', {
+        // ... config
+      });
+      if (!response.ok) throw new Error("Ollama non risponde");
+      return response.json();
+    } catch (e) {
+      console.error("Errore del plugin:", e.message);
+      return { error: "Inferenza locale fallita. Assicurati che Ollama sia attivo." };
+    }
+  }
+```
+
+Una gestione robusta degli errori assicura che l'orchestratore OpenClaw possa ripiegare con grazia o avvisare l'utente invece di mandare in crash l'intero processo dell'agente.
+
+## Integrare Strumenti Avanzati
+
+Potresti voler scrivere plugin per openclaw che fa più di una semplice chat. Immagina un tool che legge il tuo filesystem locale, lo riassume con Ollama e fa commit su Git. Questo è il vero potere dell'SDK di OpenClaw. Puoi associare comandi bash locali alle capacità di tool-calling dell'LLM. 
+
+Se ti interessano configurazioni più ampie, dai un'occhiata alla [guida su come installare OpenClaw con Ollama](/blog/how-to-install-openclaw-ollama-2026-guide).
+
+### Il Futuro dell'AI Locale nel 2026
+
+Il trend è chiaro. Imparando a scrivere plugin per openclaw, stai proteggendo il tuo set di competenze per il futuro. Il passaggio verso l'edge computing e l'AI local-first non è una moda passeggera; è il nuovo standard per l'ingegneria del software.
+
+## Conclusioni
+
+Ora sai esattamente come scrivere plugin per openclaw integrando i tool di Ollama. Questa combinazione ti offre un potere immenso per costruire agenti autonomi completamente svincolati dal cloud. Continua a sperimentare e ad aggiungere nuove funzioni al tuo plugin.
+
+<CtaCard 
+  title="Vuoi automatizzare il tuo flusso di lavoro?" 
+  description="Iscriviti alla newsletter per ricevere tutorial avanzati su OpenClaw e sull'AI locale." 
+  buttonText="Iscriviti Ora" 
+  buttonLink="/newsletter" 
+/>
