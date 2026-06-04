@@ -35,16 +35,16 @@ Gira su tre runtime JS: **Node.js ≥22.17** (server e tool CLI), **Bare ≥1.24
 
 La feature di punta è quella che hai già letto: una singola API che fa otto cose. Ecco cosa c'è nel pacchetto oggi.
 
-| Capability | Engine | A cosa serve |
-|---|---|---|
-| LLM completion | `qvac-fabric-llm.cpp` (fork di `llama.cpp` di Tether) | Chat, agenti, generazione contenuti, vision multimodale |
-| Embedding | `qvac-fabric-llm.cpp` | RAG, ricerca semantica, classificazione |
-| Trascrizione | `whisper.cpp` (o NVIDIA Parakeet via ONNX Runtime) | Speech-to-text, diarizzazione |
-| Traduzione | Bergamot (Marian) o `nmtcpp` | Traduzione on-device, no cloud |
-| Text-to-speech | ONNX Runtime (Chatterbox, Supertonic) | Output vocale per le app |
-| OCR | ONNX Runtime (FastText, CRAFT) | Estrazione da documenti scansionati, scontrini |
-| Generazione immagini | `stable-diffusion.cpp` | SD 2.1, SDXL, FLUX.2-klein on-device |
-| Fine-tuning LoRA | `qvac-fabric-llm.cpp` | Adapter custom, anche su mobile (la rivendicazione "first-mover" di Tether) |
+ Capability | Engine | A cosa serve |
+---|---|---|
+ LLM completion | `qvac-fabric-llm.cpp` (fork di `llama.cpp` di Tether) | Chat, agenti, generazione contenuti, vision multimodale |
+ Embedding | `qvac-fabric-llm.cpp` | RAG, ricerca semantica, classificazione |
+ Trascrizione | `whisper.cpp` (o NVIDIA Parakeet via ONNX Runtime) | Speech-to-text, diarizzazione |
+ Traduzione | Bergamot (Marian) o `nmtcpp` | Traduzione on-device, no cloud |
+ Text-to-speech | ONNX Runtime (Chatterbox, Supertonic) | Output vocale per le app |
+ OCR | ONNX Runtime (FastText, CRAFT) | Estrazione da documenti scansionati, scontrini |
+ Generazione immagini | `stable-diffusion.cpp` | SD 2.1, SDXL, FLUX.2-klein on-device |
+ Fine-tuning LoRA | `qvac-fabric-llm.cpp` | Adapter custom, anche su mobile (la rivendicazione "first-mover" di Tether) |
 
 Il completion LLM minimo ha questo aspetto - preso direttamente dal [getting-started ufficiale](https://docs.qvac.tether.io/):
 

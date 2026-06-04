@@ -202,21 +202,21 @@ Save the file, reload the editor (Cmd+Shift+P, "Reload Window"), and "QVAC Qwen3
 
 The plumbing is identical. The capabilities aren't.
 
-| | Ollama | QVAC |
-|---|---|---|
-| Default port | 11434 | 11434 |
-| OpenAI `/v1/chat/completions` | yes | yes |
-| OpenAI `/v1/embeddings` | yes (separate model) | yes (separate plugin) |
-| Streaming SSE | yes | yes |
-| Image generation (Stable Diffusion / FLUX) | no | yes (`@qvac/sdk/sdcpp-generation/plugin`) |
-| Speech-to-text (Whisper) | no | yes (`@qvac/sdk/whispercpp-transcription/plugin`) |
-| On-device translation (Bergamot) | no | yes (`@qvac/sdk/nmtcpp-translation/plugin`) |
-| Mobile (iOS, Android) | desktop / server only | yes via Expo |
-| On-device LoRA fine-tuning | no | yes |
-| P2P delegated inference | no | yes (Hyperswarm) |
-| OpenAI-compatible HTTP API | yes (`ollama serve`) | yes (`qvac serve openai`) |
-| Model registry | yes (Ollama Hub) | yes (Hyperdrive on Hyperswarm, ~653 models in v0.9.0) |
-| License | MIT | Apache-2.0 |
+ | Ollama | QVAC |
+---|---|---|
+ Default port | 11434 | 11434 |
+ OpenAI `/v1/chat/completions` | yes | yes |
+ OpenAI `/v1/embeddings` | yes (separate model) | yes (separate plugin) |
+ Streaming SSE | yes | yes |
+ Image generation (Stable Diffusion / FLUX) | no | yes (`@qvac/sdk/sdcpp-generation/plugin`) |
+ Speech-to-text (Whisper) | no | yes (`@qvac/sdk/whispercpp-transcription/plugin`) |
+ On-device translation (Bergamot) | no | yes (`@qvac/sdk/nmtcpp-translation/plugin`) |
+ Mobile (iOS, Android) | desktop / server only | yes via Expo |
+ On-device LoRA fine-tuning | no | yes |
+ P2P delegated inference | no | yes (Hyperswarm) |
+ OpenAI-compatible HTTP API | yes (`ollama serve`) | yes (`qvac serve openai`) |
+ Model registry | yes (Ollama Hub) | yes (Hyperdrive on Hyperswarm, ~653 models in v0.9.0) |
+ License | MIT | Apache-2.0 |
 
 The OpenAI-server endpoints in QVAC v0.9.1 are scoped to chat completions and model management. Embeddings, transcription, translation, and image generation are exposed through the SDK's JS API (`embed()`, `transcribe()`, `translate()`, `diffusion()`), not yet through the HTTP server. If your client speaks OpenAI for chat and direct SDK calls for everything else, QVAC is already the most general local server you can run today.
 

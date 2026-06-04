@@ -18,14 +18,14 @@ Which one should you adopt? The answer depends entirely on your context. Let's b
 
 ## TL;DR: The Architecture Divide
 
-| Feature | OpenClaw | Claude Code |
-| --- | --- | --- |
-| **Setup Model** | Manual configuration, Ollama/vLLM backend | Instant via npm |
-| **Execution** | Local (Ollama, Qwen, Llama) or Hybrid API | Cloud (Anthropic API strictly) |
-| **Architecture** | Multi-agent, durable workflows, MCP ecosystem | Single-agent, ad-hoc execution |
-| **Data Privacy** | Absolute (Air-gapped capable) | Cloud-dependent (Data sent to Anthropic) |
-| **Cost Profile** | Hardware capex, negligible opex | Per-token API costs |
-| **Target Audience** | Enterprise, DevSecOps, Platform Engineers | Solo Devs, fast-moving startups |
+ Feature | OpenClaw | Claude Code |
+ --- | --- | --- |
+ **Setup Model** | Manual configuration, Ollama/vLLM backend | Instant via npm |
+ **Execution** | Local (Ollama, Qwen, Llama) or Hybrid API | Cloud (Anthropic API strictly) |
+ **Architecture** | Multi-agent, durable workflows, MCP ecosystem | Single-agent, ad-hoc execution |
+ **Data Privacy** | Absolute (Air-gapped capable) | Cloud-dependent (Data sent to Anthropic) |
+ **Cost Profile** | Hardware capex, negligible opex | Per-token API costs |
+ **Target Audience** | Enterprise, DevSecOps, Platform Engineers | Solo Devs, fast-moving startups |
 
 <Image src="/images/blog/openclaw-vs-claude-code/architecture-comparison.png" alt="Architecture comparison between OpenClaw and Claude Code" width={1200} height={630} />
 

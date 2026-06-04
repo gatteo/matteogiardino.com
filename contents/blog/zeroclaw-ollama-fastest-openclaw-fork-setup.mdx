@@ -72,11 +72,11 @@ zeroclaw run --config config.toml
 
 To understand why developers are migrating in 2026, I ran a direct comparison. I tested both the Python-based OpenClaw and the Rust-based ZeroClaw running the identical agent workflow with Ollama on a Mac Mini M4.
 
-| Metric | OpenClaw (Python) | ZeroClaw (Rust) |
-| --- | --- | --- |
-| **Base RAM Usage** | ~140 MB | ~18 MB |
-| **Startup Time** | 1.2s | 0.08s |
-| **Throughput (Tokens/sec)** | 42 t/s | 45 t/s |
+ Metric | OpenClaw (Python) | ZeroClaw (Rust) |
+ --- | --- | --- |
+ **Base RAM Usage** | ~140 MB | ~18 MB |
+ **Startup Time** | 1.2s | 0.08s |
+ **Throughput (Tokens/sec)** | 42 t/s | 45 t/s |
 
 While the token generation speed is bottlenecked by the model itself, the massive reduction in RAM usage and startup time means you can spawn dozens of micro-agents in ZeroClaw without crashing your system. The memory footprint drops from 140 MB down to just 18 MB per instance.
 

@@ -102,17 +102,17 @@ If you want to re-enter the TUI later, simply relaunch `openclaw tui`.
 
 Here's when to use one interface or the other, based on my daily experience:
 
-| **Criterion** | **Web UI** | **Terminal UI** |
-|---------------|------------|-----------------|
-| **Remote access (SSH)** | Awkward, needs port forwarding or tunnel | Perfect, works natively |
-| **Headless servers** | Impossible without browser | Always works |
-| **Resource consumption** | Moderate (browser + rendering) | Minimal (text only) |
-| **Long conversation display** | Excellent, smooth scroll, syntax highlighting | Basic, scrolls off screen |
-| **Keyboard workflow** | Requires mouse for navigation | 100% keyboard |
-| **Scripting integration** | Difficult | Easy, callable from bash |
-| **Images and media** | Inline display | Text paths/links only |
-| **Initial onboarding** | More user-friendly | Requires terminal familiarity |
-| **Debugging and logs** | Convenient for structured messages | Great with `openclaw --verbose` |
+ **Criterion** | **Web UI** | **Terminal UI** |
+---------------|------------|-----------------|
+ **Remote access (SSH)** | Awkward, needs port forwarding or tunnel | Perfect, works natively |
+ **Headless servers** | Impossible without browser | Always works |
+ **Resource consumption** | Moderate (browser + rendering) | Minimal (text only) |
+ **Long conversation display** | Excellent, smooth scroll, syntax highlighting | Basic, scrolls off screen |
+ **Keyboard workflow** | Requires mouse for navigation | 100% keyboard |
+ **Scripting integration** | Difficult | Easy, callable from bash |
+ **Images and media** | Inline display | Text paths/links only |
+ **Initial onboarding** | More user-friendly | Requires terminal familiarity |
+ **Debugging and logs** | Convenient for structured messages | Great with `openclaw --verbose` |
 
 **My setup**: I use the web UI as the main interface when working locally. When I SSH into the Mac Mini for quick checks or deployments, I use the TUI. For cron automations (daily reports, monitoring scripts), always TUI.
 

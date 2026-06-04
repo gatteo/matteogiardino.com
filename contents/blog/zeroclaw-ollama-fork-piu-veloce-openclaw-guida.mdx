@@ -72,11 +72,11 @@ zeroclaw run --config config.toml
 
 Per capire perché gli sviluppatori stanno migrando nel 2026, ho fatto un confronto diretto. Ho testato OpenClaw in Python e ZeroClaw in Rust con lo stesso workflow Ollama su un Mac Mini M4.
 
-| Metrica | OpenClaw (Python) | ZeroClaw (Rust) |
-| --- | --- | --- |
-| **Consumo Base RAM** | ~140 MB | ~18 MB |
-| **Tempo di Avvio** | 1.2s | 0.08s |
-| **Throughput (Token/sec)** | 42 t/s | 45 t/s |
+ Metrica | OpenClaw (Python) | ZeroClaw (Rust) |
+ --- | --- | --- |
+ **Consumo Base RAM** | ~140 MB | ~18 MB |
+ **Tempo di Avvio** | 1.2s | 0.08s |
+ **Throughput (Token/sec)** | 42 t/s | 45 t/s |
 
 Mentre la velocità di generazione è limitata dal modello, la riduzione di RAM significa che puoi lanciare decine di micro-agenti senza saturare il sistema. Il consumo scende da 140 MB a soli 18 MB.
 
