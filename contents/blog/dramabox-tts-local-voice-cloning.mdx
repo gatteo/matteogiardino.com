@@ -1,0 +1,84 @@
+---
+title: 'DramaBox 3.3B Local TTS'
+createdAt: '2026-06-04T00:00:00Z'
+modifiedAt: '2026-06-04T00:00:00Z'
+summary: 'Learn how to run DramaBox 3.3B local TTS on your GPU, clone voices, and direct AI expressions via text prompts.'
+image: '/images/blog/dramabox-tts-local-voice-cloning.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw', 'tts']
+translationSlug: 'dramabox-tts-clonazione-voce-locale'
+---
+
+DramaBox 3.3B local TTS is a new open-source engine that lets you control the exact emotion and pacing of AI voices using stage directions. By treating your text prompt like a movie script, you can generate highly expressive speech directly on your local machine.
+
+I have been exploring local AI tools and testing frameworks for years, but this level of control over tone, pauses, and emotional shifts is a massive leap forward. Instead of hoping the model guesses the right inflection, you explicitly direct it. In this guide, I will show you how DramaBox 3.3B local TTS works, what it takes to run it on your own hardware, and how to format your prompts for the best results.
+
+<CtaCard title="Automate your AI workflows" description="Want to build complex pipelines with tools like DramaBox? Check out OpenClaw for local agent orchestration." buttonText="Discover OpenClaw" href="/blog/what-is-openclaw-ai-agent-framework" />
+
+## What is DramaBox 3.3B Local TTS?
+
+DramaBox 3.3B local TTS is an audio-diffusion transformer built on top of LyraX LTX2. It uses flow matching conditioned on Gemma 3 (12B) text embeddings. 
+
+This architecture combines a diffusion transformer backbone with an audio variational autoencoder. This setup translates the hidden space representations into audible sound, while a built-in vocoder manages the timing and pauses. The reliance on Gemma 3 is what allows DramaBox 3.3B local TTS to deeply understand complex context and emotional cues.
+
+If you have used tools like Fish Audio before (read more about [Fish Audio local setup](/blog/fishaudio-s2-pro-local-voice-cloning)), you know that local AI voices are getting incredibly realistic in 2026. But DramaBox takes this to another level by introducing theatrical control, letting you manage the exact way your AI characters speak. 
+
+## Local Setup and VRAM Requirements
+
+Running DramaBox 3.3B local TTS locally requires a solid GPU. In my tests, VRAM consumption sat just over 16 GB during generation and playback, meaning an RTX 4090, RTX 6000, or a Mac with 32GB+ Unified Memory is ideal. 
+
+You can set it up via a standard Python virtual environment:
+
+```bash
+git clone REPO_URL dramabox
+cd dramabox
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -U pip
+pip install -r requirements.txt
+python demo.py
+```
+
+This launches a Gradio interface on `localhost:7860`. If you are already running local models with Ollama, this setup will feel very familiar. Running [Ollama with OpenClaw](/blog/metaclaw-ollama-make-openclaw-smarter) is a great way to combine local text generation with this kind of local speech generation for a complete AI loop. The installation process is straightforward, and the dependencies are well-managed via standard Python tools. I highly recommend running this within a dedicated environment to prevent dependency clashes with other AI projects. 
+
+## Prompt as a Performance Script
+
+The most innovative feature of DramaBox 3.3B local TTS is how it handles text inputs. It treats the prompt as a full performance script. 
+
+Dialogue placed inside quotes is spoken aloud, while everything outside the quotes acts as a stage direction. This allows you to shift from a whisper to a shout mid-sentence:
+
+```text
+<voice softens, short pause>
+"I can't believe it."
+<voice rises with anger>
+"Why didn't you tell me?!"
+<sigh>
+```
+
+You are not just converting text to speech; you are directing a voice actor. Keep your stage directions concise and only describe things that affect delivery. The more specific you are with your stage directions, the better the model performs. You can layer multiple emotions, create suspenseful pauses, or add realistic artifacts like sighs and short laughs to humanize the delivery.
+
+If you are a developer looking to integrate this, think of the stage directions as parameters you can inject dynamically. For example, if you build an AI agent that monitors system logs, you can program it to output a calm voice for routine updates and an urgent voice for critical errors. 
+
+## Voice Cloning Limitations and Quality
+
+DramaBox 3.3B local TTS allows you to pass a 10-second reference audio file to clone a specific voice. However, voice cloning is currently not its strongest suit. 
+
+In my tests, the model successfully captured the *expression* and intent of the reference, but the actual timbre (the unique sound of the voice) tended to drift. Additionally, on longer scripts with complex emotional transitions, the model sometimes hallucinates—skipping words or rushing through lines. 
+
+Despite these quirks, the expressive control is unmatched. If you pair this with local agents through OpenClaw, you can create dynamic, emotionally aware AI assistants. This is especially useful if you are building [custom MCP servers](/blog/building-custom-mcp-server-openclaw) and want them to speak back to you with emotion rather than sounding like robotic automatons.
+
+In conclusion, DramaBox 3.3B local TTS represents a significant step forward for local audio. The 2026 landscape of AI is shifting towards highly controllable local models, and this tool perfectly exemplifies that trend. I highly recommend spinning it up, experimenting with complex stage directions, and integrating it into your local AI workflows. As the open-source community continues to refine the voice cloning aspects, this architecture could become the standard for all interactive voice agents. 
+
+## FAQ
+
+**How much VRAM do I need for DramaBox 3.3B local TTS?**
+You need around 16 GB of VRAM to generate audio smoothly, making an RTX 4090, RTX 6000, or similar high-end GPU highly recommended for local inference.
+
+**Can DramaBox clone my voice?**
+Yes, it supports 10-second reference clips for voice cloning, though the timbre matching is currently less stable than its emotional expression capabilities. Future fine-tunes will likely improve this.
+
+**How do I add pauses in DramaBox?**
+You can control pacing and add pauses by writing stage directions outside of quotes, such as `<short pause>` or `<deep breath>`. The model interprets these as literal performance cues.
+
+*Matteo Giardino is a software engineer and fractional CTO specialized in applied AI and local agent orchestration.*
