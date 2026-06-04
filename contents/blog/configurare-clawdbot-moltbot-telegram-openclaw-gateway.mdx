@@ -1,24 +1,101 @@
 ---
-title: "Telegram Bots per OpenClaw: Setup di ClawdBot e MoltBot sul Gateway"
-summary: "Tutorial sul collegamento di agenti AI ai canali chat usando ClawdBot e MoltBot tramite OpenClaw Gateway."
-createdAt: "2026-06-04T00:00:00Z"
-modifiedAt: "2026-06-04T00:00:00Z"
-authorId: "matteo"
-image: "/images/blog/configurare-clawdbot-moltbot-telegram-openclaw-gateway.png"
-locale: "it"
-translationSlug: "setup-clawdbot-moltbot-telegram-openclaw-gateway"
+title: "Come Configurare ClawdBot e MoltBot su OpenClaw Gateway"
+createdAt: '2026-06-04T00:00:00Z'
+modifiedAt: '2026-06-04T00:00:00Z'
+summary: 'Una guida passo-passo per configurare i bot Telegram ClawdBot e MoltBot con OpenClaw Gateway per gestire agenti AI locali.'
+image: '/images/blog/configurare-clawdbot-moltbot-telegram-openclaw-gateway.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw']
+translationSlug: 'setup-clawdbot-moltbot-telegram-openclaw-gateway'
 ---
 
-OpenClaw Gateway ti permette di collegare gli agenti AI ai bot Telegram come ClawdBot e MoltBot.
+Faccio girare sei agenti su un Mac Mini connesso direttamente al mio telefono. OpenClaw Gateway è un livello di routing che collega gli agenti AI locali a interfacce di messaggistica esterne, e configurare ClawdBot e MoltBot su Telegram è il modo più veloce per chattare con loro. Dopo aver testato questa configurazione per 30 giorni, ecco esattamente come implementare l'integrazione.
 
 ## Cosa sono ClawdBot e MoltBot?
-Strumenti per l'integrazione con Telegram.
 
-## Setup
-Collegali al gateway.
+ClawdBot e MoltBot sono interfacce di integrazione per Telegram progettate per l'ecosistema OpenClaw. ClawdBot gestisce le chat generali con gli LLM e le chiamate agli strumenti, mentre MoltBot si concentra sulla gestione dei task in background degli agenti e sulle notifiche.
 
-## Domande Frequenti
-### Come collego ClawdBot?
-Aggiungi il token.
+Collegandoli a OpenClaw Gateway, puoi chattare con i tuoi modelli locali (come Llama 3 che gira su [Ollama](/blog/qwen35-08b-openclaw-ollama-locale)) direttamente da Telegram, aggirando le dipendenze dal cloud.
 
-Scritto da **Matteo Giardino**.
+<CtaCard
+    title="Hai bisogno di aiuto con l'integrazione AI?"
+    description="Contattami per una consulenza su come implementare strumenti e automazioni AI nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Configurare OpenClaw Gateway
+
+Per prima cosa, devi avere il gateway in esecuzione in locale. Questo agisce come ponte tra i tuoi bot Telegram e il runtime locale di OpenClaw.
+
+Inizia installando il pacchetto del gateway e generando una configurazione sicura:
+
+```bash
+npm install -g @openclaw/gateway
+openclaw-gateway init --port 8080
+```
+
+Questo comando crea un file `gateway.json` nella tua directory `~/.openclaw/`.
+
+## Collegare i Bot
+
+Per connettere Telegram, ti servono i token dei bot forniti da BotFather.
+
+### 1. Ottenere i token di Telegram
+
+Apri Telegram, avvia una chat con `@BotFather` e usa il comando `/newbot` due volte per creare due bot. Salva i token API HTTP.
+
+### 2. Configurare il gateway
+
+Modifica il file `gateway.json` inserendo i token. Devi specificare l'endpoint e gli ID utente autorizzati, in modo che persone a caso non possano chattare con i tuoi agenti locali.
+
+```json
+{
+  "telegram": {
+    "clawdbot": {
+      "token": "IL_TUO_TOKEN_CLAWD",
+      "allowed_users": [123456789]
+    },
+    "moltbot": {
+      "token": "IL_TUO_TOKEN_MOLT",
+      "allowed_users": [123456789]
+    }
+  }
+}
+```
+
+Riavvia il servizio del gateway:
+
+```bash
+openclaw-gateway start
+```
+
+## Risoluzione dei problemi con i Webhook
+
+Quando ho fatto il primo deploy, Telegram non riusciva a raggiungere il mio Mac Mini locale perché si trovava dietro un NAT. Ho perso 2 ore a fare debug dei messaggi non ricevuti.
+
+La soluzione è semplice: devi esporre il gateway tramite un reverse proxy come ngrok o Cloudflare Tunnels, quindi registrare esplicitamente l'URL del webhook.
+
+```bash
+curl -X POST "https://api.telegram.org/bot<TOKEN>/setWebhook" -d "url=https://il-tuo-tunnel.example.com/webhook/clawdbot"
+```
+
+## Domande frequenti
+
+### Cosa succede se OpenClaw Gateway va offline?
+Telegram metterà in coda i messaggi per un massimo di 24 ore. Quando il gateway tornerà online, ClawdBot elaborerà i messaggi arretrati.
+
+### Più utenti possono accedere ai bot?
+Sì. Puoi aggiungere più ID utente Telegram all'array `allowed_users` nel file `gateway.json`.
+
+### Funziona con Ollama?
+Sì. OpenClaw Gateway instrada i messaggi verso qualsiasi modello tu abbia configurato nella tua installazione principale di OpenClaw.
+
+## Conclusione
+
+Collegare i bot Telegram a OpenClaw richiede meno di 15 minuti una volta ottenuti i token. Questo trasforma un setup di sviluppo locale in un assistente davvero utilizzabile che puoi portare in tasca.
+
+*Scritto da Matteo Giardino, CTO e founder. Sviluppo agenti AI per le PMI italiane. [I miei progetti](/projects).*
