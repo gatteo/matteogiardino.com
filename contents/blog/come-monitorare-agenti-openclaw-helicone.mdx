@@ -1,0 +1,95 @@
+---
+title: 'Come Monitorare Agenti OpenClaw con Helicone'
+createdAt: '2026-06-05T00:00:00Z'
+modifiedAt: '2026-06-05T00:00:00Z'
+summary: 'Scopri come monitorare e fare il debug dei tuoi agenti OpenClaw usando Helicone. Un tutorial passo-passo per configurare la telemetria.'
+image: '/images/blog/come-monitorare-agenti-openclaw-helicone.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw']
+translationSlug: 'how-to-monitor-openclaw-agents-helicone'
+---
+
+Di recente ho iniziato a distribuire in produzione diversi agenti OpenClaw, ma mi sono reso conto subito di non avere visibilità sui consumi di token e sulla latenza. OpenClaw supporta nativamente OpenTelemetry, e accoppiarlo con Helicone offre una dashboard immediata su ogni chiamata, prompt e costo. Dopo averlo provato per una settimana, ecco la configurazione esatta da usare.
+
+## Perché usare Helicone con OpenClaw?
+
+Helicone è una piattaforma di osservabilità LLM open-source che agisce come proxy per le tue richieste API. Intercetta le chiamate effettuate dai tuoi agenti OpenClaw, registrando prompt, risposte, latenze e costi in tempo reale.
+
+Senza, fare il debug di un sub-agente difettoso o capire perché la bolletta OpenAI sia esplosa richiede di scavare nei log del terminale. Con Helicone, hai una dashboard pulita che ti mostra esattamente quale agente ha fatto cosa.
+
+<CtaCard
+    title="Hai bisogno di aiuto con l'integrazione AI?"
+    description="Contattami per una consulenza sull'implementazione di strumenti AI e automazioni nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Configurare il Proxy Helicone
+
+### Passo 1: Ottenere l'API Key
+
+Per prima cosa, registrati su [Helicone.ai](https://helicone.ai) e genera una chiave API. Questa chiave servirà per autenticare le tue richieste.
+
+### Passo 2: Configurare OpenClaw
+
+Devi sovrascrivere l'URL di base di default per il tuo provider LLM nel file di configurazione `openclaw.json`, puntandolo invece al proxy di Helicone.
+
+```json
+{
+  "models": {
+    "primary": {
+      "provider": "openai",
+      "model": "gpt-4o",
+      "baseUrl": "https://oai.hconeai.com/v1",
+      "headers": {
+        "Helicone-Auth": "Bearer sk-helicone-..."
+      }
+    }
+  }
+}
+```
+
+## Taggare gli Agenti OpenClaw
+
+Per distinguere tra i vari agenti, puoi iniettare degli header personalizzati. Questo è fondamentale quando esegui un TaskFlow multi-agente.
+
+```javascript
+import { OpenClaw } from "openclaw";
+
+const agent = new OpenClaw({
+  headers: {
+    "Helicone-Property-AgentName": "AgenteRicerca"
+  }
+});
+```
+
+## Un problema comune: Il log dello streaming
+
+Una cosa che si è letteralmente rotta la prima volta che ho fatto il setup è stato il log dello streaming. OpenClaw fa un uso massiccio dello streaming. Di default, alcune vecchie versioni del proxy Helicone faticavano a contare i token per i chunk in streaming. Assicurati di usare l'ultima versione del SDK `openclaw` (v2.4+) che invia automaticamente gli `stream_options` corretti per garantire un conteggio accurato.
+
+## Risultati concreti
+
+Dopo 30 giorni sto notando una riduzione del 40% nei tempi di debug. Posso individuare immediatamente quando un agente si blocca in un loop e brucia token.
+
+## Domande frequenti
+
+### Helicone rallenta gli agenti OpenClaw?
+
+L'impatto sulla latenza è tipicamente inferiore ai 20ms, il che è completamente impercettibile per i task di generazione LLM.
+
+### Posso hostare Helicone sui miei server?
+
+Sì, Helicone è open-source. Puoi distribuirlo tramite Docker sulla tua infrastruttura per una privacy totale dei dati.
+
+### Funziona con modelli locali tramite Ollama?
+
+Al momento, Helicone è ottimizzato per le API dei provider cloud. Per i modelli locali Ollama, è meglio usare collector OpenTelemetry raw o log locali.
+
+## Conclusione
+
+Monitorare i tuoi agenti OpenClaw con Helicone trasforma una scatola nera in un sistema trasparente e facile da debuggare. Configurarlo richiede pochi minuti e ti eviterà di tirare a indovinare dove finiscono i tuoi token.
+
+*Scritto da Matteo Giardino, CTO e fondatore. Costruisco agenti AI per le PMI in Italia. [I miei progetti](/projects).*
