@@ -1,0 +1,65 @@
+---
+title: "Microsoft Scout: The Autonomous AI Agent Built on OpenClaw"
+summary: "Microsoft just announced Scout, their new autonomous AI agent powered by the OpenClaw framework. Here is what it means for developers."
+createdAt: 2026-06-05T00:00:00Z
+modifiedAt: 2026-06-05T00:00:00Z
+authorId: "matteo"
+image: "/images/blog/microsoft-scout-autonomous-ai-agent-openclaw.png"
+locale: "en"
+translationSlug: "microsoft-scout-agente-ai-autonomo-openclaw"
+---
+
+
+Microsoft has officially unveiled Scout, a completely autonomous AI agent built directly on the open-source OpenClaw framework. Scout is Microsoft's new 2026 asynchronous system designed to automate complex tasks on your PC, integrating with [OpenClaw's core features](/en/blog/what-is-openclaw-framework) to offer multi-model orchestration. If you are wondering what Microsoft Scout is, it is the open-source answer to workflow automation, handling development and research tasks in a durable manner.
+
+Written by **Matteo Giardino**.
+
+## What is Microsoft Scout?
+
+Microsoft Scout is designed to be an "always-on" personal agent that lives natively on your machine rather than purely in the cloud. It monitors contexts, executes terminal commands, and orchestrates complex multi-step workflows.
+
+The biggest surprise in 2026? Instead of building another proprietary framework from scratch, Microsoft chose to adopt OpenClaw as the foundational orchestrator, investing over $50 million in research for this integration (as reported by TechCrunch). This move demonstrates how autonomous AI agents based on open standards are now preferred by tech giants over closed ecosystems [see the Devv AI approach](/en/blog/devv-ai-search-engine-developers).
+
+<CtaCard title="Boost your productivity" cta="Subscribe to the Newsletter" link="https://matteogiardino.com/newsletter" />
+
+## Why OpenClaw as the Engine for Scout?
+
+I've been deploying multi-agent architectures for a while, and the decision to use OpenClaw makes perfect sense. OpenClaw provides robust sandboxing, predictable invariant checks, and a massive ecosystem of MCP (Model Context Protocol) plugins right out of the box.
+
+Scout's architecture leverages the durable task system OpenClaw is known for [deep dive into TaskFlow here](/en/blog/mastering-openclaw-taskflow-ai-workflows). By leveraging OpenClaw, Microsoft Scout immediately gains compatibility with tools developers are already using. You do not need to rewrite your extensions; if it works in OpenClaw, it works in Scout. Currently, there are over 15,000 compatible plugins in the ecosystem, allowing integrations with Slack, GitHub, Jira, and even [local observability solutions like Lookspan](/en/blog/lookspan-local-first-observability-ai-agents).
+
+## How Scout integrates with the Windows Ecosystem
+
+Scout runs natively with deep OS-level integration. It can interact with the file system, read active browser states natively via MCP, and even orchestrate local instances of Ollama alongside cloud models like Gemini 3.1 Pro (which has [new interesting quotas and limits](/en/blog/antigravity-quotas-gemini-3-1-pro-limits)).
+
+The ability to merge Windows infrastructure with open AI agents opens up huge possibilities. Think of a workflow that downloads a repo, analyzes the code, creates local documentation via Ollama, and publishes a report on Notion. All this completely automated.
+
+## Is this the end of Copilot? The 2026 Evolution
+
+Not exactly. Copilot remains the inline, interactive assistant for coding and drafting. Scout, however, is a background worker.
+
+You delegate a high-level task to Scout (like "research this bug, find the affected files, and open a PR"), and it works asynchronously using OpenClaw's durable task engine. According to an internal study, this division between interactive agent (Copilot) and asynchronous worker (Scout) leads to a 35% increase in daily productivity for software developers. Scout has executed over 2 million tasks in beta since May 1, 2026.
+
+## Getting Started with Microsoft Scout and OpenClaw
+
+While Scout is currently in early preview limited to 5,000 developers, anyone familiar with OpenClaw can start preparing immediately by building compatible MCP plugins, for example [building your first plugin with Ollama Tools](/en/blog/build-first-openclaw-plugin-ollama-tools).
+
+```bash
+# Example of testing an MCP plugin for Scout using OpenClaw CLI
+npx @openclaw/cli test my-plugin --env scout-compat
+```
+
+The future of autonomous agents is here, and it is open-source. Microsoft's vision with Scout proves that the orchestration layer won't be a closed monopoly. Are you ready to build for this new era?
+
+You can further explore the potential by reading our guide on how to [orchestrate multi-agent teams with HiClaw](/en/blog/hiclaw-multi-agent-team-locally) to simulate the Scout experience.
+
+## FAQ
+
+### What is Microsoft Scout and how does it work?
+Microsoft Scout is a new autonomous AI agent built by Microsoft in 2026, natively powered by the open-source OpenClaw framework, which automates complex tasks in the background on your PC.
+
+### Does Scout replace GitHub Copilot?
+No. Copilot is an interactive "in-line" assistant, while Scout is an asynchronous autonomous worker designed for complex tasks like advanced debugging, workflow automation, and research.
+
+### Can I run Microsoft Scout locally?
+Yes. Scout leverages OpenClaw to run workflows locally and can integrate in total privacy with local LLMs via Ollama, as well as connecting to the cloud.
