@@ -1,6 +1,6 @@
 ---
-title: "Connecting Claude to macOS Address Book via Model Context Protocol"
-summary: "How to integrate the Apple Contacts MCP for local AI with Claude Code and OpenClaw to safely read macOS contacts."
+title: "Apple Contacts MCP for Local AI: macOS Contacts Integration"
+summary: "How to integrate the Apple Contacts MCP with Claude Code and OpenClaw to safely read macOS contacts locally using AI."
 createdAt: "2026-06-06T00:00:00Z"
 modifiedAt: "2026-06-06T00:00:00Z"
 authorId: "matteo"
@@ -12,6 +12,9 @@ translationSlug: "apple-contacts-mcp-ai-locale"
 The new **Apple Contacts MCP for local AI** lets your autonomous AI agents securely access your macOS contacts without relying on cloud synchronization. In my experience running local LLMs, I've been actively testing this Model Context Protocol (MCP) server to allow tools like Claude Code and [OpenClaw orchestration](/blog/orchestrating-ai-sub-agents-openclaw) to draft emails for specific people without manually looking up their details. This fundamentally changes how local AI integrates with native operating systems in 2026.
 
 ## What is the Apple Contacts MCP?
+
+Written by **Matteo Giardino**.
+
 
 The Apple Contacts MCP is an open-source server built on the Model Context Protocol that bridges the gap between local LLMs and your native macOS Contacts app. It uses Apple's native Contacts framework (`Contacts.framework`) to expose your address book securely to local AI agents.
 
@@ -66,7 +69,7 @@ Once the Apple Contacts MCP for local AI is active, you can ask your agent compl
 
 The AI will issue a tool call to the MCP server, search the macOS Contacts database, retrieve the relevant VCard details, and use them to construct the final output. According to recent GitHub discussions (2026), the latency for these local lookups is under 50ms. I highly recommend combining this with voice interfaces, similar to what I did with [DramaBox TTS voice cloning](/blog/dramabox-tts-local-voice-cloning).
 
-## FAQ
+## Frequently Asked Questions (FAQ)
 
 ### Does the Apple Contacts MCP send my data to the cloud?
 No, the Apple Contacts MCP runs entirely locally on your Mac. If you pair it with a local LLM like Ollama, your data never touches the internet.
@@ -77,19 +80,18 @@ Any agent that supports the Model Context Protocol (MCP) will work. This include
 ### Can it edit or delete my contacts?
 Currently, the official `@modelcontextprotocol/server-apple-contacts` is read-only for safety reasons. It can only search and retrieve contact details.
 
-## Best Practices for macOS Security with MCP
-
-As local AI tools like Claude Code and OpenClaw become more powerful, managing permissions properly is essential. When you install `@modelcontextprotocol/server-apple-contacts`, you are bridging the secure macOS sandbox with a terminal environment. 
-
-To maintain security:
-1. **Restrict Terminal Access:** Only grant Contacts access to the specific terminal app you use for AI workloads.
-2. **Review the Code:** Since this is an open-source MCP server, you can review its `Contacts.framework` integration on GitHub to ensure it only reads necessary fields like name, email, and phone number.
-3. **Use Dedicated Agent Workspaces:** When building complex autonomous workflows with OpenClaw, isolate the agent's environment so it doesn't accidentally access sensitive files while processing contacts.
-
-By following these best practices, you ensure that your local AI assistant remains a helpful productivity booster rather than a privacy risk.
-
-
 ## Conclusion
 
 The Apple Contacts MCP for local AI is a must-have for anyone serious about automating their macOS workflows without sacrificing privacy. By giving your local agents secure access to your address book, you unlock a new level of autonomous assistance. Try setting it up today and see how much time you save!
-\nThis guide on connecting Claude to macOS Address Book via Model Context Protocol shows the true power of local AI.
+
+
+## FAQ
+
+**What is the Model Context Protocol (MCP)?**
+It is an open standard that allows AI assistants (like Claude or local agents) to securely and standardly read data from external sources, like databases or system apps.
+
+**Does Apple Contacts MCP work with models other than Claude?**
+Yes, any framework or tool compatible with MCP (such as OpenClaw, Ollama, or specific apps) can use this server to read contacts.
+
+**Are my contacts sent to the cloud?**
+If you use a local AI model (e.g., via Ollama or LM Studio) and integrate MCP locally, no contact data leaves your computer. If you use Claude via API/Desktop, the data read into context is sent to Anthropic.
