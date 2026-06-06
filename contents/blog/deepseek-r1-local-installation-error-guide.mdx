@@ -1,0 +1,81 @@
+---
+title: "DeepSeek R1 Error Guide: Fix VRAM Crashes on Local GPU"
+summary: "This deepseek r1 error guide solves common hardware issues when installing and running DeepSeek R1 locally with Ollama, fixing VRAM limits and context window crashes."
+createdAt: "2026-06-06T00:00:00Z"
+modifiedAt: "2026-06-06T00:00:00Z"
+authorId: "matteo"
+image: "/images/blog/deepseek-r1-local-installation-error-guide.png"
+locale: "en"
+translationSlug: "deepseek-r1-guida-errori-installazione-locale"
+---
+
+Written by **Matteo Giardino**.
+
+If you are experiencing crashes, OOM errors, or token limits when installing DeepSeek R1 locally with Ollama, this **deepseek r1 error guide** will show you exactly how to fix them. In 2026, running local models requires managing VRAM and context windows carefully. I will walk you through solving Out of Memory errors, fixing the `<think>` token cutoff, and getting your hardware configured correctly.
+
+<CtaCard title="Stay Updated on Local AI" />
+
+## OOM Error (Out of Memory) and VRAM Limits
+
+One of the most common errors is crashing due to Out of Memory (OOM). This happens when trying to load a massive model like the full 70B parameter version on a GPU with limited memory. I have seen many developers struggle with this issue, especially when trying to push their hardware to the limit.
+
+```bash
+ollama run deepseek-r1:8b
+```
+
+Make sure to use the `1.5b`, `7b`, or `8b` quantized version if you have less than 16GB of VRAM. The 8B model is heavily optimized and works perfectly for most coding and reasoning tasks without overloading your system. If you want to dive deeper into local setups, check out our [How to Install OpenClaw with Ollama: Full 2026 Setup Guide](/blog/how-to-install-openclaw-ollama-2026-guide). 
+
+## Model Not "Thinking" (Token thinking limits)
+
+If you notice the output cutting off or the model failing to process thoughts (`<think>` tokens), you need to increase the context window. This is a very specific issue for reasoning models that use a lot of tokens just to "think" before outputting the final answer.
+
+```bash
+ollama run deepseek-r1:8b --num-ctx 8192
+```
+
+By explicitly passing the `--num-ctx` flag, you force Ollama to allocate more memory for the context window, preventing the reasoning process from being truncated. This is similar to issues seen in other environments, like the [Fix 1024 Tokens Not Thinking Error in Antigravity](/blog/fix-1024-tokens-not-thinking-error-antigravity).
+
+## Ollama Connection Refused
+
+If you get a connection refused error, port 11434 might be blocked or the Ollama server isn't running. Start it with the `ollama serve` command. In my experience, this usually happens after a system reboot or if another local service binds to the same port.
+
+```bash
+sudo lsof -i :11434
+ollama serve
+```
+
+Always verify that the Ollama daemon is active before querying the model, especially if you are connecting from an external script or an AI agent framework.
+
+## DeepSeek R1 Error Guide: Incompatible Hardware
+
+Ensure your CPU supports AVX2. Modern models require updated instruction sets to run efficiently. If you are running on an older machine, the model might crash silently or throw an illegal instruction error. For Mac users on Apple Silicon, this is generally handled well, but Windows or Linux users on older Intel chips should verify their CPU flags.
+
+```bash
+# On Linux, check for AVX2 support
+cat /proc/cpuinfo | grep avx2
+```
+
+## DeepSeek R1 Error Guide: Fixing Slow Inference
+
+If the model is running but generating less than 5 tokens per second, it means inference has fallen back to the CPU. You can verify this by looking at your GPU usage using tools like `nvidia-smi` or Activity Monitor on macOS. Make sure Ollama detects your GPU properly and that you haven't exhausted your VRAM, which forces the overflow into system RAM.
+
+## FAQ
+
+### Which DeepSeek R1 version to choose for 8GB VRAM?
+The quantized `8b` version is the best choice for systems with 8GB of VRAM. It fits perfectly into memory while leaving enough room for context.
+
+### Can I run DeepSeek R1 without a GPU?
+Yes, Ollama supports CPU fallback, but it will be very slow. It is highly recommended to use an Apple Silicon Mac or an NVIDIA GPU.
+
+### What is the most common issue in this deepseek r1 error guide?
+The most common issue is the Out of Memory (OOM) error, usually caused by downloading a model size that exceeds your available VRAM.
+
+### How do I update Ollama?
+Use the official command or download the latest release from the official [Ollama website](https://ollama.com).
+
+### Why are my tokens cut off?
+Because reasoning models use hidden `<think>` tokens, consuming the context window faster than normal models.
+
+<CtaCard title="Boost your productivity" />
+
+Matteo Giardino is the CTO and founder. He writes about AI and local models.
