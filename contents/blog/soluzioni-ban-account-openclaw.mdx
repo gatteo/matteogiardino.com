@@ -1,0 +1,106 @@
+---
+title: "Account OpenClaw Bannato? Perché Succede e Come Risolvere"
+summary: "Google e Anthropic stanno sospendendo gli account che usano OpenClaw tramite OAuth. Scopri i motivi dei ban e le soluzioni per usare il framework in sicurezza."
+createdAt: "2026-06-06T00:00:00Z"
+modifiedAt: "2026-06-06T00:00:00Z"
+image: "/images/blog/soluzioni-ban-account-openclaw.png"
+authorId: "matteo"
+locale: "it"
+tags: ["ai", "openclaw", "tutorial"]
+translationSlug: "openclaw-account-ban-solutions"
+---
+
+
+
+
+Mi sono svegliato con l'account Google Antigravity sospeso, e ho subito capito di non essere l'unico. A inizio 2026, sia Google che Anthropic hanno iniziato a bloccare attivamente gli account degli utenti che utilizzavano il framework OpenClaw sfruttando l'autenticazione OAuth per aggirare i normali costi delle API. Se il tuo account è stato bannato all'improvviso mentre testavi agenti AI locali, ecco esattamente cosa è successo e come ripristinare in sicurezza i tuoi workflow.
+
+In this article, we will discuss **Account OpenClaw Bannato? Perché Succede e Come Risolvere** and how the [framework OpenClaw](/blog/cos-e-openclaw-framework) can be used safely without triggering blocks.
+
+Scritto da **Matteo Giardino**.
+
+## Il Ban Wave di OpenClaw del 2026
+
+OpenClaw è un framework open-source incredibile che permette di coordinare sub-agenti AI per eseguire task localmente, come leggere le email, gestire il calendario o pilotare istanze Chromium tramite MCP.
+
+Tuttavia, per eseguire questi complessi processi multi-agente serve un LLM di fascia alta. Dato che i costi delle API per modelli come Gemini 2.5 Pro o Claude 3.5 Sonnet possono salire vertiginosamente, la community di sviluppatori ha creato un escamotage: un plugin OAuth che permetteva a OpenClaw di autenticarsi come un "utente normale" e instradare le richieste tramite il portale sviluppatori Antigravity di Google o l'interfaccia web di Claude Code, ottenendo di fatto token costosi gratuitamente o a tariffa fissa agevolata.
+
+Questa pratica viola i Termini di Servizio (TOS). Tra aprile e maggio 2026, le piattaforme hanno reagito:
+- **Google** ha sospeso permanentemente gli account sviluppatore Antigravity che mostravano picchi di traffico tipici dei loop autonomi.
+- **Anthropic** ha sospeso temporaneamente il creatore di OpenClaw e ha iniziato a bloccare attivamente gli account che sfruttavano questo bypass (spesso chiamato "Claw Tax").
+
+<CtaCard
+    title="Sviluppa Workflow AI per la Produzione"
+    description="Smetti di lottare contro i ban delle API. Posso aiutarti a progettare pipeline OpenClaw affidabili e scalabili per il tuo team."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Come Recuperare l'Account Sospeso
+
+Se sei già stato bannato, devi agire in fretta, ma la trasparenza è fondamentale.
+
+### 1. Invia un Ricorso (Appeal)
+
+Sia Google che Anthropic forniscono un link per fare ricorso nell'email di sospensione. Non negare l'evidenza. Dichiara chiaramente:
+- Che stavi sperimentando con un progetto open-source di GitHub (OpenClaw).
+- Che hai usato un plugin OAuth fornito dalla community senza renderti conto che violasse i TOS riguardo lo scraping automatizzato delle API.
+- Che hai eliminato il plugin e che passerai a chiavi API ufficiali a pagamento.
+
+Molti utenti hanno segnalato di essere riusciti a farsi ripristinare l'accesso ad Anthropic entro 48 ore usando questo approccio onesto. Google è più severa e ha chiuso definitivamente diversi account Antigravity, ma un ricorso educato è l'unica via possibile.
+
+### 2. Disconnetti i Token OAuth in Locale
+
+Prima di provare a rientrare (anche con un nuovo account), devi cancellare i token di autenticazione salvati in cache da OpenClaw per evitare un ban immediato del nuovo profilo.
+
+```bash
+# Rimuovi i token OAuth in cache per Anthropic e Google
+rm -rf ~/.openclaw/auth/
+rm ~/.openclaw/openclaw.json
+```
+
+## 3 Metodi Sicuri per Usare OpenClaw d'Ora in Poi
+
+Puoi ancora usare OpenClaw in modo efficace, devi solo architettarlo correttamente.
+
+### 1. Passa al Locale con Ollama (Consigliato)
+
+La soluzione più robusta e completamente gratuita è smettere di dipendere dalle API in cloud e utilizzare modelli locali tramite [Ollama](/blog/configurare-openclaw-ollama-agenti-ai-locali). OpenClaw supporta nativamente gli endpoint locali.
+
+```bash
+# Scarica un modello locale molto capace
+ollama run qwen:32b
+```
+
+Aggiorna il tuo file `~/.openclaw/config.yaml` puntando a localhost invece che ad Antigravity:
+
+```yaml
+provider: ollama
+model: qwen:32b
+endpoint: http://localhost:11434
+```
+
+### 2. Usa Chiavi API Ufficiali a Pagamento
+
+Se il tuo workflow richiede rigorosamente le capacità di ragionamento di Claude 3.5 Sonnet o Gemini 2.5 Pro, devi pagarli attraverso i canali API ufficiali. Genera una chiave API dalla Console di Anthropic o da Google AI Studio, e configura OpenClaw usando le variabili d'ambiente ufficiali come `OPENCLAW_API_KEY`. Non utilizzare i plugin di web-scraping o OAuth.
+
+### 3. Usa API Proxy con Limiti di Spesa
+
+Se fai parte di un team che condivide l'accesso, usa un gateway di osservabilità per impostare limiti di spesa rigidi (hard cap) sulle tue chiavi API ufficiali. In questo modo un loop autonomo fuori controllo non azzererà il tuo budget.
+
+## FAQ
+
+### Perché Anthropic ha bannato il creatore di OpenClaw?
+Anthropic ha temporaneamente sospeso Peter Steinberger a causa di controversie sui prezzi e sulla capacità del framework di bypassare la normale fatturazione API tramite interfacce di web-scraping. Il ban è stato rimosso poco dopo.
+
+### Posso ottenere un rimborso se Google banna il mio account Antigravity?
+No. I Termini di Servizio di Google indicano esplicitamente che gli account terminati per scraping automatizzato o violazioni dei TOS perdono eventuali saldi rimanenti degli abbonamenti.
+
+### OpenClaw è sicuro da usare?
+Sì, il framework OpenClaw in sé è completamente sicuro. I ban sono strettamente legati a *come* gli utenti si autenticavano con gli LLM commerciali. Se usi modelli locali via Ollama o chiavi API a pagamento ufficiali, il tuo account non corre alcun rischio.
+
+## Wrap-up
+
+L'ondata di ban legata a OpenClaw è un duro promemoria: gli "hack per le API gratis" non reggono mai in produzione. Per il futuro, progetta i tuoi agenti per usare modelli locali come Qwen o Llama 3 tramite Ollama, e riserva le chiavi API a pagamento solo per quei task che richiedono davvero il ragionamento di livello cloud. È l'unico modo per costruire automazioni AI durature.
