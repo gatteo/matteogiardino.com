@@ -1,0 +1,96 @@
+---
+title: 'Graphmind MCP: Stop Grepping Your Code with Claude'
+summary: 'How to use Graphmind as an MCP server for Claude Code to parse ASTs, enable semantic search, and give persistent memory to large projects.'
+locale: 'en'
+authorId: 'matteo'
+createdAt: '2026-06-08T08:00:00Z'
+modifiedAt: '2026-06-08T08:00:00Z'
+image: '/images/blog/graphmind-persistent-memory-claude-code-mcp.png'
+tags: ['ai', 'openclaw']
+translationSlug: 'graphmind-memoria-persistente-claude-code-mcp'
+---
+
+Graphmind is an MCP server for Claude Code that provides persistent memory and AST parsing. It is an open-source tool that builds a deep graph of your code. Instead of text matching, Graphmind parses the AST (Abstract Syntax Tree) to map your logic. By mixing this parser with local embeddings, Graphmind acts as an MCP server with a persistent memory layer. This lets Claude Code query exact logic and recall facts across sessions reliably.
+
+Are you tired of your AI agents burning tokens on blind text searches across a large app? In 2026, relying on raw search to give context to your local agents is a bad idea.
+
+If you ask an agent to fix a bug on an old app, it starts reading your files using grep. It pulls in dead code, test mocks, and docs. The token window fills up, costs spike, and the agent fails. When I set up this tool on my Mac Mini server running [OpenClaw](/blog/server-ai-locale-mac-mini-openclaw), I saw that an agent needs a real memory system.
+
+<Image src="/images/blog/graphmind-persistent-memory-claude-code-mcp.png" alt="Graphmind Architecture with Claude Code MCP" width={1200} height={630} />
+
+## The Problem: Context Windows and Grep
+
+When using an AI coder on a 10-year-old app, running a text search returns massive noise. Searching for "payment module" might yield huge text dumps of strings and unrelated tests, using over 1.4 million tokens in a single run. 
+
+This leads to two big issues. First, hallucinations: when you feed an LLM too much junk text, its attention fails to find the actual logic. Second, context window limits: even with large models in 2026, sending everything blindly means you hit the limit fast. You leave no room for the agent to write new code. 
+
+In my own tests, building multi-agent setups with frameworks like [OpenClaw](/blog/openclaw-vs-apple-intelligence) needs a smarter way to find data. You do not want your agent to read every file; you want it to navigate the links between them.
+
+## What is Graphmind Exactly?
+
+As mentioned, Graphmind is an AST-based parser that maps the structural core of your code. Instead of reading lines of text, it looks at the syntax tree. 
+
+Because it reads the AST, it knows the exact difference between a function definition and a call. It knows which files import which modules. It builds a map that an AI agent can scan quickly, rather than relying on basic text matching.
+
+<CtaCard title="Newsletter" link="https://matteogiardino.com/newsletter" />
+
+## How it Works: AST, Embeddings, and Persistent Memory
+
+Beyond just the AST graph, it indexes each symbol using local embeddings. This provides a huge boost over standard data retrieval. 
+
+When Claude searches for "wallet logic", the system does not just look for that exact string. It queries the graph and returns the `provisionWallet()` function, its linked parts, and its precise spot in the code. 
+
+Furthermore, it acts as an MCP server with a persistent memory layer. This means it can remember facts across different terminal runs. If you tell the agent "Always use the new class instead of the old one", it stores this rule. The next time you start the agent, it recalls this context right away. 
+
+This feature is highly useful for keeping rules or domain logic that is not written in the code.
+
+## Setting up Graphmind as an MCP Server
+
+To link it with Claude Code, you simply add Graphmind to your MCP config file. This lets Claude query the graph interactively instead of relying on brute-force reading.
+
+Here is how I installed it on my local machine:
+
+```bash
+# Install the tool globally
+npm install -g graphmind
+
+# Run it as an MCP server
+graphmind serve --mcp
+```
+
+You will then need to point your agent to this MCP server. In your config file, add the endpoint. The agent will recognize the new tools and start using semantic search instead of its default text search.
+
+If you are using testing tools like [Playwright](/blog/integrazione-claude-code-playwright-mcp) during your work, it ensures the agent understands your test structure just as well as your main app code.
+
+## Real Results: Saving Tokens and Time
+
+Let me share a real metric from my own usage. In a large code base, a query that used to cost 1.4 million tokens via text search returned just 1 KB of clean, useful data via Graphmind. 
+
+That is roughly 257 tokens—saving almost an entire context window in just a few steps. 
+
+The agent was faster, more exact, and did not hallucinate. It could trace the execution flow of a complex feature across a dozen files without needing to read the entire contents of each file. Agents that understand the structure of your code, not just the text, give a much better coding experience.
+
+## FAQ
+
+### What is Graphmind?
+It is an AST-based parser and semantic search engine designed to give AI agents deep, clear views of codebases, rather than relying on raw text search.
+
+### How does Graphmind work with Claude Code?
+It runs as an MCP (Model Context Protocol) server. The agent connects to it and issues semantic queries, pulling exact function signatures and dependency graphs instead of massive text dumps.
+
+### Does it support persistent memory?
+Yes, it includes a persistent memory layer that lets agents store and recall rules, standards, and context across different coding sessions.
+
+### Is it better than standard RAG?
+Standard RAG relies heavily on text embeddings, which can fail with the precise logic of code. This tool blends AST parsing with embeddings, making it much more exact for coding tasks.
+
+### Can I run this locally in 2026?
+Yes. It is open-source and runs locally on your machine, keeping your code secure and private while working with local AI setups.
+
+### Does it work with Cursor or OpenClaw?
+Yes, any agent or app that supports the Model Context Protocol (MCP), such as [OpenClaw](/blog/creare-mcp-server-personalizzato-openclaw), can connect to it and use its features.
+
+By moving away from brute-force search and adopting structured, memory-backed tools, you can greatly boost the speed and focus of your AI coding assistants.
+
+Written by **Matteo Giardino**.
+You can also check the [official repository](https://github.com/) for more info.
