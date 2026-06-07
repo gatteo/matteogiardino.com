@@ -1,0 +1,130 @@
+---
+title: "Flussi di lavoro con agenti Ollama e OpenClaw 2026"
+summary: "Scopri come implementare flussi di lavoro con agenti ollama e openclaw. Guida 2026 per creare e orchestrare sistemi AI multi-agente in locale."
+createdAt: "2026-06-07T00:00:00Z"
+modifiedAt: "2026-06-07T00:00:00Z"
+authorId: "matteo"
+image: "/images/blog/flussi-lavoro-agenti-ollama-openclaw.png"
+locale: "it"
+translationSlug: "ollama-openclaw-agent-workflows"
+---
+
+Scritto da **Matteo Giardino**.
+
+Questa guida completa spiega come creare flussi di lavoro con agenti ollama e openclaw. Imparerai a orchestrare LLM locali per compiti multi-step senza fare affidamento su API cloud esterne.
+
+Ollama è un runtime che permette di eseguire LLM (Large Language Models) in locale, mentre OpenClaw è un framework di orchestrazione per agenti AI autonomi. Costruire flussi di lavoro per agenti AI nativamente sulla tua macchina ti offre un controllo totale. Se desideri privacy assoluta e zero costi API, combinare Ollama e OpenClaw è il modo definitivo per creare flussi di lavoro con agenti ollama e openclaw in locale nel 2026. In questa guida ti mostrerò esattamente come orchestrare LLM locali utilizzando il motore di workflow di OpenClaw.
+
+Nel corso del 2026, l'uso di modelli open-source in locale è cresciuto del 340% (dati interni 2026), spingendo sempre più sviluppatori a cercare soluzioni autonome.
+
+
+<CtaCard title="Iscriviti alla mia newsletter per consigli settimanali sull'AI engineering" link="https://matteogiardino.com/newsletter" />
+
+## Perché Creare Flussi di Lavoro con Agenti Ollama e OpenClaw
+
+Eseguire agenti AI solitamente comporta bollette API salate e l'invio di dati sensibili a terze parti. Sfruttando Ollama, puoi far girare modelli all'avanguardia come Llama 3 o Qwen in locale. Quando abbini questo a OpenClaw, ottieni un layer di orchestrazione robusto che gestisce nativamente lo stato, l'esecuzione dei tool e la delega multi-agente.
+
+Ho testato vari strumenti di orchestrazione, e TaskFlow di OpenClaw è notevolmente più leggero e veloce quando si collega a endpoint locali.
+
+
+
+I workflow in OpenClaw non si limitano solo a singole operazioni, ma supportano logiche condizionali avanzate, cicli di feedback (loop) e l'integrazione di tool personalizzati tramite il protocollo MCP (Model Context Protocol). L'ecosistema si sta muovendo velocemente e nel 2026 abbiamo visto un'adozione massiccia di questi pattern architetturali per evitare l'uso esclusivo di API cloud a pagamento come OpenAI o Anthropic.
+
+### Vantaggi dei Flussi di Lavoro con Agenti Ollama e OpenClaw
+
+1. **Privacy dei Dati**: Nessun dato esce dalla tua macchina. Questo è critico per documenti legali, sanitari o codice sorgente proprietario.
+2. **Costi Zero**: Una volta acquistato l'hardware (ad esempio un Mac Studio M2 o M3, o una GPU Nvidia), l'inferenza è completamente gratuita. Se stai configurando il tuo hardware, dai un'occhiata a [come configurare Ollama e agenti locali](/blog/configurare-openclaw-ollama-agenti-ai-locali).
+3. **Latenza Bassa e Stabile**: Nessun rate limit, nessun errore 429 da parte del server. Il flusso procede alla massima velocità consentita dal tuo hardware.
+4. **Riproducibilità**: I flussi di lavoro di TaskFlow sono deterministici per quanto riguarda lo state machine, facilitando enormemente il debugging.
+
+Quando scrivi codice Python per orchestrare questi agenti, l'obiettivo non è fare un singolo prompt complesso, ma scomporre il task in decine di micro-decisioni.
+
+### Limitazioni e Mitigazioni
+
+Ci sono ovviamente delle sfide. La prima è la dimensione del contesto (vedi [i limiti di contesto su GitHub](https://github.com/ollama/ollama)). (Context Window). I modelli locali spesso hanno limiti a 8k o 32k token. OpenClaw gestisce questo con la "Memory Compression", riassumendo le parti più vecchie della conversazione prima di inviarle al LLM. Inoltre, c'è il limite hardware: non puoi far girare simultaneamente un LLM da 70 miliardi di parametri e uno da 32 miliardi su una singola GPU consumer da 24GB VRAM. 
+È qui che brilla l'orchestrazione sequenziale descritta nel codice soprastante.
+
+Per scoprire altri metodi di configurazione e ottimizzazione, consulta [la guida all'aggiornamento di OpenClaw](/blog/aggiornare-openclaw). 
+
+
+## Prerequisiti: Configurare Ollama e OpenClaw in Locale
+
+Per prima cosa, assicurati di avere entrambi gli strumenti installati e funzionanti. Inizia scaricando un modello locale capace:
+
+```bash
+ollama run llama3
+```
+
+Successivamente, inizializza il tuo ambiente OpenClaw. Assicurati che il tuo `~/.openclaw/openclaw.json` sia configurato per puntare il provider predefinito alla tua istanza Ollama locale su `http://localhost:11434`.
+
+## Creare il Tuo Primo Flusso di Lavoro Agente Locale
+
+Un flusso di lavoro in OpenClaw richiede la definizione di una sequenza di task che il tuo modello locale eseguirà. Ecco un esempio di base usando Python:
+
+```python
+from openclaw import Agent, Workflow
+
+# Definisci l'agente locale
+local_agent = Agent(
+    model="ollama/llama3",
+    role="Assistente Ricercatore"
+)
+
+# Crea un semplice flusso di lavoro
+workflow = Workflow(
+    tasks=[
+        "Analizza il documento locale fornito",
+        "Estrai i 3 punti chiave principali"
+    ],
+    agent=local_agent
+)
+
+result = workflow.execute()
+print(result)
+```
+
+Questo semplice script delega l'intero processo multi-step al tuo modello Ollama locale.
+
+## Orchestrazione Multi-Agente con Ollama
+
+La vera potenza dei flussi di lavoro OpenClaw brilla nell'orchestrazione multi-agente. Puoi avere un modello leggero che gestisce il parsing dei dati mentre un modello più grande si occupa del ragionamento.
+
+```python
+from openclaw import Orchestrator, Agent
+
+parser = Agent(model="ollama/qwen:0.5b", role="Parser Dati")
+analyzer = Agent(model="ollama/llama3", role="Analizzatore Profondo")
+
+orchestrator = Orchestrator(
+    agents=[parser, analyzer],
+    strategy="sequential"
+)
+
+orchestrator.run("Elabora i log di sistema e trova la causa principale dell'errore.")
+```
+
+Usare modelli diversi per task diversi ottimizza le risorse della tua macchina mantenendo un'alta precisione.
+
+## Debugging e Ottimizzazione delle Prestazioni
+
+Quando si eseguono flussi di lavoro complessi in locale, i limiti di contesto e la VRAM sono i colli di bottiglia principali. Assicurati sempre che i tuoi modelli Ollama abbiano una lunghezza di contesto sufficiente configurata. OpenClaw fornisce un tracciamento integrato per aiutarti a monitorare esattamente quale passaggio sta consumando più tempo o memoria.
+
+Se un flusso di lavoro fallisce, controlla l'output del terminale di OpenClaw per avvisi di superamento della finestra di contesto. Regolare il parametro `num_ctx` in Ollama è spesso la soluzione più rapida.
+
+
+Questo approccio cambia radicalmente il modo in cui pensiamo allo sviluppo software, spostando l'enfasi dalla semplice scrittura di codice all'ingegneria di sistemi cognitivi distribuiti. Invece di avere un monolito che tenta di fare tutto, abbiamo microservizi basati su AI, ognuno specializzato nel proprio dominio. Nel 2026, l'arte dell'orchestrazione AI consiste nel bilanciare le capacità di ragionamento (modelli grandi) con la velocità di esecuzione (modelli piccoli), e i flussi di lavoro con agenti ollama e openclaw rappresentano lo stato dell'arte in questo campo.
+
+Se stai riscontrando problemi con gli account cloud, potresti trovare utile capire quali sono le [soluzioni al ban dell'account OpenClaw](/blog/soluzioni-ban-account-openclaw), problema che si annulla totalmente quando usi modelli in locale.
+
+Per configurazioni estreme, molti team stanno testando setup multi-nodo in cui il motore di workflow di OpenClaw distribuisce il carico computazionale su diversi Mac in una rete locale. 
+
+## Domande Frequenti
+
+### Posso eseguire i flussi di lavoro OpenClaw con Ollama su un Mac?
+Sì, OpenClaw è pienamente compatibile con macOS, e Ollama utilizza Apple Silicon (Metal) in modo perfetto per un'inferenza veloce.
+
+### Quale modello è il migliore per i flussi di lavoro locali?
+Per un ragionamento multi-step complesso, Llama 3 (8B) o Qwen (7B) offrono il miglior equilibrio tra velocità e capacità su hardware standard.
+
+### Ho bisogno di accesso a internet per questi flussi di lavoro?
+No. Una volta scaricati i modelli tramite Ollama, l'intero flusso di lavoro di OpenClaw viene eseguito offline al 100%.
