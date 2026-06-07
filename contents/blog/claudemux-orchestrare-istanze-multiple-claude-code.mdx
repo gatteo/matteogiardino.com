@@ -1,0 +1,43 @@
+---
+title: 'Claudemux: Orchestrare Istanze Multiple di Claude Code'
+createdAt: '2026-06-07T00:00:00Z'
+modifiedAt: '2026-06-07T00:00:00Z'
+summary: 'Scopri come orchestrare e gestire istanze multiple e concorrenti di Claude Code utilizzando Claudemux. Ottimizza i tuoi workflow di agenti AI locali.'
+image: '/images/blog/claudemux-orchestrare-istanze-multiple-claude-code.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'claude']
+translationSlug: 'claudemux-orchestrate-multiple-claude-code-instances'
+---
+
+Man mano che gli sviluppatori adottano strumenti AI locali, eseguire una singola istanza di Claude Code spesso non è sufficiente. È qui che entra in gioco Claudemux. È uno strumento potente che ti permette di orchestrare istanze multiple di Claude Code in modo trasparente.
+
+## Perché Eseguire Istanze Multiple?
+
+Quando si affrontano codebase complesse o si gestiscono task in background lunghi, un singolo agente può diventare un collo di bottiglia. Utilizzando Claudemux, puoi parallelizzare i task, dedicando un'istanza al debugging e un'altra alla generazione di test.
+
+<CtaCard
+    title="Vuoi ottimizzare il tuo workflow AI?"
+    subtitle="Costruiamo un'infrastruttura AI locale affidabile per il tuo team."
+    buttonText="Contattami"
+    href="mailto:mg@matteogiardino.com"
+/>
+
+## Configurare Claudemux
+
+L'installazione di Claudemux è immediata. Una volta installato, puoi configurare le tue istanze tramite un semplice file YAML. Questo ti permette di definire ruoli distinti, chiavi API (se necessarie) e parametri del modello per ogni istanza.
+
+```bash
+npm install -g claudemux
+claudemux init
+```
+
+## Gestire Stato e Contesto
+
+Una delle sfide più grandi con agenti multipli è la gestione dello stato. Claudemux risolve questo problema offrendo una memoria di contesto condivisa da cui tutte le istanze possono leggere, assicurando che i tuoi agenti non si intralcino a vicenda.
+
+## Conclusione
+
+Claudemux è uno strumento essenziale per chiunque stia spingendo i limiti dello sviluppo AI locale. Porta ordine nel caos della gestione di agenti multipli.
+
+*Matteo Giardino è un Fractional CTO specializzato in integrazioni AI.*

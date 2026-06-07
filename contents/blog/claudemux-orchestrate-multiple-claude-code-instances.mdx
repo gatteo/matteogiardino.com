@@ -1,0 +1,43 @@
+---
+title: 'Claudemux: Orchestrate Multiple Claude Code Instances'
+createdAt: '2026-06-07T00:00:00Z'
+modifiedAt: '2026-06-07T00:00:00Z'
+summary: 'Learn how to orchestrate and manage multiple concurrent Claude Code instances using Claudemux. Optimize your local AI agent workflows.'
+image: '/images/blog/claudemux-orchestrate-multiple-claude-code-instances.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw', 'claude']
+translationSlug: 'claudemux-orchestrare-istanze-multiple-claude-code'
+---
+
+As developers adopt local AI tools, running a single instance of Claude Code often isn't enough. That's where Claudemux comes in. It's a powerful tool that allows you to orchestrate multiple Claude Code instances seamlessly.
+
+## Why Run Multiple Instances?
+
+When dealing with complex codebases or handling long-running background tasks, a single agent can become a bottleneck. By using Claudemux, you can parallelize tasks, dedicating one instance to debugging and another to generating tests.
+
+<CtaCard
+    title="Need to optimize your AI workflow?"
+    subtitle="Let's build a reliable local AI infrastructure for your team."
+    buttonText="Contact me"
+    href="mailto:mg@matteogiardino.com"
+/>
+
+## Setting Up Claudemux
+
+Installing Claudemux is straightforward. Once installed, you can configure your instances via a simple YAML file. This allows you to define distinct roles, API keys (if needed), and model parameters for each instance.
+
+```bash
+npm install -g claudemux
+claudemux init
+```
+
+## Managing State and Context
+
+One of the biggest challenges with multiple agents is state management. Claudemux solves this by offering a shared context memory that all instances can read from, ensuring your agents don't step on each other's toes.
+
+## Conclusion
+
+Claudemux is an essential tool for anyone pushing the limits of local AI development. It brings order to the chaos of managing multiple agents.
+
+*Matteo Giardino is a Fractional CTO specializing in AI integration.*
