@@ -1,0 +1,91 @@
+---
+title: 'UI-TARS: Agente AI Open Source per Browser e Desktop'
+createdAt: '2026-06-08T00:00:00Z'
+modifiedAt: '2026-06-08T00:00:00Z'
+summary: "UI-TARS è il nuovo agente AI visivo basato su Qwen 2 VL per l'automazione di browser e desktop. Scopri come usarlo localmente senza costi API."
+image: '/images/blog/ui-tars-agente-ai-open-source-browser-desktop.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'ai agents', 'local ai']
+translationSlug: 'ui-tars-open-source-ai-agent-browser-desktop'
+---
+
+UI-TARS è un agente AI visivo open source basato su Qwen 2 VL in grado di controllare nativamente sia il tuo browser che l'ambiente desktop. Elabora i pixel grezzi dello schermo per cliccare, digitare e navigare le interfacce grafiche in totale autonomia, senza dipendere dal parsing HTML o da costose API esterne. Essendo eseguibile localmente, offre una soluzione gratuita e privata per automatizzare flussi di lavoro web e di sistema complessi.
+
+Se stai cercando un modo affidabile per automatizzare le tue attività, UI-TARS cambia le regole del gioco. Costruito su eccellenti fondamenta visive, è un agente GUI specializzato capace di "guardare" il tuo schermo ed eseguire task complessi in completa autonomia. In questa guida, analizzeremo cosa rende speciale UI-TARS, le sue funzionalità principali e come puoi eseguirlo direttamente sul tuo hardware.
+
+## Cos'è UI-TARS?
+
+UI-TARS è un modello visivo open source addestrato specificamente per il controllo del computer. A differenza degli agenti basati sul testo che richiedono il parsing di codice HTML complesso o wrapper di accessibilità (come i classici [tool alla Playwright](/blog/automazione-browser-openclaw)), UI-TARS opera visivamente, esattamente come un essere umano. Guarda lo schermo, identifica pulsanti, campi di testo ed elementi grafici, e predice le coordinate X e Y esatte per cliccare o digitare.
+
+<CtaCard title="Newsletter" />
+
+Proprio perché elabora pixel grezzi, non gli importa se un'applicazione è sviluppata in React, Electron o in un framework nativo obsoleto. Se è visibile sullo schermo, UI-TARS può interagirvi.
+
+## Funzionalità Chiave: Controllo di Browser e Desktop
+
+Il framework include due implementazioni distinte per coprire praticamente qualsiasi esigenza di automazione.
+
+### 1. Automazione del Browser
+
+L'agente browser opera direttamente all'interno delle tue sessioni web. Può navigare flussi complessi, come prenotare voli, compilare form a più passaggi o estrarre dati da Single Page Application dinamiche. Essendo un modello visivo, gestisce senza problemi quei siti che utilizzano strutture DOM offuscate per bloccare il web scraping tradizionale.
+
+Ad esempio, se gli chiedi "Trova il meteo attuale a Milano", l'agente aprirà un motore di ricerca, digiterà la query, individuerà visivamente il widget della temperatura e ti restituirà il valore esatto.
+
+### 2. Automazione Desktop
+
+L'agente desktop compie un passo ulteriore controllando l'intero sistema operativo. Può aprire applicazioni locali, spostare file, navigare nei menu di sistema ed eseguire comandi nel terminale. Questo lo rende un assistente potente per noi sviluppatori che vogliamo automatizzare script di setup o attività di amministrazione di routine senza dover scrivere infinite macro in Python.
+
+## Perché UI-TARS Rivoluziona l'Automazione
+
+Abbiamo già visto agenti GUI in passato, ma UI-TARS introduce alcuni vantaggi critici che lo rendono una scelta eccellente nel 2026.
+
+### Open Source e Local-First
+
+I pesi del modello sono open source e disponibili gratuitamente su HuggingFace. Non devi pagare costi API per ogni singolo screenshot elaborato, né devi inviare i dati sensibili del tuo desktop a un provider esterno. Eseguirlo localmente significa avere privacy totale e una scalabilità a costo zero, simile ai vantaggi di [eseguire modelli locali come Qwen 2.5 Coder](/blog/qwen-25-coder-32b-ollama-openclaw-guida).
+
+### Basato su Qwen 2 VL
+
+Utilizzando Qwen 2 VL come base, UI-TARS eredita un'elaborazione del linguaggio visivo all'avanguardia. Non si limita a riconoscere un "pulsante": comprende il contesto che lo circonda, legge il testo in modo naturale e deduce le intenzioni dell'utente dal layout dell'interfaccia.
+
+### Apprendimento Iterativo
+
+Il framework utilizza un approccio di apprendimento iterativo, migliorando costantemente i suoi percorsi di navigazione imparando dalle azioni riuscite e recuperando dagli errori. Se un layout cambia leggermente, l'agente si adatta invece di bloccarsi come farebbe un rigido script Selenium.
+
+## Come Installare ed Eseguire UI-TARS in Locale
+
+Far girare un agente visivo richiede risorse hardware adeguate, ma il processo di configurazione è semplice. Ecco come puoi avviare l'agente desktop.
+
+### Requisiti di Sistema
+
+Trattandosi di un modello visivo-linguistico, avrai bisogno di una GPU capace. È consigliata una scheda NVIDIA con almeno 16GB di VRAM per la variante da 7B parametri, mentre il modello più grande da 72B richiede setup multi-GPU. Tuttavia, per la maggior parte dei compiti di automazione, il modello da 7B offre risultati eccellenti.
+
+### Passaggi di Installazione
+
+1. **Clona il Repository**: Inizia scaricando il codice ufficiale di UI-TARS da GitHub.
+2. **Prepara l'Ambiente**: Usa Python 3.10+ e installa le dipendenze tramite `pip`.
+3. **Scarica il Modello**: Recupera i pesi di UI-TARS da HuggingFace. Puoi utilizzare server di inferenza locali standard se supportati, anche se l'implementazione nativa garantisce il miglior loop di controllo GUI.
+4. **Avvia l'Agente**: Fai partire il listener desktop. Potrai poi fornire prompt in linguaggio naturale direttamente all'agente.
+
+```bash
+# Esempio di avvio (controlla il repo per i flag aggiornati)
+python run_agent.py --model Qwen/UI-TARS-7B-VL --mode desktop
+```
+
+Una volta in esecuzione, puoi chiedergli "Apri il terminale e lancia un aggiornamento di sistema" e guardarlo eseguire i passaggi visivamente.
+
+## Testare UI-TARS tramite HuggingFace Spaces
+
+Se non hai l'hardware necessario per far girare un modello visivo da 7B in locale, niente paura. Il team ha messo a disposizione uno Space interattivo su HuggingFace dove puoi testare direttamente le capacità di automazione del browser.
+
+Ti basta inserire un prompt e lo Space avvierà un container browser isolato, lasciando che l'agente navighi sul web in base alle tue istruzioni. È il modo migliore per valutarne la logica e la precisione prima di impegnarsi in un'installazione locale.
+
+## Domande Frequenti
+
+**Posso usare UI-TARS su Mac?**  
+Sì, il codice è multipiattaforma. Sebbene le GPU NVIDIA offrano le performance migliori tramite CUDA, la community sta già lavorando su ottimizzazioni per Apple Silicon (MPS).
+
+**Supporta l'automazione in background?**  
+Al momento, gli agenti visivi tendono ad aver bisogno del focus sullo schermo reale o virtuale per "vedere" cosa succede, a differenza delle automazioni API-first. L'utilizzo tramite container Docker (come negli HuggingFace Spaces) è la soluzione ideale per task in background.
+
+*Scritto da Matteo Giardino è un CTO e sviluppatore che condivide le sue esperienze pratiche con agenti AI e automazione. Gestisce matteogiardino.com per documentare i suoi setup nel mondo reale.*

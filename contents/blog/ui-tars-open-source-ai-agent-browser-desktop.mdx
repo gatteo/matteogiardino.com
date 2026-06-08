@@ -1,0 +1,91 @@
+---
+title: 'UI-TARS: Open Source AI Agent for Browser & Desktop'
+createdAt: '2026-06-08T00:00:00Z'
+modifiedAt: '2026-06-08T00:00:00Z'
+summary: 'UI-TARS is the new open-source vision agent based on Qwen 2 VL that automates both browser and desktop tasks locally without API fees.'
+image: '/images/blog/ui-tars-open-source-ai-agent-browser-desktop.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'ai agents', 'local ai']
+translationSlug: 'ui-tars-agente-ai-open-source-browser-desktop'
+---
+
+UI-TARS is an open-source vision AI agent based on Qwen 2 VL that natively controls both your browser and desktop. It processes raw screen pixels to autonomously click, type, and navigate graphical interfaces without relying on HTML parsing or expensive APIs. By running locally, it provides a cost-free, private solution for automating complex system and web workflows.
+
+If you are looking for a reliable way to automate your tasks, UI-TARS changes the game. Built on impressive vision foundations, it is a dedicated GUI agent capable of seeing your screen and executing complex tasks autonomously. In this guide, I will break down what makes UI-TARS stand out, its core capabilities, and how you can run it on your own hardware.
+
+## What is UI-TARS?
+
+UI-TARS is an open-source vision model specifically trained for computer control. Unlike text-based agents that need complex HTML parsing or accessibility tree wrappers (like [Playwright automation tools](/blog/browser-automation-openclaw)), UI-TARS operates visually-just like a human. It looks at the screen, identifies buttons, inputs, and elements, and predicts the exact X and Y coordinates to click or type.
+
+<CtaCard title="Newsletter" />
+
+Because it processes raw pixels, it doesn't care if an app is built with React, Electron, or a legacy native framework. If it appears on the screen, UI-TARS can interact with it.
+
+## Key Capabilities: Browser and Desktop Control
+
+The framework ships with two distinct implementations that cover almost any automation need.
+
+### 1. Browser Automation
+
+The browser agent works directly within your web sessions. It can navigate complex workflows, such as booking flights, filling out multi-step forms, or extracting data from dynamic single-page applications. Because it's a vision model, it easily handles sites that use obfuscated DOM structures to prevent traditional web scraping.
+
+For example, asking it to "Get the current weather in San Francisco" prompts the agent to open a search engine, input the query, visually locate the temperature widget, and return the exact value. 
+
+### 2. Desktop Automation
+
+The desktop agent takes things a step further by controlling your operating system. It can open local applications, move files, interact with system menus, and execute commands in your terminal. This makes it a powerful assistant for developers who want to automate setup scripts or routine system administration tasks without writing custom Python macros.
+
+## Why UI-TARS Changes the Automation Game
+
+We have seen GUI agents before, but UI-TARS introduces a few critical advantages that make it a compelling choice for 2026.
+
+### Open Source and Local-First
+
+The model weights are open-source and freely available on HuggingFace. You don't need to pay API fees for every screenshot evaluated, nor do you need to send sensitive desktop data to an external provider. Running it locally means complete privacy and cost-free scaling, similar to the benefits of [running local models like Qwen 2.5 Coder](/blog/qwen-25-coder-32b-ollama-openclaw-guide).
+
+### Built on Qwen 2 VL
+
+By using Qwen 2 VL as its base, UI-TARS inherits state-of-the-art vision-language processing. It doesn't just recognize a "button"-it understands the context around it, reads text naturally, and infers user intent from the interface layout. 
+
+### Iterative Learning
+
+The framework uses an iterative learning approach, continuously improving its navigation paths by learning from successful actions and recovering from misclicks. If a UI layout changes slightly, the agent adapts instead of crashing like a hardcoded Selenium script.
+
+## How to Install and Run UI-TARS Locally
+
+Running a vision agent requires some hardware overhead, but the setup process is straightforward. Here is how you can get the desktop agent running.
+
+### System Requirements
+
+Because it is a vision-language model, you will need a capable GPU. An NVIDIA card with at least 16GB of VRAM is recommended for the 7B variant, while the larger 72B model requires multi-GPU setups. However, for most automation tasks, the 7B model provides excellent results.
+
+### Installation Steps
+
+1. **Clone the Repository**: Start by pulling the official UI-TARS code from GitHub.
+2. **Setup the Environment**: Use Python 3.10+ and install the requirements via `pip`.
+3. **Download the Model**: Pull the UI-TARS weights from HuggingFace. You can use standard local inference servers like vLLM or Ollama if supported, though the native implementation provides the best GUI control loop.
+4. **Launch the Agent**: Start the desktop listener. You can then pass natural language prompts directly to the agent.
+
+```bash
+# Example launch command (check the repo for latest flags)
+python run_agent.py --model Qwen/UI-TARS-7B-VL --mode desktop
+```
+
+Once running, you can ask it to "Open Spotify and play my Discover Weekly" and watch it execute the steps visually.
+
+## Testing UI-TARS via HuggingFace Spaces
+
+If you don't have the hardware to run a 7B vision model locally, you don't have to miss out. The team has provided an interactive Space on HuggingFace where you can test the browser automation capabilities.
+
+You simply enter a prompt, and the Space spins up an isolated browser container, letting the agent navigate the web based on your instructions. It's the best way to evaluate its reasoning and precision before committing to a local installation.
+
+*Written by Matteo Giardino is a CTO and developer sharing practical experiences with AI agents and automation. He runs matteogiardino.com to document real-world setups.*
+
+## FAQ
+
+**Can I run UI-TARS on a Mac?**  
+Yes, the code is cross-platform. While NVIDIA GPUs provide the best performance via CUDA, the community is actively working on optimizations for Apple Silicon (MPS).
+
+**Does it support background automation?**  
+Currently, vision agents need focus on a real or virtual screen to "see" what's happening, unlike API-first automations. Running the agent inside a headless container (like the HuggingFace Space approach) is the recommended way to execute background tasks.
