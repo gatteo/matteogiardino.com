@@ -1,0 +1,114 @@
+---
+title: "Fix: Claude Code MCP Config Silently Orphans Docker Containers"
+summary: "A bad claude code mcp config silently orphans docker containers, causing CPU spikes. Learn how to fix this lifecycle mismatch permanently."
+locale: "en"
+authorId: "matteo"
+createdAt: "2026-06-08T00:00:00Z"
+modifiedAt: "2026-06-08T00:00:00Z"
+image: "/images/blog/claude-code-mcp-orphans-docker.png"
+translationSlug: "claude-code-mcp-abbandona-container-docker"
+tags: ["ai", "claude-code", "docker", "devops"]
+---
+
+Scritto da **Matteo Giardino**.
+
+Claude Code's MCP (Model Context Protocol) integration provides immense power by allowing the AI to spin up temporary environments, tools, and databases. However, many developers in 2026 are discovering a silent issue: the default setup can leak resources. Specifically, I noticed that my local Mac Mini was running out of RAM, and I soon realized that a default claude code mcp config silently orphans docker containers every time the CLI crashes.
+
+If you are using Anthropic's new CLI tools, you probably rely on Docker to isolate your agents. In my own testing, I found that whenever I forcefully terminated a session, the background containers just kept running. A standard claude code mcp config silently orphans docker containers due to missing SIGTERM hooks. In this guide, I will share exactly how I debugged this issue and the automated cleanup workarounds I implemented to fix it. If you want to explore alternatives to Claude Code, check out my guide on [OpenClaw vs Claude Code](/blog/openclaw-vs-claude-code).
+
+## The Hidden Cost of Claude Code MCP
+
+When Claude Code executes a task that requires a sandbox or a database via MCP, it often relies on Docker. The agent spins up the container, does its job, and ideally shuts it down. But what happens if the CLI is forcefully terminated, or if the MCP server crashes due to an out-of-memory error? The Docker container is left running in the background.
+
+An orphaned container is a Docker instance that continues to run even though its parent process or managing application has been terminated. This is a massive problem for local AI development. If you are experimenting with multiple AI tools, these leaks can accumulate quickly. I once found over 30 headless Postgres databases running on my machine, all spawned by an abandoned session. This is a common pitfall, which is why optimizing your workflow is essential—for more tips, read my post on the [6 best ways to use Claude Code in 2026](/blog/6-best-ways-to-use-claude-code-2026).
+
+## How MCP Configs Orphan Docker Containers
+
+The lifecycle mismatch happens because the MCP client (Claude Code) and the Docker daemon do not have a strict parent-child binding. The agent issues a `docker run` command via its tool server but often lacks a reliable cleanup hook. It does not send a SIGTERM to the container if the CLI is killed abruptly. In short, your claude code mcp config silently orphans docker containers because it lacks native daemon lifecycle tracking.
+
+Over time, these orphaned containers consume significant CPU, memory, and disk space. You will eventually encounter the dreaded "No space left on device" error. If you look at the [official Docker documentation](https://docs.docker.com/engine/reference/commandline/rm/), relying on the daemon to magically clean up dangling processes without explicit flags is a bad practice.
+
+Let me show you a typical bad configuration that leads to this problem. In your `mcp_config.json`, you might have a command like this:
+
+```json
+{
+  "tools": [
+    {
+      "name": "run_sandbox",
+      "command": "docker run -d my-sandbox-image"
+    }
+  ]
+}
+```
+
+This is exactly how a claude code mcp config silently orphans docker containers. The `-d` flag detaches the container, and Claude Code has no built-in way to track the container ID and kill it later. 
+
+## Symptoms of Docker Container Leaks
+
+Before you implement a fix, you need to know if you are affected. Here are the symptoms I regularly experienced:
+
+- **Unexpected CPU spikes when idle:** My fan would spin up even when I was not coding.
+- **Exhausted disk space:** Dangling volumes and anonymous containers eat up gigabytes of storage.
+- **Port collisions:** When trying to run your own local services or a new [OpenClaw](/blog/openclaw-vs-apple-intelligence) instance, you get a `bind: address already in use` error because an orphaned container is still holding the port.
+
+## The Fix: Automated Cleanup Workarounds
+
+To prevent Claude Code from silently orphaning containers, I recommend enforcing lifecycle management at the Docker level. You cannot rely on the CLI to clean up after itself. Here are the three methods I use to keep my local environment pristine so a claude code mcp config silently orphans docker containers never again.
+
+### 1. Use Auto-Remove Flags
+
+Ensure your MCP server configuration uses the `--rm` flag for temporary containers. This tells the Docker daemon to automatically remove the container when it exits. While this does not solve the issue of a container running infinitely, it helps if the internal process finishes.
+
+```json
+{
+  "tools": [
+    {
+      "name": "run_sandbox",
+      "command": "docker run --rm my-sandbox-image"
+    }
+  ]
+}
+```
+
+### 2. Label-Based Pruning
+
+This is my favorite approach. Add a specific label to every container spawned by your AI tools (e.g., `managed-by=claude-code`). Then, set up a cron job to prune them periodically. 
+
+First, update your MCP config to include the label:
+
+```json
+{
+  "tools": [
+    {
+      "name": "run_sandbox",
+      "command": "docker run -d --label managed-by=claude-code my-sandbox-image"
+    }
+  ]
+}
+```
+
+Next, run this cleanup command manually, or put it in a bash script:
+
+```bash
+# Find and forcefully remove all orphaned Claude Code containers
+docker rm -f $(docker ps -aq --filter "label=managed-by=claude-code")
+```
+
+### 3. Use Systemd for Lifecycle Binding
+
+If you are running your MCP server on a Linux machine (like my Ubuntu server), wrap the MCP server execution in a systemd service. Systemd ensures that child processes and containers are killed when the service stops. You can use the `docker run --cgroup-parent` flag to bind the container's cgroup to the systemd service.
+
+## Final Thoughts
+
+AI developer tools are incredible, but they are still immature when it comes to resource management. The fact that a claude code mcp config silently orphans docker containers is a testament to how fast this space is moving. By managing your Docker lifecycle proactively, you can enjoy the power of Claude Code's MCP without the hidden resource costs.
+
+## FAQ
+
+### Why doesn't Claude Code clean up automatically?
+Claude Code relies on the specific MCP server implementation. If the server lacks robust error handling, cleanup hooks will not fire during unexpected terminations, leaving the containers running indefinitely.
+
+### How do I check for orphaned containers?
+Run `docker ps -a` in your terminal and look for containers that have been running for days without an active session. You can also use `docker stats` to see if unknown containers are consuming memory.
+
+### Is this issue specific to Claude Code?
+No, this is a common issue with any local AI agent that spins up external processes without strict lifecycle binding. Frameworks like OpenClaw face similar challenges if not configured properly.

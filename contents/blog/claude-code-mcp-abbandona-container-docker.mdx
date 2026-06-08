@@ -1,0 +1,114 @@
+---
+title: "Risolvere i Leak di Memoria: Claude Code MCP Abbandona i Container Docker in Silenzio"
+summary: "Quando claude code mcp abbandona i container docker in silenzio, l'ambiente locale soffre. Ecco la mia guida pratica per risolvere il problema dei container orfani."
+locale: "it"
+authorId: "matteo"
+createdAt: "2026-06-08T00:00:00Z"
+modifiedAt: "2026-06-08T00:00:00Z"
+image: "/images/blog/claude-code-mcp-abbandona-container-docker.png"
+translationSlug: "claude-code-mcp-orphans-docker"
+tags: ["ai", "claude-code", "docker", "devops"]
+---
+
+Scritto da **Matteo Giardino**.
+
+L'integrazione MCP (Model Context Protocol) di Claude Code offre una potenza immensa permettendo all'AI di avviare ambienti, tool e database temporanei. Tuttavia, molti sviluppatori nel 2026 stanno scoprendo un problema silenzioso: il setup di default causa gravi leak di risorse. Nello specifico, ho notato che il mio Mac Mini locale esauriva la RAM rapidamente, e mi sono subito reso conto che claude code mcp abbandona i container docker in silenzio ogni volta che la CLI va in crash.
+
+Se utilizzi i nuovi tool CLI di Anthropic, probabilmente ti affidi a Docker per isolare i tuoi agenti AI. Nei miei test personali, ho scoperto che ogni volta che terminavo forzatamente una sessione, i container in background continuavano a girare senza fermarsi. In breve, claude code mcp abbandona i container docker in silenzio per colpa di hook SIGTERM mancanti. In questa guida, condividerò esattamente come ho fatto debugging su questo problema e i workaround di pulizia automatizzata che ho implementato per risolverlo definitivamente. Se vuoi esplorare alternative valide a Claude Code, dai un'occhiata alla mia guida su [OpenClaw vs Claude Code](/blog/openclaw-vs-claude-code).
+
+## Il Costo Nascosto del MCP di Claude Code
+
+Quando Claude Code esegue un task che richiede una sandbox o un database tramite MCP, si affida spesso e volentieri a Docker. L'agente avvia il container, esegue il suo lavoro e idealmente lo spegne una volta concluso. Ma cosa succede se la CLI viene terminata in modo forzato, o se il server MCP va in crash a causa di un errore di "out of memory"? Il container Docker viene lasciato in esecuzione in background senza alcuna supervisione.
+
+Un container orfano è un'istanza Docker che continua a funzionare nonostante il suo processo padre o l'applicazione che lo gestisce sia stata terminata. Questo è un problema enorme per lo sviluppo AI locale. Se sperimenti quotidianamente con molteplici tool AI, queste perdite si accumulano velocemente. Una volta ho trovato oltre 30 database Postgres "headless" in esecuzione sulla mia macchina, tutti generati da una singola sessione abbandonata. Questa è una trappola davvero comune, motivo per cui l'ottimizzazione del flusso di lavoro è essenziale—per altri consigli avanzati, leggi il mio post sui [6 migliori modi per usare Claude Code nel 2026](/blog/6-migliori-modi-usare-claude-code-2026).
+
+## Come le Configurazioni MCP Creano Container Orfani
+
+Il disallineamento del ciclo di vita si verifica proprio perché il client MCP (Claude Code) e il demone Docker non hanno alcun vincolo stretto padre-figlio. L'agente AI esegue un comando `docker run` tramite il suo tool server ma spesso manca di un hook di pulizia affidabile al 100%. Non invia infatti un segnale SIGTERM al container se la CLI viene killata all'improvviso. In sintesi, claude code mcp abbandona i container docker in silenzio perché non c'è tracciamento nativo del ciclo di vita del demone.
+
+Col passare del tempo, questi container orfani consumano pesantemente CPU, memoria preziosa e spazio su disco. Alla fine incapperai sicuramente nel temuto errore "No space left on device". Se vai a leggere la [documentazione ufficiale di Docker](https://docs.docker.com/engine/reference/commandline/rm/), affidarsi al demone per pulire magicamente i processi sospesi senza usare flag espliciti è considerata una pessima pratica ("bad practice").
+
+Lascia che ti mostri una tipica configurazione errata che porta a questo problema. Nel tuo file `mcp_config.json`, potresti avere un comando strutturato così:
+
+```json
+{
+  "tools": [
+    {
+      "name": "run_sandbox",
+      "command": "docker run -d my-sandbox-image"
+    }
+  ]
+}
+```
+
+Questo è l'esempio esatto di come claude code mcp abbandona i container docker in silenzio. Il flag `-d` "distacca" (detach) il container e Claude Code non ha alcun modo integrato per tenere traccia dell'ID del container e terminarlo in un secondo momento.
+
+## Sintomi dei Leak di Container Docker
+
+Prima di poter implementare una soluzione efficace, devi capire se sei affetto dal bug. Ecco i sintomi principali che ho sperimentato regolarmente:
+
+- **Picchi anomali di CPU in idle:** La ventola del mio Mac Mini partiva a mille anche quando non stavo programmando.
+- **Spazio su disco esaurito in fretta:** Volumi non associati (dangling) e container anonimi mangiano letteralmente gigabyte di spazio d'archiviazione.
+- **Collisioni di porte di rete:** Quando cerchi di avviare i tuoi servizi locali o una nuova istanza di [OpenClaw](/blog/openclaw-vs-apple-intelligence), ricevi il classico errore `bind: address already in use` perché un container fantasma orfano sta ancora occupando quella specifica porta.
+
+## La Soluzione per Quando Claude Code MCP Abbandona i Container Docker in Silenzio
+
+Per evitare in modo definitivo che Claude Code abbandoni silenziosamente i container, ti raccomando fortemente di applicare una gestione rigorosa del ciclo di vita direttamente a livello di Docker. Non puoi assolutamente fare affidamento sulla CLI affinché si pulisca da sola. Ecco i tre metodi principali che uso personalmente per mantenere il mio ambiente locale sempre immacolato.
+
+### 1. Usa Flag di Auto-Rimozione
+
+Assicurati sempre che la configurazione del tuo server MCP usi il flag `--rm` per i container temporanei. Questo flag comunica al demone Docker di rimuovere automaticamente il container non appena esso termina l'esecuzione. Sebbene questo non risolva il problema di un container in esecuzione all'infinito (loop), aiuta tantissimo se il processo interno arriva alla sua naturale conclusione.
+
+```json
+{
+  "tools": [
+    {
+      "name": "run_sandbox",
+      "command": "docker run --rm my-sandbox-image"
+    }
+  ]
+}
+```
+
+### 2. Pruning Basato su Etichette (Label)
+
+Questo è in assoluto il mio approccio preferito e raccomandato. Aggiungi un'etichetta specifica a ogni singolo container avviato dai tuoi tool AI (ad esempio, `managed-by=claude-code`). Successivamente, imposta un cron job di sistema per fare "pruning" (pulizia) periodico.
+
+Per prima cosa, aggiorna la configurazione MCP per includere la tua etichetta:
+
+```json
+{
+  "tools": [
+    {
+      "name": "run_sandbox",
+      "command": "docker run -d --label managed-by=claude-code my-sandbox-image"
+    }
+  ]
+}
+```
+
+Dopodiché, esegui semplicemente questo comando di pulizia in manuale, o meglio ancora inseriscilo in uno script bash automatizzato:
+
+```bash
+# Trova e rimuovi forzatamente tutti i container orfani di Claude Code
+docker rm -f $(docker ps -aq --filter "label=managed-by=claude-code")
+```
+
+### 3. Usa Systemd per il Vincolo del Ciclo di Vita
+
+Se fai girare il tuo server MCP su una macchina Linux vera e propria (come ad esempio il mio server Ubuntu), avvolgi l'esecuzione del server MCP in un solido servizio systemd. Systemd si assicura in automatico che i processi figli e i vari container vengano letteralmente killati quando il servizio principale si ferma. Puoi usare il flag `docker run --cgroup-parent` per vincolare il "cgroup" del container a quello del servizio systemd genitore.
+
+## Considerazioni Finali
+
+I tool di sviluppo basati sull'AI sono davvero incredibili, ma sono ancora palesemente immaturi quando si tratta di gestione avanzata delle risorse del computer ospite. Il fatto che claude code mcp abbandona i container docker in silenzio è una chiara testimonianza di quanto velocemente si stia muovendo questo settore innovativo. Gestendo in maniera proattiva il ciclo di vita dei tuoi container Docker, puoi goderti appieno l'immensa potenza della tecnologia MCP di Claude Code senza doverne pagare i costi nascosti in termini di RAM e CPU.
+
+## FAQ
+
+### Perché Claude Code non esegue la pulizia automaticamente?
+Claude Code si affida ciecamente all'implementazione specifica del server MCP in uso. Se quel server manca di una solida e robusta gestione degli errori di sistema, gli hook di pulizia non verranno mai eseguiti in caso di terminazione inaspettata, lasciando i container perennemente attivi.
+
+### Come faccio a verificare la presenza di container orfani?
+Esegui semplicemente `docker ps -a` nel tuo terminale e cerca i container che sono in esecuzione da giorni o settimane senza alcuna sessione attiva di Claude Code. Puoi anche usare `docker stats` per controllare se eventuali container sconosciuti stanno consumando troppa memoria.
+
+### Questo bug è specifico solo di Claude Code?
+Assolutamente no, questo è un problema alquanto comune con qualsiasi agente AI locale che avvia in automatico processi esterni senza applicare uno stretto e sicuro vincolo del ciclo di vita. Persino framework popolari come OpenClaw affrontano sfide del tutto simili se non vengono configurati adeguatamente in partenza.
