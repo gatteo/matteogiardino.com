@@ -28,6 +28,16 @@ const nextConfig = {
     async redirects() {
         return [
             {
+                source: '/en/blog/how-to-install-openclaw-ollama-2026-guide',
+                destination: '/en/blog/using-ollama-with-openclaw-en',
+                permanent: true,
+            },
+            {
+                source: '/blog/guida-installazione-openclaw-ollama-2026',
+                destination: '/blog/configurare-openclaw-ollama-agenti-ai-locali',
+                permanent: true,
+            },
+            {
                 source: '/blog/chi-e-il-cto-guida-completa-al-ruolo-del-chief-technology-officer',
                 destination: '/blog/guida-ruolo-cto',
                 permanent: true,
