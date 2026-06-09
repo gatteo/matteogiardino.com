@@ -1,0 +1,77 @@
+---
+title: 'OpenClaw & Ollama: Your Free Local AI Research Assistant'
+createdAt: '2026-06-09T00:00:00Z'
+modifiedAt: '2026-06-09T00:00:00Z'
+summary: 'Build a private, autonomous, and free AI research assistant on your machine using OpenClaw and Ollama instead of relying on paid APIs.'
+image: '/images/blog/openclaw-free-local-ai-research-assistant.png'
+authorId: matteo
+locale: 'en'
+tags: ['openclaw', 'ollama', 'ai agents', 'local ai', 'tutorial']
+translationSlug: 'openclaw-assistente-ai-ricerca-locale-gratuito'
+---
+
+I recently grew tired of paying a fortune in API costs just to have an AI research topics for me. The solution was combining OpenClaw with Ollama to create a fully autonomous, local AI research assistant. After running this setup, I have a fast, private, and completely free agent that browses the web, synthesizes data, and writes markdown reports while my machine handles the heavy lifting.
+
+## The Need for Local AI Research Assistants
+
+Most people rely on paid services like ChatGPT or Claude for research. While powerful, they come with three major drawbacks: cost, privacy, and control. When you are deep into specific technical topics or analyzing proprietary data, sending all your queries to a cloud provider is often a dealbreaker.
+
+Running a local AI research assistant solves this. You own the data, there are zero recurring API costs, and you can tweak the system to search the specific sources you care about. If you want true control over your workflow, moving to a local setup is the only logical step forward.
+
+<CtaCard
+    title="Need help setting up your AI infrastructure?"
+    description="I build custom, resilient AI agents and workflows for businesses. Let's discuss your use case."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Why OpenClaw + Ollama?
+
+If you have read my guide on [how to run a multi-agent team locally](/en/blog/hiclaw-multi-agent-team-locally), you know I am a massive fan of OpenClaw. OpenClaw provides the agentic reasoning loop and tool-use capabilities, while Ollama serves the actual LLM locally. 
+
+The combination is seamless. Ollama handles the heavy model weights with incredible efficiency on consumer hardware, and OpenClaw orchestrates the tasks. You get a fully functional, tool-using agent without writing complex orchestrators from scratch or paying for OpenAI tokens.
+
+## Setting Up the Research Environment
+
+First, you need to pull a capable model. For research tasks that require tool use and web search, I recommend a balanced model like Qwen 2.5 or Llama 3.
+
+```bash
+ollama pull qwen2.5:14b
+```
+
+Once the model is running, initialize your OpenClaw agent and point it to your local Ollama instance in your `~/.openclaw/openclaw.json` config file. Make sure you set the primary model to point to the local provider. 
+
+## Adding Web Search via MCP
+
+An AI without internet access cannot be a good research assistant. This is where the Model Context Protocol (MCP) comes in. By configuring an MCP search tool, you give the agent the ability to pull real-time data from the web.
+
+You can configure the Brave search MCP or use a local scraping tool. This allows the agent to execute queries, read search results, and even fetch the contents of specific URLs to synthesize the information directly into your report. 
+
+## Creating the Autonomous Research Workflow
+
+With the environment set up and the tools connected, you can unleash the agent. Here is an example prompt you can give your new local assistant:
+
+*"Research the latest developments in local LLM speculative decoding from the last three months. Synthesize the top 5 techniques and write a comprehensive markdown report with sources."*
+
+OpenClaw will parse the prompt, use the MCP search tool to find recent articles, analyze the context using the local Ollama model, and output a structured markdown file. The entire process happens on your machine, autonomously, until the final report is ready.
+
+## FAQ
+
+**What are the hardware requirements for this setup?**
+You can run this on an Apple Silicon Mac (M1/M2/M3 with at least 16GB RAM) or a PC with an NVIDIA RTX 3060/4060 or better.
+
+**Is it really completely free?**
+Yes. Both OpenClaw and Ollama are open-source and run locally, meaning there are absolutely no API costs per query.
+
+**Can the agent access my local files?**
+Yes, OpenClaw can be configured to read and write local files, allowing the agent to save its research reports directly to your hard drive.
+
+## Conclusion & Next Steps
+
+Building a local AI research assistant is one of the most rewarding ways to use open-source AI today. It provides immediate value, protects your privacy, and teaches you the fundamentals of agentic workflows. 
+
+If you want to take this further, you can start combining this setup with other tools, like integrating [Chrome DevTools MCP](/en/blog/browser-control-openclaw-chrome-devtools-mcp) for more complex browser automation. The possibilities are endless when you control the entire stack.
+
+*Matteo is a fractional CTO and developer who builds autonomous AI agents and local intelligence systems.*
