@@ -1,0 +1,69 @@
+---
+title: "Memclawz: 3-Level Context Scaling Architecture for Local AI"
+createdAt: '2026-06-10T00:00:00Z'
+modifiedAt: '2026-06-10T00:00:00Z'
+summary: 'Discover how Memclawz adds durable context to OpenClaw via a 3-speed memory system to prevent AI agent hallucinations and context overflow.'
+image: '/images/blog/memclawz-3-speed-memory-openclaw-agents.png'
+authorId: matteo
+locale: 'en'
+tags: ['openclaw', 'ai-agents', 'local-llm']
+---
+
+Building local AI agents with OpenClaw and Ollama is a game-changer, but there's a hard limit everyone eventually hits: the context window. When an agent runs continuously for hours or days, reading files and executing commands, it fills up its context. Once that happens, it either forgets the initial instructions or starts hallucinating.
+
+Infinite context windows aren't the answer—they get expensive and painfully slow on local hardware like a Mac Mini server. What we actually need is **durable memory**.
+
+This is where **Memclawz** comes in. It’s an approach to memory architecture that gives OpenClaw agents a 3-speed memory system. I've been testing it to build durable multi-step workflows, and it radically changes how local agents operate.
+
+Here is how the 3-speed architecture works and how you can apply it.
+
+## The Context Window Problem in Local AI Agents
+
+When we talk about [local AI agents with OpenClaw](/en/blog/configurare-openclaw-ollama-agenti-ai-locali), the typical workflow is prompt → execution → result. 
+
+But when you assign a complex project—say, parsing logs over three days—the agent's conversation history grows. Even with a highly capable local model like Qwen 3.5 8B, you eventually hit the token limit. The agent starts dropping earlier messages, which often contain the most critical instructions or the original goal. 
+
+## Enter Memclawz: The 3-Speed Memory Architecture
+
+Memclawz solves this by splitting memory into three distinct "gears," just like a computer uses CPU cache, RAM, and a SSD. 
+
+### Gear 1: Fast Scratchpad (Short-term)
+This is the agent's immediate working memory. It holds the current task, the last few terminal outputs, and the immediate next step. In OpenClaw, this is the standard prompt context. It's fast, but it is explicitly kept small. When a sub-task finishes, the scratchpad is wiped clean.
+
+### Gear 2: Working Context (Mid-term)
+This is the equivalent of RAM. Memclawz uses a structured JSON state file (like `state.json`) that the agent reads at the start of every new task loop. It contains:
+- The overall goal.
+- A list of completed steps.
+- Known constraints (e.g., "Do not use Python 2").
+
+By keeping this file updated, the agent never forgets its primary mission, even if the scratchpad is flushed.
+
+### Gear 3: Vector Storage (Long-term)
+This is the SSD. When the agent learns a new skill or reads a large documentation file, it embeds that knowledge into a local vector database (like Chroma or simply a collection of markdown notes searched via embeddings). 
+
+When the agent encounters a problem, it queries this long-term memory. It allows [local models like Qwen](/en/blog/qwen35-08b-openclaw-ollama-locale) to access gigabytes of reference material without clogging the context window.
+
+## How to Integrate Memclawz with OpenClaw
+
+Setting this up with OpenClaw is straightforward if you use the [HiClaw multi-agent framework](/en/blog/hiclaw-multi-agent-team-locally) or write custom Python scripts. 
+
+You expose three specific tools to your agent:
+1. `update_state(key, value)`: Modifies the mid-term JSON file.
+2. `read_state()`: Fetches the current project status.
+3. `search_memory(query)`: Queries the vector DB for past solutions.
+
+The trick is forcing the agent to read the state file at the beginning of its system prompt. You don't need massive 128k context windows; an 8k window is plenty when the agent only loads what it needs.
+
+## Why Durable Memory Beats Infinite Context Windows
+
+Some might argue that models with 1M token context windows render Memclawz obsolete. In practice, especially for local AI, this isn't true.
+
+- **Speed:** Processing 1M tokens locally takes minutes per response. An 8k context window with Memclawz responds in seconds.
+- **Accuracy:** The "Lost in the Middle" phenomenon is real. Models struggle to retrieve facts buried in massive contexts. Structured memory is explicit and reliable.
+- **Cost:** If you use cloud APIs, huge contexts drain your wallet. Local inference drains your VRAM.
+
+## Conclusion and Next Steps
+
+Memory is the missing link between simple chat scripts and true autonomous agents. By implementing a 3-speed architecture like Memclawz, your OpenClaw agents transform from forgetful assistants into reliable, long-term workers.
+
+If you are building AI agents for your business and hitting scale limits, reaching out to an experienced Fractional CTO might be the best next step to get your architecture right.
