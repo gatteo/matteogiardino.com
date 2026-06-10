@@ -1,0 +1,72 @@
+---
+title: 'AutoClaw: Agenti AI su Telegram in Ambiente Windows'
+createdAt: '2026-06-11T00:00:00Z'
+modifiedAt: '2026-06-11T00:00:00Z'
+summary: 'Scopri come integrare gli agenti AI direttamente in Telegram su Windows con AutoClaw. Nessun terminale, setup in un click.'
+image: '/images/blog/autoclaw-agenti-ai-telegram-windows.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'ai agents', 'telegram']
+translationSlug: 'autoclaw-ai-agents-telegram-windows'
+---
+
+Se usi spesso OpenClaw e l'ecosistema GLM, sai quanto possano essere potenti gli agenti AI. Ma non tutti amano il terminale. **AutoClaw** è la soluzione: porta il tuo assistente AI direttamente dentro app di messaggistica come Telegram su Windows, senza dover toccare file di configurazione o righe di comando.
+
+In questa guida pratica, ti mostro come installare AutoClaw su Windows e configurare il tuo bot Telegram in pochi minuti.
+
+## Che cos'è AutoClaw e perché è diverso
+
+<Image src="/images/blog/autoclaw-agenti-ai-telegram-windows/autoclaw-ai-agents-telegram-windows-242.webp" alt="Interfaccia di AutoClaw" width={1200} height={630} />
+
+AutoClaw è un'applicazione desktop sviluppata dal team AutoGLM. A differenza di OpenClaw, che vive principalmente nel terminale, AutoClaw si integra nelle app che usi tutti i giorni: Telegram, WeChat o WhatsApp.
+
+Mandi un messaggio descrivendo cosa ti serve e AutoClaw lo analizza, esegue le azioni (ricerche web, esecuzione di codice, gestione di file) e ti risponde nella stessa chat. Niente dashboard complesse, zero attrito.
+
+<CtaCard title="Vuoi ottimizzare i tuoi processi con l'AI?" description="Scopri come implementare agenti AI come AutoClaw nella tua azienda per automatizzare workflow complessi." buttonText="Prenota una consulenza" href="https://matteogiardino.com/contact" />
+
+## Come Installare AutoClaw su Windows
+
+L'installazione su Windows richiede letteralmente un click. Niente dipendenze complicate o configurazioni Docker.
+
+1. **Scarica Telegram Desktop**: se non ce l'hai, scaricalo da telegram.org e fai il login.
+2. **Installa AutoClaw**: scarica l'installer per Windows ed eseguilo.
+3. **Avvia e accedi**: dopo l'installazione, puoi accedere con un account Google o Z.ai per sbloccare tutte le funzionalità.
+4. (Opzionale) Installa l'estensione del browser se vuoi dare all'agente un controllo web più profondo.
+
+<Image src="/images/blog/autoclaw-agenti-ai-telegram-windows/autoclaw-ai-agents-telegram-windows-114.webp" alt="Installazione di AutoClaw su Windows" width={1200} height={630} />
+
+*Se in passato hai avuto blocchi usando modelli Google AI Ultra con OpenClaw, AutoClaw gestisce meglio questi limiti direttamente out-of-the-box.*
+
+## Configurare il Bot Telegram con BotFather
+
+La vera magia inizia quando colleghi AutoClaw a Telegram. 
+
+1. Apri AutoClaw, vai su **IM Channels** e seleziona **Telegram**.
+2. Su Telegram, cerca **@BotFather** e avvialo. Invia il comando `/newbot`.
+3. Scegli un nome e uno username (che deve finire con "bot"). BotFather ti fornirà un **token HTTP API**.
+4. Copia quel token e incollalo nella maschera di configurazione Telegram dentro AutoClaw.
+
+<Image src="/images/blog/autoclaw-agenti-ai-telegram-windows/autoclaw-ai-agents-telegram-windows-333.webp" alt="Configurazione Token Telegram in AutoClaw" width={1200} height={630} />
+
+Ora avvia il tuo nuovo bot su Telegram cliccando su "Start". AutoClaw confermerà il collegamento (potrebbe chiederti di approvare un codice di pairing per sicurezza).
+
+## Automatizzare Ricerca e Task da Telegram
+
+Una volta collegato, puoi semplicemente scrivere al bot. AutoClaw userà i tool giusti (come *Browser Use* per navigare o *Code Execution*) e risponderà.
+
+Ad esempio, puoi chiedere:
+> "Puoi impostare un allarme giornaliero per le 6 del mattino?"
+
+AutoClaw capirà l'intento e imposterà un cron job interno che ti invierà una notifica su Telegram ogni giorno alle 6.
+
+<Image src="/images/blog/autoclaw-agenti-ai-telegram-windows/autoclaw-ai-agents-telegram-windows-496.webp" alt="Task pianificati su Telegram tramite AutoClaw" width={1200} height={630} />
+
+### Note sulla sicurezza e sui modelli
+
+Di default, AutoClaw utilizza modelli AutoFlow (o Anthropic se inserisci una tua chiave API). L'app include restrizioni per l'accesso ai file locali, un aspetto fondamentale quando deleghi operazioni a un agente AI. Ti consiglio comunque di isolare le working directory.
+
+Se gestisci workflow complessi e cerchi alternative per automatizzare su Mac, dai un'occhiata anche a come [configurare OpenClaw senza API key](/blog/configurare-openclaw-senza-api-key-gratis).
+
+Con AutoClaw hai il potenziale di un ecosistema AI multi-agente, racchiuso nell'app di chat che hai già aperta.
+
+*Matteo Giardino è un software engineer che costruisce infrastrutture AI e agenti autonomi. Condivide esperimenti, fallimenti e setup pratici dalla trincea del coding.*
