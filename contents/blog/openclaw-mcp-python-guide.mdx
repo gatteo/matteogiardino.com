@@ -1,0 +1,67 @@
+---
+title: "How to Build a Custom Python MCP Tool for OpenClaw"
+summary: "Learn how to write a Model Context Protocol (MCP) server in Python and connect it to your OpenClaw local AI agent in 5 minutes."
+locale: "en"
+translationSlug: "guida-openclaw-mcp-python"
+author: "Matteo"
+authorId: "matteo"
+createdAt: "2026-06-10T00:00:00Z"
+publishedAt: "2026-06-10T00:00:00Z"
+modifiedAt: "2026-06-10"
+image: "/images/blog/openclaw-mcp-python-guide.png"
+---
+
+If you're using OpenClaw, you've probably hit a wall where your local AI agent needs to access a specific internal database, an API, or a custom script. The solution is the Model Context Protocol (MCP). In this tutorial, I'll show you exactly how to write a simple Python MCP server and connect it to OpenClaw.
+
+## What is MCP in OpenClaw?
+
+The Model Context Protocol (MCP) is a standardized way for AI models to interact with local tools. Instead of hardcoding API keys into your agent, you expose an MCP server over `stdio` or HTTP, and OpenClaw automatically discovers the available tools.
+
+## Step 1: Writing the Python Tool
+
+I recently needed an agent to check server logs. Here's the minimal Python MCP server I built using the official SDK:
+
+```python
+from mcp.server.fastmcp import FastMCP
+
+mcp = FastMCP("log_checker")
+
+@mcp.tool()
+def get_recent_logs(lines: int = 50) -> str:
+    """Fetch the most recent server logs."""
+    try:
+        with open("/var/log/syslog", "r") as f:
+            return "".join(f.readlines()[-lines:])
+    except Exception as e:
+        return f"Error reading logs: {e}"
+
+if __name__ == "__main__":
+    mcp.run()
+```
+
+## Step 2: Configuring openclaw.json
+
+Once the Python script is ready, you need to tell OpenClaw where to find it. Open your `~/.openclaw/openclaw.json` and add the server configuration:
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "log_checker": {
+        "command": "uv",
+        "args": ["run", "/path/to/log_checker.py"]
+      }
+    }
+  }
+}
+```
+
+<CtaCard title="Want more OpenClaw tutorials?" description="Join my newsletter for weekly AI engineering tips." buttonText="Subscribe" buttonLink="/newsletter" />
+
+## Step 3: Testing the Agent
+
+Restart your OpenClaw gateway, and run your agent. You can now ask: *"Check the last 20 lines of the system logs."* The agent will autonomously call your Python tool, read the output, and synthesize an answer. 
+
+Building custom tools is what makes local AI truly powerful. By isolating your logic in MCP servers, you keep your agents modular and secure.
+
+Written by Matteo Giardino, a fractional CTO and developer who builds local AI tools and autonomous workflows.
