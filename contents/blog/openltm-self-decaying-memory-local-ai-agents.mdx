@@ -1,0 +1,77 @@
+---
+title: 'OpenLTM: Self-Decaying Memory for Local AI Agents'
+createdAt: '2026-06-10T00:00:00Z'
+modifiedAt: '2026-06-10T00:00:00Z'
+summary: 'Learn how to integrate OpenLTM to provide self-decaying, persistent memory to your local OpenClaw AI agents, improving context relevance and reducing token costs.'
+image: '/images/blog/openltm-self-decaying-memory-local-ai-agents.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw']
+translationSlug: 'openltm-memoria-auto-decadente-agenti-ai-locali'
+---
+
+When building autonomous AI agents with frameworks like OpenClaw, one of the biggest challenges is memory management. As the agent runs for days or weeks, the context window grows, leading to hallucination and high token costs. OpenLTM introduces a self-decaying memory system that solves this natively.
+
+## The Context Window Problem
+
+Traditional local agents append every thought, action, and observation to their context window. When it gets full, they summarize it or abruptly clear parts of it. Both approaches lose critical nuances or break task continuity. 
+
+OpenLTM provides a biological-inspired approach: memories have an activation weight that decays over time unless re-accessed.
+
+<CtaCard
+    title="Need help with AI integration?"
+    description="Get in touch for a consultation on implementing AI tools and automations in your business."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Setting Up OpenLTM with OpenClaw
+
+### 1. Installation
+
+First, install the OpenLTM MCP server and its dependencies.
+
+```bash
+npm install -g @openclaw/openltm-mcp
+```
+
+### 2. Configuration
+
+Next, configure your OpenClaw agent to use the OpenLTM server in your `openclaw.json`. 
+
+```json
+{
+  "mcpServers": {
+    "openltm": {
+      "command": "openltm-mcp",
+      "args": ["--decay-rate=0.05", "--storage-dir=~/.openltm"]
+    }
+  }
+}
+```
+
+## How Self-Decaying Memory Works
+
+Whenever the agent stores an observation, OpenLTM assigns it an initial weight of 1.0. Every time the agent queries its memory, retrieved memories get a weight boost, simulating rehearsal. Memories that drop below a threshold (e.g., 0.1) are offloaded to cold storage and excluded from the active context.
+
+## FAQ
+
+### Does OpenLTM work entirely offline?
+
+Yes. OpenLTM is a local storage layer and requires zero internet connection to function.
+
+### Is OpenLTM free?
+
+Yes, it is open-source and free to use alongside OpenClaw.
+
+### Can I use it with Ollama?
+
+Absolutely. By pairing OpenLTM with an Ollama backend for OpenClaw, your entire agentic workflow remains local, private, and cost-free.
+
+## Wrap-up
+
+Adding OpenLTM to your OpenClaw agents provides the long-term context retention necessary for complex autonomous workflows. Give it a try!
+
+*Written by Matteo Giardino, CTO and founder. I build AI agents for SMEs in Italy. [My projects](/projects).*

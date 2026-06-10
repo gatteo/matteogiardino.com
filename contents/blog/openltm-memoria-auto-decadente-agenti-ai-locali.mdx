@@ -1,0 +1,77 @@
+---
+title: 'OpenLTM: Memoria Auto-Decadente per Agenti AI Locali'
+createdAt: '2026-06-10T00:00:00Z'
+modifiedAt: '2026-06-10T00:00:00Z'
+summary: 'Scopri come integrare OpenLTM per fornire memoria persistente e auto-decadente ai tuoi agenti AI locali in OpenClaw, migliorando la rilevanza del contesto.'
+image: '/images/blog/openltm-memoria-auto-decadente-agenti-ai-locali.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw']
+translationSlug: 'openltm-self-decaying-memory-local-ai-agents'
+---
+
+Quando si costruiscono agenti AI autonomi con framework come OpenClaw, una delle sfide principali è la gestione della memoria. Man mano che l'agente lavora per giorni o settimane, la finestra di contesto cresce, portando ad allucinazioni e alti costi in termini di token. OpenLTM introduce un sistema di memoria auto-decadente che risolve questo problema in modo nativo.
+
+## Il Problema della Finestra di Contesto
+
+Gli agenti locali tradizionali aggiungono ogni pensiero, azione e osservazione alla loro finestra di contesto. Quando si riempie, la riassumono o ne eliminano parti bruscamente. Entrambi gli approcci fanno perdere sfumature critiche o rompono la continuità del task.
+
+OpenLTM offre un approccio di ispirazione biologica: i ricordi hanno un peso di attivazione che decade nel tempo a meno che non vi si acceda di nuovo.
+
+<CtaCard
+    title="Hai bisogno di aiuto con l'integrazione AI?"
+    description="Contattami per una consulenza su come implementare tool e automazioni AI nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Configurare OpenLTM con OpenClaw
+
+### 1. Installazione
+
+Per prima cosa, installa il server MCP di OpenLTM e le sue dipendenze.
+
+```bash
+npm install -g @openclaw/openltm-mcp
+```
+
+### 2. Configurazione
+
+Successivamente, configura il tuo agente OpenClaw per utilizzare il server OpenLTM nel tuo `openclaw.json`.
+
+```json
+{
+  "mcpServers": {
+    "openltm": {
+      "command": "openltm-mcp",
+      "args": ["--decay-rate=0.05", "--storage-dir=~/.openltm"]
+    }
+  }
+}
+```
+
+## Come Funziona la Memoria Auto-Decadente
+
+Ogni volta che l'agente memorizza un'osservazione, OpenLTM le assegna un peso iniziale di 1.0. Ogni volta che l'agente interroga la sua memoria, i ricordi recuperati ottengono un aumento di peso, simulando il ripasso. I ricordi che scendono sotto una certa soglia (es. 0.1) vengono spostati in uno storage a freddo ed esclusi dal contesto attivo.
+
+## Domande Frequenti
+
+### OpenLTM funziona completamente offline?
+
+Sì. OpenLTM è un livello di archiviazione locale e non richiede alcuna connessione internet per funzionare.
+
+### OpenLTM è gratuito?
+
+Sì, è open-source e gratuito da usare insieme ad OpenClaw.
+
+### Posso usarlo con Ollama?
+
+Assolutamente. Abbinando OpenLTM a un backend Ollama per OpenClaw, l'intero tuo flusso di lavoro da agente rimane locale, privato e a costo zero.
+
+## Wrap-up
+
+L'aggiunta di OpenLTM ai tuoi agenti OpenClaw fornisce la ritenzione del contesto a lungo termine necessaria per complessi flussi di lavoro autonomi. Mettilo alla prova!
+
+*Scritto da Matteo Giardino, CTO e founder. Costruisco agenti AI per le PMI in Italia. [I miei progetti](/projects).*
