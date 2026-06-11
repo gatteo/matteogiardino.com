@@ -1,0 +1,64 @@
+---
+title: "DeepSeek Engram Spiegato: Il Lookup Scalabile per LLM Locali"
+description: "Scopri come DeepSeek Engram utilizza tabelle di lookup scalabili per accelerare i transformer, risparmiando VRAM e ottimizzando l'esecuzione per agenti AI locali come OpenClaw."
+summary: "Scopri in dettaglio DeepSeek Engram spiegato: cos'è, come il lookup scalabile riduce l'uso di VRAM e i vantaggi per l'AI in locale."
+authorId: matteo
+createdAt: "2026-06-11T00:00:00Z"
+modifiedAt: "2026-06-11T00:00:00Z"
+publishedAt: "2026-06-11T00:00:00Z"
+locale: "it"
+image: "/images/blog/deepseek-engram-memoria-condizionale-lookup-scalabile.png"
+tags: ["ai", "deepseek", "openclaw", "local ai", "llm", "engram"]
+translationSlug: "deepseek-engram-explained-conditional-memory-scalable-lookup"
+---
+
+DeepSeek ha recentemente introdotto **Engram**, un meccanismo innovativo che promette di rivoluzionare le performance dei modelli transformer. Invece di ricalcolare ogni volta i vettori per frasi o espressioni ricorrenti, questo sistema aggiunge una minuscola capacità integrata al modello, capace di recuperare rapidamente questi pattern pre-calcolati. In questo post vedremo **DeepSeek Engram spiegato** in parole semplici e capiremo perché è una svolta per il 2026.
+
+Il risultato? Meno carico computazionale sui primi layer del modello, esecuzione più rapida e un uso intelligente della RAM di sistema per non saturare la preziosa VRAM della GPU. In questo articolo esploreremo come funziona DeepSeek Engram, perché il prefetching dalla RAM host fa la differenza e come questa innovazione si traduce in vantaggi concreti per chi sviluppa agenti AI locali, ad esempio utilizzando [OpenClaw](/blog/what-is-openclaw-ai-agent-framework).
+
+<CtaCard title="Unisciti alla Community di OpenClaw" description="Resta aggiornato sulle ultime novità riguardo a DeepSeek, ottimizzazioni LLM locali e lo sviluppo di agenti autonomi." buttonText="Scopri OpenClaw su GitHub" buttonLink="https://github.com/gatteo/openclaw" />
+
+## Come Funziona Engram: Vantaggi del Lookup Scalabile
+
+I classici modelli transformer ricalcolano costantemente ogni singolo token, anche per espressioni fisse, nomi propri o "boilerplate" strutturale (es. l'apertura di un file in codice come `def main():`). DeepSeek Engram introduce il concetto di **lookup scalabile**, che si affianca al noto *conditional compute* dei modelli Mixture of Experts (MoE). 
+
+Il flusso è sorprendentemente intuitivo:
+1. Il testo viene suddiviso in token.
+2. Ad ogni passaggio, Engram osserva una piccola finestra composta dagli ultimi due o tre token appena elaborati.
+3. Questa finestra viene passata attraverso alcune funzioni di hash leggere, che puntano a specifiche posizioni all'interno di enormi tabelle di appoggio (lookup tables).
+
+Se il pattern esiste nella tabella, Engram restituisce in tempo costante una rappresentazione vettoriale pronta all'uso e la unisce allo stato attuale del modello. Questo significa che la rete neurale non deve "sprecare" calcolo nei suoi primi layer per ricostruire relazioni ovvie, ma può concentrare la potenza di calcolo sui layer più profondi e sul ragionamento complesso.
+
+## Posizionamento e Prefetching: Salvare VRAM sulla GPU
+
+Uno dei problemi principali nell'uso di ampie tabelle è lo spazio: queste crescono rapidamente e occupano preziosa memoria video (VRAM) sulla GPU, che è notoriamente il collo di bottiglia principale per chi fa girare modelli in locale, come spiegato nella nostra guida su [come configurare OpenClaw e Ollama](/blog/configurare-openclaw-ollama-agenti-ai-locali).
+
+DeepSeek ha risolto questo problema spostando le grandi tabelle di Engram direttamente nella **RAM di sistema (host RAM)**. Ma come fanno ad evitare che la latenza della connessione PCIe rallenti il processo? 
+La risposta è il **prefetching intelligente**.
+
+Mentre la GPU è occupata a elaborare e calcolare i layer correnti del modello per i token attuali, la CPU, che è per lo più inattiva, "guarda avanti" e avvia in anticipo la richiesta per i token successivi. Quando la GPU arriva a elaborare il livello in cui i vettori Engram sono richiesti, questi sono già stati trasferiti dalla RAM di sistema alla VRAM o sono comunque pronti all'uso. 
+
+## Perché Engram è Fondamentale per l'AI Locale e OpenClaw
+
+Nel panorama degli agenti autonomi, dove framework coordinano workflow complessi in background (come visto in [HiClaw per team multi-agente](/blog/hiclaw-team-multi-agente-locale)), la latenza di inferenza e il consumo di VRAM sono ostacoli primari. Un agente che esegue chiamate ripetitive, genera log simili o compila boilerplate in continuazione beneficerà enormemente di Engram.
+
+Poiché gran parte del contesto strutturale dell'agente — come il prompt di sistema, le descrizioni dei tool o i pattern di risposta — è altamente ripetitivo, la struttura di Engram permette di ridurre drasticamente i tempi di generazione del prompt (Time To First Token) e aumentare la velocità di decodifica, lasciando libera la VRAM per caricare modelli più capienti.
+
+## Domande Frequenti (FAQ)
+
+**Cosa differenzia Engram dal Mixture of Experts (MoE)?**
+Il MoE è *conditional compute*: attiva solo una parte dei parametri (esperti) per calcolare la risposta a seconda dell'input. Engram è un accesso rapido a dati pre-calcolati, bypassando del tutto il ricalcolo per i pattern noti. Spesso vengono usati insieme nel 2026.
+
+**DeepSeek Engram funziona su computer consumer?**
+Sì. Uno dei suoi vantaggi chiave è che sposta l'onere della memorizzazione delle enormi tabelle sulla RAM di sistema (che è molto più capiente ed economica), preservando la VRAM della GPU, permettendo così di eseguire modelli avanzati su hardware consumer.
+
+**Richiede modifiche all'hardware?**
+No, Engram si affida alla banda PCIe esistente tra CPU e GPU e usa il prefetching per mascherare la latenza.
+
+## Conclusioni
+
+Avere **DeepSeek Engram spiegato** in modo chiaro ci fa capire che rappresenta un passo avanti brillante nell'ottimizzazione dell'inferenza dei Large Language Models. Offloadando enormi tabelle di lookup sulla RAM di sistema e sincronizzandole tramite prefetching, permette di avere modelli più veloci e scalabili con consumi di VRAM ridotti fino al 40% per compiti ripetitivi.
+
+<Image src="/images/blog/deepseek-engram-memoria-condizionale-lookup-scalabile.png" alt="DeepSeek Engram Architecture e Lookup Scalabile" />
+
+*Sono Matteo Giardino, sviluppatore e tech enthusiast, creatore di OpenClaw e focalizzato sull'integrazione di AI agentic workflows in ambienti locali.*
