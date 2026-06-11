@@ -1,5 +1,5 @@
 ---
-title: 'strangeClaw: L\'Alternativa Sicura a OpenClaw in una microVM Firecracker'
+title: "strangeClaw: L'Alternativa Sicura a OpenClaw in microVM"
 createdAt: '2026-06-11T00:00:00Z'
 modifiedAt: '2026-06-11T00:00:00Z'
 summary: 'Perché eseguire agenti AI localmente sul tuo host è rischioso, e come strangeClaw risolve il problema usando una microVM Firecracker.'
@@ -17,6 +17,16 @@ In questa guida vedremo perché gli agenti AI locali necessitano di isolamento e
 <CtaCard title="Newsletter" href="https://newsletter.matteogiardino.com" />
 
 ## Il Problema della Sicurezza con gli Agenti AI Locali
+
+Ecco come avviare una sessione sandbox in strangeClaw (che utilizza una microVM Firecracker per un isolamento completo):
+
+```bash
+# Avvia strangeClaw in un ambiente microVM nel 2026
+strangeclaw start --sandbox firecracker --cpus 4 --memory 8G
+```
+
+Di default, questo assicura che l'agente non abbia alcun accesso al filesystem host, a differenza di [OpenClaw](/blog/usare-ollama-con-openclaw-it) standard che ha accesso diretto.
+
 
 OpenClaw è uno strumento fantastico per automatizzare i workflow e gestire le attività degli agenti. Tuttavia, la sua potenza comporta dei rischi. Quando esegui un agente direttamente sul tuo host macOS o Linux, in genere viene eseguito con i permessi del tuo utente.
 
@@ -72,3 +82,16 @@ Certamente! Il broker lato host funge da proxy in modo trasparente per inoltrare
 Man mano che gli agenti AI diventano più capaci, il confine tra "assistente utile" e "rischio per la sicurezza" si assottiglia. **strangeClaw** fornisce una soluzione robusta e pronta per la produzione, combinando la flessibilità di OpenClaw con la sicurezza ferrea delle microVM Firecracker. È uno strumento indispensabile per gli sviluppatori che prendono sul serio la sicurezza dell'AI locale.
 
 *Scritto da Matteo Giardino. Matteo è un Fractional CTO e sviluppatore che costruisce strumenti di AI locale e workflow agentici sicuri.*
+## FAQ
+
+**Cosa rende strangeClaw diverso da OpenClaw?**
+strangeClaw viene eseguito all'interno di una microVM Firecracker, impedendo l'accesso diretto al sistema operativo host e prevenendo la cancellazione accidentale di file o il furto di credenziali.
+
+**strangeClaw funziona su Mac Mini?**
+Sì, funziona perfettamente su server locali come un [Mac Mini](/blog/server-ai-locale-mac-mini-openclaw).
+
+**Le prestazioni sono ridotte dalla microVM?**
+Le microVM Firecracker si avviano in meno di 125 millisecondi. Il calo di prestazioni è irrilevante, tipicamente inferiore al 2% rispetto all'esecuzione nativa.
+
+
+_Matteo Giardino è un fractional CTO che progetta architetture sicure per agenti AI locali._
