@@ -1,0 +1,58 @@
+---
+title: "Flux 2 Klein: Testato Localmente con ComfyUI"
+summary: "Una guida pratica per eseguire il nuovo modello open-source Flux 2 Klein 9B in locale utilizzando ComfyUI per l'intelligenza visiva interattiva."
+createdAt: "2026-06-11T00:00:00Z"
+modifiedAt: "2026-06-11T00:00:00Z"
+authorId: "matteo"
+image: "/images/blog/flux-2-klein-9b-test-locale-comfyui.png"
+locale: "it"
+translationSlug: "flux-2-klein-9b-tested-locally-comfyui"
+tags:
+  - "ai"
+  - "comfyui"
+  - "flux"
+---
+
+Eseguire il nuovo modello Flux 2 Klein 9B in locale cambia completamente le regole del gioco per l'intelligenza visiva interattiva. In questa guida del 2026, ti mostrerò come configurarlo direttamente all'interno di ComfyUI. Scopri anche la nostra guida su [come configurare OpenClaw e Ollama in locale](/blog/configurare-openclaw-ollama-agenti-ai-locali) per ampliare il tuo ecosistema AI locale.
+
+Scritto da Matteo Giardino.
+
+## Cos'è Flux 2 Klein 9B?
+
+Flux 2 Klein è un modello open-source (licenza Apache 2.0) di intelligenza visiva interattiva che ha recentemente sorpreso la community AI. Con 9 miliardi di parametri, offre un incredibile equilibrio tra qualità visiva e la possibilità di essere eseguito su macchine locali. Invece di affidarmi ad API in cloud, ho deciso di testarlo sul mio computer per valutarne le prestazioni reali.
+
+<CtaCard title="Esplora altri tutorial AI" href="/blog/ollama-assistente-ai-locale-gratis" />
+
+## Requisiti Hardware
+
+Prima di iniziare, assicurati che la tua macchina sia pronta. Far girare un modello visivo da 9B richiede una discreta quantità di VRAM. L'ho testato su un Mac Apple Silicon con 32GB di memoria unificata, ma una GPU NVIDIA dedicata con almeno 12GB di VRAM funzionerà senza problemi.
+
+## Configurare ComfyUI per Flux 2
+
+Per iniziare, devi aggiornare la tua installazione di ComfyUI e scaricare i pesi necessari.
+
+```bash
+cd ComfyUI
+git pull
+```
+
+Scarica il file `.safetensors` di Flux 2 Klein 9B da Hugging Face e posizionalo nella tua directory `models/checkpoints`.
+
+## Costruire il Workflow
+
+All'interno di ComfyUI, parti da un workflow base di generazione immagini. Carica il checkpoint, collega i classici nodi di prompt testuale e uniscili al KSampler. Poiché Flux 2 è ottimizzato per task interattivi, noterai una comprensione del prompt estremamente accurata.
+
+## Prestazioni e Risultati
+
+I miei test locali hanno dimostrato che i tempi di inferenza sono incredibilmente rapidi per un modello di queste dimensioni. Sul mio Mac, ha generato un'immagine di alta qualità 1024x1024 in meno di 15 secondi. Le capacità interattive ti permettono di affinare i tuoi prompt e vedere le regolazioni in tempo reale senza il tipico lag dei modelli basati su cloud.
+
+## FAQ
+
+### Cos'è Flux 2 Klein?
+È un modello open-source da 9 miliardi di parametri progettato per l'intelligenza visiva interattiva.
+
+### Posso usare Flux 2 Klein in locale?
+Sì, puoi eseguirlo localmente su piattaforme come ComfyUI, a patto di avere sufficiente VRAM.
+
+### Flux 2 Klein è gratuito?
+Assolutamente sì, è rilasciato sotto licenza Apache 2.0 ed è completamente open-source.
