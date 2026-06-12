@@ -1,0 +1,111 @@
+---
+title: "Come Risolvere l'Errore OpenClaw disconnected (1006)"
+createdAt: '2026-06-12T00:00:00Z'
+modifiedAt: '2026-06-12T00:00:00Z'
+summary: 'Risolvi l errore OpenClaw disconnected (1006) no close reason con soluzioni pratiche per Nginx, Docker, firewall e Telegram.'
+image: '/images/blog/come-risolvere-errore-openclaw-disconnected-1006.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw']
+translationSlug: 'fix-openclaw-disconnected-1006-no-reason'
+---
+
+Se visualizzi l'errore `Error: gateway closed (1006 abnormal closure (no close frame)): no close reason` o `disconnected (1006): no reason` in OpenClaw, non sei il solo. Ho affrontato questo problema più volte sui miei server, e la soluzione è solitamente molto semplice. In questa guida, ti mostrerò i passaggi che funzionano per risolverlo.
+
+## Cosa Significa l'Errore 1006
+
+L'errore WebSocket 1006 indica semplicemente che la connessione è stata chiusa in modo anomalo. Il server non ha fornito un "close frame" corretto o un motivo chiaro per la disconnessione.
+
+Nel contesto di OpenClaw o Clawdbot, questo in genere indica uno di questi problemi: il gateway su `127.0.0.1:18789` non è raggiungibile, gli aggiornamenti WebSocket (upgrade) falliscono a livello del proxy, un firewall blocca il traffico o un container Docker è andato in crash. Vediamo come sistemarlo.
+
+<CtaCard title="Usa la CLI di OpenClaw" description="Gestisci i tuoi agenti e i comandi di troubleshooting direttamente dal terminale." buttonText="Scopri OpenClaw CLI" link="/projects/openclaw" />
+
+## Soluzione 1: Header WebSocket di Nginx (Il Più Comune)
+
+Se stai eseguendo OpenClaw dietro un reverse proxy Nginx su una VPS, questa è quasi sicuramente la causa. I WebSocket richiedono header speciali per "aggiornare" la connessione HTTP. Senza di questi, il gateway si disconnette immediatamente con un errore 1006.
+
+Assicurati che il tuo blocco di configurazione Nginx includa gli header `Upgrade` corretti:
+
+```nginx
+location / {
+    proxy_pass http://127.0.0.1:18789;
+
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+
+    proxy_read_timeout 3600;
+    proxy_send_timeout 3600;
+}
+```
+
+Dopo aver aggiornato la configurazione, riavvia Nginx:
+
+```bash
+sudo systemctl restart nginx
+```
+
+Ricarica OpenClaw e la connessione dovrebbe rimanere attiva.
+
+## Soluzione 2: Regole Firewall su Ubuntu/Debian
+
+A volte il gateway sta funzionando perfettamente, ma le regole del firewall bloccano il traffico sulla porta predefinita.
+
+Devi consentire sia il traffico TCP che UDP sulla porta della Web UI:
+
+```bash
+sudo iptables -A INPUT -p tcp --dport 18789 -j ACCEPT
+sudo iptables -A INPUT -p udp --dport 18789 -j ACCEPT
+```
+
+Dopodiché, forza il riavvio del gateway usando la CLI:
+
+```bash
+clawdbot gateway --force
+```
+
+Tieni presente che le regole di iptables non sono persistenti dopo un riavvio a meno che tu non le salvi esplicitamente usando `netfilter-persistent` o `iptables-save`.
+
+## Soluzione 3: Stato del Container Docker e Riavvio
+
+Se stai distribuendo OpenClaw tramite Docker, controlla lo stato del container. Un container obsoleto o bloccato causerà ripetute chiusure 1006.
+
+Per prima cosa, elenca i tuoi container:
+
+```bash
+sudo docker ps
+```
+
+Se vedi il tuo container OpenClaw nella lista (anche se sembra in esecuzione ma è bloccato), riavvialo:
+
+```bash
+sudo docker restart <nome_container>
+```
+
+Aggiorna la Web UI e attendi qualche secondo dopo il login. Questo semplice riavvio elimina gli stati WebSocket in stallo.
+
+## Soluzione 4: Disabilitare i Canali Telegram
+
+Diversi utenti hanno segnalato che il problema 1006 è iniziato immediatamente dopo aver configurato l'integrazione del canale Telegram. Se sospetti che sia questo il caso, puoi disabilitarlo per vedere se il gateway si stabilizza.
+
+Esegui il comando di configurazione:
+
+```bash
+clawdbot configure
+```
+
+Naviga su **Channels** e disabilita temporaneamente Telegram (o tutti i canali). Una volta disabilitato, il gateway spesso rimane stabile. Un instradamento di rete instabile verso le API di Telegram può a volte abbattere l'intera connessione del gateway. Se hai bisogno di Telegram, assicurati che il tuo server possa raggiungere in modo affidabile `api.telegram.org`. 
+
+## Conclusione
+
+L'errore 1006 in OpenClaw sembra intimidatorio ma è quasi sempre un problema a livello di rete. Correggendo gli header di upgrade di Nginx, aprendo le porte del firewall corrette o risolvendo i problemi di stato di Docker, tornerai operativo.
+
+Se hai a che fare con altri ban o limiti di rate su OpenClaw, assicurati di leggere la mia analisi sulle [soluzioni per il ban dell'account OpenClaw](/blog/soluzioni-ban-account-openclaw) per ulteriori indicazioni.
+
+*Matteo Giardino è un fractional CTO e sviluppatore che scrive di agenti AI pratici, automazione e architettura del software.*
+\n*Scritto da Matteo Giardino, CTO e founder. Costruisco agenti AI per piccole e medie imprese in Italia. [I miei progetti](/projects).*
