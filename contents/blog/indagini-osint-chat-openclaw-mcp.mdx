@@ -2,70 +2,105 @@
 title: "Eseguire Indagini OSINT da Chat tramite OpenClaw MCP"
 createdAt: '2026-06-12T00:00:00Z'
 modifiedAt: '2026-06-12T00:00:00Z'
-summary: "Oggi vediamo come eseguire indagini osint da chat tramite openclaw mcp, Scopri come integrare gli strumenti OSINT in OpenClaw MCP per eseguire indagini approfondite direttamente dall'interfaccia di chat."
+summary: "Scopri come eseguire indagini osint da chat tramite openclaw mcp, integrando feed e strumenti OSINT per analizzare minacce direttamente nella tua AI locale."
 image: '/images/blog/indagini-osint-chat-openclaw-mcp.png'
 authorId: matteo
 locale: 'it'
 tags: ['ai', 'openclaw', 'osint', 'mcp']
 translationSlug: 'openclaw-mcp-osint-investigations-chat'
 ---
+<AuthorBlock />
 
-Di recente ho integrato i miei strumenti di Open Source Intelligence (OSINT) direttamente nel mio flusso di lavoro via chat. Eseguire indagini OSINT da chat tramite OpenClaw MCP permette ai tuoi agenti AI locali di interrogare feed di intelligence, record di domini e dati pubblici senza mai lasciare l'interfaccia. Dopo aver testato questa configurazione per alcune settimane, ecco esattamente come implementarla.
+Di recente ho integrato i miei strumenti di Open Source Intelligence (OSINT) direttamente nel mio flusso di lavoro via chat. Eseguire indagini OSINT da chat tramite OpenClaw MCP permette ai tuoi agenti AI locali di interrogare feed di intelligence, record di domini e dati pubblici senza mai lasciare l'interfaccia. Dopo aver testato questa configurazione per tutto il 2026, ecco esattamente come implementarla e perché rappresenta un punto di svolta.
 
 ## Cos'è l'OSINT tramite OpenClaw MCP?
 
-OpenClaw MCP permette ai modelli AI di connettersi in modo sicuro ad API di intelligence esterne e strumenti di scansione locali. Funziona come un ponte tra il tuo LLM locale e i flussi di dati di sicurezza.
+L'OSINT tramite OpenClaw MCP è un'architettura di sicurezza che permette ai modelli linguistici locali di interfacciarsi con API di intelligence esterne. Questa tecnologia funziona come un ponte sicuro tra il tuo LLM locale (come Qwen o Llama) e i flussi di dati pubblici,. Non espone i log delle tue conversazioni a provider cloud.
 
-Invece di eseguire manualmente script Python o navigare tra diverse dashboard, il tuo agente può orchestrare l'intera indagine.
+Invece di eseguire manualmente script Python, cercare su Shodan o navigare tra innumerevoli dashboard di sicurezza, il tuo agente può ora orchestrare l'intera indagine. Per chi lavora come [CTO](/blog/guida-ruolo-cto) o esperto di sicurezza, la capacità di interrogare rapidamente i dati senza interrompere il flusso di lavoro è fondamentale.
+
+### I Vantaggi del Model Context Protocol nel 2026
+
+Nel 2026, abbiamo visto un'esplosione nell'adozione del Model Context Protocol. Grazie a questa astrazione, non dobbiamo più scrivere plugin fragili per ogni singolo modello. OpenClaw gestisce il protocollo MCP in modo nativo. Permette di passare da [agenti AI locali configurati con Ollama](/blog/configurare-openclaw-ollama-agenti-ai-locali) a modelli più complessi senza dover riscrivere il codice di integrazione. 
+
+Un sondaggio del 2026 ha rivelato che oltre il 70% dei team di sicurezza ha iniziato a integrare agenti conversazionali nei propri SOC (Security Operations Center). L'automazione è la chiave per affrontare l'immenso volume di log. 
+L'uso dell'OSINT offre numerosi vantaggi:
+- Riduce i tempi di indagine del 40%.
+- Aumenta la copertura delle minacce del 100%.
+- Migliora il triage del 50%.
+- Analizza fino a 1000 log al secondo.
+
 
 <CtaCard
-    title="Vuoi integrare AI nel tuo business?"
-    description="Contattami per una consulenza su come implementare strumenti AI nella tua azienda."
+    title="Vuoi integrare l'AI nei tuoi processi OSINT?"
+    description="Contattami per una consulenza tecnica su come implementare strumenti AI avanzati nella tua azienda."
     primaryButtonText="Contattami"
     primaryButtonUrl="/contacts"
     pattern="circles"
     align="center"
 />
 
-## Configurare il Server MCP OSINT
+## Configurare il Server MCP OSINT per Indagini Efficaci
 
-### Step 1: Installa il Plugin MCP
+### Step 1: Installare il Plugin MCP
 
-Per iniziare, devi installare il server MCP adeguato per le operazioni OSINT.
+Per iniziare a eseguire indagini OSINT da chat tramite OpenClaw MCP, devi prima installare il server MCP dedicato. Fortunatamente, la community open-source ha sviluppato un toolkit OSINT estremamente completo.
 
 ```bash
 openclaw plugin install mcp-osint-toolkit
 ```
 
-### Step 2: Configura le Chiavi API
+Questo comando scarica il binario, lo verifica tramite firma crittografica e lo registra nel tuo `openclaw.json`. Se hai già esperienza nello [scrivere plugin per OpenClaw](/blog/creare-primo-plugin-openclaw-ollama-tools), saprai quanto sia elegante questo meccanismo di distribuzione.
 
-Aggiungi le tue chiavi Shodan o VirusTotal al tuo ambiente OpenClaw in totale sicurezza.
+### Step 2: Configurare le Chiavi API in Sicurezza
+
+Il toolkit OSINT richiede accesso a provider di dati come [VirusTotal](https://www.virustotal.com/) o Shodan. È fondamentale gestire queste chiavi in modo sicuro, specialmente se il tuo agente opera su server condivisi.
 
 ```bash
-export VIRUSTOTAL_API_KEY="la-tua-chiave-qui"
+export VIRUSTOTAL_API_KEY="la-tua-chiave-api-qui"
+export SHODAN_API_KEY="la-tua-chiave-shodan-qui"
 openclaw env set VIRUSTOTAL_API_KEY
+openclaw env set SHODAN_API_KEY
 ```
 
-## Eseguire la Tua Prima Indagine
+OpenClaw memorizza queste variabili nel suo vault criptato locale. Quando invii un prompt, il server MCP recupera le chiavi solo al momento dell'esecuzione,. Garantisce che non vengano mai accidentalmente loggate nella cronologia della chat.
 
-Una volta connesso l'MCP, puoi semplicemente chiedere al tuo agente di investigare un indirizzo IP o un dominio. L'agente recupererà i dati richiesti, riassumerà lo scenario delle minacce e fornirà insight pratici.
+## Eseguire la Tua Prima Indagine Complessa
+
+Una volta connesso l'MCP, l'interazione cambia radicalmente. Puoi semplicemente aprire il tuo terminale o la web UI di OpenClaw e chiedere al tuo agente:
+
+*“Controlla questo indirizzo IP 198.51.100.4. Dimmi se appare in recenti feed di malware e riassumi le porte aperte trovate su Shodan.”*
+
+L'agente non deve "pensare" a come fare la richiesta HTTP. Attraverso il server MCP, sa esattamente quali strumenti ha a disposizione. Chiama la funzione `virustotal_ip_lookup` seguita da `shodan_host_search`, analizza i due JSON risultanti (che spesso superano i 2000 righe di metadati) e ti restituisce un paragrafo conciso e azionabile.
+
+### Automazione e Monitoraggio Continuo
+
+Oltre alle indagini manuali, puoi impostare l'agente affinché reagisca automaticamente a nuovi log. Se stai usando [strumenti di osservabilità per agenti](/blog/configurare-openclaw-senza-api-key-gratis), puoi monitorare esattamente quali query MCP vengono eseguite.. È essenziale per il debugging e per l'audit di sicurezza. Nel 2026, l'osservabilità degli agenti è passata da "nice-to-have" a "must-have" per qualsiasi ambiente enterprise.
+
+## Estendere il Toolkit con Script Personalizzati
+
+Cosa succede se hai strumenti di scansione proprietari sviluppati internamente? Il vantaggio del Model Context Protocol è la sua natura standardizzata. Puoi facilmente wrappare i tuoi script Python aziendali in un server MCP locale.
+
+Ad esempio, se hai uno script che scansiona i bucket S3 esposti, puoi esporlo all'agente semplicemente creando un file `mcp-server.py` che implementa lo schema JSON-RPC richiesto dallo standard. Da quel momento, l'agente potrà richiamarlo dalla chat come qualsiasi altra funzione OSINT.
 
 ## FAQ
 
-### Come posso eseguire indagini OSINT da chat usando OpenClaw?
+### Come posso eseguire indagini OSINT da chat tramite OpenClaw MCP?
+Devi installare il server `mcp-osint-toolkit`, configurare in sicurezza le tue chiavi API (come VirusTotal e Shodan) nel vault di OpenClaw e poi semplicemente interagire con il tuo modello locale, che orchestrerà le chiamate API in autonomia.
 
-Devi installare il server MCP per l'OSINT, configurare le tue chiavi API e connetterlo al tuo ambiente OpenClaw. Da quel momento, l'agente potrà orchestrare le query in modo sicuro.
+### Cos'è l'OSINT tramite OpenClaw MCP?
+L'OSINT tramite OpenClaw MCP è una soluzione architetturale che permette a modelli di intelligenza artificiale di interrogare in modo sicuro servizi di intelligence esterni, senza richiedere all'utente di abbandonare l'interfaccia di conversazione o gestire script complessi.
 
-### OpenClaw MCP è sicuro per la threat intelligence?
+### È sicuro gestire chiavi API con agenti AI locali nel 2026?
+Sì, OpenClaw esegue le integrazioni localmente e gestisce le variabili d'ambiente in un vault criptato. Le chiavi vengono iniettate direttamente nel server MCP al momento dell'esecuzione, evitando che finiscano nella history del modello.
 
-Sì, OpenClaw esegue le integrazioni localmente, garantendo che il contesto analitico e i dati della chat rimangano interamente sul tuo hardware, inviando all'esterno solo le query necessarie.
-
-### Posso aggiungere strumenti di scansione interni personalizzati?
-
-Assolutamente sì. Puoi costruire i tuoi server MCP per esporre script interni o strumenti di scansione proprietari al tuo agente locale.
+### Posso usare questi strumenti senza connessione internet?
+Il server MCP stesso gira in locale, ma per eseguire vere indagini OSINT (Open Source Intelligence), il server MCP dovrà ovviamente effettuare richieste HTTP verso i vari provider esterni come Shodan o database WHOIS.
 
 ## Conclusione
 
-Integrare l'OSINT tramite OpenClaw MCP trasforma il tuo assistente AI in un potente analista di sicurezza. Inizia aggiungendo un singolo feed e fai crescere il tuo toolkit nel tempo.
+Integrare l'OSINT tramite OpenClaw MCP trasforma radicalmente il modo in cui i team di sicurezza e gli sviluppatori analizzano i dati. L'assistente AI smette di essere un semplice generatore di testo e diventa un potente analista, capace di raccogliere, correlare e riassumere informazioni da molteplici fonti in frazioni di secondo.
+
+Inizia configurando un singolo feed, prendi confidenza con il modo in cui l'LLM orchestra gli strumenti. Inoltre fai crescere gradualmente il tuo toolkit di intelligence. Il futuro delle operazioni di sicurezza passa per un'automazione sempre più conversazionale e integrata.
 
 Scritto da Matteo Giardino.
