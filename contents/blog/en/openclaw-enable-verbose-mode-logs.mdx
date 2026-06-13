@@ -1,0 +1,46 @@
+---
+title: "How to Enable Verbose Mode and Logs in OpenClaw"
+description: "A quick guide on how to enable verbose mode in OpenClaw gateway to debug issues and read detailed logs."
+publishedAt: "2026-06-13T08:00:00Z"
+modifiedAt: "2026-06-13T08:00:00Z"
+locale: "en"
+translationSlug: "come-abilitare-verbose-mode-logs-openclaw"
+---
+
+Debugging AI agents can be tricky, but OpenClaw makes it easier by providing a detailed verbose mode. If you are facing connection drops or strange agent behaviors, reading the raw logs is the first step to diagnosing the issue. Here is how to enable verbose mode and read logs in OpenClaw.
+
+## 1. Check service status
+
+Before making any changes, verify if the OpenClaw gateway is currently running in the background.
+
+<Image src="/images/blog/openclaw-verbose-mode-logs/openclaw-enable-verbose-mode-logs-41.webp" alt="Check service status" width={1200} height={630} />
+
+Run the status command in your terminal. If it's active, you'll need to stop it before restarting in verbose mode.
+
+<CtaCard title="Need Help with OpenClaw?" description="Join our Telegram community for real-time support." href="https://t.me/openclaw" />
+
+## 2. Stop the service
+
+To cleanly restart the gateway with new flags, stop the running instance first.
+
+<Image src="/images/blog/openclaw-verbose-mode-logs/openclaw-enable-verbose-mode-logs-50.webp" alt="Stop the service" width={1200} height={630} />
+
+Use the system command to stop the OpenClaw service gracefully.
+
+## 3. Start gateway in verbose mode
+
+Now, you can start the gateway with the verbose flag enabled. This will output every single request, response, and internal error directly to your terminal.
+
+<Image src="/images/blog/openclaw-verbose-mode-logs/openclaw-enable-verbose-mode-logs-66.webp" alt="Start gateway in verbose mode" width={1200} height={630} />
+
+Once running, try to reproduce the issue you were facing. The logs will now contain much more detail, including raw MCP traffic and tool execution results.
+
+## 4. Exit verbose and return to normal
+
+After you have gathered the necessary logs and identified the problem, you can stop the verbose process (usually with `Ctrl+C`) and restart the normal background service.
+
+<Image src="/images/blog/openclaw-verbose-mode-logs/openclaw-enable-verbose-mode-logs-113.webp" alt="Exit verbose and return to normal" width={1200} height={630} />
+
+Keeping verbose mode on permanently is not recommended as it can consume excessive disk space and slow down the terminal output.
+
+*Written by Matteo Giardino, CTO and AI automation expert.*

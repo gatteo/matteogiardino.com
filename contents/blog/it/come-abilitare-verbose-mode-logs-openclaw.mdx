@@ -1,0 +1,46 @@
+---
+title: "Come Abilitare il Verbose Mode e i Log in OpenClaw"
+description: "Una guida rapida su come abilitare la modalità verbose nel gateway di OpenClaw per risolvere problemi e leggere i log."
+publishedAt: "2026-06-13T08:00:00Z"
+modifiedAt: "2026-06-13T08:00:00Z"
+locale: "it"
+translationSlug: "openclaw-enable-verbose-mode-logs"
+---
+
+Eseguire il debug degli agenti AI può essere complesso, ma OpenClaw lo rende più semplice fornendo una modalità verbose dettagliata. Se stai riscontrando disconnessioni o comportamenti strani degli agenti, leggere i log grezzi è il primo passo per diagnosticare il problema. Ecco come abilitare il verbose mode e leggere i log in OpenClaw.
+
+## 1. Controlla lo stato del servizio
+
+Prima di apportare modifiche, verifica se il gateway di OpenClaw è attualmente in esecuzione in background.
+
+<Image src="/images/blog/openclaw-verbose-mode-logs/openclaw-enable-verbose-mode-logs-41.webp" alt="Controlla lo stato del servizio" width={1200} height={630} />
+
+Esegui il comando di stato nel tuo terminale. Se è attivo, dovrai interromperlo prima di riavviarlo in modalità verbose.
+
+<CtaCard title="Serve Aiuto con OpenClaw?" description="Entra nella nostra community Telegram per supporto in tempo reale." href="https://t.me/openclaw" />
+
+## 2. Ferma il servizio
+
+Per riavviare in modo pulito il gateway con le nuove flag, ferma prima l'istanza in esecuzione.
+
+<Image src="/images/blog/openclaw-verbose-mode-logs/openclaw-enable-verbose-mode-logs-50.webp" alt="Ferma il servizio" width={1200} height={630} />
+
+Usa il comando di sistema per fermare il servizio OpenClaw in modo controllato.
+
+## 3. Avvia il gateway in modalità verbose
+
+Ora puoi avviare il gateway con la flag verbose abilitata. Questo mostrerà ogni singola richiesta, risposta ed errore interno direttamente nel tuo terminale.
+
+<Image src="/images/blog/openclaw-verbose-mode-logs/openclaw-enable-verbose-mode-logs-66.webp" alt="Avvia il gateway in modalità verbose" width={1200} height={630} />
+
+Una volta in esecuzione, prova a riprodurre il problema che stavi affrontando. I log conterranno ora molti più dettagli, incluso il traffico MCP raw e i risultati dell'esecuzione dei tool.
+
+## 4. Esci dalla modalità verbose e torna alla normalità
+
+Dopo aver raccolto i log necessari e identificato il problema, puoi fermare il processo verbose (solitamente con `Ctrl+C`) e riavviare il normale servizio in background.
+
+<Image src="/images/blog/openclaw-verbose-mode-logs/openclaw-enable-verbose-mode-logs-113.webp" alt="Esci dalla modalità verbose" width={1200} height={630} />
+
+Non è consigliabile mantenere la modalità verbose attiva in modo permanente, poiché può consumare eccessivo spazio su disco e rallentare l'output del terminale.
+
+*Scritto da Matteo Giardino, CTO e esperto di automazione AI.*
