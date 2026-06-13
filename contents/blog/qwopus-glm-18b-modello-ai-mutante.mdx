@@ -1,0 +1,138 @@
+---
+title: "Analisi di Qwopus-GLM-18B: Fondere Due Modelli 9B per Superare i 35B Parametri"
+summary: "Scopri come Qwopus-GLM-18B, un modello da 18B creato impilando due modelli da 9B, supera il Qwen da 35B. E come farlo girare in locale con llama.cpp."
+createdAt: "2026-06-13T00:00:00Z"
+modifiedAt: "2026-06-13T00:00:00Z"
+image: "/images/blog/qwopus-glm-18b-modello-ai-mutante.png"
+authorId: "matteo"
+translationSlug: "qwopus-glm-18b-mutant-ai-model"
+author: "Matteo Giardino"
+locale: "it"
+tags:
+  - Local AI
+  - LLM
+  - Qwopus
+  - llama.cpp
+seoTitle: "Qwopus-GLM-18B: Modello AI Mutante in Locale"
+seoDescription: "Qwopus-GLM-18B è un modello da 18B creato impilando due modelli da 9B. Scopri come batte modelli più grandi e come usarlo in locale con llama.cpp e 14GB di VRAM."
+isPublished: true
+---
+
+Cosa succede quando tagli la parte superiore di un modello AI e la cuci sulla parte inferiore di un altro? Ottieni Qwopus-GLM-18B, un mutante da 18 miliardi di parametri che ignora le regole standard dell'addestramento. Batte il nuovissimo modello da 35 miliardi di parametri di Qwen pesando meno della metà (9.2 GB contro 22 GB).
+
+In questa guida aggiornata al 2026 ti mostrerò esattamente come è stato costruito questo modello, come si comporta nella programmazione e nel ragionamento, e come servirlo in locale utilizzando llama.cpp con soli 14GB di VRAM.
+
+## Come è stato costruito Qwopus-GLM-18B
+
+Invece di addestrare un nuovo modello da zero, i creatori hanno utilizzato due modelli separati da 9B, pesanti circa 5 GB ciascuno. Il Modello A era specializzato in codice e task multi-step. Il Modello B eccelleva nel ragionamento logico step-by-step.
+
+<CtaCard title="Potenzia i Tuoi Agenti" description="Connetti i tuoi modelli AI locali a tutto usando OpenClaw." link="/projects/openclaw" ctaText="Prova OpenClaw" />
+
+Invece di sceglierne uno, li hanno impilati. Proprio come quando esegui [Qwen 3.5 0.8B in locale](/blog/run-qwen35-08b-openclaw-ollama-cpu), l'efficienza è fondamentale. Tutti i 32 layer del Modello A sono stati posizionati direttamente sopra i 32 layer del Modello B.
+
+### La Cicatrice e la Guarigione
+
+Inizialmente non c'è stato alcun training aggiuntivo: solo un taglia e incolla per creare un modello da 64 layer e 18B di parametri. Tuttavia, c'era una "cicatrice" nel mezzo. Il layer 31 e il layer 32 non si erano mai parlati prima, generando codice illeggibile.
+
+Per risolvere il problema, hanno eseguito un "heal fine-tune". Pensalo come una fisioterapia per il modello. Sono bastati 1.000 step di training per insegnare a queste due metà come comunicare. La loss di training è crollata del 39% e il codice generato è diventato pulito e pronto per la produzione.
+
+## Performance: Battere i Giganti da 35B
+
+Questa architettura mutante non è solo un esperimento; funziona incredibilmente bene. Ecco cosa ho notato durante i miei test pratici:
+
+- **Codice e Agenti:** Ho richiesto una simulazione HTML/JS in un singolo file. Il ragionamento è stato solido, l'output pulito e non ci sono state allucinazioni o loop.
+- **Ragionamento Matematico:** Testato con l'equazione del razzo di Tsiolkovsky, il modello non ha solo risolto la matematica, ma ha individuato un difetto concettuale nel mio prompt, distinguendo tra ciò che un razzo può produrre e ciò che un'orbita richiede.
+- **Sicurezza:** Ha rifiutato con successo le richieste che violavano le policy di sicurezza, offrendo alternative costruttive.
+
+
+Questo modello rappresenta un cambiamento significativo nel modo in cui affrontiamo l'architettura AI nel 2026. Il metodo tradizionale prevede l'addestramento di modelli enormi partendo da zero, richiedendo immensi cluster di calcolo e mesi di ottimizzazione. Semplicemente impilando layer pre-addestrati ed eseguendo un breve fine-tuning di guarigione, i ricercatori hanno dimostrato che possiamo riutilizzare i blocchi di intelligenza esistenti. Le implicazioni sono profonde: i team più piccoli possono ora costruire modelli altamente capaci e specializzati senza gli astronomici costi di pre-addestramento.
+
+Inoltre, la dimensione di 18 miliardi di parametri rappresenta il perfetto punto di equilibrio per l'hardware prosumer. Mentre i modelli da 7B spesso faticano con il ragionamento complesso, e i modelli da oltre 30B richiedono hardware costoso, Qwopus si adatta perfettamente alla VRAM delle moderne GPU consumer di fascia alta. Questo democratizza l'accesso a capacità all'avanguardia, consentendo a sviluppatori indipendenti, ricercatori e piccole imprese di eseguire inferenze potenti completamente offline, garantendo privacy e zero costi API continui. Ho testato ampiamente questo setup sulla mia macchina locale e la latenza è fenomenale. La combinazione dell'esecuzione ibrida CPU/GPU altamente ottimizzata di llama.cpp e l'efficienza intrinseca del modello lo fa sembrare reattivo quanto le API ospitate nel cloud, ma completamente sotto il tuo controllo.
+
+Mentre il panorama dell'AI continua a evolversi, questi modelli ibridi "Frankenstein" potrebbero diventare il modo standard in cui destilliamo e combiniamo conoscenze specializzate da diversi domini in assistenti locali unificati e performanti.
+
+## Come Installare e Usare Qwopus-GLM-18B in Locale
+
+Non ti serve una GPU enterprise da 80 GB per usarlo. L'utilizzo della VRAM durante il serving supera di poco i 14 GB, rendendolo accessibile su molte schede consumer.
+
+Ecco come configurarlo usando `llama.cpp`:
+
+1. Scarica il modello usando la CLI di Hugging Face:
+```bash
+pip install -U "huggingface_hub[cli]"
+huggingface-cli login
+huggingface-cli download qwopus-org/Qwopus-GLM-18B.gguf --local-dir models/qwopus
+```
+
+2. Compila `llama.cpp` dai sorgenti:
+```bash
+git clone https://github.com/ggerganov/llama.cpp
+cd llama.cpp
+make -j
+```
+
+3. Avvia il server:
+```bash
+./server -m ../models/qwopus/Qwopus-GLM-18B.gguf -c 8192 -t 8 -ngl 35 -p 8080
+```
+
+Una volta avviato, puoi interrogare l'endpoint locale:
+```bash
+curl -s http://localhost:8080/completion \
+  -H "Content-Type: application/json" \
+  -d '{"prompt": "Scrivi uno script Python per...", "n_predict": 512}'
+```
+
+
+
+## Perché l'approccio "Frankenstein" Funziona
+Quando sovrapponi due modelli linguistici pre-addestrati, stai effettivamente prendendo le profonde rappresentazioni semantiche apprese dal primo modello e fornendole come input al secondo modello. Nell'addestramento tradizionale, questo porterebbe a un collasso completo della qualità dell'output perché gli spazi di rappresentazione interna non corrispondono. Tuttavia, la fase di heal fine-tuning colma questa lacuna. Nel corso di 1.000 step, la rete neurale impara a proiettare lo spazio di output del Layer 32 (dal Modello A) nello spazio di input atteso del Layer 1 (dal Modello B).
+
+Il motivo per cui questo porta a prestazioni superiori rispetto a un modello da 18B addestrato nativamente risiede nella specializzazione dei modelli di base. Il Modello A è stato ampiamente ottimizzato per workflow agentici e uso di strumenti. Il Modello B è stato addestrato estesamente su dimostrazioni matematiche e logica formale. Combinandoli, Qwopus eredita le capacità specializzate di entrambi senza subire il catastrofico forgetting che spesso affligge il fine-tuning di un singolo modello su dataset contraddittori. Questo approccio apre affascinanti possibilità per la community open-source di mescolare e abbinare modelli di dominio specializzati.
+
+Per gli sviluppatori che desiderano integrarlo in produzione, l'assenza di un massiccio impatto sulla VRAM significa che è possibile eseguire istanze multiple di Qwopus-GLM-18B su un singolo server di fascia alta, gestendo le richieste simultanee in modo efficiente. La velocità di inferenza utilizzando `llama.cpp` è perfettamente adatta per agenti interattivi in tempo reale.
+
+Inoltre, puoi configurare facilmente questo modello all'interno delle tue pipeline di orchestrazione locali. Se hai un setup esistente, ti basterà scambiare il percorso del modello per godere delle avanzate capacità di ragionamento. Il futuro dell'AI locale non riguarda solo l'addestramento di modelli più grandi da zero; riguarda la combinazione creativa di quelli esistenti.
+
+
+## Domande Frequenti
+
+**Quanta VRAM serve per Qwopus-GLM-18B?**  
+Richiede poco più di 14GB di VRAM quando eseguito tramite `llama.cpp`, rendendolo compatibile con GPU consumer da 16GB come la RTX 4080.
+
+**Qual è la context window di Qwopus-GLM-18B?**  
+Supporta una context window di 8192 token, sufficiente per task standard di programmazione e workflow agentici.
+
+---
+*Matteo Giardino è uno sviluppatore appassionato di AI che esplora intelligenza locale e automazione. Scopri i suoi progetti su [MatteoGiardino.com](/).*
+\nScritto da Matteo Giardino, CTO e sviluppatore AI.
+
+
+## Espandere il Setup
+Una volta avviato Qwopus, puoi connetterlo a [OpenClaw per orchestrare più agenti](/blog/openclaw-agent-orchestration). Inoltre, se ti interessa testare altri modelli leggeri, dai un'occhiata alla mia guida su come [Eseguire Qwen 3.5 0.8B in locale](/blog/run-qwen35-08b-openclaw-ollama-cpu).
+
+Per ulteriori dettagli, puoi leggere la [documentazione ufficiale di llama.cpp](https://github.com/ggerganov/llama.cpp).
+
+
+
+## Perché l'approccio "Frankenstein" Funziona
+Quando sovrapponi due modelli linguistici pre-addestrati, stai effettivamente prendendo le profonde rappresentazioni semantiche apprese dal primo modello e fornendole come input al secondo modello. Nell'addestramento tradizionale, questo porterebbe a un collasso completo della qualità dell'output perché gli spazi di rappresentazione interna non corrispondono. Tuttavia, la fase di heal fine-tuning colma questa lacuna. Nel corso di 1.000 step, la rete neurale impara a proiettare lo spazio di output del Layer 32 (dal Modello A) nello spazio di input atteso del Layer 1 (dal Modello B).
+
+Il motivo per cui questo porta a prestazioni superiori rispetto a un modello da 18B addestrato nativamente risiede nella specializzazione dei modelli di base. Il Modello A è stato ampiamente ottimizzato per workflow agentici e uso di strumenti. Il Modello B è stato addestrato estesamente su dimostrazioni matematiche e logica formale. Combinandoli, Qwopus eredita le capacità specializzate di entrambi senza subire il catastrofico forgetting che spesso affligge il fine-tuning di un singolo modello su dataset contraddittori. Questo approccio apre affascinanti possibilità per la community open-source di mescolare e abbinare modelli di dominio specializzati.
+
+Per gli sviluppatori che desiderano integrarlo in produzione, l'assenza di un massiccio impatto sulla VRAM significa che è possibile eseguire istanze multiple di Qwopus-GLM-18B su un singolo server di fascia alta, gestendo le richieste simultanee in modo efficiente. La velocità di inferenza utilizzando `llama.cpp` è perfettamente adatta per agenti interattivi in tempo reale.
+
+Inoltre, puoi configurare facilmente questo modello all'interno delle tue pipeline di orchestrazione locali. Se hai un setup esistente, ti basterà scambiare il percorso del modello per godere delle avanzate capacità di ragionamento. Il futuro dell'AI locale non riguarda solo l'addestramento di modelli più grandi da zero; riguarda la combinazione creativa di quelli esistenti.
+
+
+## Domande Frequenti
+
+**Cos'è Qwopus-GLM-18B?**
+Qwopus-GLM-18B è un modello AI mutante creato sovrapponendo due modelli da 9B parametri, che offre performance eccezionali.
+
+**Quanta VRAM serve per Qwopus-GLM-18B?**
+Richiede poco più di 14GB di VRAM quando eseguito tramite `llama.cpp`, rendendolo compatibile con GPU consumer da 16GB.
+
+**Qual è la context window di Qwopus-GLM-18B?**
+Supporta una context window di 8192 token, sufficiente per task standard di programmazione e workflow agentici.
+
