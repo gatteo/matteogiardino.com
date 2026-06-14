@@ -1,0 +1,71 @@
+---
+title: 'Ollama OpenClaw Workflow: Il Tutorial Completo'
+createdAt: '2026-06-14T00:00:00Z'
+modifiedAt: '2026-06-14T00:00:00Z'
+summary: 'Scopri come utilizzare i modelli Ollama all\'interno degli agenti OpenClaw. Un tutorial passo-passo sui workflow AI locali.'
+image: '/images/blog/tutorial-workflow-ollama-openclaw.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'ollama', 'tutorial']
+translationSlug: 'ollama-openclaw-workflow-tutorial'
+---
+
+Di recente ho iniziato a usare i modelli Ollama nei miei agenti OpenClaw per ridurre i costi delle API. Ecco un tutorial completo su come configurare un workflow Ollama OpenClaw.
+
+## Perché usare Ollama con OpenClaw?
+
+OpenClaw è un framework fantastico per creare agenti AI, ma i costi delle API possono crescere. Integrando Ollama, puoi eseguire potenti modelli localmente e gratuitamente.
+
+<CtaCard
+    title="Hai bisogno di aiuto con i workflow AI?"
+    description="Contattami per una consulenza su come implementare tool e automazioni AI nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Configurare il Workflow
+
+### 1. Installare le Dipendenze
+
+Per prima cosa, assicurati di avere sia Ollama che OpenClaw installati.
+
+```bash
+pip install openclaw
+ollama pull qwen-2.5-coder
+```
+
+### 2. Configurare l'Agente
+
+Crea un nuovo agente in OpenClaw e configuralo per usare Ollama come backend.
+
+```python
+from openclaw import Agent
+
+agent = Agent(
+    model="qwen-2.5-coder",
+    backend="ollama",
+    base_url="http://localhost:11434"
+)
+```
+
+## Creare il Tuo Primo Workflow
+
+Ora puoi creare un semplice workflow che utilizza questo agente locale per elaborare i task. L'agente verrà eseguito interamente sulla tua macchina locale.
+
+## Domande Frequenti
+
+### Funziona offline?
+
+Sì, una volta scaricato il modello tramite Ollama, l'intero workflow OpenClaw funziona offline.
+
+### Quali modelli sono supportati?
+
+Qualsiasi modello disponibile nel registro Ollama può essere utilizzato nel tuo workflow OpenClaw.
+
+## Conclusione
+
+Integrare Ollama nei tuoi workflow OpenClaw è una svolta per lo sviluppo AI locale a basso costo.
+
+*Scritto da Matteo Giardino, CTO e founder. Costruisco agenti AI per le PMI in Italia. [I miei progetti](/projects).*
