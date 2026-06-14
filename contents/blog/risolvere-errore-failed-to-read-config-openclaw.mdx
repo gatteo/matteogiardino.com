@@ -1,0 +1,111 @@
+---
+title: "Come Risolvere l'Errore 'failed to read config' in OpenClaw"
+description: "Il gateway di OpenClaw va in crash con l'errore 'failed to read config'? Scopri come risolvere problemi di sintassi YAML, permessi e ripristinare i tuoi agenti AI."
+summary: "Scopri esattamente come risolvere l'errore 'failed to read config' in OpenClaw correggendo la sintassi YAML, i permessi dei file e le chiavi mancanti."
+date: '2026-06-14T10:00:00.000Z'
+createdAt: '2026-06-14T10:00:00.000Z'
+modifiedAt: '2026-06-14T10:00:00.000Z'
+published: true
+locale: 'it'
+translationSlug: 'fix-failed-read-config-error-openclaw'
+tags: ['openclaw', 'troubleshooting', 'ai agents', 'configurazione', 'tutorial']
+authorId: 'matteo'
+image: '/images/blog/risolvere-errore-failed-to-read-config-openclaw.png'
+---
+
+<AuthorBlock authorId="matteo" />
+
+Se stai eseguendo agenti AI in locale con OpenClaw nel 2026, imbatterti nell'errore fatale `failed to read config` può bloccare improvvisamente l'intero flusso di lavoro. Questo errore impedisce l'avvio del gateway, lasciando i tuoi agenti isolati. Ho affrontato personalmente questo problema diverse volte mentre configuravo il mio [server AI locale su Mac Mini con OpenClaw](/blog/server-ai-locale-mac-mini-openclaw), quindi so perfettamente quanto possa essere frustrante. In questa guida, ti spiego perché succede e come risolvere l'errore "failed to read config" in OpenClaw in pochi minuti.
+
+## Cosa causa l'errore "failed to read config"?
+
+OpenClaw si affida a un file di configurazione centrale (solitamente situato in `~/.openclaw/config.yaml`) per gestire modelli, tool MCP e chiavi API. L'errore `failed to read config` si verifica quando il demone di OpenClaw non riesce ad analizzare questo file.
+
+I colpevoli più comuni sono:
+1. **Sintassi YAML non valida:** Uno spazio mancante, un'indentazione errata o caratteri speciali non virgolettati.
+2. **Permesso negato:** Il servizio OpenClaw non ha i permessi di lettura sul file.
+3. **Campi obbligatori mancanti:** Un blocco di configurazione incompleto dopo un aggiornamento.
+4. **File corrotto:** Contenuto vuoto o illeggibile a causa di un salvataggio interrotto.
+
+## Passo 1: Valida la Sintassi YAML
+
+La causa numero uno di questo errore è un errore di battitura nella sintassi. Lo standard YAML è notoriamente severo riguardo all'indentazione. Ti consiglio di usare uno strumento come il [validatore ufficiale YAML](https://yamlchecker.com/) per verificare il file in pochi secondi.
+
+Apri il terminale e controlla il file con un linter:
+
+```bash
+# Se hai yq installato
+yq eval '.' ~/.openclaw/config.yaml
+```
+
+Se `yq` restituisce un errore di parsing, apri il file nel tuo editor di codice e cerca:
+- **Tabulazioni invece di spazi:** YAML accetta solo spazi per l'indentazione.
+- **Caratteri non escaped:** Se la tua chiave API o un prompt contiene caratteri come `:` o `#`, racchiudi l'intera stringa tra virgolette.
+- **Liste non allineate:** Assicurati che array come `fallback_models` o `tools` siano formattati correttamente.
+
+## Passo 2: Controlla i Permessi del File
+
+Se la sintassi è corretta, il demone di OpenClaw potrebbe essere bloccato fuori dal file. Questo accade spesso se hai modificato la configurazione usando `sudo` ma esegui il demone come utente normale.
+
+Ripristina la proprietà e i permessi corretti:
+
+```bash
+# Prendi possesso della directory di OpenClaw
+sudo chown -R $USER:$USER ~/.openclaw
+
+# Imposta i permessi di lettura/scrittura corretti
+chmod 600 ~/.openclaw/config.yaml
+```
+
+Riavvia il gateway e controlla se l'errore persiste.
+
+## Passo 3: Rigenera la Configurazione Predefinita
+
+Se non riesci a trovare l'errore di sintassi o sospetti che il file sia irrimediabilmente corrotto, la soluzione più rapida è lasciare che OpenClaw generi una nuova configurazione pulita.
+
+Per prima cosa, fai un backup del file attuale per non perdere le tue chiavi API:
+
+```bash
+mv ~/.openclaw/config.yaml ~/.openclaw/config.yaml.backup
+```
+
+Quindi, inizializza una nuova configurazione:
+
+```bash
+openclaw init
+```
+
+Questo comando crea un `config.yaml` pulito e valido. Ora puoi copiare in sicurezza le tue chiavi API e gli endpoint personalizzati dal backup al nuovo file. **Fallo un blocco alla volta**, testando OpenClaw dopo ogni aggiunta per isolare l'errore. Dai un'occhiata alla nostra guida su [come trovare tutti i modelli OpenClaw](/blog/trovare-modelli-openclaw-primary-default-fallback) per assicurarti di ripristinare correttamente le configurazioni primarie e di fallback.
+
+## Passo 4: Riavvia il Gateway OpenClaw
+
+Una volta che il file di configurazione è valido e accessibile, riavvia il gateway di OpenClaw per applicare le modifiche.
+
+```bash
+openclaw gateway restart
+```
+
+Puoi verificare che il gateway stia funzionando correttamente controllando i log:
+
+```bash
+openclaw logs --follow
+```
+
+Se vedi `[INFO] Configuration loaded successfully`, sei a posto!
+
+## Domande Frequenti (FAQ)
+
+### Come risolvere l'errore "failed to read config" in OpenClaw senza perdere i miei tool MCP?
+Crea sempre un backup del tuo file `config.yaml` prima di apportare modifiche o eseguire `openclaw init`. Puoi tranquillamente copiare il blocco delle definizioni MCP dal backup nel nuovo file di configurazione generato senza perdere alcun dato.
+
+### L'aggiornamento di OpenClaw può causare l'errore "failed to read config"?
+Sì, a volte i major update introducono nuovi campi obbligatori nello schema YAML. Se il tuo vecchio file di configurazione non ha questi campi, OpenClaw non riuscirà a leggerlo. Generare una nuova configurazione tramite `openclaw init` risolve il problema.
+
+### Posso usare JSON invece di YAML per la configurazione?
+No, nel 2026 OpenClaw supporta solo YAML per il suo file di configurazione principale. Tuttavia, puoi gestire le impostazioni programmaticamente tramite le API di OpenClaw.
+
+## Conclusione
+
+L'errore `failed to read config` in OpenClaw è quasi sempre un semplice problema di sintassi YAML o di permessi. Validando attentamente il file di configurazione e assicurando la corretta proprietà, puoi rimettere online i tuoi agenti AI rapidamente.
+
+Se i crash persistono, considera di [abilitare il verbose mode e i log](/blog/come-abilitare-verbose-mode-logs-openclaw) per ottenere uno stack trace più dettagliato dell'errore di parsing.

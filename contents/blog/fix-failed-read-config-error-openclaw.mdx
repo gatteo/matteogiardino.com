@@ -1,0 +1,111 @@
+---
+title: "How to Fix 'failed to read config' Error in OpenClaw"
+description: "Is your OpenClaw gateway crashing with a 'failed to read config' error? Learn how to troubleshoot corrupted YAML files, fix permissions, and restore your AI agent setup."
+summary: "Learn exactly how to fix 'failed to read config' error in OpenClaw by resolving YAML syntax issues, file permissions, and missing keys in 2026."
+date: '2026-06-14T10:00:00.000Z'
+createdAt: '2026-06-14T10:00:00.000Z'
+modifiedAt: '2026-06-14T10:00:00.000Z'
+published: true
+locale: 'en'
+translationSlug: 'risolvere-errore-failed-to-read-config-openclaw'
+tags: ['openclaw', 'troubleshooting', 'ai agents', 'configuration', 'tutorial']
+authorId: 'matteo'
+image: '/images/blog/fix-failed-read-config-error-openclaw.png'
+---
+
+<AuthorBlock authorId="matteo" />
+
+If you're running local AI agents with OpenClaw in 2026, encountering the fatal `failed to read config` error can abruptly stop your entire workflow. This error prevents the gateway from starting, leaving your agents stranded. I've personally dealt with this error several times when configuring my [OpenClaw local AI server on Mac Mini](/blog/local-ai-server-mac-mini-openclaw), so I know exactly how frustrating it can be. In this guide, we'll explain why this happens and how to fix 'failed to read config' error in OpenClaw in minutes.
+
+## What Causes the "failed to read config" Error?
+
+OpenClaw relies on a central configuration file (usually located at `~/.openclaw/config.yaml`) to manage models, MCP tools, and API keys. The `failed to read config` error occurs when the OpenClaw daemon cannot parse this file. 
+
+The most common culprits are:
+1. **Invalid YAML syntax:** A missed space, incorrect indentation, or unquoted special characters.
+2. **Permission denied:** The OpenClaw service doesn't have read access to the file.
+3. **Missing required fields:** An incomplete configuration block after an update.
+4. **Corrupted file:** Empty or garbled contents due to an interrupted save or unexpected shutdown.
+
+## Step 1: Validate Your YAML Syntax
+
+The number one cause of this error is a syntax typo. YAML is notoriously strict about indentation. I recommend using the [official YAML linting tools](https://yamlchecker.com/) to quickly verify your file.
+
+Open your terminal and check the file with a linter:
+
+```bash
+# If you have yq installed
+yq eval '.' ~/.openclaw/config.yaml
+```
+
+If `yq` throws a parsing error, open the file in your code editor and look for:
+- **Tabs instead of spaces:** YAML only accepts spaces for indentation.
+- **Unescaped characters:** If your API key or prompt contains characters like `:` or `#`, wrap the entire string in quotes.
+- **Mismatched lists:** Ensure your `fallback_models` or `tools` arrays are properly formatted.
+
+## Step 2: Check File Permissions
+
+If the syntax is correct, the OpenClaw daemon might be locked out of the file. This often happens if you edited the config using `sudo` but run the daemon as a regular user.
+
+Fix the ownership and permissions:
+
+```bash
+# Take ownership of the OpenClaw directory
+sudo -S -p '' chown -R $USER:$USER ~/.openclaw
+
+# Set correct read/write permissions
+chmod 600 ~/.openclaw/config.yaml
+```
+
+Restart the gateway and check if the error persists.
+
+## Step 3: Regenerate the Default Configuration
+
+If you cannot find the syntax error or suspect the file is hopelessly corrupted, the fastest fix is to let OpenClaw generate a fresh configuration.
+
+First, back up your current file so you don't lose your API keys:
+
+```bash
+mv ~/.openclaw/config.yaml ~/.openclaw/config.yaml.backup
+```
+
+Next, initialize a new configuration:
+
+```bash
+openclaw init
+```
+
+This command creates a clean, valid `config.yaml`. You can now safely copy your specific API keys and custom model endpoints from the backup into the new file. **Do this one block at a time**, testing OpenClaw after each addition to isolate the error. Check out our guide on [how to find all OpenClaw models](/blog/find-openclaw-models-primary-default-fallback) to make sure you restore your primary and fallback configurations correctly.
+
+## Step 4: Restart the OpenClaw Gateway
+
+Once your configuration file is valid and accessible, restart the OpenClaw gateway to apply the changes.
+
+```bash
+openclaw gateway restart
+```
+
+You can verify the gateway is running smoothly by checking the logs:
+
+```bash
+openclaw logs --follow
+```
+
+If you see `[INFO] Configuration loaded successfully`, you're good to go!
+
+## Frequently Asked Questions (FAQ)
+
+### How to fix 'failed to read config' error in OpenClaw without losing my MCP tools?
+Always create a backup of your `config.yaml` file before making changes or running `openclaw init`. You can safely copy your MCP definitions block from the backup into the newly generated config file without losing any data.
+
+### Does updating OpenClaw cause the 'failed to read config' error?
+Yes, sometimes major updates introduce new required fields in the YAML schema. If your old config is missing these fields, OpenClaw will fail to read it. Generating a fresh config via `openclaw init` resolves this.
+
+### Can I use JSON instead of YAML for the configuration?
+No, OpenClaw currently only supports YAML for its primary configuration file in 2026. However, you can manage settings programmatically via the OpenClaw API.
+
+## Conclusion
+
+The `failed to read config` error in OpenClaw is almost always a simple YAML syntax or permission issue. By carefully validating your configuration file and ensuring correct ownership, you can get your AI agents back online quickly. 
+
+If you're still experiencing crashes, consider [enabling verbose mode and logs](/blog/openclaw-enable-verbose-mode-logs) to get a more detailed stack trace of the parsing failure.
