@@ -1,0 +1,88 @@
+---
+title: 'RecurseChat: Usare l’AI Locale nella Quotidianità'
+createdAt: '2026-06-14T00:00:00Z'
+modifiedAt: '2026-06-14T00:00:00Z'
+summary: 'Perché RecurseChat è l’interfaccia nativa perfetta per i tuoi modelli AI locali. Come configurarlo per l’uso quotidiano con Ollama e OpenClaw.'
+image: '/images/blog/recursechat-ai-locale-uso-quotidiano.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'local ai', 'ollama', 'privacy']
+translationSlug: 'recursechat-local-ai-daily-driver'
+---
+
+Gestivo tutte le mie query AI locali da una finestra del terminale. Era veloce, ma dopo mesi passati a copiare e incollare blocchi di codice su iTerm, sentivo la mancanza di un'esperienza nativa in stile ChatGPT che mantenesse i miei dati offline nel 2026. RecurseChat è un'interfaccia chat veloce e nativa per macOS che si connette direttamente a backend locali come Ollama e OpenClaw, trasformando i modelli grezzi in veri strumenti per l'uso quotidiano. Dopo averlo usato come interfaccia principale per oltre 30 giorni, ecco perché funziona, cosa è andato storto all'inizio e come configurarlo.
+
+## L'Importanza di un'Interfaccia per l'AI Locale
+
+I tool a riga di comando e le UI da terminale sono ottimi per gli ingegneri, ma non offrono la fluidità delle piattaforme in cloud come ChatGPT o Claude. Per l'uso quotidiano serve il rendering ricco del Markdown, una cronologia ricercabile e la possibilità di cambiare modello velocemente senza toccare il terminale.
+
+RecurseChat risolve questo problema alla perfezione. È un'app nativa scritta in Swift per macOS, progettata appositamente per interfacciarsi con i motori di inferenza locali. Trasforma [Ollama nel tuo assistente AI locale gratuito](/blog/configurare-openclaw-ollama-agenti-ai-locali) con un'interfaccia che non ti rallenta mai.
+
+<CtaCard
+    title="Hai bisogno di aiuto con l'integrazione AI?"
+    description="Contattami per una consulenza su come implementare automazioni e strumenti AI nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Connettere RecurseChat ai Modelli Locali
+
+### Configurare l'integrazione con Ollama
+
+Il modo più semplice per iniziare è connettere RecurseChat a Ollama. Dato che Ollama esegue un server API locale di default, l'integrazione è immediata.
+
+Assicurati che Ollama sia in esecuzione e di aver scaricato un modello affidabile:
+
+```bash
+ollama run llama3
+```
+
+Su RecurseChat, vai in Settings > Providers e verifica che l'endpoint di Ollama punti a `http://localhost:11434`. L'app rileverà automaticamente i tuoi modelli, permettendoti di cambiare contesto all'istante.
+
+### Integrazione con OpenClaw
+
+Se utilizzi OpenClaw per gestire più agenti o workflow specializzati, puoi esporre le sue API a RecurseChat avviando il gateway di OpenClaw. Trovo questo setup fantastico per connettermi alle mie istanze [Enterprise di OpenClaw](/blog/nvidia-nemoclaw-openclaw-aziendale).
+
+```bash
+openclaw gateway start --port 8080
+```
+
+Aggiungi un endpoint compatibile con OpenAI su RecurseChat, puntalo a `http://localhost:8080/v1` e imposta i tuoi profili agente personalizzati. Questo ti permette di chattare con i tuoi agenti autonomi OpenClaw direttamente da un'app desktop nativa.
+
+## Attenzione: Il Limite di Contesto
+
+Una cosa che si è rotta subito la prima volta che ho usato RecurseChat con OpenClaw è stato il limite della finestra di contesto. Ho incollato un file di log da 15.000 parole e l'app ha restituito un generico errore HTTP 500 perché il contesto del modello locale era bloccato a 4096 token.
+
+La soluzione è semplice: devi aumentare esplicitamente la dimensione del contesto nella configurazione di OpenClaw o Ollama prima di avviare il modello. Per Ollama, basta passare il parametro `num_ctx`:
+
+```bash
+ollama run llama3 --num_ctx 16384
+```
+
+## Prestazioni nel Mondo Reale nel 2026
+
+Usare modelli locali quotidianamente significa scambiare la latenza del cloud con la dipendenza dall'hardware. Sul mio Mac Mini M2 Pro con 32GB di RAM, la generazione dei token con un modello da 8B inizia in meno di 0.2 secondi. Inoltre, un'app nativa come RecurseChat consuma il 40% di memoria in meno rispetto a un wrapper basato su Electron.
+
+Il vantaggio principale resta la privacy assoluta: puoi incollare codice sorgente sensibile, documenti architetturali interni e dati dei clienti senza che nulla esca mai dalla macchina.
+
+## FAQ
+
+### RecurseChat è gratuito?
+
+Sì, l'applicazione principale è scaricabile e utilizzabile gratuitamente. Si concentra interamente sulle interazioni locali sul dispositivo, quindi non dovrai pagare alcun abbonamento mensile per le API cloud.
+
+### Funziona completamente offline?
+
+Sì, assolutamente. Finché il tuo backend (come Ollama o OpenClaw) è in esecuzione in locale, RecurseChat funziona al 100% offline. Non serve alcuna connessione a internet per generare risposte o cercare nella cronologia.
+
+### Posso usarlo su Windows o Linux?
+
+Attualmente RecurseChat è fortemente ottimizzato per macOS e sfrutta i framework nativi di Apple. Se usi Linux o Windows, ti consiglio di esplorare alternative multi-piattaforma come Open WebUI.
+
+## Conclusioni
+
+Passare all'AI locale per l'uso quotidiano richiede un frontend che sia praticamente invisibile e non aggiunga frizione. RecurseChat offre questa esperienza nativa mantenendo i tuoi dati strettamente privati. Se lo combini con OpenClaw per gli agenti e Ollama per l'inferenza pura, ottieni una workstation AI offline che non ha nulla da invidiare ai migliori tool in cloud.
+
+*Scritto da Matteo Giardino, CTO e founder. Sviluppo agenti AI per le PMI in Italia. [I miei progetti](/projects).*
