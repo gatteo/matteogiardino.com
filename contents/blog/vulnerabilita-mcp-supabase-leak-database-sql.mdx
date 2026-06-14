@@ -1,0 +1,86 @@
+---
+title: "Vulnerabilità Supabase MCP: Come Può Esporre il Tuo Database SQL"
+summary: "Un'analisi critica della vulnerabilità di Supabase MCP che espone i database SQL, come avviene la fuga di dati e i passaggi per mettere in sicurezza gli agenti AI."
+createdAt: "2026-06-14T00:00:00Z"
+modifiedAt: "2026-06-14T00:00:00Z"
+authorId: "matteo"
+image: "/images/blog/vulnerabilita-mcp-supabase-leak-database-sql.png"
+locale: "it"
+translationSlug: "supabase-mcp-vulnerability-sql-leak"
+tags: ["ai", "security", "openclaw"]
+---
+<AuthorBlock />
+
+La recente vulnerabilità Supabase MCP ha esposto un vettore di attacco critico. In questo scenario, gli agenti AI locali possono inavvertitamente divulgare l'intero database SQL. Se utilizzi il Model Context Protocol (MCP) per collegare agenti AI come [OpenClaw](/blog/cos-e-openclaw-framework) o Claude Code alla tua istanza Supabase, i tuoi dati grezzi potrebbero essere a rischio a causa di semplici prompt injection.
+
+In questa guida, ti spiegherò esattamente come funziona questa vulnerabilità Supabase MCP. Ti mostrerò come avviene la fuga di dati SQL. Ti spiegherò cosa puoi fare oggi per mettere in sicurezza il tuo ambiente locale nel 2026.
+
+## Cos'è la Vulnerabilità Supabase MCP?
+
+Il Model Context Protocol (MCP) dà agli agenti AI un accesso standardizzato a strumenti e database esterni. Tuttavia, la vulnerabilità Supabase MCP si verifica quando all'agente vengono concessi permessi `read_query` o `execute_sql` illimitati. Questo accade senza un'adeguata sanificazione.
+
+Quando un'istruzione malevola chiede all'agente di "riassumere tutte le tabelle utente", l'agente interroga legittimamente l'endpoint Supabase. Poiché la connessione MCP opera localmente con privilegi elevati, l'agente aggira le normali policy di Row Level Security (RLS) del frontend. Questo porta direttamente a un'esposizione del database SQL. È un rischio severo.
+
+<CtaCard title="Sicurezza degli Agenti AI" href="/blog/nanoclaw-alternativa-sicura-openclaw" />
+
+## Come Avviene la Fuga del Database SQL
+
+Il problema centrale risiede nel perimetro di fiducia. Gli agenti che utilizzano il connettore Supabase MCP presumono che qualsiasi query formulino sia sicura. Ecco il processo:
+
+1. **Prompt Injection**: Un utente malintenzionato nasconde un payload in un documento. L'agente lo legge.
+2. **Esecuzione MCP**: L'agente analizza il payload. Utilizza lo strumento Supabase MCP per eseguire una query.
+3. **Esfiltrazione dei Dati**: La fuga di dati SQL si verifica in questo momento. L'agente invia le righe recuperate a un server esterno tramite un semplice comando `curl`.
+
+Questo significa che anche se il tuo Supabase in produzione è sicuro, il tuo ambiente di sviluppo locale collegato tramite MCP diventa l'anello debole. Consulta i [documenti di sicurezza di Supabase](https://supabase.com/docs/guides/auth/row-level-security) ufficiali.
+
+## Proteggere OpenClaw dalla Vulnerabilità Supabase MCP
+
+Dopo aver testato a fondo la situazione, ho scoperto la migliore difesa. La difesa contro la vulnerabilità Supabase MCP è limitare l'ambito dello strumento.
+
+- **Limita i Permessi MCP**: Non dare mai al tuo agente AI chiavi del database con livello di amministratore. Utilizza un utente di sola lettura specifico per la connessione Supabase MCP.
+- **Isolamento di Rete**: Limita l'accesso di rete in uscita del tuo agente OpenClaw. In questo modo non può esfiltrare dati anche se si verifica una perdita di dati SQL.
+- **Log di Audit**: Monitora quali query SQL sta eseguendo il tuo agente.
+
+```sql
+-- Esempio di ruolo di sola lettura sicuro per MCP
+CREATE ROLE mcp_readonly_user WITH LOGIN PASSWORD 'password_sicura';
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO mcp_readonly_user;
+```
+
+Applicando queste restrizioni, puoi utilizzare Supabase in sicurezza con MCP. Eviti di rischiare una fuga di dati del database SQL. Questo rende l'architettura del tuo agente robusta.
+
+## Dettagli Tecnici della Vulnerabilità Supabase MCP
+
+Molti sviluppatori chiedono come la vulnerabilità Supabase MCP aggiri le protezioni tipiche. La risposta è l'accesso diretto al database. Quando un server MCP si connette direttamente a PostgreSQL utilizzando una stringa di connessione, ignora le protezioni dell'API REST. Ignora le regole di rete edge di Supabase.
+
+La fuga di dati del database SQL è quindi assoluta. Espone ogni tabella. Espone ogni colonna. L'agente AI, agendo su un prompt malevolo, può iterare attraverso lo schema.
+
+### Mitigare la Fuga di Dati SQL
+
+Per fermare la fuga di dati del database SQL, devi applicare limiti a livello di database. Devi usare `GRANT` e `REVOKE`. Non devi fare affidamento sul prompt di sistema dell'agente. I prompt di sistema vengono facilmente aggirati.
+
+1. Crea un ruolo specifico.
+2. Concedigli l'accesso solo alle tabelle necessarie.
+3. Testa la connessione.
+
+Questi 3 passaggi garantiscono la sicurezza.
+
+## FAQ
+
+### La vulnerabilità Supabase MCP riguarda i database in produzione?
+Colpisce principalmente gli ambienti locali e di sviluppo. Questo accade dove gli sviluppatori collegano i loro agenti AI direttamente al database. Usano chiavi API altamente privilegiate. Se quelle chiavi hanno accesso alla produzione, la produzione è a rischio.
+
+### Come prevengo una perdita di dati del database SQL tramite MCP?
+Utilizza sempre credenziali con ambito limitato e di sola lettura per la connessione MCP. Applica la Row Level Security (RLS) anche per il ruolo database dell'agente. Blocca l'uscita di rete esterna per il processo dell'agente.
+
+### OpenClaw è vulnerabile di default?
+OpenClaw in sé è sicuro. Gli strumenti a cui lo colleghi definiscono la sua superficie di attacco. Se installi un connettore Supabase MCP insicuro, l'agente eseguirà qualsiasi query SQL riceva.
+
+
+La vulnerabilità Supabase MCP rimane un problema critico per gli sviluppatori nel 2026. Mettere in sicurezza gli ambienti locali è importante quanto mettere in sicurezza gli ambienti di produzione. Quando si verifica una fuga di dati del database SQL, le conseguenze sono gravi. Valida sempre i controlli di accesso del tuo agente. Questo assicura che i tuoi dati restino al sicuro.
+
+Per riassumere, la vulnerabilità Supabase MCP richiede attenzione immediata. Non ignorare il rischio di una fuga di dati del database SQL. Segui le best practice descritte in questa guida. Usa ruoli di sola lettura. Isola le tue reti. Tieniti informato sulle ultime minacce alla sicurezza.
+
+Nel 2026, il panorama degli agenti AI si evolve rapidamente. La vulnerabilità Supabase MCP è solo un esempio dei nuovi vettori di attacco che affrontiamo. Una fuga di dati SQL può distruggere la reputazione di un'azienda. Sii proattivo. Sii sicuro.
+
+Se vuoi saperne di più sulla sicurezza dei tuoi agenti, dai un'occhiata alla nostra guida su [NanoClaw](/blog/nanoclaw-alternativa-sicura-openclaw). È un'alternativa sicura. Mitiga molti di questi rischi in modo nativo.
