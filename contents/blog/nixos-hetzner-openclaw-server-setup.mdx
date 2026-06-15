@@ -1,0 +1,109 @@
+---
+title: 'How to Deploy OpenClaw on Hetzner with NixOS in 15 Minutes'
+createdAt: '2026-06-15T00:00:00Z'
+modifiedAt: '2026-06-15T00:00:00Z'
+summary: 'Learn how to deploy a dedicated Hetzner Metal server with NixOS to run OpenClaw AI agents 24/7 securely. A practical guide to sandbox your agent hardware.'
+image: '/images/blog/nixos-hetzner-openclaw-server-setup.png'
+authorId: matteo
+locale: 'en'
+tags: ['openclaw', 'nixos', 'hetzner', 'ai agents', 'local ai']
+translationSlug: 'server-nixos-hetzner-agenti-openclaw'
+---
+
+Hosting local AI agents 24/7 is a challenge. To solve this, you need to know how to deploy openclaw on hetzner with nixos in 15 minutes. This gives you a dedicated Hetzner Metal server with NixOS to run OpenClaw securely and cost-effectively, fully sandboxed and reproducible.
+
+Physical hardware is great, but a low-cost cloud alternative gives you isolation without upfront cost.
+
+## Why Hetzner and NixOS?
+
+When you run autonomous AI agents, security and reproducibility are paramount. Hetzner Metal provides an incredibly cost-efficient platform with raw performance, which is exactly what heavy agent workloads demand. NixOS complements this perfectly. Its declarative configuration means your server state is perfectly reproducible. If an agent goes rogue or the system state drifts, a simple Nix rebuild brings everything back to a known-good baseline. 
+
+<CtaCard title="Need Help with AI Infrastructure?" description="I help companies design and deploy secure, autonomous AI architectures using OpenClaw and NixOS." ctaText="Let's Talk" ctaLink="/contact" />
+
+## Step 1: Provisioning the Hetzner Server
+
+First, you need the right hardware. For OpenClaw workloads, I recommend an AX-line server from Hetzner. These machines offer excellent single-core performance (vital for agent loops) and plenty of RAM.
+
+1. Go to the Hetzner Robot console.
+2. Select an AX server (e.g., AX41 or AX51).
+3. Opt for the default Linux rescue system - do not install a standard OS yet.
+4. Request the server and wait for the root credentials.
+
+## Step 2: Installing NixOS in Rescue Mode
+
+Once you have SSH access to the Hetzner rescue system, we will install NixOS using the declarative configuration. This is where the process becomes reproducible. 
+
+First, fetch the NixOS installation image and mount it:
+
+```bash
+curl -L https://github.com/nix-community/nixos-images/releases/download/latest/nixos-kexec-installer-x86_64-linux.tar.gz | tar -xz
+./kexec/run
+```
+
+Your SSH connection will drop as the server reboots into the NixOS installer. Reconnect using the same IP, and you will be in the NixOS live environment. Generate your hardware configuration and edit your `configuration.nix` to include SSH keys and basic networking.
+
+## Step 3: Securing the OpenClaw Environment
+
+Running agents with `--yolo` execution on a bare-metal server is a recipe for disaster. We need to use NixOS isolation. 
+
+In your `configuration.nix`, set up a dedicated user and a systemd-nspawn container for OpenClaw. This ensures the agent cannot access the host filesystem or other sensitive services.
+
+```nix
+containers.openclaw = {
+  autoStart = true;
+  privateNetwork = true;
+  config = { config, pkgs, ... }: {
+    environment.systemPackages = [ pkgs.nodejs pkgs.git ];
+    # Add OpenClaw specific configurations here
+  };
+};
+```
+
+This declarative sandbox guarantees that even if an agent hallucinates a destructive command, the damage is contained.
+
+## Step 4: Running Your First Agent
+
+With the container running, you can deploy your first OpenClaw agent. SSH into the container and set up your environment:
+
+```bash
+nixos-container root-login openclaw
+git clone https://github.com/your-repo/agent-config.git
+cd agent-config
+openclaw start --agent default
+```
+
+Your agent is now running in a 24/7 autonomous loop, safely isolated from the host. You can leave it running to process tasks, monitor APIs, or manage your workflows.
+
+
+## Advanced Configuration for OpenClaw
+
+When you deploy OpenClaw on a bare metal server, you need to think about networking and persistence. By default, NixOS makes it incredibly easy to configure a reverse proxy. If you plan to expose the OpenClaw API or use its web dashboard, you can add an Nginx configuration right into your `configuration.nix`. 
+
+To do this, simply declare your virtual host and let NixOS handle the Let's Encrypt certificates automatically. This level of declarative infrastructure is why knowing how to deploy openclaw on hetzner with nixos in 15 minutes is such a superpower in 2026. You go from zero to a secure, TLS-enabled API without manually editing a single config file on the live system.
+
+Another critical aspect is storage. OpenClaw agents generate a lot of logs and state data. You should configure a dedicated ZFS dataset or a mounted volume specifically for the container's `/var/lib/openclaw` directory. This ensures that even if you destroy and recreate the container, your agent's memory persists. I typically allocate at least 50GB of NVMe storage for this purpose.
+
+## Monitoring Your Agents
+
+Running agents 24/7 means you need visibility. While you can SSH into the container and read logs, a better approach is to integrate a monitoring stack. NixOS supports Prometheus and Grafana out of the box. By adding a few lines to your configuration, you can scrape metrics from OpenClaw and visualize them on a dashboard.
+
+This is particularly useful if you are managing a fleet of agents. You can track token usage, response times, and error rates. If you are interested in other ways to isolate agents, you might want to read about [strangeClaw and Firecracker microVMs](/blog/strangeclaw-sandboxed-openclaw-alternative-firecracker-microvm).
+
+## FAQ
+
+### Is Hetzner reliable for AI workloads?
+Yes. Hetzner offers some of the best price-to-performance ratios for dedicated servers. An AX41 server with an AMD Ryzen processor provides exceptional single-thread performance, which is ideal for running local LLMs and agent loops.
+
+### Can I run Ollama on the same NixOS server?
+Absolutely. You can declare an Ollama service in your NixOS configuration and configure OpenClaw to use it as the local provider. This keeps your entire AI stack on one machine, avoiding network latency and API costs. For more details on local models, check out [Using Ollama with OpenClaw](/blog/using-ollama-with-openclaw-en).
+
+### Why use systemd-nspawn instead of Docker?
+NixOS integrates natively with systemd-nspawn for declarative containers. It avoids the overhead and complexity of Docker daemon management while providing excellent filesystem and network isolation for your OpenClaw agents.
+
+## Next Steps for Your Agent Fleet
+
+Deploying one agent is just the beginning. With NixOS, scaling to multiple agents is as simple as defining more containers in your configuration file. You can also integrate memory tools and persistent storage securely within the declarative framework. 
+
+By combining Hetzner's raw performance with NixOS's rock-solid reproducibility, you get a production-ready OpenClaw environment that costs a fraction of a managed cloud service.
+
+<Author content="Matteo Giardino is a fractional CTO and software engineer specializing in local AI agents and reproducible infrastructure." />
