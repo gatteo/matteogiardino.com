@@ -1,0 +1,126 @@
+---
+title: "How to Build a Local Perplexity Alternative with OpenClaw and SearXNG"
+summary: "Learn how to build a local perplexity alternative with openclaw and searxng using Ollama via Docker to reclaim your privacy."
+author: "Matteo Giardino"
+authorId: "matteo"
+createdAt: "2026-06-15T00:00:00Z"
+modifiedAt: "2026-06-15T00:00:00Z"
+locale: "en"
+translationSlug: "creare-alternativa-perplexity-locale-openclaw-searxng"
+image: "/images/blog/openclaw-searxng-perplexity-alternative.png"
+---
+
+Want to run your own private version of Perplexity AI? If you are wondering how to build a local perplexity alternative with openclaw and searxng, you are in the right place. completely free from trackers and external API dependencies. 
+
+If you're tired of search engines logging your queries and AI platforms using your data for training, hosting your own search agent is the ultimate solution. By combining a [local LLM (via Ollama)](/blog/configurare-openclaw-ollama-agenti-ai-locali) and a self-hosted metasearch engine (SearXNG), you can create an autonomous research assistant that respects your privacy.
+
+<CtaCard title="Get the latest AI automation tips" description="Subscribe to my newsletter to learn how I build local AI agents and automate my workflows." buttonText="Subscribe Now" buttonLink="/newsletter" />
+
+## Why Build a Local Perplexity?
+
+Perplexity AI is a fantastic tool, but it relies on the cloud. Every search query you make is processed on external servers. If you are researching sensitive technical topics, confidential company data, or just prefer to keep your browsing habits private, you need a local alternative.
+
+With OpenClaw and an MCP (Model Context Protocol) tool, we can give a local LLM the ability to search the web in real-time. This setup gives you:
+- **Zero tracking:** No search history tied to your identity.
+- **Data privacy:** Your queries never leave your local network.
+- **Customization:** Choose exactly which search engines your AI agent queries.
+
+## What is SearXNG?
+
+SearXNG is a free, privacy-respecting metasearch engine. Instead of maintaining its own web index, it aggregates results from more than 70 search services (Google, Bing, Wikipedia, etc.) while stripping tracking identifiers. 
+
+By running SearXNG locally using Docker, we create a private search API that our OpenClaw agent can query freely, without running into rate limits or requiring paid API keys like the Google Custom Search API.
+
+## Step 1: Deploy SearXNG via Docker
+
+The easiest way to run SearXNG is through Docker Compose. Create a new directory for your SearXNG setup and create a `docker-compose.yml` file:
+
+```yaml
+version: '3.7'
+services:
+  searxng:
+    image: searxng/searxng:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./searxng:/etc/searxng
+    environment:
+      - SEARXNG_BASE_URL=http://localhost:8080/
+    restart: unless-stopped
+```
+
+Run `docker-compose up -d` to start the container. After a few seconds, you can visit `http://localhost:8080` to verify that your private search engine is running.
+
+## Step 2: Configure the SearXNG MCP for OpenClaw
+
+Now that SearXNG is running, we need to connect it to OpenClaw. We can use a custom MCP script to translate OpenClaw's tool calls into SearXNG search queries.
+
+Add the following configuration to your `~/.openclaw/openclaw.json` under the `mcpServers` block:
+
+```json
+{
+  "mcpServers": {
+    "searxng": {
+      "command": "npx",
+      "args": ["-y", "@openclaw/searxng-mcp", "--url", "http://localhost:8080", "--format", "json"]
+    }
+  }
+}
+```
+
+This tells OpenClaw to spin up the SearXNG MCP server and point it to our local Docker instance. 
+
+## Step 3: Testing the Local Search Agent
+
+Restart OpenClaw to load the new MCP configuration. Once the agent is up, you can prompt it with a research task:
+
+> "Search the web for the latest updates on the DeepSeek R1 model and summarize the findings."
+
+OpenClaw will automatically decide to use the SearXNG tool, fetch the search results from your local instance, read the top pages, and synthesize an answer - just like Perplexity, but entirely local.
+
+If you combine this setup with a strong local model like Qwen 2.5 Coder or Llama 3 via Ollama, you get a highly capable research assistant with zero recurring costs.
+
+
+## How OpenClaw MCP Solves the Web Search Problem
+
+When building a local agent, the hardest part is giving it access to real-time information without breaking the local-first rule. Traditionally, developers would use the Google Custom Search API or Tavily, but these require API keys and cost money at scale. By using the Model Context Protocol (MCP), OpenClaw can seamlessly bridge the gap between your local LLM and SearXNG. 
+
+If you want to read more about how MCP works, check out my guide on [OpenClaw Telemetry and Schema Detection MCP](/blog/openclaw-telemetry-schema-mcp). MCP standardizes the tool-calling interface, meaning your AI agent understands exactly how to format the search queries and parse the JSON results returned by SearXNG. This is the exact same architecture used by Claude Code, but fully open-source and running on your own hardware.
+
+## Advanced Configuration: Customizing SearXNG Engines
+
+SearXNG allows you to enable or disable specific search engines. For a research assistant, you might want to prioritize academic sources or developer docs. You can edit the `settings.yml` file in your SearXNG docker volume:
+
+```yaml
+engines:
+  - name: google
+    engine: google
+    shortcut: go
+  - name: github
+    engine: github
+    shortcut: gh
+  - name: arxiv
+    engine: arxiv
+    shortcut: ar
+```
+
+This flexibility is why figuring out how to build a local perplexity alternative with openclaw and searxng is such a game-changer for developers in 2026. You control the index. For more details on setting up your local environment, you can refer to my comprehensive tutorial on [how to configure OpenClaw with Ollama](/blog/configurare-openclaw-ollama-agenti-ai-locali) which covers the prerequisites. You can also explore the [official SearXNG documentation](https://docs.searxng.org/) for advanced configurations.
+
+## FAQ
+
+**Is it really free to run a local Perplexity alternative?**
+Yes. Both OpenClaw and SearXNG are open-source and free. You only pay for the electricity to run your local hardware (like a Mac Mini or a PC with a good GPU).
+
+**Can I use this setup on macOS?**
+Absolutely. Docker Desktop works perfectly on Apple Silicon, and Ollama is highly optimized for M-series chips. In fact, many 2026 workflows rely on Mac Minis as local AI servers.
+
+**How does the speed compare to cloud-based Perplexity AI?**
+It depends on your hardware. A local Llama 3 8B model will generate text slightly slower than OpenAI's servers, but the search retrieval via SearXNG is typically instant. The trade-off is absolute privacy.
+
+## Conclusion
+
+Building a local Perplexity alternative is easier than ever thanks to OpenClaw's MCP architecture. By connecting open-source tools like SearXNG and local models, we can reclaim our privacy while maintaining the convenience of AI-powered web search.
+
+If you are just getting started with local AI, I highly recommend checking out my guide on configuring OpenClaw with Ollama to set up the foundation for your local agents.
+
+*Written by Matteo Giardino. Matteo is a software engineer and AI enthusiast building open-source agent workflows. He runs matteogiardino.com to share practical insights on applied AI.*

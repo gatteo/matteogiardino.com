@@ -1,0 +1,126 @@
+---
+title: "Come Creare un'Alternativa a Perplexity Locale con OpenClaw e SearXNG"
+summary: "Scopri come creare un'alternativa a perplexity locale con openclaw e searxng usando Ollama via Docker per riprenderti la tua privacy."
+author: "Matteo Giardino"
+authorId: "matteo"
+createdAt: "2026-06-15T00:00:00Z"
+modifiedAt: "2026-06-15T00:00:00Z"
+locale: "it"
+translationSlug: "openclaw-searxng-perplexity-alternative"
+image: "/images/blog/creare-alternativa-perplexity-locale-openclaw-searxng.png"
+---
+
+Vuoi eseguire la tua versione privata di Perplexity AI? Se ti stai chiedendo come creare un'alternativa a perplexity locale con openclaw e searxng, sei nel posto giusto. completamente libera da tracciatori e dipendenze da API esterne.
+
+Se sei stanco dei motori di ricerca che registrano le tue query e delle piattaforme AI che usano i tuoi dati per l'addestramento, ospitare il tuo agente di ricerca personale è la soluzione definitiva. Combinando un [LLM locale (tramite Ollama)](/blog/configurare-openclaw-ollama-agenti-ai-locali) e un motore di ricerca aggregato self-hosted (SearXNG), puoi creare un assistente di ricerca autonomo che rispetta la tua privacy.
+
+<CtaCard title="Ricevi gli ultimi consigli sull'automazione AI" description="Iscriviti alla mia newsletter per scoprire come costruisco agenti AI locali e automatizzo i miei flussi di lavoro." buttonText="Iscriviti Ora" buttonLink="/newsletter" />
+
+## Perché Costruire un Perplexity Locale?
+
+Perplexity AI è uno strumento fantastico, ma dipende dal cloud. Ogni ricerca che fai viene elaborata su server esterni. Se fai ricerche su argomenti tecnici sensibili, dati aziendali confidenziali, o semplicemente preferisci mantenere private le tue abitudini di navigazione, ti serve un'alternativa locale.
+
+Con OpenClaw e uno strumento MCP (Model Context Protocol), possiamo dare a un LLM locale la capacità di cercare sul web in tempo reale. Questa configurazione ti offre:
+- **Zero tracciamento:** Nessuna cronologia di ricerca legata alla tua identità.
+- **Privacy dei dati:** Le tue query non escono mai dalla tua rete locale.
+- **Personalizzazione:** Scegli esattamente quali motori di ricerca interroga il tuo agente AI.
+
+## Cos'è SearXNG?
+
+SearXNG è un motore di metaricerca gratuito che rispetta la privacy. Invece di mantenere un proprio indice web, aggrega i risultati da oltre 70 servizi di ricerca (Google, Bing, Wikipedia, ecc.) eliminando gli identificatori di tracciamento.
+
+Eseguendo SearXNG localmente tramite Docker, creiamo un'API di ricerca privata che il nostro agente OpenClaw può interrogare liberamente, senza incorrere in limiti di traffico o richiedere chiavi API a pagamento come le API di Google Custom Search.
+
+## Passo 1: Distribuire SearXNG via Docker
+
+Il modo più semplice per eseguire SearXNG è attraverso Docker Compose. Crea una nuova directory per la tua configurazione e crea un file `docker-compose.yml`:
+
+```yaml
+version: '3.7'
+services:
+  searxng:
+    image: searxng/searxng:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./searxng:/etc/searxng
+    environment:
+      - SEARXNG_BASE_URL=http://localhost:8080/
+    restart: unless-stopped
+```
+
+Esegui `docker-compose up -d` per avviare il container. Dopo pochi secondi, potrai visitare `http://localhost:8080` per verificare che il tuo motore di ricerca privato sia attivo.
+
+## Passo 2: Configurare l'MCP di SearXNG per OpenClaw
+
+Ora che SearXNG è in esecuzione, dobbiamo collegarlo a OpenClaw. Possiamo usare uno script MCP personalizzato per tradurre le chiamate agli strumenti di OpenClaw in query di ricerca su SearXNG.
+
+Aggiungi la seguente configurazione al tuo file `~/.openclaw/openclaw.json` sotto il blocco `mcpServers`:
+
+```json
+{
+  "mcpServers": {
+    "searxng": {
+      "command": "npx",
+      "args": ["-y", "@openclaw/searxng-mcp", "--url", "http://localhost:8080", "--format", "json"]
+    }
+  }
+}
+```
+
+Questo dice a OpenClaw di avviare il server MCP di SearXNG e puntarlo alla nostra istanza Docker locale.
+
+## Passo 3: Testare l'Agente di Ricerca Locale
+
+Riavvia OpenClaw per caricare la nuova configurazione MCP. Una volta che l'agente è attivo, puoi dargli un compito di ricerca:
+
+> "Cerca sul web gli ultimi aggiornamenti sul modello DeepSeek R1 e riassumi i risultati."
+
+OpenClaw deciderà automaticamente di usare lo strumento SearXNG, recupererà i risultati della ricerca dalla tua istanza locale, leggerà le pagine principali e sintetizzerà una risposta - proprio come Perplexity, ma in modo interamente locale.
+
+Se combini questa configurazione con un modello locale potente come Qwen 2.5 Coder o Llama 3 via Ollama, ottieni un assistente di ricerca altamente capace con zero costi ricorrenti.
+
+
+## Come l'MCP di OpenClaw Risolve il Problema della Ricerca Web
+
+Quando si costruisce un agente locale, la parte più difficile è dargli accesso alle informazioni in tempo reale senza violare la regola del "local-first". Tradizionalmente, gli sviluppatori usavano le API di Google Custom Search o Tavily, ma queste richiedono chiavi API e costano denaro su larga scala. Utilizzando il Model Context Protocol (MCP), OpenClaw può colmare perfettamente il divario tra il tuo LLM locale e SearXNG.
+
+Se vuoi leggere come funziona l'MCP, dai un'occhiata alla mia guida su [OpenClaw Telemetry e Schema Detection MCP](/blog/openclaw-telemetry-schema-mcp). L'MCP standardizza l'interfaccia di chiamata agli strumenti, il che significa che il tuo agente AI capisce esattamente come formattare le query di ricerca e analizzare i risultati JSON restituiti da SearXNG. Questa è l'esatta architettura usata da strumenti commerciali, ma completamente open-source e in esecuzione sul tuo hardware nel 2026.
+
+## Configurazione Avanzata: Personalizzare i Motori di SearXNG
+
+SearXNG ti permette di abilitare o disabilitare specifici motori di ricerca. Per un assistente di ricerca, potresti voler dare priorità a fonti accademiche o documentazione per sviluppatori. Puoi modificare il file `settings.yml` nel tuo volume docker di SearXNG:
+
+```yaml
+engines:
+  - name: google
+    engine: google
+    shortcut: go
+  - name: github
+    engine: github
+    shortcut: gh
+  - name: arxiv
+    engine: arxiv
+    shortcut: ar
+```
+
+Questa flessibilità è il motivo per cui capire come creare un'alternativa a perplexity locale con openclaw e searxng rappresenta una svolta per gli sviluppatori. Hai il controllo dell'indice. Per maggiori dettagli su come impostare il tuo ambiente locale, puoi fare riferimento al mio tutorial completo su [come configurare OpenClaw con Ollama](/blog/configurare-openclaw-ollama-agenti-ai-locali) che copre i prerequisiti. Puoi anche esplorare la [documentazione ufficiale di SearXNG](https://docs.searxng.org/) per configurazioni avanzate.
+
+## FAQ
+
+**È davvero gratuito eseguire un'alternativa locale a Perplexity?**
+Sì. Sia OpenClaw che SearXNG sono open-source e gratuiti. Paghi solo per l'elettricità per far funzionare il tuo hardware locale.
+
+**Posso usare questa configurazione su macOS?**
+Assolutamente. Docker Desktop funziona perfettamente su Apple Silicon, e Ollama è altamente ottimizzato per i chip della serie M. Infatti, molti flussi di lavoro del 2026 si basano sui Mac Mini come server AI locali.
+
+**Come si confronta la velocità con Perplexity AI basato sul cloud?**
+Dipende dal tuo hardware. Un modello locale Llama 3 8B genererà testo un po' più lentamente rispetto ai server di OpenAI, ma il recupero della ricerca tramite SearXNG è tipicamente istantaneo. Il compromesso è la privacy assoluta.
+
+## Conclusione
+
+Costruire un'alternativa locale a Perplexity è più facile che mai grazie all'architettura MCP di OpenClaw. Collegando strumenti open-source come SearXNG e modelli locali, possiamo riappropriarci della nostra privacy mantenendo la comodità della ricerca web potenziata dall'AI.
+
+Se hai appena iniziato con l'AI locale, ti consiglio vivamente di dare un'occhiata alla mia guida su come configurare OpenClaw con Ollama per preparare le basi per i tuoi agenti locali.
+
+*Scritto da Matteo Giardino. Matteo è un software engineer e appassionato di AI che costruisce flussi di lavoro open-source per agenti. Gestisce matteogiardino.com per condividere approfondimenti pratici sull'AI applicata.*
