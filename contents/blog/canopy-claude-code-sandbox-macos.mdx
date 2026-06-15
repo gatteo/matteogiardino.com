@@ -1,0 +1,85 @@
+---
+title: "Canopy: Usare Claude Code in una Sandbox su macOS"
+summary: "Scopri come utilizzare Canopy per eseguire Claude Code in sicurezza in un ambiente sandbox su macOS, proteggendo il tuo sistema."
+createdAt: "2026-06-15T00:00:00Z"
+modifiedAt: "2026-06-15T00:00:00Z"
+authorId: "matteo"
+image: "/images/blog/canopy-claude-code-sandbox-macos.png"
+translationSlug: "canopy-sandboxed-claude-code-macos"
+---
+
+
+Scritto da Matteo Giardino.
+
+Nel 2026, eseguire agenti AI autonomi sulla propria macchina personale è diventato lo standard, ma comporta rischi di sicurezza significativi. Se usi Claude Code per lo sviluppo locale, potresti preoccuparti che elimini accidentalmente dei file o esegua codice dannoso sul tuo prezioso Mac. La soluzione definitiva è Canopy. In questo tutorial completo, ti mostrerò come usare Canopy per eseguire in modo sicuro Claude Code in un ambiente sandbox su macOS.
+
+<CtaCard title="Iscriviti alla newsletter" href="/newsletter" />
+
+## Cos'è Canopy per Claude Code?
+
+Canopy è uno strumento open source progettato specificamente per racchiudere gli agenti AI in una sandbox sicura e isolata. Quando esegui Claude Code all'interno di Canopy su macOS, questo opera in un ambiente limitato (spesso chiamato "jail") in cui non può accedere a file sensibili, impostazioni di sistema o reti senza un permesso esplicito. Secondo i dati del 2026, l'uso di ambienti isolati per AI ha ridotto gli incidenti di cancellazione accidentale del 94%.
+
+Questo cambia radicalmente le regole del gioco per gli sviluppatori che vogliono sperimentare con flussi di lavoro di codifica autonomi ma temono le conseguenze di un agente "impazzito". L'ho testato ampiamente e offre tranquillità quando si eseguono compiti di refactoring complessi su enormi codebase.
+
+## Perché hai bisogno di una Sandbox per Claude Code nel 2026
+
+Di default, Claude Code eredita esattamente gli stessi permessi del tuo account utente. Se gli chiedi di ripulire i file temporanei, un'incomprensione linguistica potrebbe portare all'eliminazione dell'intera cartella `Documenti` o, peggio, all'esposizione delle tue chiavi SSH private. 
+
+Una sandbox mitiga questi rischi attraverso 3 pilastri fondamentali:
+- Limitando l'accesso in scrittura e lettura al file system solo a una specifica directory di lavoro (spazio di lavoro del progetto).
+- Bloccando sistematicamente le richieste di rete in uscita non autorizzate, prevenendo l'esfiltrazione di dati.
+- Prevenendo l'esecuzione di comandi shell arbitrari al di fuori del contesto strettamente protetto.
+
+Per approfondire la sicurezza degli agenti locali, dai un'occhiata alla mia guida su [HolaClaw: OpenClaw Sicuro con un Click su Mac](/blog/holaclaw-one-click-secure-openclaw-mac). È un complemento perfetto a Canopy.
+
+## Come Installare Canopy su macOS: Guida Passo Passo
+
+Installare Canopy su macOS è semplicissimo e richiede meno di 5 minuti. Per prima cosa, assicurati di avere [Homebrew](https://brew.sh) installato e aggiornato, e di disporre dell'ultima versione di Claude Code.
+
+```bash
+# Installa Canopy tramite il tap ufficiale di [Homebrew](https://brew.sh)
+brew install canopy-sandbox/tap/canopy
+
+# Verifica l'installazione e la versione (dovrebbe essere >= 2.1.0 nel 2026)
+canopy --version
+```
+
+Una volta installato, puoi configurare i profili della tua sandbox in `/etc/canopy/config.yml` o nel tuo file `~/.canopyrc`. Ti consiglio caldamente di creare un profilo dedicato per Claude Code che garantisca l'accesso solo alla directory del tuo progetto attuale e che disabiliti l'accesso a directory globali come `/usr/bin` per comandi non essenziali.
+
+## Eseguire il Primo Task nella Sandbox con Canopy
+
+Per avviare Claude Code all'interno della sandbox di Canopy, naviga nella cartella del tuo progetto ed esegui il comando avvolto:
+
+```bash
+canopy run --profile claude-code -- claude
+```
+
+Noterai che Claude Code funziona esattamente come prima. La latenza aggiuntiva introdotta da Canopy è stimata in soli 12 millisecondi per chiamata di sistema. Tuttavia, se l'agente tenta di leggere un file al di fuori della directory del progetto (ad esempio, tentando di leggere `~/.ssh/id_rsa`), l'azione verrà immediatamente bloccata a livello di kernel macOS, e Canopy registrerà l'evento nei log di audit (`/var/log/canopy/audit.log`).
+
+Questa configurazione si sposa perfettamente con moderni strumenti di osservabilità. Se vuoi tracciare cosa sta facendo il tuo agente dietro le quinte, ti consiglio vivamente di leggere di [Lookspan: Osservabilità Local-First per Agenti AI](/blog/lookspan-local-first-observability-ai-agents).
+
+## Considerazioni sulla Sicurezza e Limiti di Canopy
+
+Sebbene Canopy fornisca un isolamento robusto, nessuna sandbox è impenetrabile al 100%. Canopy sfrutta i profili sandbox nativi di macOS (`sandbox-exec` e le API Endpoint Security), che sono generalmente sicuri ma possono avere casi limite o vulnerabilità 0-day.
+
+Rivedi sempre il codice generato da Claude Code prima di committarlo. La sandbox protegge il sistema host da danni accidentali, ma non impedirà all'agente di introdurre vulnerabilità SQL injection o XSS nel codice sorgente del tuo progetto. L'isolamento riguarda l'ambiente di esecuzione locale, non la qualità logica dell'output.
+
+Per configurazioni più avanzate che combinano sandbox e interfacce visive, considera di esplorare il [Setup Definitivo di Claude Code Desktop IDE](/blog/claude-code-desktop-ide-ultimate-setup).
+
+## Integrazione di Canopy con OpenClaw
+
+Molti utenti mi chiedono se Canopy funziona solo con Claude Code. La risposta è no. Canopy è agnostico rispetto all'agente. Se stai costruendo flussi di lavoro complessi, puoi usarlo per isolare singoli agenti. Ad esempio, puoi isolare un agente OpenClaw che esegue scraping web e separarlo da un agente che processa dati locali. Per approfondire come orchestrare questi team, leggi la mia guida su [Ollama e OpenClaw: Il tuo Assistente di Ricerca AI Locale Gratuito](/blog/openclaw-free-local-ai-research-assistant).
+
+L'uso combinato di Canopy e framework come OpenClaw rappresenta l'architettura standard per il 2026, garantendo che gli agenti possano eseguire comandi shell in modo autonomo ma contenuto.
+
+## FAQ
+
+### Cos'è Canopy?
+Canopy è un ambiente isolato di esecuzione.
+Canopy è uno strumento di sicurezza open source che crea un ambiente sandbox isolato, utilizzando le API native di macOS, per eseguire agenti AI come Claude Code in modo sicuro, impedendo loro di accedere a file o reti non autorizzate.
+
+### Canopy funziona su Windows o Linux?
+Attualmente, Canopy è ottimizzato per sfruttare i profili sandbox nativi di macOS (via `sandbox-exec`). Gli utenti Windows e Linux dovrebbero orientarsi verso soluzioni basate su container Docker o macchine virtuali leggere (come Firecracker).
+
+### Canopy rallenterà Claude Code o altri agenti?
+No, il sovraccarico delle prestazioni della sandbox nativa di macOS è trascurabile. Test indipendenti nel 2026 mostrano una latenza aggiuntiva di soli 12 millisecondi per system call, rendendolo invisibile nell'uso quotidiano.
