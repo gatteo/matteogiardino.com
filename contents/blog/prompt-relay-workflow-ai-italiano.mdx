@@ -1,0 +1,85 @@
+---
+title: 'Prompt Relay: Come Strutturare Workflow AI Complessi'
+createdAt: '2026-06-16T00:00:00Z'
+modifiedAt: '2026-06-16T00:00:00Z'
+summary: 'Scopri come implementare il pattern Prompt Relay per costruire workflow multi-agente affidabili ed evitare il collasso del contesto nei LLM.'
+image: '/images/blog/prompt-relay-workflow-ai-italiano.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw']
+translationSlug: 'prompt-relay-ai-workflow'
+---
+
+Dopo aver lottato con agenti AI che perdevano il focus su task lunghi, ho implementato il pattern Prompt Relay. Il Prompt Relay è un design pattern in cui l'output di un agente viene formattato e passato come prompt di input per l'agente successivo, prevenendo il blocco del contesto e migliorando l'affidabilità.
+
+## Cos'è il Prompt Relay nei Workflow AI?
+
+Il Prompt Relay è un'architettura per agenti autonomi che suddivide task complessi in passaggi isolati. Invece di dare a un singolo agente un prompt enorme sperando che completi un processo in 10 step, si concatenano agenti specializzati. Ogni agente completa un singolo task e genera un riassunto strutturato che funge da "testimone" (o prompt di partenza) per l'agente successivo.
+
+Questo risolve il problema principale degli agenti monolitici: il collasso del contesto. Quando un LLM deve gestire troppe istruzioni, strumenti e la cronologia della conversazione, perde il filo del discorso.
+
+<CtaCard
+    title="Hai bisogno di aiuto con i workflow AI?"
+    description="Contattami per una consulenza sull'implementazione di agenti AI personalizzati nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Perché i Prompt Singoli Falliscono su Larga Scala
+
+Quando ho iniziato a costruire agenti locali con OpenClaw, cercavo di inserire tutta la mia logica in un unico system prompt. L'agente doveva recuperare dati, analizzarli, scrivere codice ed eseguire test.
+
+Ecco cosa andava storto:
+1. **Istruzioni Perse:** L'agente dimenticava le regole all'inizio del prompt.
+2. **Esaurimento del Context Window:** La cronologia della conversazione diventava troppo grande, portando a timeout API e costi enormi.
+3. **Confusione con i Tool:** Avendo 20 tool a disposizione, l'agente allucinava gli argomenti o usava lo strumento sbagliato.
+
+Il Prompt Relay risolve questo problema dando a ogni agente un context window pulito e solo i tool di cui ha bisogno per la sua fase specifica.
+
+## Implementare il Pattern Prompt Relay
+
+### Step 1: L'Agente Dispatcher
+
+Il primo agente nella staffetta è il dispatcher. Il suo unico compito è capire l'intento dell'utente e scrivere il prompt per il primo worker specializzato.
+
+```json
+{
+  "role": "Ricercatore",
+  "task": "Trova l'ultima documentazione sulle integrazioni MCP di OpenClaw.",
+  "output_format": "Lista in Markdown degli endpoint API."
+}
+```
+
+### Step 2: L'Agente Worker
+
+L'agente worker prende il testimone, esegue il task usando i suoi tool specifici e poi riassume ciò che ha trovato. Fondamentalmente, non conserva la cronologia della conversazione. Restituisce uno stato finale.
+
+### Step 3: L'Agente Synthesizer
+
+L'agente finale prende gli output dei worker e formatta il risultato da consegnare all'utente.
+
+## OpenClaw e il Prompt Relay
+
+Usando framework come OpenClaw, implementare il Prompt Relay è intuitivo. Puoi orchestrare più agenti usando uno script supervisore che gestisce il passaggio del testimone. Questo è estremamente efficace se combinato con modelli locali come Qwen o Llama eseguiti su Ollama, dove le finestre di contesto sono più piccole e l'affidabilità è fondamentale.
+
+## Domande Frequenti
+
+### Cos'è un Prompt Relay?
+
+Il Prompt Relay è un design pattern per agenti AI in cui i task vengono suddivisi, e l'output di un agente diventa il prompt di input esplicito per il successivo, prevenendo il sovraccarico di contesto.
+
+### Perché non usare un singolo agente?
+
+I singoli agenti soffrono del collasso del contesto quando gestiscono task complessi in più fasi. Dimenticano le istruzioni, allucinano e diventano inaffidabili nelle conversazioni lunghe.
+
+### Posso eseguire il Prompt Relay localmente?
+
+Sì. Framework come OpenClaw e server locali come Ollama ti permettono di eseguire più agenti specializzati sul tuo hardware, passando il contesto tra di loro in modo efficiente.
+
+## Conclusione
+
+Il Prompt Relay è l'anello mancante tra le demo AI e i workflow per la produzione. Isolando il contesto e specializzando gli agenti, aumenti drasticamente l'affidabilità.
+
+*Scritto da Matteo Giardino, CTO e founder. Sviluppo agenti AI per le PMI in Italia. [I miei progetti](/projects).*

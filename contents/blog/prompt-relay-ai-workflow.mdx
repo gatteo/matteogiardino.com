@@ -1,0 +1,85 @@
+---
+title: 'Prompt Relay: How to Structure Complex AI Agent Workflows'
+createdAt: '2026-06-16T00:00:00Z'
+modifiedAt: '2026-06-16T00:00:00Z'
+summary: 'Learn how to implement the Prompt Relay pattern to build reliable, multi-step AI agent workflows and avoid single-prompt context collapse.'
+image: '/images/blog/prompt-relay-ai-workflow.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw']
+translationSlug: 'prompt-relay-workflow-ai-italiano'
+---
+
+After struggling with AI agents losing focus on long tasks, I implemented the Prompt Relay pattern. Prompt Relay is an AI workflow design where the output of one agent is systematically reformatted and passed as the precise input prompt for the next agent, preventing context bloat and improving reliability.
+
+## What is Prompt Relay in AI Workflows?
+
+Prompt Relay is an architectural pattern for autonomous agents that breaks complex tasks into isolated steps. Instead of giving one agent a massive prompt and hoping it completes a 10-step process, you chain specialized agents together. Each agent completes a single task and generates a structured summary that serves as the "relay baton" or starting prompt for the next agent.
+
+This solves the biggest problem with monolithic agents: context collapse. When an LLM juggles too many instructions, tools, and past conversation turns, it loses the plot. 
+
+<CtaCard
+    title="Need help with AI workflows?"
+    description="Get in touch for a consultation on implementing custom AI agents in your business."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/en/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Why Single Prompts Fail at Scale
+
+When I first started building local agents with OpenClaw, I tried putting all my logic into a single system prompt. The agent had to fetch data, parse it, write code, and run tests.
+
+Here is what went wrong:
+1. **Lost Instructions:** The agent forgot rules from the beginning of the prompt.
+2. **Context Window Exhaustion:** The conversation history grew too large, leading to API timeouts and massive token costs.
+3. **Tool Confusion:** With 20 tools available, the agent would hallucinate tool arguments or use the wrong tool.
+
+Prompt Relay fixes this by giving each agent a clean context window and only the tools it needs for its specific phase.
+
+## Implementing the Prompt Relay Pattern
+
+### Step 1: The Dispatcher Agent
+
+The first agent in the relay is the dispatcher. Its only job is to understand the user's intent and write the prompt for the first specialized worker. 
+
+```json
+{
+  "role": "Researcher",
+  "task": "Find the latest documentation on OpenClaw MCP integrations.",
+  "output_format": "Markdown list of API endpoints."
+}
+```
+
+### Step 2: The Worker Agent
+
+The worker agent takes the baton, executes the task using its specific tools, and then summarizes its findings. Crucially, it does not hold onto the conversation history. It outputs a final state.
+
+### Step 3: The Synthesizer Agent
+
+The final agent takes the outputs from the workers and formats the final deliverable.
+
+## OpenClaw and Prompt Relay
+
+Using frameworks like OpenClaw, implementing Prompt Relay is straightforward. You can orchestrate multiple agents using a supervisor script that handles the passing of the baton. This is highly effective when combined with local models like Qwen or Llama running on Ollama, where context windows are smaller and reliability is paramount.
+
+## FAQ
+
+### What is a Prompt Relay?
+
+Prompt Relay is a design pattern for AI agents where tasks are broken down, and the output of one agent becomes the explicit input prompt for the next, preventing context overload.
+
+### Why not use a single agent?
+
+Single agents suffer from context collapse when handling complex, multi-step tasks. They forget instructions, hallucinate, and become unreliable over long conversations.
+
+### Can I run Prompt Relay locally?
+
+Yes. Frameworks like OpenClaw and local servers like Ollama allow you to run multiple specialized agents on your own hardware, passing context between them efficiently.
+
+## Wrap-up
+
+Prompt Relay is the missing link between toy AI demos and production-ready agent workflows. By isolating context and specializing agents, you drastically increase reliability. 
+
+*Written by Matteo Giardino, CTO and founder. I build AI agents for SMEs in Italy. [My projects](/en/projects).*
