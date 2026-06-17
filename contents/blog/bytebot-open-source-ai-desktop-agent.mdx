@@ -1,0 +1,92 @@
+---
+title: 'ByteBot: The First Open Source and Secure AI Desktop Agent'
+createdAt: '2026-06-17T00:00:00Z'
+modifiedAt: '2026-06-17T00:00:00Z'
+summary: 'I tested ByteBot, the new open source desktop AI agent. Here is how it works in a sandboxed environment and why it changes desktop automation.'
+image: '/images/blog/bytebot-open-source-ai-desktop-agent.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'ai agents', 'open source']
+translationSlug: 'bytebot-agente-ai-desktop-open-source'
+---
+
+I have been running local AI agents for over two years on my Mac Mini, but most are confined to the terminal or the browser (as I discussed when exploring [UI-TARS: Open Source AI Browser Agent](/en/blog/ui-tars-open-source-ai-agent-browser-desktop)). **ByteBot** changes the rules: it is an open-source desktop agent capable of moving the mouse, reading the screen, and navigating autonomously to complete tasks, just like a human operator.
+
+Today I will show you what it is, how I set it up to run securely, and why this sandboxed approach is the only viable path to automate desktop tasks without risking your personal data.
+
+## What is ByteBot and why it's different
+
+ByteBot is not your usual chat assistant. It is a fundamental piece for anyone looking to [Build an AI Workforce: A CIO and CTO Guide to OpenClaw](/en/blog/cio-cto-guide-ai-workforce-openclaw). It is an open-source agentic system designed to automate processes on the desktop and web by leveraging multimodal LLMs capable of "seeing" the screen. Unlike closed-source tools that integrate at the OS level without true transparency, ByteBot runs in an isolated container or virtual environment, giving you full control.
+
+Instead of interacting solely via text APIs, ByteBot uses visual coordinates to click, type, and navigate interfaces that were never designed for bots. This makes it ideal for QA testing, legacy software automation, or repetitive data research.
+
+<CtaCard title="Join our community" description="Want to discuss ByteBot and local AI agents? Join our Telegram channel!" buttonText="Join now" href="https://t.me/matteogiardino" />
+
+## Architecture: Virtual Desktop and Security
+
+The real strength of ByteBot lies in how it handles security. When an agent can click anywhere, an AI hallucination could easily delete important files or send unintended emails.
+
+ByteBot solves this problem by using an **isolated virtual desktop** (often via Docker or virtualized sessions). The agent does not use your personal desktop:
+1. It creates a virtual instance (like an Xvfb display or containerized environment).
+2. It opens the browser and apps strictly within that isolated context.
+3. Developers can monitor execution in real time via VNC.
+
+This way, if anything goes wrong, your personal files and logged-in sessions remain completely safe.
+
+## Step-by-Step Installation
+
+Installing ByteBot is straightforward if you are familiar with Python and Docker. Here are the exact commands I ran on my setup:
+
+```bash
+# 1. Clone the official repository
+git clone https://github.com/bytebot/bytebot.git
+cd bytebot
+
+# 2. Configure the virtual environment
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+# 3. Start the isolated environment via Docker (recommended)
+docker-compose up -d
+```
+
+Once started, you will need to configure your API keys or point it towards a local model like **Qwen-VL** or **Llama-3-Vision** (via Ollama) if you want a 100% local, zero-cost setup.
+
+## Field Test: Searches and System Ops
+
+I tested ByteBot by asking it to complete a specific task: *"Search for the cheapest flight from Milan to New York for next month on a specific travel site, and save the results in a CSV file."*
+
+The result was impressive:
+1. It opened the browser in the virtual desktop.
+2. It navigated the site, visually accepting cookies.
+3. It filled out the search forms using screen selectors.
+4. It extracted the pricing data and generated the requested file.
+
+It took about 3 minutes—slower than a direct API—but it achieved the goal without needing any specialized endpoints or software integrations. Everything was purely visual.
+
+## API Costs, Local Models, and Limitations
+
+The current true limit of these multimodal agents is API cost. Models like GPT-4o or Claude 3.5 Sonnet (which excel at vision) consume a lot of tokens when sending continuous screenshots to parse the screen state.
+
+To cut costs, I highly recommend configuring ByteBot with a local model. By running `ollama run qwen2-vl` on my server, operations are slower but entirely free and private. Keep in mind that current open-source models might struggle on highly complex visual interfaces, requiring much more precise prompting.
+
+## Conclusion: Is it worth it?
+
+Absolutely. If you are a developer or a CTO looking to explore next-generation RPA (Robotic Process Automation), ByteBot provides a transparent and secure architecture to get started.
+
+It is not yet ready to replace your critical production workflows without supervision, but it is the best open-source starting point I have tested this year for vision-based automation.
+
+## Frequently Asked Questions (FAQ)
+
+**What is ByteBot?**
+ByteBot is an open-source AI agent designed to automate desktop and web processes by visually interacting with interfaces just like a human user would, officially launched and gaining traction in 2026.
+
+**Is ByteBot safe for my personal data?**
+Yes, provided it is configured inside a virtual desktop or container (e.g., via Docker or Xvfb). This ensures the agent has no access to your personal files or active logged-in sessions on your main host.
+
+**Can I use ByteBot with free AI models?**
+Absolutely. You can configure ByteBot to use local open-source vision models like Qwen2-VL via Ollama, reducing API costs by 100% compared to using commercial models like GPT-4o.
+
+***
+**Author:** Matteo Giardino is a Fractional CTO who helps companies securely and efficiently integrate AI and automation by building agentic solutions on local and open-source servers.
