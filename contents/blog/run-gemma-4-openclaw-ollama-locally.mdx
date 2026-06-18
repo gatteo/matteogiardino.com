@@ -1,0 +1,85 @@
+---
+title: "How to Run Gemma 4 Locally with OpenClaw and Ollama"
+description: "A complete tutorial on setting up Google's Gemma 4 9B model locally on your machine using Ollama, and integrating it with OpenClaw agents without any API keys or costs."
+date: "2026-06-18"
+locale: "en"
+translationSlug: "eseguire-gemma-4-locale-openclaw-ollama"
+tags: ["ai", "openclaw", "tutorial", "ollama"]
+---
+
+Looking to run Google's latest open-weights model on your own hardware? In this guide, I'll show you exactly how to set up Gemma 4 locally using Ollama and connect it to your OpenClaw agents. It's fast, private, and costs absolutely nothing in API fees.
+
+The release of Gemma 4 has shifted the landscape for local AI. With its 9B parameter version offering near-GPT-4o capabilities in reasoning, it's the perfect sweet spot for developers wanting a smart local assistant without needing a server rack. After testing it extensively on my Mac Studio, I've found it outperforms both Llama 3 8B and Qwen 2.5 for OpenClaw agent tasks.
+
+Here is how you can set it up in under 5 minutes.
+
+<CtaCard title="Need to orchestrate multiple local agents?" description="Check out how OpenClaw makes it easy." ctaText="Read the Guide" ctaLink="/blog/master-openclaw-system-prompts-local-agents" />
+
+## Why Gemma 4 is Perfect for Local Agents
+
+Running local agents requires a model that is both fast enough to not leave you waiting and smart enough to handle JSON outputs reliably. Gemma 4 excels at both. 
+
+Its memory footprint is surprisingly efficient—the 4-bit quantized version runs comfortably on machines with just 8GB of VRAM or Unified Memory. When connected to OpenClaw, it follows multi-step tool-use instructions almost flawlessly.
+
+## Hardware Prerequisites
+
+Before we start, ensure your machine meets the minimum requirements:
+- **Mac:** M1/M2/M3/M4 with at least 16GB of Unified Memory (8GB works but will be slow for 9B).
+- **Windows/Linux:** An NVIDIA GPU with at least 8GB VRAM (RTX 3060, 4060, etc.) or 16GB system RAM if running on CPU.
+- Storage: About 6GB of free disk space for the quantized model weights.
+
+## Step 1: Install Ollama and Pull Gemma 4
+
+Ollama is the easiest way to run local LLMs. If you haven't installed it yet, head over to [ollama.com](https://ollama.com) and grab the installer.
+
+Once installed, open your terminal and run:
+
+```bash
+ollama run gemma4
+```
+
+Ollama will automatically download the default 9B instruct model (usually a 4-bit quantization). Wait for the download to finish. Once it drops you into the `>>>` prompt, test it by typing `hello!`. If it replies, your local AI server is up and running.
+
+## Step 2: Configure OpenClaw to Use Ollama
+
+OpenClaw supports Ollama out of the box. You just need to tell your agent configuration to route requests to your local Ollama server instead of an external API like OpenAI or Anthropic.
+
+Open your `openclaw.json` or your specific agent configuration file.
+
+## Step 3: Add Gemma 4 to the Models Array
+
+Update your provider block to point to Ollama and specify `gemma4` as the model name.
+
+```json
+{
+  "provider": {
+    "type": "ollama",
+    "endpoint": "http://localhost:11434/api/generate",
+    "model": "gemma4"
+  },
+  "agent": {
+    "name": "LocalAssistant",
+    "system": "You are a helpful local AI assistant."
+  }
+}
+```
+
+Save the file. Make sure Ollama is still running in the background (the Ollama app runs a menu bar icon on Mac, or a background service on Linux/Windows).
+
+## Testing the Setup
+
+Now, launch your OpenClaw agent from the terminal:
+
+```bash
+openclaw run LocalAssistant
+```
+
+Ask your agent a complex question or tell it to use a tool. You should see the response stream back. Since it's running locally on Gemma 4, your prompts and data never leave your machine!
+
+## Conclusion
+
+By combining Ollama with OpenClaw, you unlock a powerful, privacy-first AI workflow. Gemma 4's strong reasoning capabilities make it an ideal engine for local agentic tasks. 
+
+If you encounter issues with tool-calling, try adjusting the temperature in your OpenClaw config to `0.1` for more deterministic outputs.
+
+<AuthorBlock name="Matteo" bio="Building AI tools and scaling systems. Sharing what I learn along the way." />

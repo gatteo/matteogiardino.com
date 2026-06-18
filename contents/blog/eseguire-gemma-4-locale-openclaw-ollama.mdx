@@ -1,0 +1,85 @@
+---
+title: "Come Eseguire Gemma 4 in Locale con OpenClaw e Ollama"
+description: "Un tutorial completo su come configurare il modello Gemma 4 9B di Google in locale usando Ollama, integrandolo con gli agenti OpenClaw senza costi API."
+date: "2026-06-18"
+locale: "it"
+translationSlug: "run-gemma-4-openclaw-ollama-locally"
+tags: ["ai", "openclaw", "tutorial", "ollama"]
+---
+
+Vuoi eseguire l'ultimo modello open-weights di Google sul tuo hardware? In questa guida, ti mostrerò esattamente come configurare Gemma 4 in locale usando Ollama e collegarlo ai tuoi agenti OpenClaw. È veloce, privato e non costa assolutamente nulla in fee API.
+
+Il rilascio di Gemma 4 ha cambiato le regole del gioco per l'AI locale. Con la sua versione da 9B parametri che offre capacità di ragionamento vicine a GPT-4o, è il punto d'incontro perfetto per gli sviluppatori che desiderano un assistente locale intelligente senza aver bisogno di un server rack. Dopo averlo testato intensamente sul mio Mac Studio, ho scoperto che supera sia Llama 3 8B che Qwen 2.5 per i task degli agenti OpenClaw.
+
+Ecco come configurarlo in meno di 5 minuti.
+
+<CtaCard title="Vuoi orchestrare agenti locali?" description="Scopri come OpenClaw semplifica il processo." ctaText="Leggi la Guida" ctaLink="/blog/master-openclaw-system-prompts-local-agents" />
+
+## Perché Gemma 4 è Perfetto per gli Agenti Locali
+
+Eseguire agenti in locale richiede un modello che sia abbastanza veloce da non farti aspettare e abbastanza intelligente da gestire output JSON in modo affidabile. Gemma 4 eccelle in entrambi.
+
+Il suo consumo di memoria è sorprendentemente efficiente: la versione quantizzata a 4-bit gira comodamente su macchine con soli 8GB di VRAM o Memoria Unificata. Quando connesso a OpenClaw, segue le istruzioni per l'uso dei tool in modo quasi impeccabile.
+
+## Prerequisiti Hardware
+
+Prima di iniziare, assicurati che la tua macchina soddisfi i requisiti minimi:
+- **Mac:** M1/M2/M3/M4 con almeno 16GB di Memoria Unificata (8GB funzionano ma saranno lenti per il 9B).
+- **Windows/Linux:** Una GPU NVIDIA con almeno 8GB VRAM (RTX 3060, 4060, ecc.) o 16GB di RAM di sistema se in esecuzione su CPU.
+- Archiviazione: Circa 6GB di spazio libero su disco.
+
+## Step 1: Installa Ollama e Scarica Gemma 4
+
+Ollama è il modo più semplice per eseguire LLM in locale. Se non l'hai ancora installato, vai su [ollama.com](https://ollama.com) e scarica l'installer.
+
+Una volta installato, apri il terminale ed esegui:
+
+```bash
+ollama run gemma4
+```
+
+Ollama scaricherà automaticamente il modello instruct 9B predefinito. Aspetta che il download finisca. Quando appare il prompt `>>>`, testalo scrivendo `ciao!`.
+
+## Step 2: Configura OpenClaw per Usare Ollama
+
+OpenClaw supporta Ollama nativamente. Devi solo dire alla configurazione del tuo agente di instradare le richieste al tuo server Ollama locale invece che a un'API esterna.
+
+Apri il tuo `openclaw.json` o il file di configurazione specifico dell'agente.
+
+## Step 3: Aggiungi Gemma 4 all'Array dei Modelli
+
+Aggiorna il blocco provider per puntare a Ollama e specifica `gemma4` come nome del modello.
+
+```json
+{
+  "provider": {
+    "type": "ollama",
+    "endpoint": "http://localhost:11434/api/generate",
+    "model": "gemma4"
+  },
+  "agent": {
+    "name": "LocalAssistant",
+    "system": "Sei un utile assistente AI locale."
+  }
+}
+```
+
+Salva il file. Assicurati che Ollama sia ancora in esecuzione in background.
+
+## Testare la Configurazione
+
+Ora, avvia il tuo agente OpenClaw dal terminale:
+
+```bash
+openclaw run LocalAssistant
+```
+
+Fai una domanda complessa al tuo agente o digli di usare un tool. Poiché è in esecuzione in locale su Gemma 4, i tuoi prompt e dati non lasciano mai la tua macchina!
+
+## Conclusione
+
+Combinando Ollama con OpenClaw, sblocchi un potente workflow AI incentrato sulla privacy. 
+
+Se riscontri problemi con il tool-calling, prova a regolare la temperatura nella configurazione di OpenClaw a `0.1` per output più deterministici.
+
+<AuthorBlock name="Matteo" bio="Sviluppo strumenti AI e scalo sistemi. Condivido ciò che imparo lungo il percorso." />
