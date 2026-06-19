@@ -2,14 +2,15 @@
 title: 'ClawWork: quando il tuo agente AI inizia a guadagnare'
 createdAt: '2026-03-11T00:00:00Z'
 modifiedAt: '2026-03-11T00:00:00Z'
-summary: 'Un esperimento pazzo: dai 10$ a un agente OpenClaw e vedi se sopravvive. Spoiler: ha fatto 19.915$ in 8 ore facendo lavoro vero.'
+summary: 'Un esperimento pazzo: dai 10$ a [un agente OpenClaw](/blog/openclaw-vs-claude-code-confronto) e vedi se sopravvive. Spoiler: ha fatto 19.915$ in 8 ore facendo lavoro vero.'
 image: '/images/blog/clawwork-ai-che-guadagna.png'
 authorId: matteo
 locale: 'it'
+translationSlug: 'clawwork-money-making-ai-coworker'
 tags: ['ai', 'openclaw', 'ai agents', 'automation']
 ---
 
-Qualcuno ha dato 10 dollari a un agente OpenClaw e gli ha detto: "Sopravvivi". Otto ore dopo, quell'agente aveva guadagnato 19.915 dollari completando lavoro professionale vero. Non è una simulazione con soldi finti. Sono task reali, valutazioni reali, pressione economica reale.
+Qualcuno ha dato 10 dollari a [un agente OpenClaw](/blog/openclaw-vs-claude-code-confronto) e gli ha detto: "Sopravvivi". Otto ore dopo, quell'agente aveva guadagnato 19.915 dollari completando lavoro professionale vero. Non è una simulazione con soldi finti. Sono task reali, valutazioni reali, pressione economica reale.
 
 Si chiama ClawWork, è open source, si basa su OpenClaw, e punta a qualcosa di genuinamente nuovo. Ma devi stare molto attento.
 
@@ -35,9 +36,9 @@ Ci sono deliverable veri come documenti Word, fogli Excel, analisi di mercato, p
 
 Il pagamento è calcolato così:
 
-```
+```text
 pagamento = quality_score * ore_stimate * salario_orario_bls
-```
+```text
 
 Un task di market research analyst da tre ore a 38$ l'ora paga fino a 116$, ma solo se il lavoro è buono.
 
@@ -60,7 +61,7 @@ Questi sono insight che non ottieni da un benchmark standard. Mostrano come redd
 
 ## Architettura
 
-ClawWork sta dentro l'ecosistema OpenClaw e passa attraverso Nanobot, che si collega ai tuoi canali come Telegram o Discord. I messaggi passano attraverso il gateway Nanobot, e ogni singola chiamata LLM viene intercettata dal tracked provider, che detrae il costo dal saldo dell'agente in tempo reale. Il tuo agente sa esattamente quanto costa esistere.
+ClawWork sta dentro l'[ecosistema OpenClaw](/blog/openclaw-vs-claude-code-confronto) e passa attraverso Nanobot, che si collega ai tuoi canali come Telegram o Discord. I messaggi passano attraverso il gateway Nanobot, e ogni singola chiamata LLM viene intercettata dal tracked provider, che detrae il costo dal saldo dell'agente in tempo reale. Il tuo agente sa esattamente quanto costa esistere.
 
 <Image src="/images/blog/clawwork-ai-che-guadagna/clawwork-199.webp" alt="Diagramma dell'architettura di ClawWork con gateway Nanobot e tracked provider" width={1200} height={630} />
 
@@ -134,3 +135,11 @@ Questi vincoli sono il punto di ClawWork, ma richiedono gestione attenta. È pot
 ClawWork mostra come un AI co-worker può operare sotto pressione economica reale piuttosto che passare benchmark. I risultati della leaderboard rendono chiaro che qualità, costo e reddito interagiscono in modi che i test tipici non possono rivelare.
 
 Procedi, ma procedi con cautela. Se me lo chiedi, probabilmente non lo userò subito perché ci sono ancora bug. Se sei già su OpenClaw e disposto a fare sandbox prima, vale la pena esplorarlo con controlli di costo stretti e un'allowlist rigorosa.
+
+## FAQ on clawwork
+
+**What is ClawWork?**
+It is a framework to put OpenClaw agents to work.
+
+**Is it free?**
+No, LLM API costs are real.

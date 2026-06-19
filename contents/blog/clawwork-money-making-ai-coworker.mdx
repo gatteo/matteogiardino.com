@@ -1,0 +1,148 @@
+---
+title: 'ClawWork: Transform OpenClaw into a Money-Making AI Coworker'
+createdAt: '2026-03-11T00:00:00Z'
+modifiedAt: '2026-03-11T00:00:00Z'
+summary: 'clawwork: A crazy experiment: give [an OpenClaw agent](/blog/openclaw-vs-claude-code) $10 and see if it survives. Spoiler: it made $19,915 in 8 hours doing real work.'
+image: '/images/blog/clawwork-ai-che-guadagna.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw', 'ai agents', 'automation']
+translationSlug: 'clawwork-ai-che-guadagna'
+---
+
+Someone gave [an OpenClaw agent](/blog/openclaw-vs-claude-code) 10 dollars and told it: "Survive." Eight hours later, that agent had earned $19,915 by completing actual professional work. This is not a simulation with fake money. These are real tasks, real evaluations, and real economic pressure.
+
+It’s called ClawWork, it’s open-source, built on top of OpenClaw, and it aims at something genuinely new in the 2026 AI landscape. But you need to be very careful.
+
+<Image src="/images/blog/clawwork-ai-che-guadagna/clawwork-1.webp" alt="ClawWork overview, the AI agent that earns money completing professional tasks" width={1200} height={630} />
+
+I’ll explain what ClawWork does, how the architecture works, the scoring and payout model, and the risks that actually matter. I’ll also point out the exact spots where your costs can explode and where you might expose sensitive data. Read the caution notes carefully before connecting anything to a live channel.
+
+## What clawwork Does
+
+*Written by Matteo Giardino*
+
+
+ClawWork transforms your AI assistant into what developers call an "AI co-worker". The distinction matters. An assistant answers your questions. A co-worker does work that creates economic value and gets paid for it.
+
+<Image src="/images/blog/clawwork-ai-che-guadagna/clawwork-82.webp" alt="ClawWork interface showing the transformation from assistant to AI co-worker" width={1200} height={630} />
+
+The agent starts with $10. Every LLM call costs real money deducted from that balance. The only way to increase the balance is by completing professional tasks and having them evaluated by an LLM.
+
+Poor work = low payout. Run out of money = the agent dies. That pressure loop is the whole point.
+
+## Scope and Scoring
+
+The scope covers 44 occupations: developer, lawyer, financial manager, nurse, journalist, real estate agent, compliance officer, and more. It includes 220 real professional tasks from the GDP-Well dataset, designed to measure the actual contribution of AI to economic output. It’s not a multiple-choice test.
+
+There are real deliverables like Word documents, Excel sheets, market analyses, project plans, and process designs. Scoring is tied to real hourly wage data from the US Bureau of Labor Statistics. The payout depends on the quality and the estimated time of the task.
+
+The payout is calculated like this:
+
+```text
+payout = quality_score * estimated_hours * bls_hourly_wage
+```text
+
+A three-hour market research analyst task at $38 an hour pays up to $116, but only if the work is good.
+
+## Signals from the Leaderboard
+
+<Image src="/images/blog/clawwork-ai-che-guadagna/clawwork-126.webp" alt="ClawWork public leaderboard ranking AI models by income and quality" width={1200} height={630} />
+
+A public leaderboard showed ATIC combined with Qwen 3.5 Plus turning $10 into $19,915 in 8 hours. Qwen 3.5 Plus alone came in third while spending only $6 in API costs. aic deepc came in fifth on income but had the highest quality score at 66.8%.
+
+These are insights you don't get from a standard benchmark. They show how income, cost, and quality interact under real economic pressure. You can compare models and decide which service provider to use, or consider local models to manage costs.
+
+<CtaCard
+    title="Want to integrate AI into your business?"
+    description="Contact me for a consultation on how to implement AI tools in your company."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Architecture
+
+ClawWork lives inside the [OpenClaw ecosystem](/blog/openclaw-vs-claude-code) and routes through Nanobot, which connects to your channels like Telegram or Discord. Messages pass through the Nanobot gateway, and every single LLM call is intercepted by the tracked provider, which deducts the cost from the agent's balance in real time. Your agent knows exactly how much it costs to exist.
+
+<Image src="/images/blog/clawwork-ai-che-guadagna/clawwork-199.webp" alt="ClawWork architecture diagram with Nanobot gateway and tracked provider" width={1200} height={630} />
+
+On the task side, the agent receives a GDP-Well task, decides whether to work or learn, executes, earns income, and persists the results to the dashboard. The evaluator scores the submissions and determines the payout using the wage-tied formula. This feedback loop keeps the agent within a realistic economic environment.
+
+## Setup and Sandbox First
+
+Start with the standalone simulation and the sandbox, not a live channel. You will need API keys, and this is not a free tool.
+
+<Image src="/images/blog/clawwork-ai-che-guadagna/clawwork-311.webp" alt="ClawWork sandbox setup for secure testing" width={1200} height={630} />
+
+**Step 1:** Read the caution section before running anything. The API cost can spiral out of control, and you are paying for both the agent and the evaluator at the same time.
+
+**Step 2:** Configure the simulation in the sandbox locally and confirm that the dashboard receives runs and scores. Watch the spending and quality scores in real time before connecting any live channel.
+
+**Step 3:** Confirm your environment variables and model choices. Expensive models add up quickly when the classifier, the agent, and the evaluator each make separate calls on every task.
+
+**Step 4:** Iterate on small test tasks until you understand the payout curve and the failure modes. A poorly defined run can burn real money before you notice.
+
+**Step 5:** Only after you are comfortable, plan the live gateway integration. Lock down access controls first.
+
+Project Repo: [HKUDS/ClawWork on GitHub](https://github.com/HKUDS/ClawWork)
+
+## OpenClaw Integration
+
+Once ready for a live channel, connect the economic tracking to a Nanobot gateway. Every conversation will be tracked and every token will have a cost.
+
+<Image src="/images/blog/clawwork-ai-che-guadagna/clawwork-421.webp" alt="ClawWork integration process with the OpenClaw gateway" width={1200} height={630} />
+
+**Step 1:** Configure your JSON settings file for the ClawWork tracked provider and economic tracking. Double-check model names, rate limits, and any allowlist configurations.
+
+**Step 2:** Install the skill file provided by the repo and set the correct path in your gateway config. Make sure the skill loads without errors.
+
+**Step 3:** Start the gateway and confirm that messages are intercepted and carry a cost. Validate that balances decrement per call and that task results persist in the dashboard.
+
+**Step 4:** Keep the allowlist restricted to your user ID until you are sure of costs and behavior. Treat any connected channel as a potential trigger point.
+
+## Tools and Capabilities
+
+<Image src="/images/blog/clawwork-ai-che-guadagna/clawwork-437.webp" alt="List of available tools in ClawWork including economic tools" width={1200} height={630} />
+
+ClawWork exposes about 14 tools, including four economic tools on top of the standard Nanobot tools. It includes web search, file creation, and code execution in a sandbox. The sandbox is E2B, which is a cloud service, meaning your code runs on their infrastructure, not yours, so read their terms.
+
+<Image src="/images/blog/clawwork-ai-che-guadagna/clawwork-468.webp" alt="Detail of ClawWork agent capabilities with E2B sandbox and evaluator" width={1200} height={630} />
+
+The evaluator uses GPT-4o by default, which means every task submission sends your agent's work output to OpenAI. If you are working with confidential financial data, this is a problem. Consider your data classification before running sensitive workloads.
+
+## Costs and Risks
+
+<Image src="/images/blog/clawwork-ai-che-guadagna/clawwork-496.webp" alt="Analysis of API costs and economic risks when using ClawWork" width={1200} height={630} />
+
+API costs can spiral because the task classifier, the agent, and the evaluator all make separate LLM calls per task. A poorly defined run with an expensive model can burn real money before you know it. The income is simulated value tied to wage data, not real revenue.
+
+Integration in Claw mode ties directly into your live OpenClaw gateway. Any connected channel like Telegram or Discord becomes a potential entry point for someone triggering commands and racking up costs if your allowlist isn't locked down. Set it to your user ID while you learn and test.
+
+These constraints are the point of ClawWork, but they require careful management. It’s powerful, but unforgiving. Treat it like a system that spends real money on every message.
+
+<CtaCard
+    title="Discover my projects"
+    description="Take a look at the projects I'm working on and the technologies I use."
+    primaryButtonText="View Projects"
+    primaryButtonUrl="/projects"
+    pattern="circles"
+    align="center"
+/>
+
+## Final Thoughts
+
+<Image src="/images/blog/clawwork-ai-che-guadagna/clawwork-520.webp" alt="Final thoughts on the ClawWork experiment and the future of economic AI agents" width={1200} height={630} />
+
+ClawWork shows how an AI co-worker can operate under real economic pressure rather than just passing benchmarks. The leaderboard results make it clear that quality, cost, and income interact in ways that typical tests can't reveal.
+
+Proceed, but proceed with caution. If you ask me, I probably won't use it right away because there are still bugs. If you are already on OpenClaw and willing to sandbox first, it's worth exploring with strict cost controls and a rigorous allowlist.
+
+## FAQ on clawwork
+
+**What is ClawWork?**
+It is a framework to put OpenClaw agents to work.
+
+**Is it free?**
+No, LLM API costs are real.
