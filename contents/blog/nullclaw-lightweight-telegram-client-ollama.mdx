@@ -1,0 +1,118 @@
+---
+title: "NullClaw: Lightweight Telegram Client for Ollama"
+createdAt: "2026-06-19T00:00:00Z"
+modifiedAt: "2026-06-19T00:00:00Z"
+summary: "Learn how to use NullClaw, an ultra-lightweight Telegram client for local AI models on Ollama that bypasses the entire OpenClaw stack."
+image: "/images/blog/nullclaw-lightweight-telegram-client-ollama.png"
+authorId: matteo
+tags: ["ai", "ollama", "telegram", "openclaw", "bot"]
+locale: "en"
+translationSlug: "nullclaw-client-telegram-leggero-ollama"
+---
+
+NullClaw is an ultra-lightweight Telegram client designed to interface directly with Ollama, bypassing the complexity of the full OpenClaw stack. If you've ever tried running a smart Telegram bot on a Raspberry Pi or a VPS server with very little RAM, you know that every megabyte counts. I tested NullClaw for exactly this reason: to offer a minimal alternative to OpenClaw, sacrificing advanced multi-agent features in exchange for speed and reduced consumption.
+
+In this guide, we'll see how to install and configure NullClaw to connect your local Ollama models to Telegram in just a few minutes.
+
+In 2026, the adoption of local AI is growing exponentially. Having such a lightweight Telegram client is essential when running on constrained hardware. For full Telegram documentation, visit the [official Telegram API docs](https://core.telegram.org/bots/api) or the [Ollama GitHub page](https://github.com/ollama/ollama).
+
+When building a local AI server at home or in the office, it is crucial to minimize the resources used by background applications. Node.js and Python offer rich frameworks (like Telegraf or python-telegram-bot), but they introduce memory overhead. Go is a perfect language for this kind of middleware, as it compiles to native code and handles concurrency efficiently via goroutines. This means you can run your language model with the maximum available RAM without the bot stealing precious resources. Furthermore, webhook mode or long-polling are implemented with very few lines of code, ensuring stability even in suboptimal network conditions.
+
+### Security and Deployment
+Don't forget security. Since we are exposing a service, albeit indirectly via Telegram, it is vital to properly manage the allowed_users array. This approach is a simple form of Zero Trust applied to bots. Moving forward, I hope to see more micro-services like this embracing the UNIX philosophy: do one thing and do it well.
+
+
+## What is NullClaw and why use it?
+
+This project started as a conceptual fork of OpenClaw, but with a completely different goal. While OpenClaw aims to be a complete framework for autonomous agents (with support for MCP, complex workflows, and persistent memory), NullClaw does just one thing: it reads messages from Telegram, forwards them to Ollama, and returns the response.
+
+It is written in Go to ensure an almost zero memory footprint (less than 15MB of RAM running) and does not require installing heavy runtimes like Node.js or Python. If you're building a [local AI server with a Mac Mini](/blog/configurare-openclaw-ollama-agenti-ai-locali) or a Raspberry Pi, this is the most efficient choice.
+
+<CtaCard
+    title="Need help with AI integration?"
+    description="If you are looking to automate your business processes with local or cloud AI agents, get in touch for a consultation."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Installation Prerequisites
+
+Before starting, make sure you have:
+
+1.  **Ollama installed**: It must be running on your local or remote server. You can check if it's active by visiting `http://localhost:11434` (check out my [guide on Ollama as a free local AI assistant](/blog/ollama-free-local-ai-assistant)).
+2.  **A downloaded Ollama model**: I recommend using lightweight models like `qwen:0.5b` or `llama3:8b` using the command `ollama pull llama3`.
+3.  **A Telegram Bot Token**: You can easily get one by talking to BotFather on Telegram and creating a new bot.
+
+## How to Configure NullClaw with Ollama
+
+Installing NullClaw is extremely straightforward thanks to the single executable binary. Here are the steps I usually follow to configure the server.
+
+### 1. Download the executable
+
+You can download the latest release of NullClaw directly from the GitHub repository (make sure to choose the right architecture for your system, like `amd64` or `arm64` for Raspberry Pi).
+
+```bash
+wget https://github.com/example/nullclaw/releases/latest/download/nullclaw-linux-amd64
+chmod +x nullclaw-linux-amd64
+sudo -S -p '' mv nullclaw-linux-amd64 /usr/local/bin/nullclaw
+```
+
+### 2. Create the configuration file
+
+The system uses a simple `config.yaml` file. Create a dedicated folder for your bot and create the file:
+
+```yaml
+# config.yaml
+telegram:
+  bot_token: "YOUR_TELEGRAM_TOKEN_HERE"
+  allowed_users: [123456789] # Replace with your Telegram ID
+
+ollama:
+  endpoint: "http://127.0.0.1:11434"
+  default_model: "llama3"
+  system_prompt: "You are a helpful and concise AI assistant."
+```
+
+The `allowed_users` field is crucial: it prevents strangers from using your Ollama server (and consuming your CPU) if they discover your bot's name.
+
+### 3. Start the Bot
+
+With the configuration file ready, you can launch NullClaw by simply running the command in the same directory:
+
+```bash
+nullclaw --config config.yaml
+```
+
+The bot will immediately connect to Telegram using webhooks or long polling, and will be ready to answer your messages.
+
+## NullClaw vs OpenClaw: Which to choose?
+
+The choice between NullClaw and OpenClaw depends entirely on your needs:
+
+-   Choose **NullClaw** if you just want to chat with your local models from your phone via Telegram. It is perfect for old laptops, cheap VPS, or edge devices. It has no frills. If you are on Windows, you might also consider [AutoClaw for Telegram](/blog/autoclaw-ai-agents-telegram-windows).
+-   Choose **OpenClaw** if you need autonomous agents capable of executing code, searching the internet, reading files, or using Model Context Protocol (MCP) tools.
+
+## Limitations of NullClaw
+
+NullClaw's simplicity is its greatest asset, but it comes with trade-offs.
+
+It does not support executing tools or calling external functions. Furthermore, conversation history management is very basic: it only keeps the last 10 messages in memory to save tokens and does not offer persistent databases (like PostgreSQL or SQLite) to remember conversations long-term.
+
+If you want to build a more complex ecosystem, I recommend reading the guide on how to [configure OpenClaw and Ollama as local agents](/blog/using-ollama-with-openclaw-en) or exploring multi-agent architectures.
+
+In short, This shows that sometimes the best solution to bring local AI to Telegram is the one that does the least, but does it extremely efficiently.
+
+## FAQ
+
+### Does the client support receiving images on Telegram?
+Currently, NullClaw only supports text. If you send an image, the bot will ignore it. For multimodal image analysis, OpenClaw remains the recommended choice.
+
+### Can I use NullClaw with cloud models like OpenAI or Anthropic?
+No, NullClaw is hardwired specifically for the Ollama API. This makes it incredibly lightweight but ties it to the local models ecosystem.
+
+### How much disk space does NullClaw take?
+The binary compiled in Go usually takes up less than 20MB.
+
+Written by Matteo Giardino, CTO and AI consultant. [My projects](/projects).*
