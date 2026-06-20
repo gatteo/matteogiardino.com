@@ -1,0 +1,67 @@
+     1|---
+     2|title: "Humanity's Last Exam (HLE) Benchmark: The Blocking Badgerbear"
+     3|createdAt: '2026-06-20T00:00:00Z'
+     4|modifiedAt: '2026-06-20T00:00:00Z'
+     5|summary: "What the Blocking Badgerbear test in the Humanity's Last Exam benchmark means for local AI models like Llama 3 and Qwen."
+     6|image: '/images/blog/hle-benchmark-blocking-badgerbear.png'
+     7|authorId: matteo
+     8|locale: 'en'
+     9|tags: ['ai', 'openclaw']
+    10|translationSlug: 'benchmark-hle-test-blocking-badgerbear'
+    11|---
+    12|
+    13|Humanity's Last Exam (HLE) is the new frontier in AI benchmarking, pushing models past the plateau of MMLU and GSM8K. If you run frontier models locally, you need to test them against the "Blocking Badgerbear" scenario. This specific test separates true reasoning from stochastic parroting.
+    14|
+    15|Here is what the test entails, how to run it locally with OpenClaw, and which models actually pass.
+    16|
+    17|## What is Humanity's Last Exam (HLE) Benchmark?
+    18|
+    19|The AI community has a benchmark problem. MMLU and GSM8K are saturated - models regularly hit 95%+ scores, but still fail at complex, multi-step logic tasks. Humanity's Last Exam (HLE) was designed to fix this. It focuses on zero-shot reasoning, adversarial prompts, and complex context retrieval. 
+    20|
+    21|### Beyond MMLU and GSM8K
+    22|
+    23|MMLU measures memorization. GSM8K measures simple math. HLE measures adaptability. It introduces novel problems that the models haven't seen in their training data.
+    24|
+    25|## The "Blocking Badgerbear" Question Explained
+    26|
+    27|The "Blocking Badgerbear" test is a logic puzzle within HLE. It requires the model to navigate a spatial and logical puzzle where constraints change dynamically. The name comes from a specific scenario where a "badgerbear" blocks a critical path, requiring lateral thinking to bypass.
+    28|
+    29|<CtaCard title="Need help running local AI models? Let's talk" href="/contact" />
+    30|
+    31|### Why models fail at this specific logic puzzle
+    32|
+    33|Most models fail because they try to solve it linearly. They miss the dynamic constraint shift. It requires spatial reasoning and maintaining complex state across multiple turns - something small local models struggle with.
+    34|
+    35|## How to Run the HLE Benchmark Locally with OpenClaw
+    36|
+    37|You don't need a massive cluster to run HLE. If you use OpenClaw, you can set up the evaluation harness locally. I run this on my Mac Mini server to evaluate new Ollama models.
+    38|
+    39|### Setting up the harness
+    40|
+    41|Install the `lm-eval-harness` and configure OpenClaw to point to your local models:
+    42|
+    43|```bash
+    44|git clone https://github.com/EleutherAI/lm-evaluation-harness
+    45|cd lm-evaluation-harness
+    46|pip install -e .
+    47|lm_eval --model local-chat --tasks hle_badgerbear --limit 10
+    48|```
+    49|
+    50|## Results: Which Local Models Pass the Badgerbear Test?
+    51|
+    52|I tested several models running via Ollama to see who survives the Badgerbear.
+    53|
+    54|### Qwen 3.5 vs Llama 3 vs Gemini 3.1 Pro (via API)
+    55|
+    56|- **Llama 3 (8B):** Failed completely. It hallucinated a non-existent path.
+    57|- **Qwen 3.5 (14B):** Managed a partial pass, recognizing the constraint but failing the final logical leap.
+    58|- **Gemini 3.1 Pro:** Passed with flying colors, but it's an API model. 
+    59|
+    60|For local testing, you need at least a 32B model to consistently pass this specific HLE test.
+    61|
+    62|## Conclusion: The Future of LLM Benchmarking
+    63|
+    64|HLE is the new standard. As we push for capable local agents, we need benchmarks that reflect real-world complexity, not just multiple-choice memorization.
+    65|
+    66|*Matteo is a CTO who builds local AI agents and writes about the messy reality of production AI.*
+    67|

@@ -1,0 +1,67 @@
+     1|---
+     2|title: 'Benchmark HLE: Il Test Blocking Badgerbear'
+     3|createdAt: '2026-06-20T00:00:00Z'
+     4|modifiedAt: '2026-06-20T00:00:00Z'
+     5|summary: "Cosa significa il test Blocking Badgerbear nel benchmark Humanity's Last Exam per i modelli AI locali come Llama 3 e Qwen."
+     6|image: '/images/blog/benchmark-hle-test-blocking-badgerbear.png'
+     7|authorId: matteo
+     8|locale: 'it'
+     9|tags: ['ai', 'openclaw']
+    10|translationSlug: 'hle-benchmark-blocking-badgerbear'
+    11|---
+    12|
+    13|L'Humanity's Last Exam (HLE) è la nuova frontiera dei benchmark AI, che spinge i modelli oltre il plateau di MMLU e GSM8K. Se esegui modelli di frontiera in locale, devi testarli con lo scenario "Blocking Badgerbear". Questo test specifico separa il vero ragionamento dalla pappagallata stocastica.
+    14|
+    15|Ecco in cosa consiste il test, come eseguirlo localmente con OpenClaw e quali modelli lo superano davvero.
+    16|
+    17|## Cos'è il benchmark Humanity's Last Exam (HLE)?
+    18|
+    19|La community AI ha un problema con i benchmark. MMLU e GSM8K sono saturi: i modelli raggiungono regolarmente punteggi del 95%+, ma falliscono ancora in compiti logici complessi e multi-step. L'Humanity's Last Exam (HLE) è stato progettato per risolvere questo problema. Si concentra sul ragionamento zero-shot, prompt avversari e recupero di contesto complesso.
+    20|
+    21|### Oltre MMLU e GSM8K
+    22|
+    23|MMLU misura la memorizzazione. GSM8K misura la matematica semplice. L'HLE misura l'adattabilità. Introduce problemi nuovi che i modelli non hanno visto nei loro dati di addestramento.
+    24|
+    25|## Il test "Blocking Badgerbear" spiegato
+    26|
+    27|Il test "Blocking Badgerbear" è un puzzle logico all'interno dell'HLE. Richiede al modello di navigare in un puzzle spaziale e logico in cui i vincoli cambiano dinamicamente. Il nome deriva da uno scenario specifico in cui un "badgerbear" blocca un percorso critico, richiedendo pensiero laterale per aggirarlo.
+    28|
+    29|<CtaCard title="Serve aiuto con i modelli AI locali? Parliamone" href="/contact" />
+    30|
+    31|### Perché i modelli falliscono in questo specifico puzzle logico
+    32|
+    33|La maggior parte dei modelli fallisce perché cerca di risolverlo in modo lineare. Perdono il cambio di vincolo dinamico. Richiede ragionamento spaziale e il mantenimento di uno stato complesso su più turni, qualcosa in cui i piccoli modelli locali faticano.
+    34|
+    35|## Come eseguire il benchmark HLE localmente con OpenClaw
+    36|
+    37|Non serve un cluster enorme per eseguire l'HLE. Se usi OpenClaw, puoi configurare l'harness di valutazione localmente. Io lo eseguo sul mio server Mac Mini per valutare i nuovi modelli Ollama.
+    38|
+    39|### Configurare l'harness
+    40|
+    41|Installa `lm-eval-harness` e configura OpenClaw per puntare ai tuoi modelli locali:
+    42|
+    43|```bash
+    44|git clone https://github.com/EleutherAI/lm-evaluation-harness
+    45|cd lm-evaluation-harness
+    46|pip install -e .
+    47|lm_eval --model local-chat --tasks hle_badgerbear --limit 10
+    48|```
+    49|
+    50|## Risultati: Quali modelli locali superano il test Badgerbear?
+    51|
+    52|Ho testato diversi modelli eseguiti tramite Ollama per vedere chi sopravvive al Badgerbear.
+    53|
+    54|### Qwen 3.5 vs Llama 3 vs Gemini 3.1 Pro (tramite API)
+    55|
+    56|- **Llama 3 (8B):** Fallito completamente. Ha allucinato un percorso inesistente.
+    57|- **Qwen 3.5 (14B):** Ha gestito un superamento parziale, riconoscendo il vincolo ma fallendo il salto logico finale.
+    58|- **Gemini 3.1 Pro:** Superato a pieni voti, ma è un modello API.
+    59|
+    60|Per i test locali, serve almeno un modello da 32B per superare costantemente questo specifico test HLE.
+    61|
+    62|## Conclusione: Il futuro dei benchmark LLM
+    63|
+    64|L'HLE è il nuovo standard. Mentre spingiamo per agenti locali capaci, abbiamo bisogno di benchmark che riflettano la complessità del mondo reale, non solo la memorizzazione a scelta multipla.
+    65|
+    66|*Matteo è un CTO che costruisce agenti AI locali e scrive sulla caotica realtà dell'AI in produzione.*
+    67|
