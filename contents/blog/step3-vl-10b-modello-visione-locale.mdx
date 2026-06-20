@@ -1,0 +1,82 @@
+---
+title: 'STEP3-VL-10B: Il miglior modello di visione locale nel 2026?'
+createdAt: '2026-06-20T00:00:00Z'
+modifiedAt: '2026-06-20T00:00:00Z'
+summary: 'Recensione e tutorial su STEP3-VL-10B di StepFun AI. Come far girare questo nuovo modello di visione locale da 10B su OpenClaw e hardware consumer.'
+image: '/images/blog/step3-vl-10b-modello-visione-locale.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw']
+translationSlug: 'step3-vl-10b-best-local-vision-model'
+---
+
+Gestisco sei agenti AI su un Mac Mini e l'analisi visiva locale e' sempre stata il collo di bottiglia. Finora, modelli come LLaVA o faticavano con testo piccolo o richiedevano troppa VRAM per girare in modo fluido accanto agli LLM di ragionamento. Oggi vediamo STEP3-VL-10B di StepFun AI, un modello che risponde esattamente a questo problema.
+
+STEP3-VL-10B si piazza nella fascia dei 10 miliardi di parametri, il punto di equilibrio perfetto per l'hardware consumer moderno. Questo articolo mostra perche' e' utile, come si comporta nei test reali e i comandi esatti per configurarlo su OpenClaw o Ollama.
+
+## Cos'e' STEP3-VL-10B?
+
+StepFun AI ha recentemente rilasciato STEP3-VL-10B. E' un modello multimodale (vision-language) pensato per l'analisi locale di immagini, documenti e interfacce. 
+
+A differenza dei modelli enormi che richiedono cluster cloud, questo 10B gira comodamente su una RTX 3090, 4090 o sui Mac con chip Apple Silicon (M2/M3/M4 Max). Supporta risoluzioni dinamiche, permettendo di estrarre testo da screenshot densi o analizzare grafici senza perdere i dettagli.
+
+<CtaCard
+    title="Vuoi integrare AI nel tuo business?"
+    description="Contattami per una consulenza su come implementare strumenti AI e modelli di visione locale nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Architettura: perche' 10B parametri?
+
+Il formato 10B non e' casuale. I modelli piu' piccoli (2B-4B) sono veloci ma spesso "allucinano" o non riescono a comprendere interfacce complesse. Quelli sopra i 30B offrono ragionamento eccellente, ma occupano tutta la VRAM, non lasciando spazio per i modelli di elaborazione logica necessari nel workflow degli agenti AI.
+
+Con 10B parametri quantizzati a 4-bit o 8-bit, STEP3-VL-10B occupa circa 6-8 GB di RAM. Questo mi permette di eseguirlo in parallelo con un LLM da 32B dedicato alla logica sul mio server domestico.
+
+## Come si confronta con LLaVA e Qwen-VL
+
+Ho eseguito alcuni test pratici mettendo STEP3-VL-10B contro LLaVA 1.5 (13B) e Qwen-VL.
+Ecco cosa ho notato:
+- **Testo denso (OCR):** LLaVA spesso salta le righe in documenti affollati. STEP3-VL-10B ha mantenuto la struttura intatta, leggendo correttamente tabelle complesse.
+- **Interfacce UI:** Quando si chiede di "trovare il bottone per salvare", STEP3-VL-10B riconosce l'icona del floppy o il testo con piu' precisione rispetto agli altri, rendendolo ideale per l'automazione browser.
+- **Velocita':** Usando llama.cpp, i tempi di inferenza sono comparabili a Qwen-VL, ma la coerenza visiva e' superiore.
+
+## Come eseguire STEP3-VL-10B localmente
+
+Il modo piu' rapido per testarlo e' usare Ollama. Assicurati di avere l'ultima versione installata.
+
+```bash
+# Scarica ed esegui il modello tramite Ollama
+ollama run stepfun/step3-vl-10b
+```
+
+Se utilizzi OpenClaw per gestire i tuoi agenti AI, l'integrazione e' immediata. Nel tuo file `openclaw.json`, configura il provider vision:
+
+```json
+{
+  "vision": {
+    "provider": "ollama",
+    "model": "stepfun/step3-vl-10b",
+    "resolution": "high"
+  }
+}
+```
+
+Riavvia l'agente e sara' in grado di "vedere" lo schermo e analizzare file passati in input usando il nuovo modello.
+
+## Test pratico: comprensione di UI e grafici
+
+Il vero banco di prova per un CTO o sviluppatore e' l'utilita' quotidiana. Ho fornito a STEP3-VL-10B uno screenshot di una dashboard analitica e gli ho chiesto di estrarre le metriche principali.
+
+Il modello ha riconosciuto:
+1. I valori esatti dei KPI in alto.
+2. Il trend decrescente del grafico a linee.
+3. Il significato dei colori usati nella legenda.
+
+Avere un modello locale capace di queste prestazioni apre le porte ad agenti autonomi in grado di operare su piattaforme web senza API, leggendo letteralmente l'interfaccia utente in modo privato e sicuro.
+
+In breve, se stai costruendo agenti visivi locali nel 2026, STEP3-VL-10B e' attualmente il miglior compromesso tra prestazioni OCR, comprensione generale e consumo di memoria.
+
+*Matteo Giardino e' un fractional CTO che costruisce sistemi autonomi con OpenClaw.*

@@ -1,0 +1,82 @@
+---
+title: 'STEP3-VL-10B: The Best Local Vision Model in 2026?'
+createdAt: '2026-06-20T00:00:00Z'
+modifiedAt: '2026-06-20T00:00:00Z'
+summary: 'Review and tutorial of StepFun AI STEP3-VL-10B. How to run this new 10B local vision model on OpenClaw and consumer hardware.'
+image: '/images/blog/step3-vl-10b-best-local-vision-model.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw']
+translationSlug: 'step3-vl-10b-modello-visione-locale'
+---
+
+I run six AI agents on a Mac Mini, and local visual analysis has always been the bottleneck. Until now, models like LLaVA either struggled with small text or required too much VRAM to run smoothly alongside reasoning LLMs. Today we look at STEP3-VL-10B by StepFun AI, a model that solves exactly this problem.
+
+STEP3-VL-10B sits in the 10-billion parameter range, the perfect sweet spot for modern consumer hardware. This post shows why it is useful, how it performs in real tests, and the exact commands to set it up on OpenClaw or Ollama.
+
+## What is STEP3-VL-10B?
+
+StepFun AI recently released STEP3-VL-10B. It is a multimodal vision-language model designed for local analysis of images, documents, and interfaces.
+
+Unlike massive models that require cloud clusters, this 10B model comfortably runs on an RTX 3090, 4090, or Apple Silicon Macs (M2/M3/M4 Max). It supports dynamic resolutions, allowing you to extract text from dense screenshots or analyze charts without losing details.
+
+<CtaCard
+    title="Building something with OpenClaw?"
+    description="If you are integrating OpenClaw into a product or workflow, I am available for short engagements."
+    primaryButtonText="Get in Touch"
+    primaryButtonUrl="/contacts"
+    pattern="grid"
+    align="center"
+/>
+
+## Architecture: Why 10B parameters?
+
+The 10B size is not random. Smaller models (2B-4B) are fast but often hallucinate or fail to understand complex UI layouts. Those above 30B offer excellent reasoning but hog all the VRAM, leaving no room for the logic-focused models required in AI agent workflows.
+
+With 10B parameters quantized to 4-bit or 8-bit, STEP3-VL-10B takes up about 6-8 GB of RAM. This allows me to run it in parallel with a 32B logic LLM on my home server.
+
+## How it compares to LLaVA and Qwen-VL
+
+I ran practical tests pitting STEP3-VL-10B against LLaVA 1.5 (13B) and Qwen-VL. 
+Here is what I noticed:
+- **Dense text (OCR):** LLaVA often skips lines in crowded documents. STEP3-VL-10B kept the structure intact, correctly reading complex tables.
+- **UI interfaces:** When asked to "find the save button", STEP3-VL-10B recognizes the floppy icon or text with more precision than the others, making it ideal for browser automation.
+- **Speed:** Using llama.cpp, inference times are comparable to Qwen-VL, but visual coherence is strictly better.
+
+## How to run STEP3-VL-10B locally
+
+The fastest way to test it is using Ollama. Make sure you have the latest version installed.
+
+```bash
+# Download and run the model via Ollama
+ollama run stepfun/step3-vl-10b
+```
+
+If you use OpenClaw to manage your AI agents, integration is immediate. In your `openclaw.json` file, configure the vision provider:
+
+```json
+{
+  "vision": {
+    "provider": "ollama",
+    "model": "stepfun/step3-vl-10b",
+    "resolution": "high"
+  }
+}
+```
+
+Restart the agent, and it will be able to "see" the screen and analyze input files using the new model.
+
+## Real-world test: UI and chart understanding
+
+The true benchmark for a CTO or developer is daily utility. I provided STEP3-VL-10B with a screenshot of an analytics dashboard and asked it to extract the main metrics.
+
+The model recognized:
+1. The exact values of the top KPIs.
+2. The downward trend of the line chart.
+3. The meaning of the colors used in the legend.
+
+Having a local model capable of this performance opens the door to autonomous agents that can operate on web platforms without APIs, literally reading the user interface in a private and secure way.
+
+In short, if you are building local visual agents in 2026, STEP3-VL-10B is currently the best compromise between OCR performance, general understanding, and memory consumption.
+
+*Matteo Giardino is a fractional CTO building autonomous systems with OpenClaw.*
