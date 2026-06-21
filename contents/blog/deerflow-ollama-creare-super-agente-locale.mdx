@@ -1,0 +1,90 @@
+---
+title: 'DeerFlow e Ollama: come creare un super agente AI locale'
+createdAt: '2026-06-21T00:00:00Z'
+modifiedAt: '2026-06-21T00:00:00Z'
+summary: 'DeerFlow è il framework di ByteDance per agenti autonomi. Scopri come usarlo con Ollama in un ambiente Docker sicuro per eseguire codice sul tuo Mac.'
+image: '/images/blog/deerflow-ollama-creare-super-agente-locale.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'ai agents', 'openclaw', 'tutorial']
+translationSlug: 'deerflow-ollama-build-local-super-agent'
+---
+
+DeerFlow è l'ambiente di esecuzione per agenti autonomi open source sviluppato da ByteDance. Invece di limitarsi a chattare, fornisce all'agente un file system reale e un terminale bash isolato. Dopo averlo testato sul mio Mac Mini, ti spiego come configurarlo con Ollama per far girare modelli locali senza costi API.
+
+Se stai cercando di costruire un "super agente" in grado di analizzare dati, scrivere script ed eseguirli autonomamente, DeerFlow è la soluzione più sicura attualmente disponibile. Ti spiego perché la sua architettura basata su Docker è fondamentale e come integrarlo con i tuoi modelli locali in 15 minuti.
+
+## Cos'è DeerFlow e perché ti serve
+
+Mentre framework come OpenClaw gestiscono l'orchestrazione degli agenti, DeerFlow risolve un problema diverso: l'esecuzione sicura del codice. Quando chiedi a un LLM di scrivere ed eseguire uno script Python per analizzare un file CSV, non vuoi che lo script giri direttamente sul tuo sistema operativo.
+
+DeerFlow crea una "scatola chiusa" (sandbox) dove l'agente può operare. Ha accesso a un terminale, può installare pacchetti, creare file e fallire senza causare danni al tuo computer.
+
+<CtaCard
+    title="Vuoi costruire agenti AI sicuri per la tua azienda?"
+    description="Iscriviti alla newsletter per sviluppatori: condivido ogni settimana i setup locali che uso in produzione."
+    primaryButtonText="Iscriviti ora"
+    primaryButtonUrl="/newsletter"
+    pattern="dots"
+    align="left"
+/>
+
+## L'importanza di una sandbox Docker
+
+Eseguire codice generato dall'AI sul tuo host è un rischio di sicurezza enorme, un problema che abbiamo visto anche analizzando [strangeClaw e le microVM](/blog/strangeclaw-alternativa-openclaw-microvm-firecracker). Un comando dannoso generato per errore (o per allucinazione del modello) può cancellare i tuoi progetti.
+
+DeerFlow utilizza container Docker per isolare l'agente. Ogni task viene eseguito in un container temporaneo che viene distrutto al termine dell'operazione. Questo approccio garantisce:
+- **Sicurezza:** l'agente non può accedere ai tuoi file personali.
+- **Riproducibilità:** l'ambiente di partenza è sempre pulito e identico.
+- **Isolamento delle dipendenze:** i pacchetti installati dall'agente non inquinano il tuo sistema.
+
+## Configurare DeerFlow con Ollama
+
+La configurazione predefinita di DeerFlow punta spesso alle API di OpenAI o Anthropic. Per mantenere i dati in locale e azzerare i costi, possiamo collegarlo a Ollama.
+
+Prima di iniziare, assicurati di aver installato Docker e Ollama. Scarica un modello capace di generare codice, come Qwen 3.5:
+
+```bash
+ollama run qwen2.5-coder:32b
+```
+
+Successivamente, clona il repository di DeerFlow e configura l'endpoint API per puntare al tuo server Ollama locale (di solito `http://localhost:11434/v1`). Nel file `.env` di DeerFlow, imposta:
+
+```env
+OPENAI_API_BASE="http://host.docker.internal:11434/v1"
+OPENAI_API_KEY="ollama"
+MODEL_NAME="qwen2.5-coder:32b"
+```
+
+Uso `host.docker.internal` perché DeerFlow gira all'interno di un container e ha bisogno di comunicare con Ollama che gira sull'host.
+
+## Creare il tuo primo super agente
+
+Una volta configurato, puoi lanciare DeerFlow. Proviamo con un task pratico: forniamogli un file CSV con dati di vendita e chiediamogli di estrarre le tendenze principali.
+
+Copia il tuo `vendite.csv` nella cartella `workspace` di DeerFlow ed esegui:
+
+```bash
+python run.py --task "Leggi vendite.csv, scrivi uno script Python per calcolare le vendite totali per mese e salva un grafico in output.png"
+```
+
+DeerFlow farà partire il container. Il modello Qwen scriverà lo script, lo eseguirà nel terminale virtuale, installerà eventuali librerie mancanti (come `pandas` o `matplotlib`) e infine genererà il grafico. Tutto in totale autonomia.
+
+## Limiti attuali e sviluppi futuri
+
+DeerFlow è un progetto giovane. Ho notato che l'ambiente Docker a volte impiega qualche secondo di troppo per avviarsi e la gestione degli errori non è sempre chiara se il modello entra in un loop infinito di comandi errati.
+
+Tuttavia, l'approccio di ByteDance è quello corretto: separare la logica dell'agente dall'ambiente di esecuzione. Integrato con un orchestratore come OpenClaw, apre le porte alla creazione di swarm di agenti locali che lavorano in parallelo in totale sicurezza.
+
+## Domande frequenti
+
+### DeerFlow è gratuito?
+Sì, il framework è open source. Usandolo con Ollama, elimini anche i costi delle chiamate API ai modelli linguistici.
+
+### Posso usare modelli più leggeri di Qwen 32B?
+Certamente. Puoi usare `llama3:8b` o `qwen2.5-coder:7b`, ma i modelli più grandi commettono meno errori di sintassi quando scrivono ed eseguono script complessi nella sandbox.
+
+### Funziona su Mac Apple Silicon?
+Sì. Docker Desktop e Ollama supportano nativamente i chip M1/M2/M3. Il mio setup principale gira su un Mac Mini M2 Pro senza problemi di compatibilità.
+
+*Scritto da Matteo Giardino, CTO e founder. Costruisco agenti AI per piccole e medie imprese in Italia. [I miei progetti](/projects).*
