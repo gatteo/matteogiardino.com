@@ -1,0 +1,63 @@
+---
+title: "AutoGLM Phone 9B: Turn Your Android into an Autonomous AI Agent"
+description: "How to use AutoGLM Phone 9B to control your Android device automatically. A complete local AI setup guide for mobile UI automation."
+date: "2026-06-21"
+modifiedAt: "2026-06-21"
+author: "Matteo Giardino"
+locale: "en"
+tags: ["ai", "local-ai", "automation", "android", "openclaw"]
+coverImage: "/images/blog/autoglm-phone-9b-android-ai-agent.png"
+status: "published"
+category: "technology"
+relatedArticles: []
+createdAt: "2026-06-21T00:00:00Z"
+summary: "A complete guide on using AutoGLM Phone 9B to turn your Android into an autonomous AI agent."
+image: "/images/blog/autoglm-phone-9b-android-ai-agent.png"
+authorId: "matteo"
+translationSlug: "autoglm-phone-9b-agente-ai-android"
+---
+
+*Written by Matteo Giardino* - CTO and Founder of OpenClaw.
+
+AutoGLM Phone 9B is a breakthrough open-weights model capable of driving Android UI through autonomous interaction. If you've been waiting for a truly local, on-device AI agent capable of tapping, swiping, and typing just like a human, this is it. In this guide, I will show you exactly how to set up AutoGLM Phone 9B and connect it with OpenClaw.
+
+Having built dozens of AI agents, I've noticed a missing piece: interacting natively with mobile applications without fragile Appium scripts. AutoGLM Phone 9B solves this by using multi-modal inputs (vision and text) to predict screen interactions directly. 
+
+## What is AutoGLM Phone 9B?
+
+AutoGLM Phone 9B is a 9-billion parameter multimodal language model optimized specifically for understanding and interacting with mobile graphical user interfaces. Unlike general-purpose LLMs, it was trained on vast amounts of Android screen recordings and UI layouts.
+
+<CtaCard title="Want help deploying AI agents?" subtitle="Let's build your AI workforce together." buttonText="Book a call" buttonLink="/contact" />
+
+## How It Works Under the Hood
+
+The architecture relies on a continuous loop of screen observation and action prediction:
+1. **Perception**: The model receives a screenshot of the current Android state.
+2. **Analysis**: It identifies actionable UI elements (buttons, text fields, icons).
+3. **Action Prediction**: Based on the user's natural language goal, it generates the exact coordinates and action type (tap, swipe, input).
+
+## Local Setup Guide
+
+Running a 9B multimodal model requires decent hardware. You'll need at least a Mac with 16GB of Unified Memory or a PC with an RTX 3090/4090. 
+
+Here is how you initialize the agent:
+
+```bash
+# Clone the repository and set up the environment
+git clone https://github.com/THUDM/AutoGLM.git
+cd AutoGLM
+pip install -r requirements.txt
+
+# Run the local inference server
+python server.py --model THUDM/AutoGLM-Phone-9B
+```
+
+Once the server is running, you can connect your Android device via ADB and execute the agent script to start automating tasks.
+
+## AutoGLM vs OpenClaw Ecosystem
+
+How does this fit into the broader OpenClaw architecture? While PicoClaw handles lightweight API and desktop browser automation, AutoGLM bridges the gap for mobile-first environments. You can easily integrate AutoGLM as a specialized tool within your OpenClaw workflow.
+
+## Conclusion
+
+Edge-deployed UI agents are the next frontier in automation. AutoGLM Phone 9B provides a robust, open-weights foundation for building Android automation without brittle selector-based scripts. It's time to build smarter workflows.
