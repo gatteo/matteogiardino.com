@@ -1,0 +1,120 @@
+---
+title: 'Fix OpenClaw Docker Install Stuck at Pending (2026)'
+createdAt: '2026-06-21T00:00:00Z'
+modifiedAt: '2026-06-21T00:00:00Z'
+summary: 'How to fix the OpenClaw Docker installation getting stuck at pending.json. Step-by-step guide to resolve the infinite loading loop.'
+image: '/images/blog/fix-openclaw-docker-install-stuck-pending.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw', 'docker']
+translationSlug: 'risolvere-installazione-docker-openclaw-bloccata-pending'
+---
+
+I recently encountered a frustrating issue while deploying OpenClaw on a new server: the Docker installation gets completely stuck at `pending.json`. If your OpenClaw setup is hanging in an infinite loading loop during the initial container spin-up, the fix is actually straightforward: you need to manually clear the dangling volume state and reset the permissions on the persistent configuration directory.
+
+## Why the OpenClaw Install Gets Stuck
+
+If you want to read more about configuration, see my guide on [Qwen 2.5 Coder 32B and OpenClaw](/blog/qwen-25-coder-32b-ollama-openclaw-guide).
+
+OpenClaw relies on a manifest file (`pending.json`) to track the status of its initial setup, including fetching the latest Ollama binaries and pulling the base models. If the Docker daemon restarts or the container crashes during this first initialization, the file is left in a locked state.
+
+When you try to start the container again via `docker-compose up -d`, OpenClaw reads the orphaned `pending.json` and assumes another process is currently handling the setup. The result? An infinite "Pending" loop in the Web UI and the logs.
+
+<CtaCard
+    title="Need help with AI infrastructure?"
+    description="I build secure, local AI setups for SMEs. Let's talk about scaling your agentic workflows."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## How to Fix the Pending.json Error
+
+The solution is to stop the container, remove the corrupted manifest, and enforce the correct file ownership.
+
+### 1. Stop the OpenClaw container
+
+First, bring down the entire compose stack to ensure no process is trying to write to the volume.
+
+```bash
+docker-compose down
+```
+
+### 2. Remove the locked manifest
+
+Navigate to your OpenClaw configuration directory. Depending on your setup, this is usually mapped to `~/.openclaw` or `./data`. Delete the offending file.
+
+```bash
+rm -f ~/.openclaw/state/pending.json
+```
+
+### 3. Fix permissions and restart
+
+Sometimes the loop is caused by Docker running as root while the host directory expects user permissions. Reset the ownership and start the stack again.
+
+```bash
+sudo chown -R $USER:$USER ~/.openclaw
+docker-compose up -d
+```
+
+## The E-E-A-T Gotcha
+
+When I first ran into this on my Mac Mini server, I kept tearing down the container (`docker rm -f openclaw`), but the error persisted. Why? Because the `~/.openclaw` directory is mounted as a persistent volume. Recreating the container doesn't wipe the broken state. You *must* delete the file on the host. 
+
+## FAQ
+
+### What does pending.json do in OpenClaw?
+The `pending.json` file is a temporary lock mechanism used by OpenClaw to prevent concurrent initialization processes from colliding when downloading base models and configuring the MCP servers.
+
+### Can I skip the initial model download?
+Yes. You can start OpenClaw with the `--no-models` flag in your docker-compose command to skip the initial pulls and get straight to the dashboard, then add your custom Ollama endpoint later.
+
+### Why is the Web UI showing a white screen?
+A white screen combined with the pending loop usually means the gateway proxy (Envoy) is up, but the backend Node.js process is stuck waiting for the lock file to be released.
+
+
+## Verifying the Fix with Docker Logs
+
+After you restart the container, you should check the logs to ensure the initialization completes successfully. This is how to fix openclaw docker install stuck at pending url effectively. Run the following command:
+
+```bash
+docker-compose logs -f openclaw
+```
+
+You should see the system pulling the default Ollama models (if enabled) and starting the MCP servers. The process can take a few minutes depending on your internet connection. 
+
+## Understanding Docker Volume Permissions
+
+Docker volumes can be tricky, especially on Linux and macOS. When Docker maps a directory, it sometimes assigns `root` ownership if the directory didn't exist before the container started. This prevents the Node.js process inside the container (running as a non-root user) from writing or deleting files like `pending.json`. 
+
+To avoid this in the future:
+1. Always create the directory manually before running `docker-compose up`.
+2. Ensure your `docker-compose.yml` specifies the correct user UID/GID if necessary.
+3. Regularly check your volume mounts using `ls -la ~/.openclaw`.
+
+## Alternative: Using the `--no-models` Flag
+
+If your network is slow or you prefer to use external models (like an existing Ollama instance or OpenAI APIs), you can bypass the pending setup entirely. 
+
+Edit your `docker-compose.yml` to include the `--no-models` argument in the command section:
+
+```yaml
+services:
+  openclaw:
+    image: matteogiardino/openclaw:latest
+    command: ["--no-models"]
+```
+
+This skips the model downloading phase completely, eliminating the chance of getting stuck in the pending loop. It's a quick workaround if you don't need the default local models right away.
+
+In 2026, OpenClaw has become one of the most reliable frameworks for local AI agents, but local infrastructure still requires some manual troubleshooting. Let's make sure your setup is robust. By fixing the pending.json error, you ensure your AI agents can start reliably every time.
+
+These steps should get your environment back on track. For more advanced tutorials, check out my other guides on scaling OpenClaw.
+
+
+## Wrap-up
+
+Fixing the OpenClaw pending loop only takes three commands. Keep an eye on your volume mounts and always ensure your host permissions match the Docker user. 
+
+*Written by Matteo Giardino, CTO and founder. I build AI agents for SMEs in Italy. [My projects](/projects).*

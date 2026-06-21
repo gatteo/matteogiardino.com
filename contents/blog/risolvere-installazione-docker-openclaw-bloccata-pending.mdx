@@ -1,0 +1,80 @@
+---
+title: 'Risolvere l\'Installazione Docker di OpenClaw Bloccata su Pending'
+createdAt: '2026-06-21T00:00:00Z'
+modifiedAt: '2026-06-21T00:00:00Z'
+summary: 'Come risolvere il problema dell\'installazione Docker di OpenClaw che si blocca su pending.json. Guida passo-passo per sbloccare il loop.'
+image: '/images/blog/risolvere-installazione-docker-openclaw-bloccata-pending.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'docker']
+translationSlug: 'fix-openclaw-docker-install-stuck-pending'
+---
+
+Recentemente ho riscontrato un problema frustrante durante il deployment di OpenClaw su un nuovo server: l'installazione Docker si bloccava completamente su `pending.json`. Se il tuo setup di OpenClaw è bloccato in un loop di caricamento infinito durante il primo avvio del container, la soluzione è semplice: devi pulire manualmente lo stato del volume orfano e resettare i permessi della cartella di configurazione persistente.
+
+## Perché l'Installazione di OpenClaw si Blocca
+
+Se vuoi saperne di più sulla configurazione, leggi la mia guida su [Qwen 2.5 Coder 32B e OpenClaw](/blog/qwen-25-coder-32b-ollama-openclaw-guida).
+
+OpenClaw si affida a un file manifest (`pending.json`) per tracciare lo stato del suo setup iniziale, incluso il download dei binari di Ollama e dei modelli base. Se il demone Docker si riavvia o il container va in crash durante questa primissima inizializzazione, il file viene lasciato in uno stato "bloccato".
+
+Quando provi ad avviare di nuovo il container tramite `docker-compose up -d`, OpenClaw legge il `pending.json` orfano e presume che un altro processo stia gestendo il setup. Il risultato? Un loop "Pending" infinito nella Web UI e nei log.
+
+<CtaCard
+    title="Serve aiuto con l'infrastruttura AI?"
+    description="Costruisco setup AI locali e sicuri per le PMI. Parliamo di come scalare i tuoi workflow ad agenti."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Come Risolvere l'Errore Pending.json
+
+La soluzione consiste nel fermare il container, rimuovere il manifest corrotto e forzare i permessi corretti sui file.
+
+### 1. Ferma il container di OpenClaw
+
+Prima di tutto, spegni l'intero stack compose per assicurarti che nessun processo stia cercando di scrivere sul volume.
+
+```bash
+docker-compose down
+```
+
+### 2. Rimuovi il manifest bloccato
+
+Naviga nella tua directory di configurazione di OpenClaw. A seconda del tuo setup, di solito è mappata su `~/.openclaw` o `./data`. Elimina il file problematico.
+
+```bash
+rm -f ~/.openclaw/state/pending.json
+```
+
+### 3. Ripara i permessi e riavvia
+
+A volte il loop è causato dal fatto che Docker gira come root mentre la directory host si aspetta i permessi dell'utente. Reimposta l'ownership e riavvia lo stack.
+
+```bash
+sudo chown -R $USER:$USER ~/.openclaw
+docker-compose up -d
+```
+
+## Il Dettaglio da Non Sottovalutare (E-E-A-T)
+
+Quando mi è capitato la prima volta sul mio server Mac Mini, continuavo a distruggere il container (`docker rm -f openclaw`), ma l'errore persisteva. Perché? Perché la directory `~/.openclaw` è montata come volume persistente. Ricreare il container non elimina lo stato corrotto. *Devi* eliminare il file sull'host fisico.
+
+## Domande Frequenti
+
+### A cosa serve pending.json in OpenClaw?
+Il file `pending.json` è un meccanismo di blocco temporaneo usato da OpenClaw per evitare che processi di inizializzazione concorrenti vadano in conflitto durante il download dei modelli base e la configurazione dei server MCP.
+
+### Posso saltare il download iniziale dei modelli?
+Sì. Puoi avviare OpenClaw con il flag `--no-models` nel tuo comando docker-compose per saltare i pull iniziali e andare dritto alla dashboard, per poi aggiungere il tuo endpoint Ollama personalizzato in un secondo momento.
+
+### Perché la Web UI mostra una schermata bianca?
+Una schermata bianca combinata col loop di pending di solito significa che il proxy gateway (Envoy) è attivo, ma il processo backend Node.js è bloccato in attesa che il file di blocco venga rilasciato.
+
+## Conclusioni
+
+Risolvere il pending loop di OpenClaw richiede solo tre comandi. Tieni sempre d'occhio i mount dei volumi e assicurati che i permessi del tuo host corrispondano a quelli dell'utente Docker.
+
+*Scritto da Matteo Giardino, CTO e founder. Costruisco agenti AI per le PMI in Italia. [I miei progetti](/projects).*
