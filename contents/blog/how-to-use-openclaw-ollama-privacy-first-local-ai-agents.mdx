@@ -1,0 +1,54 @@
+---
+title: 'How to Use OpenClaw and Ollama for Privacy-First Local AI Agents'
+createdAt: '2026-06-21T00:00:00Z'
+modifiedAt: '2026-06-21T00:00:00Z'
+summary: 'Learn how to build privacy-first local AI agents using OpenClaw and Ollama, keeping all your data strictly on your machine.'
+image: '/images/blog/how-to-use-openclaw-ollama-privacy-first-local-ai-agents.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw', 'ai agents', 'ollama']
+translationSlug: 'come-usare-openclaw-ollama-agenti-ai-locali-privacy-first'
+---
+
+Privacy is critical when dealing with sensitive data. I've found that the best way to ensure data sovereignty is to keep it off the cloud entirely. In this guide, I will show you how to build privacy-first local AI agents using OpenClaw and Ollama.
+
+## Why Privacy Matters in AI
+
+When you send code or company documents to an API, you lose control. A local setup with Ollama ensures nothing leaves your machine, while OpenClaw orchestrates the workflow locally.
+
+## Setting up Ollama for Local Models
+
+First, install Ollama and pull a local model:
+
+```bash
+ollama run llama3.1
+```
+
+This ensures we have a powerful reasoning engine running locally.
+
+## Installing OpenClaw
+
+Install OpenClaw globally via npm:
+
+```bash
+npm install -g @openclaw/cli
+```
+
+## Connecting OpenClaw to Ollama
+
+Configure your OpenClaw settings to point to your local Ollama instance rather than an external API.
+
+```json
+{
+  "provider": "ollama",
+  "model": "llama3.1"
+}
+```
+
+## Building a Private Agent Workflow
+
+Now you can create workflows that process confidential documents without privacy concerns.
+
+<CtaCard title="Sign up for updates" href="https://matteogiardino.com/newsletter" />
+
+*Matteo Giardino is an AI engineer and CTO focusing on local AI and developer tools.*

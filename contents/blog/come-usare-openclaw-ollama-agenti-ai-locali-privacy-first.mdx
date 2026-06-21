@@ -1,0 +1,54 @@
+---
+title: 'Come Usare OpenClaw e Ollama per Agenti AI Locali Privacy-First'
+createdAt: '2026-06-21T00:00:00Z'
+modifiedAt: '2026-06-21T00:00:00Z'
+summary: 'Scopri come creare agenti AI locali privacy-first usando OpenClaw e Ollama, mantenendo tutti i tuoi dati strettamente sul tuo computer.'
+image: '/images/blog/come-usare-openclaw-ollama-agenti-ai-locali-privacy-first.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'ai agents', 'ollama']
+translationSlug: 'how-to-use-openclaw-ollama-privacy-first-local-ai-agents'
+---
+
+La privacy è fondamentale quando si trattano dati sensibili. Ho scoperto che il modo migliore per garantire la sovranità dei dati è non mandarli sul cloud. In questa guida ti mostrerò come creare agenti AI locali usando OpenClaw e Ollama.
+
+## Perché la Privacy è Cruciale
+
+Quando invii codice o documenti aziendali a un'API, perdi il controllo. Un setup locale con Ollama assicura che nulla lasci il tuo computer, mentre OpenClaw orchestra il workflow.
+
+## Installare Ollama per i Modelli Locali
+
+Per prima cosa, installa Ollama e scarica un modello locale:
+
+```bash
+ollama run llama3.1
+```
+
+Così avremo un potente motore di ragionamento locale.
+
+## Installare OpenClaw
+
+Installa OpenClaw globalmente tramite npm:
+
+```bash
+npm install -g @openclaw/cli
+```
+
+## Connettere OpenClaw a Ollama
+
+Configura OpenClaw per puntare alla tua istanza locale di Ollama.
+
+```json
+{
+  "provider": "ollama",
+  "model": "llama3.1"
+}
+```
+
+## Creare un Workflow Privato
+
+Ora puoi processare documenti riservati senza alcuna preoccupazione per la privacy.
+
+<CtaCard title="Iscriviti alla newsletter" href="https://matteogiardino.com/newsletter" />
+
+*Matteo Giardino è un AI engineer e CTO focalizzato sull'AI locale.*
