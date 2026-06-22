@@ -1,0 +1,136 @@
+---
+title: 'How to Build an AI Financial Analyst Agent with OpenClaw and MCP'
+createdAt: '2026-06-23T00:00:00Z'
+modifiedAt: '2026-06-23T00:00:00Z'
+summary: 'Practical guide to building a local AI financial analyst: use OpenClaw and MCP to connect real-time stock market data to a private LLM.'
+image: '/images/blog/build-ai-financial-analyst-agent-openclaw-mcp.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw']
+translationSlug: 'costruire-agente-ai-analista-finanziario-openclaw-mcp'
+---
+
+Generic AI agents are fine for summarization, but when you need precise numbers, you need specialization. Building an AI financial analyst agent means giving your local model real-time access to the markets via the Model Context Protocol (MCP). After running this setup with OpenClaw, I will show you how to connect a Python MCP server to stock APIs to automate your financial research locally.
+
+## Why use MCP for financial data
+
+The Model Context Protocol is the standard that enables AI models to interact with the outside world in a secure and structured way. Without MCP, an LLM is limited: its knowledge stops at its training date. That is useless in finance.
+
+By adding a specialized MCP server, OpenClaw can send structured queries to get a stock's current price, read the latest corporate news, and compare balance sheets. You don't have to copy and paste from websites; your agent handles it.
+
+<CtaCard
+    title="Want to build AI agents for your team?"
+    description="I build custom AI solutions to automate research and data analysis in your company."
+    primaryButtonText="Contact me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Prerequisites for your AI analyst
+
+Before writing code, you need a working local environment. Here is what I used on my Mac Mini M4:
+
+- **OpenClaw** installed and configured (I use version 2026.3.1).
+- A local model via **Ollama**. Qwen 2.5 Coder or Llama 3.2 work perfectly.
+- A free API key for stock data (for example, Alpha Vantage or the yfinance library for Python).
+- Python 3.12+ installed.
+
+## Step 1: Create the MCP server in Python
+
+We will write a simple MCP server that exposes two tools: fetching a stock price and retrieving the latest news.
+
+Create a `financial-mcp` directory and initialize the environment:
+
+```bash
+mkdir financial-mcp && cd financial-mcp
+python -m venv venv
+source venv/bin/activate
+pip install mcp yfinance
+```
+
+Create the `server.py` file:
+
+```python
+from mcp.server.fastmcp import FastMCP
+import yfinance as yf
+
+# Initialize the MCP server
+mcp = FastMCP("FinancialAnalyst")
+
+@mcp.tool()
+def get_stock_price(ticker: str) -> str:
+    """Gets the current price and basic data for a stock"""
+    try:
+        stock = yf.Ticker(ticker)
+        info = stock.info
+        price = info.get('currentPrice', 'N/A')
+        name = info.get('longName', ticker)
+        return f"{name} ({ticker}): ${price}"
+    except Exception as e:
+        return f"Error retrieving data for {ticker}: {str(e)}"
+
+@mcp.tool()
+def get_company_news(ticker: str) -> str:
+    """Retrieves the latest financial news for a company"""
+    stock = yf.Ticker(ticker)
+    news = stock.news[:3]
+    return "\n".join([f"- {n['title']}" for n in news])
+
+if __name__ == "__main__":
+    mcp.run(transport='stdio')
+```
+
+This script uses `FastMCP` to expose two Python functions as standard tools that OpenClaw can understand and call autonomously.
+
+## Step 2: Configure OpenClaw
+
+Now we need to tell OpenClaw to use this new MCP server. Open the OpenClaw configuration file (usually in `~/.openclaw/config.yaml`) and add the server under the `mcpServers` section:
+
+```yaml
+mcpServers:
+  financial:
+    command: "python"
+    args:
+      - "/absolute/path/to/financial-mcp/server.py"
+```
+
+Restart OpenClaw to apply the changes. If you go to the "Tools" tab, you should see `get_stock_price` and `get_company_news` ready to be used.
+
+## Step 3: The Analyst's System Prompt
+
+A good set of tools is useless without the right prompt. You must give the agent a clear role. Go to the OpenClaw settings and set this system prompt:
+
+```text
+You are an expert financial analyst. Your job is to provide concise, data-driven reports.
+ALWAYS use your tools to retrieve the current stock price and latest news before answering.
+Do not invent numbers. If data is not available through your tools, state it clearly.
+Structure your analysis into three parts: Market Data, Recent Context, and Summary.
+```
+
+## The wrong ticker issue
+
+When I first tested this setup, the LLM hallucinated European stock tickers. Instead of asking for the price on the Milan stock exchange (which requires the `.MI` suffix in yfinance), it searched for random US tickers.
+
+The fix? I modified the prompt by adding precise instructions on how to format international tickers. Remember that tools execute exactly what the model passes to them: input sanitization must happen via prompt engineering or Python validation inside the MCP server.
+
+## The result: Reports generated in 10 seconds
+
+After 2 weeks of testing, this financial analyst agent has saved me hours of browsing finance websites. Instead of opening 5 different tabs, I launch OpenClaw and ask: "Give me a summary on Apple and Microsoft today." In 10 seconds, the agent calls the MCP server in parallel, reads the results, and formats a professional report.
+
+## FAQ
+
+### What do you need to build an AI financial agent?
+You need a local LLM model (via Ollama or similar), a UI like OpenClaw, and an MCP server to connect the AI to financial APIs (like yfinance or Alpha Vantage).
+
+### How much does it cost to use yfinance with MCP?
+The `yfinance` Python library is free because it scrapes public data from Yahoo Finance. This makes it perfect for personal projects and zero-cost local testing.
+
+### Can I connect the agent to my real portfolio?
+Yes, you can build MCP tools that securely read CSV exports or your broker's APIs, keeping your financial data private locally thanks to the use of models like Llama 3 or Qwen.
+
+## Conclusion
+
+Building an AI financial analyst agent with OpenClaw and MCP proves the true power of local AI: specialization. With just a few lines of Python, we transformed a generic LLM into an assistant connected to the real world. The next step? Adding tools to download and analyze quarterly earnings reports in PDF format.
+
+*Written by Matteo Giardino, CTO and founder. I build AI agents for small and medium businesses in Italy. [My projects](/projects).*
