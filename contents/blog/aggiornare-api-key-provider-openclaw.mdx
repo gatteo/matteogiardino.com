@@ -1,0 +1,115 @@
+---
+title: "Come Aggiornare l'API Key in OpenClaw (Qualsiasi Provider)"
+summary: "Guida passo-passo del 2026 per cambiare l'API Key di OpenAI, Anthropic o OpenRouter in OpenClaw, usando la CLI o modificando il file JSON."
+description: "Guida passo-passo del 2026 per cambiare l'API Key di OpenAI, Anthropic o OpenRouter in OpenClaw, usando la CLI o modificando il file JSON."
+publishedAt: "2026-06-23"
+createdAt: "2026-06-23T00:00:00Z"
+modifiedAt: "2026-06-23"
+author: "Matteo Giardino"
+authorId: "matteo"
+image: "/images/blog/aggiornare-api-key-provider-openclaw.png"
+isPublished: true
+tags:
+  - openclaw
+  - tutorial
+  - api key
+locale: "it"
+translationSlug: "update-api-key-provider-openclaw"
+---
+
+Se stai usando OpenClaw nel 2026, prima o poi dovrai affrontare il problema: **come aggiornare l'API Key in OpenClaw (qualsiasi provider)**. Che tu abbia esaurito il credito di OpenAI, raggiunto i rate limit, o deciso di passare a un modello più economico tramite OpenRouter, cambiare la chiave è un'operazione essenziale. In questa guida completa, ti mostrerò i due metodi principali per aggiornare l'API Key in modo sicuro, evitando errori di connessione e mantenendo attivi i tuoi agenti AI locali.
+
+Negli ultimi mesi ho gestito decine di agenti AI autonomi sul mio [server OpenClaw VPS](/blog/openclaw-hostinger-vps-setup), e la rotazione delle chiavi API è diventata una routine. Esistono due approcci: l'utilizzo rapido della Command Line Interface (CLI) o la modifica manuale del file di configurazione JSON. Esploreremo entrambi i metodi con esempi pratici per Anthropic, OpenAI e Groq.
+
+## Perché Aggiornare o Cambiare la tua API Key in OpenClaw?
+
+La gestione corretta delle credenziali è fondamentale in qualsiasi architettura AI. Ecco tre motivi principali per cui è necessario aggiornare la chiave:
+
+- **Rotazione per Sicurezza:** Come ogni credenziale sensibile, le API Key dovrebbero essere sostituite ogni 3-6 mesi. Se hai mai caricato accidentalmente il tuo `openclaw.json` su GitHub, sai di cosa parlo.
+- **Cambio Provider:** OpenClaw supporta nativamente [l'installazione di OpenClaw](/blog/come-installare-openclaw) con decine di provider diversi. Passare da OpenAI (`gpt-4o`) ad Anthropic (`claude-3-5-sonnet`) richiede l'inserimento di una chiave con prefisso `sk-ant`.
+- **Esaurimento del Credito:** I token finiscono in fretta quando si usano flussi di lavoro complessi. Quando il provider restituisce un errore 429 o 401, il cambio di chiave è l'unica soluzione per ripristinare il servizio.
+
+<CtaCard title="Unisciti al Canale Telegram" description="Ricevi aggiornamenti quotidiani su OpenClaw, nuovi modelli e agenti AI." buttonText="Entra nel Canale" href="https://t.me/matteogiardino_com" />
+
+## Metodo 1: Aggiornare l'API Key usando la CLI di OpenClaw (Consigliato)
+
+Il metodo più sicuro e rapido per capire **come aggiornare l'api key in openclaw (qualsiasi provider)** è affidarsi alla CLI ufficiale. La CLI gestisce automaticamente la sintassi del file JSON sottostante, prevenendo errori di formattazione fatali.
+
+Apri il tuo terminale (su macOS, Linux o tramite WSL su Windows) e utilizza il comando `config set`:
+
+```bash
+openclaw config set api_key "sk-proj-LA_TUA_NUOVA_CHIAVE"
+```
+
+Se non specifichi il provider, OpenClaw aggiornerà la chiave del provider predefinito (solitamente OpenAI o quello che hai impostato durante il primo avvio). Se invece vuoi aggiornare la chiave di un provider specifico, ad esempio Anthropic, usa il flag `--provider`:
+
+```bash
+openclaw config set api_key "sk-ant-api03-LA_TUA_NUOVA_CHIAVE" --provider anthropic
+```
+
+Questo approccio è incredibilmente affidabile e viene eseguito in meno di 2 secondi, senza bisogno di fermare i processi degli agenti attivi. L'ho testato su cluster multi-agente e l'aggiornamento viene recepito al successivo ciclo di esecuzione dell'agente.
+
+## Metodo 2: Modificare manualmente il file openclaw.json
+
+Ci sono situazioni in cui la CLI potrebbe non essere accessibile o potresti voler configurare le chiavi per 5 provider diversi in un colpo solo. In questi casi, la modifica diretta del file `openclaw.json` è la strada da percorrere.
+
+Il file di configurazione principale si trova nella directory home del tuo utente. Apri il file con un editor di testo come Nano, Vim o VS Code:
+
+```bash
+nano ~/.openclaw/openclaw.json
+```
+
+All'interno del file, cerca il blocco `"providers"`. Qui troverai la struttura ad albero con tutte le tue configurazioni. Per aggiornare l'API Key, sostituisci semplicemente la stringa all'interno del campo `"api_key"`. Ecco un esempio pratico per aggiornare contemporaneamente OpenAI e Groq:
+
+```json
+{
+  "providers": {
+    "openai": {
+      "api_key": "sk-proj-NUOVA_CHIAVE_OPENAI_2026",
+      "model": "gpt-4o"
+    },
+    "groq": {
+      "api_key": "gsk_NUOVA_CHIAVE_GROQ_2026",
+      "model": "llama-3.1-70b-versatile"
+    }
+  }
+}
+```
+
+**Attenzione:** il formato JSON è spietato. Assicurati di non dimenticare le virgole alla fine delle righe (tranne l'ultima del blocco) e di non eliminare le parentesi graffe. Una volta salvato il file (`Ctrl+O` e `Invio` su Nano), OpenClaw leggerà le nuove impostazioni.
+
+## Verificare l'Aggiornamento dell'API Key
+
+Non dare mai per scontato che l'aggiornamento sia andato a buon fine senza un test. Per verificare che OpenClaw riesca a comunicare con il provider utilizzando la nuova API Key, lancia il comando di test nativo:
+
+```bash
+openclaw ping --provider anthropic
+```
+
+Se ricevi una risposta del tipo `Status: OK - Connection established in 120ms`, congratulazioni: la tua chiave è attiva. Se invece ottieni un errore `401 Unauthorized` o `403 Forbidden`, la chiave potrebbe essere stata incollata male, con spazi vuoti all'inizio o alla fine, oppure il tuo account sul provider potrebbe essere sprovvisto di fondi.
+
+## FAQ sulle API Key in OpenClaw
+
+**Dove vengono salvate le API Key in OpenClaw?**  
+Vengono salvate in chiaro nel file di configurazione `~/.openclaw/openclaw.json`. Assicurati che questo file abbia i permessi corretti (`chmod 600`) per evitare letture non autorizzate sul tuo sistema.
+
+**Posso usare OpenClaw senza una API Key?**  
+Sì, ma solo utilizzando provider locali. Puoi [configurare Ollama](/blog/come-installare-ollama) come provider predefinito. In quel caso, il campo `"api_key"` nel JSON può essere lasciato vuoto o omesso del tutto.
+
+**Cosa fare in caso di errore 429 Too Many Requests?**  
+L'errore 429 non indica una chiave sbagliata, ma il superamento del rate limit del provider. L'aggiornamento dell'API Key con una associata a un account di livello superiore o l'aggiunta di credito risolverà il problema.
+
+L'operazione per capire come aggiornare l'api key in openclaw (qualsiasi provider) è una competenza di base per chiunque lavori con framework agentici. Assicurati di monitorare il consumo dei token dalla dashboard del tuo provider per non farti mai cogliere impreparato.
+
+*Scritto da Matteo Giardino, sviluppatore e Fractional CTO appassionato di AI agentica e automazione.*
+
+## FAQ
+
+**Come aggiorno la chiave API per Anthropic in OpenClaw?**  
+Usa il comando CLI `openclaw config set api_key "sk-ant-..." --provider anthropic`. Questo aggiornerà automaticamente la configurazione corretta per i modelli Claude.
+
+**Perché OpenClaw restituisce l'errore 401 Unauthorized?**  
+L'errore 401 significa che la tua chiave API è scaduta, non valida o incollata male (es. spazi extra). Re-inseriscila tramite la CLI.
+
+**Posso cambiare modello e provider contemporaneamente?**  
+Sì, modificando direttamente il file `~/.openclaw/openclaw.json`, puoi specificare sia la nuova `"api_key"` che il nuovo `"model"` per qualsiasi provider supportato.
