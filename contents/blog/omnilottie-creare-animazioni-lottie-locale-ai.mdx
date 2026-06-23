@@ -1,0 +1,102 @@
+---
+title: 'OmniLottie: Generare Animazioni Lottie in Locale'
+createdAt: '2026-06-23T09:00:00Z'
+modifiedAt: '2026-06-23T09:00:00Z'
+summary: 'OmniLottie è il nuovo strumento AI che ti permette di creare animazioni Lottie da testo, immagini o video completamente offline. Scopri come configurarlo in locale nel 2026.'
+image: '/images/blog/omnilottie-creare-animazioni-lottie-locale-ai.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'omnilottie', 'local ai', 'lottie', 'tutorial']
+translationSlug: 'omnilottie-create-lottie-animations-locally-ai'
+---
+
+Scritto da Matteo Giardino
+
+Vuoi creare animazioni Lottie da testo, immagini o video in locale? OmniLottie è esattamente quello che fa per te. Scopri come in questa guida stile [Z-Anime e OpenClaw](/blog/z-anime-openclaw-create-studio-quality-anime-locally). La generazione di animazioni vettoriali ha storicamente richiesto ore di lavoro manuale in Adobe After Effects o l'utilizzo di costose API in cloud. Nel 2026, il panorama dell'intelligenza artificiale è cambiato, permettendo agli sviluppatori di generare animazioni Lottie leggere e di alta qualità completamente offline sul proprio hardware.
+
+In questa guida, ti mostrerò come installare OmniLottie, configurare l'ambiente di lavoro e iniziare a generare animazioni senza inviare alcun dato a server esterni.
+
+<CtaCard title="Hai bisogno di integrare strumenti AI locali per il tuo team?" />
+
+## Perché le Animazioni Lottie Sono Fondamentali nel 2026
+
+I file Lottie sono animazioni basate su JSON esponenzialmente più piccole di GIF o MP4. Possono essere scalate all'infinito senza perdere qualità, rendendole perfette per applicazioni web e mobile. Prima di OmniLottie, il collo di bottiglia era sempre il processo di creazione, in cui i designer dovevano gestire manualmente ogni fotogramma chiave.
+
+Ora, grazie ai modelli AI multimodali in grado di comprendere il movimento, puoi usare OmniLottie per convertire semplici prompt testuali in file JSON pronti per la produzione. Ancora meglio, puoi fornire in input un'immagine SVG statica o una breve clip video e l'AI estrapolerà i percorsi di movimento per restituirti un file Lottie immacolato.
+
+Eseguendo questo processo in locale, mantieni la privacy assoluta sui tuoi asset aziendali ed eviti i costi di abbonamento ricorrenti dei generatori di animazioni basati sul cloud.
+
+## Requisiti di Sistema per OmniLottie
+
+Per far girare OmniLottie in modo fluido sul tuo computer, hai bisogno di un hardware adeguato. La generazione di percorsi di movimento vettoriali richiede potenza di calcolo, sebbene non sia pesante quanto la generazione di video basati su pixel.
+
+- **GPU**: Una scheda video dedicata con almeno 8GB di VRAM (NVIDIA RTX 3060 o superiore) o un Mac Apple Silicon (M1/M2/M3) con almeno 16GB di Memoria Unificata.
+- **Archiviazione**: Circa 15GB di spazio libero per i pesi del modello e le dipendenze.
+- **OS**: Linux (Ubuntu 22.04+), macOS 13+, o Windows 11 con WSL2.
+
+Nella mia esperienza utilizzandolo su un server Mac Mini, la generazione richiede circa 15-30 secondi per animazione, il che è incredibile per un flusso di lavoro offline.
+
+## Come Installare OmniLottie in Locale
+
+La configurazione di OmniLottie prevede di clonare la repository, impostare un ambiente virtuale Python e scaricare i pesi del modello necessari.
+
+Prima di tutto, clona la repository ufficiale e naviga nella directory:
+
+```bash
+git clone https://github.com/omnilottie/omnilottie-local.git
+cd omnilottie-local
+```
+
+Successivamente, crea un ambiente virtuale per non sporcare i pacchetti di sistema:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+Installa le dipendenze richieste. Se usi un Mac con Apple Silicon, assicurati di installare la versione di PyTorch compatibile con MPS per l'accelerazione hardware:
+
+```bash
+pip install -r requirements.txt
+```
+
+Una volta completata l'installazione, avvia lo script di configurazione iniziale. Questo scaricherà automaticamente i modelli AI richiesti da HuggingFace. L'operazione potrebbe richiedere alcuni minuti a seconda della tua connessione internet:
+
+```bash
+python setup_models.py
+```
+
+## Creare Animazioni da Testo e Immagini
+
+Ora che OmniLottie è installato, puoi iniziare a generare. L'interfaccia a riga di comando (CLI) è semplice e intuitiva.
+
+Per creare un'animazione da un prompt di testo, usa il seguente comando. L'output verrà salvato come file `.json` nella tua directory `outputs`.
+
+```bash
+python generate.py --mode text --prompt "Uno spinner di caricamento minimalista, colore blu, rotazione fluida" --output spinner.json
+```
+
+Se hai un file grafico SVG esistente che desideri animare, puoi passarlo in modalità immagine. L'AI analizzerà i livelli e applicherà un movimento naturale:
+
+```bash
+python generate.py --mode image --input mio_logo.svg --prompt "fallo rimbalzare leggermente" --output logo_animato.json
+```
+
+Questa funzionalità è incredibilmente utile per dare vita istantaneamente a componenti UI statici.
+
+## Integrare OmniLottie in OpenClaw
+
+Per gli sviluppatori che vogliono automatizzare i flussi, integrate OmniLottie negli agenti. Leggete la nostra [Guida Qwen 2.5 Coder 32B](/blog/qwen-25-coder-32b-ollama-openclaw-guide) per i dettagli MCP. Avvolgendo la CLI di OmniLottie in un semplice server MCP in Python, i tuoi agenti AI locali possono generare animazioni su richiesta.
+
+Immagina di dire al tuo agente di programmazione: "Crea un modulo di login in React e genera un'animazione di spunta per lo stato di successo." L'agente può scrivere il codice React, chiamare lo strumento MCP di OmniLottie e iniettare il JSON risultante direttamente nel tuo progetto. Questo è il vero potere dell'intelligenza artificiale locale nel 2026.
+
+## Domande Frequenti
+
+### Q: Posso usare OmniLottie per progetti commerciali?
+A: Sì, la versione open-source utilizza una licenza permissiva. Verifica i termini specifici sulla repository ufficiale.
+
+### Q: Funziona senza connessione internet?
+A: Sì. Una volta scaricati i pesi del modello iniziali, la generazione avviene offline sul tuo hardware locale.
+
+### Q: Come si confronta OmniLottie con Adobe After Effects?
+A: Genera semplici animazioni UI. Non sostituisce il controllo della timeline di After Effects, ma accelera drasticamente il flusso di lavoro.
