@@ -1,0 +1,87 @@
+---
+title: "OpenClaw e DeepSeek Coder V2: Il Setup Definitivo per Agenti AI Locali"
+description: "Scopri come configurare DeepSeek Coder V2 con OpenClaw per creare loop di agenti locali, evitando la troncatura del contesto e automatizzando la scrittura del codice."
+summary: "Scopri come configurare DeepSeek Coder V2 con OpenClaw per creare loop di agenti locali, evitando la troncatura del contesto e automatizzando la scrittura del codice."
+publishedAt: "2026-06-24"
+createdAt: "2026-06-24T00:00:00Z"
+modifiedAt: "2026-06-24"
+image: "/images/blog/openclaw-deepseek-coder-v2-setup-ai-locale.png"
+authorId: "matteo"
+slug: "openclaw-deepseek-coder-v2-setup-ai-locale"
+locale: "it"
+translationSlug: "openclaw-deepseek-coder-v2-local-ai-setup"
+tags: ["openclaw", "deepseek", "ai-locale", "tutorial", "llm"]
+---
+
+Configurare **DeepSeek Coder V2** insieme a **OpenClaw** ti permette di avere un agente AI per la programmazione completamente locale, in grado di gestire contesti enormi senza perdere pezzi. Unendo le capacità di ragionamento di DeepSeek Coder V2 con l'orchestrazione di OpenClaw, puoi automatizzare code review e refactoring lavorando offline.
+
+In questa guida, ti mostrerò esattamente come scaricare il modello tramite Ollama e come impostare il JSON/YAML di OpenClaw per stabilire una connessione stabile.
+
+<CtaCard title="Vuoi altri tutorial sugli agenti AI locali?" link="https://matteogiardino.com/newsletter" buttonText="Iscriviti" />
+
+## Cos'è DeepSeek Coder V2?
+
+DeepSeek Coder V2 è uno dei modelli open-weights più capaci attualmente disponibili, addestrato specificamente per la generazione di codice e l'ingegneria del software. La vera forza risiede nella sua architettura Mixture-of-Experts (MoE) e nell'enorme context window. Questo significa che può processare intere codebase senza dimenticare le istruzioni iniziali o allucinare variabili.
+
+## Perché usarlo con OpenClaw?
+
+OpenClaw nasce per orchestrare complessi flussi di lavoro multi-agente. Quando colleghi DeepSeek Coder V2 a OpenClaw, passi dall'avere un semplice chatbot a un sistema autonomo capace di:
+- Leggere i tuoi file locali usando tool specifici.
+- Scrivere codice in modo iterativo.
+- Eseguire test e correggere i propri errori.
+
+Far girare tutto in locale significa azzerare i costi delle API e garantire la privacy totale sui tuoi dati. Lo sto usando sul mio Mac Studio e la latenza è praticamente nulla per la maggior parte dei task.
+
+## Step 1: Scaricare il Modello in Locale
+
+Il modo più semplice per far girare DeepSeek Coder V2 in locale è utilizzare [Ollama](https://ollama.com/). Assicurati prima di tutto di averlo installato.
+
+Apri il terminale e digita:
+
+```bash
+ollama run deepseek-coder-v2:16b
+```
+
+*Nota: In base alla tua VRAM, potresti voler scegliere una versione quantizzata diversa. Il modello da 16B gira perfettamente su macchine con almeno 16GB di memoria unificata.*
+
+Attendi la fine del download. Puoi verificare che tutto funzioni scrivendo un semplice prompt direttamente nella CLI di Ollama.
+
+## Step 2: Configurare il Provider su OpenClaw
+
+Una volta che Ollama sta esponendo il modello su `http://localhost:11434`, dobbiamo dire a OpenClaw di utilizzarlo.
+
+Apri il file di configurazione di OpenClaw (solitamente `~/.openclaw/config.yaml` o `openclaw.json`) e aggiungi il provider Ollama:
+
+```yaml
+providers:
+  - name: "ollama-deepseek"
+    type: "ollama"
+    endpoint: "http://localhost:11434"
+    models:
+      - "deepseek-coder-v2:16b"
+    default_parameters:
+      temperature: 0.2
+      num_ctx: 16384
+```
+
+Fai attenzione al parametro `num_ctx`. È fondamentale alzarlo rispetto al default di Ollama (spesso fermo a 2048) in modo che i tool e i system prompt di OpenClaw non vengano troncati.
+
+## Testare il Setup: Un Task Reale
+
+Ora avvia la CLI di OpenClaw e assegna un compito al tuo nuovo agente.
+
+```bash
+openclaw run --provider ollama-deepseek --model deepseek-coder-v2:16b "Scrivi uno script Python che legga tutti i file CSV nella cartella corrente e li unisca."
+```
+
+Vedrai OpenClaw eseguire il piano sfruttando DeepSeek Coder V2 per generare il codice. Il risultato è solitamente molto pulito e, girando in locale, non andrà mai in timeout come accade a volte con i provider cloud congestionati.
+
+## Conclusioni e Prossimi Passi
+
+Unire DeepSeek Coder V2 e OpenClaw sblocca un ambiente di sviluppo AI locale e robusto. È privato, veloce e completamente gratuito.
+
+Il prossimo passo? Prova a costruire un tool custom per OpenClaw che permetta all'agente DeepSeek di lanciare i tuoi unit test in automatico.
+
+<br />
+
+Scritto da Matteo Giardino, un software engineer e ricercatore AI, focalizzato su flussi di lavoro ad agenti locali e sistemi autonomi.

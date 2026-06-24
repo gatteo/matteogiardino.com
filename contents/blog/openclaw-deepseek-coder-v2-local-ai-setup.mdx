@@ -1,0 +1,87 @@
+---
+title: "OpenClaw with DeepSeek Coder V2: Ultimate Local AI Setup"
+description: "Learn how to configure DeepSeek Coder V2 with OpenClaw for local agent loops, avoiding context truncation and running coding agents directly on your machine."
+summary: "Learn how to configure DeepSeek Coder V2 with OpenClaw for local agent loops, avoiding context truncation and running coding agents directly on your machine."
+publishedAt: "2026-06-24"
+createdAt: "2026-06-24T00:00:00Z"
+modifiedAt: "2026-06-24"
+image: "/images/blog/openclaw-deepseek-coder-v2-local-ai-setup.png"
+authorId: "matteo"
+slug: "openclaw-deepseek-coder-v2-local-ai-setup"
+locale: "en"
+translationSlug: "openclaw-deepseek-coder-v2-setup-ai-locale"
+tags: ["openclaw", "deepseek", "local-ai", "tutorial", "llm"]
+---
+
+Setting up **DeepSeek Coder V2** with **OpenClaw** gives you a powerful, local AI coding agent that can handle massive context without truncation. By pairing the impressive reasoning capabilities of DeepSeek Coder V2 with the flexible agent orchestration of OpenClaw, you can automate code reviews, scaffolding, and refactoring completely offline.
+
+In this guide, I will show you exactly how to download the model locally via Ollama and configure the OpenClaw provider JSON to establish a stable connection.
+
+<CtaCard title="Want more local AI agent tutorials?" link="https://matteogiardino.com/newsletter" buttonText="Subscribe" />
+
+## What is DeepSeek Coder V2?
+
+DeepSeek Coder V2 is one of the most capable open-weights models specifically fine-tuned for code generation and software engineering tasks. What makes it special is its mixture-of-experts (MoE) architecture and its massive context window. This allows it to ingest entire codebases without forgetting instructions or hallucinating variables halfway through a long file. 
+
+## Why use it with OpenClaw?
+
+OpenClaw is designed to orchestrate complex multi-agent workflows. When you plug DeepSeek Coder V2 into OpenClaw, you go from having a smart chatbot to having an autonomous system that can:
+- Read your local files using tools.
+- Write code iteratively.
+- Perform tests and automatically fix its own mistakes.
+
+Running this locally means zero API costs and full data privacy. I've been running this setup on my Mac Studio, and the latency is negligible for most standard agent tasks.
+
+## Step 1: Downloading the Model Locally
+
+The easiest way to run DeepSeek Coder V2 locally is via [Ollama](https://ollama.com/). First, make sure you have Ollama installed.
+
+Open your terminal and run:
+
+```bash
+ollama run deepseek-coder-v2:16b
+```
+
+*Note: Depending on your VRAM, you might want to choose the quantized version that fits best. The 16B model runs smoothly on machines with at least 16GB of unified memory.*
+
+Wait for the download to finish. You can verify it's running by testing a simple prompt in the Ollama CLI.
+
+## Step 2: Configuring the OpenClaw Provider
+
+Once Ollama is serving the model on `http://localhost:11434`, you need to point OpenClaw to it. 
+
+Open your OpenClaw configuration file (usually `~/.openclaw/config.yaml` or `openclaw.json`) and add the Ollama provider:
+
+```yaml
+providers:
+  - name: "ollama-deepseek"
+    type: "ollama"
+    endpoint: "http://localhost:11434"
+    models:
+      - "deepseek-coder-v2:16b"
+    default_parameters:
+      temperature: 0.2
+      num_ctx: 16384
+```
+
+Notice the `num_ctx` setting. It's crucial to bump this up from the Ollama default (which is often 2048) so that OpenClaw's tools and system prompts don't get truncated.
+
+## Testing the Setup: A Real Coding Task
+
+Now, launch your OpenClaw CLI and assign a task to your new agent.
+
+```bash
+openclaw run --provider ollama-deepseek --model deepseek-coder-v2:16b "Write a Python script that reads all CSV files in the current directory and merges them."
+```
+
+You should see OpenClaw executing the plan, leveraging DeepSeek Coder V2 for the code generation. The output is typically extremely clean, and since the model is running locally, it won't timeout like some cloud providers during high traffic.
+
+## Conclusion and Next Steps
+
+Combining DeepSeek Coder V2 with OpenClaw unlocks a robust local AI development environment. It's private, fast, and completely free. 
+
+Next, try building a custom OpenClaw tool that allows the DeepSeek agent to run your unit tests automatically.
+
+<br />
+
+Written by Matteo Giardino, a software engineer and AI researcher focused on local agent workflows and autonomous systems.
