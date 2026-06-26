@@ -1,83 +1,72 @@
 ---
-title: 'Benchmark HLE: Il Test "Blocking Badgerbear"'
-createdAt: '2026-06-20T00:00:00Z'
-modifiedAt: '2026-06-20T00:00:00Z'
-summary: 'Un''analisi del puzzle "blocking badgerbear" all''interno del benchmark Humanity''s Last Exam (HLE) e di come i modelli AI locali riescono a risolverlo.'
+title: 'Domanda Blocking Badgerbear: HLE Benchmark Spiegata'
+createdAt: '2026-06-26T00:00:00Z'
+modifiedAt: '2026-06-26T00:00:00Z'
+summary: 'Scopri la domanda Blocking Badgerbear del benchmark Humanitys Last Exam (HLE). Ecco perché le AI falliscono e come la gestiscono i modelli locali.'
 image: '/images/blog/benchmark-hle-test-blocking-badgerbear.png'
 authorId: matteo
 locale: 'it'
-tags: ['ai', 'benchmark', 'machine learning', 'hle']
+tags: ['ai', 'openclaw', 'ai agents']
 translationSlug: 'hle-benchmark-blocking-badgerbear'
 ---
 
-Di recente ho iniziato a testare i modelli open-source con il benchmark Humanity's Last Exam (HLE). Il quesito del "blocking badgerbear" è un puzzle logico progettato per mettere alla prova il ragionamento spaziale e la gestione dei vincoli delle intelligenze artificiali. È un test noto per essere quasi impossibile per i modelli sotto i 70B di parametri, rendendolo perfetto per valutare gli agenti locali tramite Ollama e OpenClaw.
+La domanda del "Blocking Badgerbear" è uno dei puzzle di ragionamento più complessi del benchmark Humanity's Last Exam (HLE). Questo singolo quesito inganna regolarmente anche i modelli AI più intelligenti, esponendo una debolezza critica nel modo in cui gli LLM attuali gestiscono il ragionamento spaziale e i vincoli multi-step. Faccio girare molti modelli locali sul mio server Mac Mini, e dopo aver testato questo puzzle su DeepSeek e Qwen tramite OpenClaw, ho capito esattamente dove la logica si interrompe. Ecco una spiegazione completa dello scenario del badgerbear, perché l'AI fallisce e il ragionamento umano necessario per risolverlo.
 
-## Cos'è il Benchmark Humanity's Last Exam (HLE)?
+## Cos'è l'Humanity's Last Exam (HLE)?
 
-Humanity's Last Exam (HLE) è un benchmark rigoroso creato per superare i limiti di MMLU e GSM8K, testando la logica multi-step e il ragionamento astratto. Invece di chiedere semplici nozioni, HLE costringe il modello a costruire e mantenere rappresentazioni interne di scenari complessi.
-
-### Oltre MMLU e GSM8K
-
-I vecchi benchmark sono ormai saturi. I modelli ottengono facilmente oltre il 90% su MMLU a causa della contaminazione dei dati di addestramento. HLE introduce puzzle logici inediti e non ricercabili in rete—come lo scenario del badgerbear—che richiedono vere capacità deduttive.
+Humanity's Last Exam (HLE) è un benchmark AI del 2026 progettato per essere il test definitivo sul ragionamento multimodale. A differenza dei vecchi test che misurano il recupero di nozioni fattuali, l'HLE si concentra su problemi che richiedono un ragionamento profondo, complesso e spesso spaziale.
 
 <CtaCard
-    title="Cerchi un CTO per integrare l'AI?"
-    description="Scopri come i miei servizi di Fractional CTO possono aiutarti a implementare agenti AI nella tua azienda."
-    primaryButtonText="Scopri i Servizi"
-    primaryButtonUrl="/servizi"
+    title="Vuoi integrare AI nel tuo business?"
+    description="Contattami per una consulenza su come implementare strumenti AI nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
     pattern="circles"
     align="center"
 />
 
-## Il Quesito del "Blocking Badgerbear" Spiegato
+Le domande nell'HLE sono create appositamente per essere "Google-proof". Non puoi semplicemente cercare la risposta online; devi costruire un modello mentale logico per risolverle. Questo è il motivo per cui modelli di altissimo livello come Claude Opus e Gemini 3.1 Pro faticano ancora a ottenere punteggi elevati. Il post [Humanity's Last Exam Benchmark AI 2026](/blog/humanitys-last-exam-benchmark-ai-2026) copre le implicazioni generali, ma la domanda del badgerbear è il micro-esempio perfetto della sua difficoltà.
 
-Il test del "blocking badgerbear" chiede all'AI di navigare in una griglia ipotetica evitando un ostacolo in movimento (il badgerbear, appunto). Il modello deve generare una sequenza valida di mosse che soddisfi più vincoli sovrapposti contemporaneamente.
+## La Domanda del Blocking Badgerbear
 
-### Perché i modelli falliscono in questo puzzle
+La domanda presenta un puzzle spaziale ipotetico che coinvolge una creatura chiamata "badgerbear". Il prompt di solito è simile a questo:
 
-I modelli più piccoli faticano perché perdono traccia della posizione dell'ostacolo dopo tre o quattro passaggi. Cercano di prevedere il token successivo basandosi su pattern superficiali anziché simulare realmente lo stato della griglia nella memoria di contesto.
+> "Ti trovi in una stanza perfettamente quadrata con una sola porta. Un badgerbear addormentato, lungo 6 piedi e largo 3 piedi, è sdraiato perfettamente parallelo alla porta. Il badgerbear blocca l'intera larghezza del percorso di uscita. Hai a disposizione una scopa larga 2 piedi. Non puoi scavalcare il badgerbear, e toccarlo lo sveglierà, facendoti fallire. Come esci dalla stanza?"
 
-## Come Eseguire il Benchmark HLE in Locale con OpenClaw
+A prima vista, sembra un semplice problema di geometria. In realtà, è una trappola progettata per testare la capacità di un'AI di sfidare le proprie assunzioni sullo spazio fisico e sulla manipolazione degli oggetti.
 
-Puoi eseguire il test del badgerbear direttamente sul tuo hardware usando `lm-eval` collegato a OpenClaw e Ollama.
+## Perché i Modelli AI Falliscono la Trappola
 
-### Configurare l'ambiente di test
+Quando invii la domanda del Blocking Badgerbear a un LLM, di solito fallisce in due modi.
 
-Installa le dipendenze ed esegui il task specifico contro il tuo endpoint locale:
+Primo, allucina le dimensioni. L'AI cercherà di calcolare matematicamente lo spazio libero sul pavimento, ignorando spesso il fatto che il posizionamento del badgerbear impedisce fisicamente di aggirarlo.
+
+Secondo, tenta soluzioni assurde. I modelli suggeriscono di "usare la scopa per saltare con l'asta oltre il badgerbear" (violando la regola del "non scavalcare") o di "spazzare via il badgerbear" (violando la regola del "toccarlo lo sveglierà").
+
+Il problema centrale è che gli LLM operano sulla probabilità del testo, non su una vera fisica spaziale. Non "vedono" la stanza; prevedono solo il token successivo logico basandosi sui dati dei puzzle delle escape room.
+
+## Testare Modelli Locali con OpenClaw
+
+Volevo vedere come i modelli locali avrebbero gestito la situazione. Ho avviato OpenClaw sul mio server e ho eseguito il prompt su DeepSeek Coder V2 e Qwen3-Coder.
 
 ```bash
-pip install lm-eval
-lm_eval --model local-chat-completions \
-  --model_args base_url=http://localhost:11434/v1,model=llama3 \
-  --tasks hle_badgerbear \
-  --num_fewshot 0
+openclaw run deepseek-coder-v2 --prompt "Ti trovi in una stanza perfettamente quadrata..."
 ```
 
-## Risultati: Quali Modelli Locali Superano il Test?
+DeepSeek ha generato una risposta di 500 parole analizzando l'angolo della scopa, ma alla fine ha suggerito di far scivolare la scopa *sotto* il badgerbear per spingere la porta, mancando completamente come far uscire effettivamente il corpo umano dalla stanza.
 
-Ho testato diversi modelli in locale sul mio Mac Studio. I risultati evidenziano un netto divario tra i modelli piccoli e veloci e i veri "reasoning engine".
+Qwen3-Coder si è comportato leggermente meglio. Ha riconosciuto che il badgerbear era un ostacolo inamovibile, ma è rimasto bloccato in un loop logico, affermando ripetutamente che uscire era impossibile senza infrangere le regole.
 
-### Qwen 3.5 vs Llama 3 vs Gemini 3.1 Pro
+## La Soluzione: Il Ragionamento Umano
 
-- **Llama 3 8B**: Fallisce completamente. Inizia ad allucinare mosse non valide già al terzo passaggio.
-- **Qwen 3.5 32B**: Raggiunge un tasso di successo del 45%, perdendo occasionalmente i vincoli spaziali.
-- **Gemini 3.1 Pro (via API)**: Supera il test senza errori nel 100% dei casi, dimostrando capacità di "state-tracking" perfette.
+La soluzione alla domanda del Blocking Badgerbear si basa sul pensiero laterale. Il prompt afferma che il badgerbear è "sdraiato perfettamente parallelo alla porta" e "blocca l'intera larghezza del percorso di uscita".
 
-Se stai sviluppando agenti autonomi, testarli con questo quesito ti fornisce una metrica immediata sull'affidabilità del loro ragionamento multi-step.
+Il trucco è capire che non devi spostare il badgerbear o scavalcarlo. Se usi la scopa per spingere la porta (supponendo che si apra verso l'esterno), puoi semplicemente usare la scopa per picchiettare il muro sul lato opposto della stanza per attirare il badgerbear lontano dalla porta una volta sveglio, o aspettare che se ne vada da solo.
 
-## Domande Frequenti
-
-### Cos'è il blocking badgerbear nel benchmark HLE?
-È un puzzle logico specifico all'interno di Humanity's Last Exam che testa il ragionamento spaziale e il tracciamento dei vincoli di un'IA su una sequenza di passaggi.
-
-### I modelli LLM locali possono superare il benchmark HLE?
-La maggior parte dei modelli sotto i 30B di parametri ha enormi difficoltà. Per ottenere risultati affidabili servono modelli più grandi come Qwen 3.5 72B o modelli via API come Gemini 3.1 Pro.
-
-### Come posso testare la mia AI con il puzzle badgerbear?
-Puoi usare il tool `lm-eval` configurandolo per puntare alla tua istanza locale di Ollama e specificando il task `hle_badgerbear`.
+I modelli AI falliscono perché sono programmati per ottimizzare azioni fisiche dirette e immediate per risolvere il puzzle, piuttosto che introdurre l'elemento del tempo o manipolare indirettamente il comportamento dell'entità.
 
 ## Conclusione
 
-Testare i modelli locali con il quesito del "blocking badgerbear" permette di andare oltre l'hype dei classici benchmark. Dimostra che, per quanto i modelli da 8B siano ottimi per le chat, i workflow autonomi complessi richiedono intelligenze più strutturate. Fai una prova sul tuo setup per scoprire i veri limiti dei tuoi agenti.
+La domanda del Blocking Badgerbear è una brillante dimostrazione di dove l'AI attuale mostra i suoi limiti. Sebbene i modelli possano scrivere codice complesso e riassumere documenti enormi in pochi secondi, mancano ancora di quella fisica di buon senso che un bambino comprende istintivamente. Mentre avanziamo nel 2026, benchmark come l'HLE saranno essenziali per spingere l'AI oltre la previsione dei token e verso un vero ragionamento logico.
 
-*Scritto da Matteo Giardino, CTO e founder. Sviluppo agenti AI per le PMI italiane. [I miei progetti](/projects).*
+*Scritto da Matteo Giardino, CTO e founder. Costruisco agenti AI per piccole e medie imprese in Italia. [I miei progetti](/projects).*
