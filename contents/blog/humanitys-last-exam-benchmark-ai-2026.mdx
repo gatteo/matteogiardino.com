@@ -1,82 +1,101 @@
-     1|---
-     2|title: "HLE Benchmark: Why Humanity's Last Exam is the Final AI Challenge"
-     3|createdAt: '2026-05-13T00:00:00Z'
-     4|modifiedAt: '2026-06-19T00:00:00Z'
-     5|summary: "Humanity's Last Exam (HLE) is the final closed-ended benchmark for frontier LLMs. See latest scores and why calibration is the new bottleneck in 2026."
-     6|image: '/images/blog/humanitys-last-exam-benchmark-ai-2026.png'
-     7|authorId: matteo
-     8|locale: 'en'
-     9|tags: ['ai', 'benchmark', 'hle', 'llm']
-    10|translationSlug: 'humanitys-last-exam-benchmark-ai-2026-analisi'
-    11|---
-    12|
-    13|# HLE Benchmark: Why Humanity's Last Exam is the Final AI Challenge
-    14|
-    15|Written by Matteo Giardino - CTO and AI consultant.
-    16|
-    17|AI benchmarks are saturating. Models now score over 90% on tests like MMLU, making them useless for measuring true frontier capabilities. **Humanity's Last Exam (HLE)** is the solution: a graduate-level challenge designed to be the final academic test for AI.
-    18|
-    19|In this post, I break down what HLE is, analyze the latest scores from GPT-5.4 and Gemini 3.1, and explain why the biggest bottleneck in 2026 is not just raw accuracy - it is overconfidence and calibration.
-    20|
-    21|## What is Humanity's Last Exam (HLE)?
-    22|
-    23|Humanity's Last Exam is a multi-modal, closed-ended benchmark created by 1,000 subject matter experts. Unlike previous tests, HLE targets the frontier of human understanding in math, physics, and medicine.
-    24|
-    25|The dataset consists of 2,500 questions so difficult that even the most advanced LLMs struggle to break the 50% accuracy barrier. It is not about facts; it is about deep reasoning and the ability to interpret multi-modal diagrams.
-    26|
-    27|## Beyond MMLU: Why HLE Matters in 2026
-    28|
-    29|Why is this challenge fundamental? Because we've reached "benchmark saturation." When every model hits 95% on MMLU, the signal is lost. HLE sets the bar at the post-graduate level, providing a clean metric for the reasoning depth of a frontier AI system.
-    30|
-    31|Specifically, it combats training data contamination by using expert-vetted questions that aren't easily searchable. For a CTO, it's the best way to verify if a model actually "understands" complex technical domains.
-    32|
-    33|<CtaCard
-    34|    title="Need help with AI integration?"
-    35|    description="Get in touch for a consultation on implementing AI tools and automations in your business."
-    36|    primaryButtonText="Contact Me"
-    37|    primaryButtonUrl="/contacts"
-    38|    pattern="circles"
-    39|    align="center"
-    40|/>
-    41|
-    42|## Latest Scores & Leaderboard Analysis
-    43|
-    44|The current leaderboard shows a fascinating shift in the AI landscape. As of May 2026, here are the top performers on the HLE (Humanity's Last Exam):
-    45|
-    46|1. **Gemini 3.1 Pro Preview (Thinking High)**: 46.44%
-    47|2. **GPT-5.4 Pro (2026-03-05)**: 44.32%
-    48|3. **Muse Spark**: 40.56%
-    49|4. **Claude Opus 4.7**: 36.20%
-    50|
-    51|What's interesting here isn't just the ranking, but the gap. We are seeing a plateau. Even with "High Thinking" modes enabled, models are struggling to move past the 50% mark. This suggests that we are hitting a fundamental bottleneck in how LLMs handle specialized, world-class scientific problems.
-    52|
-    53|## The Overconfidence Problem: Calibration Error
-    54|
-    55|The most striking metric in the HLE results isn't accuracy - it is **Calibration Error**. A well-calibrated model knows when it is likely to be wrong. If a model says it is 90% confident, it should be right 90% of the time.
-    56|
-    57|In HLE, we see systematic overconfidence. Many models exhibit calibration errors higher than 50%. They provide "confidently wrong" answers to graduate-level physics or math problems. For enterprise applications, this is a massive red flag. It is often better to have a model that says "I don't know" than one that hallucinates a plausible-sounding but incorrect solution. This expert-level bottleneck is what the **hle benchmark** was built to identify.
-    58|
-    59|## How to Use HLE for Model Selection
-    60|
-    61|When you are choosing a model for complex tasks like [autonomous coding](/blog/deepseek-v4-pro-openclaw-autonomous-coding-agent) or [server management](/blog/local-ai-server-mac-mini-openclaw), don't just look at the raw accuracy. You might want to explore [how to run models locally](/blog/run-qwen35-08b-openclaw-ollama-cpu) or check out [free API options](/blog/update-openclaw) to test these capabilities yourself.
-    62|
-    63|1. **Check the Calibration**: Look for models with lower calibration errors. They are more reliable for automation where human oversight is minimal.
-    64|2. **Multi-modal Performance**: If your workflow involves charts or diagrams, HLE is the best way to test if a model can actually "see" the logic in an image.
-    65|3. **Test with OpenClaw**: I always recommend running these models through the [OpenClaw framework](/blog/what-is-openclaw-ai-agent-framework) to see how they handle real-world tools and long-running tasks beyond static benchmarks.
-    66|
-    67|## FAQ
-    68|
-    69|### What is the "Blocking Badgerbear" in HLE?
+---
+title: "HLE Benchmark: Google Gemini Scores & The Blocking Badgerbear"
+createdAt: '2026-05-13T00:00:00Z'
+modifiedAt: '2026-06-26T00:00:00Z'
+summary: "Humanity's Last Exam (HLE) is the final AI benchmark. Discover Google Gemini scores and why the 'Blocking Badgerbear' remains unsolved."
+image: '/images/blog/humanitys-last-exam-benchmark-ai-2026.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'benchmark', 'hle', 'llm']
+translationSlug: 'humanitys-last-exam-benchmark-ai-2026-analisi'
+---
+
+# HLE Benchmark: Google Gemini Scores & The Blocking Badgerbear
+
+Written by Matteo Giardino - CTO and AI consultant.
+
+Are you looking for the latest Google Gemini scores on the HLE benchmark and wondering what the "Blocking Badgerbear" is? Humanity's Last Exam (HLE) is a graduate-level challenge designed to be the final academic test for AI, and currently, no model can reliably solve the complex spatial reasoning of the Blocking Badgerbear question. Google Gemini 3.1 Pro leads the leaderboard, but even it struggles.
+
+AI benchmarks are saturating. Models now score over 90% on tests like MMLU, making them useless for measuring true frontier capabilities. In this post, I break down what HLE is, analyze the latest scores from Google Gemini 3.1 and GPT-5.4, and explain why calibration is the real bottleneck. For a broader comparison, read my guide on [Gemini 3.1 Pro vs Opus 4.6 vs GPT 5.3](/blog/gemini-31-pro-vs-opus-46-vs-gpt-53-codex).
+
+## What is Humanity's Last Exam (HLE)?
+
+Humanity's Last Exam is a multi-modal, closed-ended benchmark created by 1,000 subject matter experts. Unlike previous tests, HLE targets the frontier of human understanding in math, physics, biology, and medicine. You can read more about the methodology on the [Center for AI Safety website](https://www.safe.ai/).
+
+The dataset consists of 2,500 questions so difficult that even the most advanced LLMs struggle to break the 50% accuracy barrier. It is not about recalling facts; it is about deep reasoning, spatial logic, and the ability to interpret complex multi-modal diagrams. 
+
+## Beyond MMLU: Why HLE Matters in 2026
+
+Why is this challenge fundamental? Because we have reached "benchmark saturation." When every model hits 95% on MMLU, the signal is lost. HLE sets the bar at the post-graduate level, providing a clean metric for the reasoning depth of a frontier AI system. 
+
+Specifically, it combats training data contamination by using expert-vetted questions that aren't easily searchable. For a CTO or an AI engineer, it is the best way to verify if a model actually "understands" complex technical domains rather than just parroting memorized data.
+
+<CtaCard
+    title="Need help with AI integration?"
+    description="Get in touch for a consultation on implementing AI tools and automations in your business."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Loading the HLE Benchmark Dataset
+
+If you are a developer looking to evaluate your own fine-tunes against the public portion of the HLE benchmark, you can easily load the dataset using the Hugging Face `datasets` library.
+
+```python
+from datasets import load_dataset
+
+# Load the public split of Humanity's Last Exam
+dataset = load_dataset("cais/hle", split="test")
+
+print(f"Total evaluation questions: {len(dataset)}")
+
+# Example of inspecting a question
+sample_question = dataset[0]
+print("Question:", sample_question["question"])
+print("Subject:", sample_question["subject"])
+```
+
+This snippet allows you to pull the exact graduate-level logic problems to test against local models before trusting them in production.
+
+## Latest Scores: Google Gemini and the Leaderboard
+
+The current leaderboard shows a fascinating shift in the AI landscape. As of mid-2026, here are the top performers on the HLE (Humanity's Last Exam):
+
+1. **Gemini 3.1 Pro Preview (Thinking High)**: 46.44%
+2. **GPT-5.4 Pro (2026-03-05)**: 44.32%
+3. **Muse Spark**: 40.56%
+4. **Claude Opus 4.7**: 36.20%
+
+What is interesting here isn't just the ranking, but the gap. We are seeing a plateau. Even with "High Thinking" modes enabled, models are struggling to move past the 50% mark. This suggests that we are hitting a fundamental bottleneck in how LLMs handle specialized, world-class scientific problems. Google Gemini's score of 46.44% is currently the highest, largely thanks to its native multi-modal architecture which handles the complex visual diagrams better than text-first models.
+
+## The Overconfidence Problem: Calibration Error
+
+The most striking metric in the HLE results isn't accuracy - it is **Calibration Error**. A well-calibrated model knows when it is likely to be wrong. If a model says it is 90% confident, it should be right 90% of the time.
+
+In HLE, we see systematic overconfidence. Many models exhibit calibration errors higher than 50%. They provide "confidently wrong" answers to graduate-level physics or math problems. For enterprise applications, this is a massive red flag. It is often better to have a model that says "I don't know" than one that hallucinates a plausible-sounding but incorrect solution. This expert-level bottleneck is exactly what the **hle benchmark** was built to identify.
+
+## How to Use HLE for Model Selection
+
+When you are choosing a model for complex tasks like [autonomous coding](/blog/deepseek-v4-pro-openclaw-autonomous-coding-agent) or [server management](/blog/nixos-hetzner-openclaw-server-setup), don't just look at the raw accuracy. You might want to explore [how to run models locally](/blog/run-qwen35-08b-openclaw-ollama-cpu) or check out [free API options](/blog/free-models-apis-openclaw) to test these capabilities yourself.
+
+1. **Check the Calibration**: Look for models with lower calibration errors. They are more reliable for automation where human oversight is minimal.
+2. **Multi-modal Performance**: If your workflow involves charts or diagrams, HLE is the best way to test if a model can actually "see" the logic in an image.
+3. **Test with OpenClaw**: I always recommend running these models through the [OpenClaw framework](/blog/what-is-openclaw-ai-agent-framework) to see how they handle real-world tools and long-running tasks beyond static benchmarks.
+
+## FAQ
+
+### What is the "Blocking Badgerbear" in HLE?
 The "Blocking Badgerbear" is an infamous question within the Humanity's Last Exam dataset. It has become a symbol of the benchmark's difficulty because it combines obscure domain knowledge with complex multi-modal spatial reasoning. To date, almost no frontier LLM has been able to solve the blocking badgerbear problem consistently without hallucinating.
 
 ### What is the passing score for the hle benchmark?
-    70|There is no "passing" score for AI. However, current frontier models are all scoring below 50%, highlighting the extreme difficulty of the benchmark.
-    71|
-    72|### How does the hle benchmark compare to MMLU?
-    73|MMLU is essentially "undergraduate" level and is now saturated (models score >90%). HLE is "graduate" level and multi-modal, designed to be the final academic benchmark of its kind.
-    74|
-    75|### Can I run the hle benchmark locally?
-    76|The public set is available for the research community, but you'll need significant compute and proper evaluation scripts to test models locally.
-    77|
-    78|*Written by Matteo Giardino, CTO and founder. [My projects](/projects).*
-    79|
+There is no formal "passing" score for AI in HLE. However, current frontier models are all scoring below 50%, highlighting the extreme difficulty of the benchmark designed for subject matter experts.
+
+### How does the hle benchmark compare to MMLU?
+MMLU is essentially "undergraduate" level and is now saturated (models score >90%). HLE is "graduate" level and multi-modal, designed to be the final academic benchmark of its kind, offering a true test for 2026's top models.
+
+### Can I run the hle benchmark locally?
+The public set is available for the research community on Hugging Face, but you will need significant compute and proper evaluation scripts to test models locally. The private hold-out set remains hidden to prevent data contamination.
+
+*Written by Matteo Giardino, CTO and founder. [My projects](/projects).*
