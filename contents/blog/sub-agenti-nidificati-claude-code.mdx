@@ -1,0 +1,92 @@
+---
+title: "Sub-Agenti Nidificati in Claude Code: Come Funzionano"
+createdAt: '2026-06-16T00:00:00Z'
+modifiedAt: '2026-06-16T00:00:00Z'
+summary: "L'aggiornamento v2.1.172 di Claude Code introduce i sub-agenti nidificati. Scopri come configurare la profondità e creare flussi AI complessi."
+image: '/images/blog/sub-agenti-nidificati-claude-code.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'claude-code', 'ai agents']
+translationSlug: 'claude-code-nested-sub-agents'
+---
+
+
+Se ti stai chiedendo come utilizzare i sub-agenti nidificati di claude code nel 2026, sei nel posto giusto. L'aggiornamento v2.1.172 di Claude Code ha introdotto i sub-agenti nidificati in claude code, che consentono agli agenti di creare e orchestrare i propri sotto-agenti in modo autonomo, passando da un'orchestrazione piatta a un albero gerarchico. Questo risolve radicalmente il problema del sovraccarico di contesto. 
+
+Eseguo regolarmente diversi agenti Claude Code sul mio Mac Mini per automatizzare lo sviluppo e gestire i progetti [come abbiamo visto nella guida sui pattern multi-agente](/blog/openclaw-multi-agent-patterns-native-vs-hiclaw). Il recente aggiornamento v2.1.172 ha cambiato il modo in cui li strutturo. Claude Code ora supporta i sub-agenti nidificati in claude code - significa che un agente può crearne altri a sua volta per delegare compiti, espandendo le capacità del team AI.
+
+Questo passaggio da un'orchestrazione piatta ad alberi di agenti gerarchici risolve il problema del sovraccarico del contesto. Ora puoi progettare flussi di lavoro in cui un agente orchestratore delega compiti ad agenti specializzati, i quali creano i propri worker per lavori specifici.
+
+Ecco come configurare la delega nidificata, impostare la profondità massima e superare i problemi più comuni.
+
+## Introduzione alla Delega Nidificata
+
+Prima della v2.1.172, Claude Code era limitato a un'orchestrazione piatta. Potevi creare un agente orchestratore che generava più agenti finali, ma quest'ultimi non potevano delegare ulteriormente.
+
+Ora gli agenti possono creare i propri sub-agenti. Questo permette di costruire architetture complesse a più livelli. Ad esempio, un agente planner principale può creare un agente di ricerca. L'agente di ricerca può poi generare un agente scraper per estrarre dati, analizzarli e restituire un report sintetico risalendo la catena.
+
+<CtaCard title="Vuoi scalare i tuoi agenti AI aziendali?" href="/contacts" />
+
+## Come Configurare la Profondità Massima
+
+Per prevenire loop infiniti e tenere sotto controllo i costi delle API, Claude Code impone un limite di profondità predefinito. Devi aumentare esplicitamente questo limite per abilitare la delega nidificata.
+
+Puoi configurarlo nel file `claude.json` del tuo progetto o globalmente tramite la CLI:
+
+```bash
+claude config set delegation.max_spawn_depth 2
+```
+
+Un `max_spawn_depth` di 1 indica l'orchestrazione piatta di default. Impostarlo a 2 permette agli orchestratori di creare worker che possono a loro volta generare altri worker.
+
+Mantieni sempre questo numero basso. Una profondità di 3 o superiore espone a un consumo imprevedibile di token e rende molto difficile il debugging se un agente fallisce silenziosamente.
+
+## Caso d'Uso: Il Pattern Orchestratore
+
+Il modo migliore per usare la delega nidificata è il pattern Orchestratore-Ricercatore-Scraper.
+
+1. **Orchestratore Principale**: Comprende l'obiettivo dell'utente e lo divide in macro-task.
+2. **Sub-Agente Ricercatore**: Prende un task specifico (es. "Analizza i prodotti AI dei competitor") e capisce che ha bisogno di dati aggiornati in tempo reale.
+3. **Sub-Agente Scraper**: Viene creato per scaricare pagine web, estrarre il testo e restituire i dati grezzi.
+
+Il Ricercatore elabora i dati grezzi in un riassunto pulito. L'Orchestratore vede solo il riassunto finale, risparmiando un'enorme quantità di token nel contesto. Questo approccio gerarchico mantiene l'efficienza e focalizza ogni agente su una singola responsabilità.
+
+## Errori Comuni e Migliori Pratiche
+
+La delega nidificata è potente ma richiede regole ferree. Secondo recenti benchmark del 2026, l'uso di alberi gerarchici ha ridotto i costi delle API del 40% rispetto alle architetture piatte tradizionali. Puoi leggere di più a riguardo nel [confronto tra framework AI 2026](/blog/openclaw-vs-langchain-autogpt-crewai).
+
+- **Attenzione al contesto**: Non passare l'intero contesto del progetto giù per l'albero. Invia solo i file specifici o i vincoli di cui un sub-agente ha bisogno.
+- **Forza ritorni verificabili**: Gli agenti spesso dichiarano successo ("Ho controllato i file e sembrano ok") senza fornire i dati effettivi. Obbliga gli agenti finali a scrivere i risultati in un file o a restituire un JSON verificabile.
+- **Monitora i costi API**: Gli agenti gerarchici possono far lievitare i costi se riprovano task falliti in un loop. Usa Helicone o un proxy egress Envoy per impostare limiti rigidi.
+
+
+## Domande frequenti
+
+### Cos'è la delega nidificata in Claude Code?
+La delega nidificata permette a un agente AI di creare a sua volta altri agenti. Invece di avere un singolo orchestratore (struttura piatta), puoi creare un albero dove un manager delega a un ricercatore, che delega a uno scraper.
+
+### Quanti sub-agenti nidificati in claude code posso creare?
+Di default, la profondità massima è 1. Puoi aumentarla modificando il parametro `max_spawn_depth` nel file di configurazione, ma si sconsiglia di superare il livello 3 per evitare costi imprevisti.
+
+### I sub-agenti condividono lo stesso contesto?
+No. Ogni agente riceve solo il contesto che gli viene passato esplicitamente dall'agente genitore, riducendo drasticamente il consumo di token.
+
+
+## Domande frequenti
+
+### Cos'è la delega nidificata in Claude Code?
+La delega nidificata permette a un agente AI di creare a sua volta altri agenti. Invece di avere un singolo orchestratore (struttura piatta), puoi creare un albero dove un manager delega a un ricercatore, che delega a uno scraper.
+
+### Quanti sub-agenti nidificati in claude code posso creare?
+Di default, la profondità massima è 1. Puoi aumentarla modificando il parametro `max_spawn_depth` nel file di configurazione, ma si sconsiglia di superare il livello 3 per evitare costi imprevisti.
+
+### I sub-agenti condividono lo stesso contesto?
+No. Ogni agente riceve solo il contesto che gli viene passato esplicitamente dall'agente genitore, riducendo drasticamente il consumo di token.
+
+## Conclusione
+
+I sub-agenti nidificati in Claude Code v2.1.172 ci permettono finalmente di costruire architetture AI modulari. Isolando il contesto e delegando compiti mirati lungo un albero, puoi gestire problemi di ingegneria del software molto più complessi senza scontrarti con i limiti di token.
+
+Tieni bassa la profondità, esigi output verificabili dai worker e sfrutta questa nuova flessibilità.
+
+*Scritto da Matteo Giardino, un fractional CTO che realizza soluzioni AI personalizzate e infrastrutture open source per le PMI italiane.*

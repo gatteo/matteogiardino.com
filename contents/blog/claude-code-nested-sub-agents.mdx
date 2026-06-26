@@ -1,0 +1,82 @@
+---
+title: 'Claude Code Nested Sub-Agents: How to Spawn Agents'
+createdAt: '2026-06-16T00:00:00Z'
+modifiedAt: '2026-06-16T00:00:00Z'
+summary: 'The Claude Code v2.1.172 update introduces nested sub-agents. Learn how to configure spawn depth and build hierarchical AI workflows.'
+image: '/images/blog/claude-code-nested-sub-agents.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'claude-code', 'ai agents']
+translationSlug: 'sub-agenti-nidificati-claude-code'
+---
+
+
+If you are wondering how to use claude code nested sub-agents in 2026, this guide covers everything you need to know. The v2.1.172 update fundamentally changed how we build AI workflows by introducing claude code nested sub-agents, which allow orchestrator agents to spawn and manage their own child agents. This shifts orchestration from a flat model to a hierarchical tree, effectively solving context window bloat and reducing API costs.
+
+I run multiple Claude Code agents on my Mac Mini server to handle daily coding tasks, similar to what I discussed in my [guide on orchestrating AI sub-agents](/blog/orchestrating-ai-sub-agents-openclaw). The recent update just changed how I structure them. Claude Code now supports claude code nested sub-agents - meaning agents can spawn their own agents.
+
+This shift from flat orchestration to hierarchical agent trees solves context bloat. You can now design workflows where an orchestrator agent delegates tasks to specialized sub-agents, which in turn spawn their own workers for specific jobs.
+
+Here is how you can set up nested delegation, configure maximum spawn depth, and avoid common pitfalls.
+
+## Introduction to Nested Delegation
+
+Before v2.1.172, Claude Code was limited to flat orchestration. You could create one orchestrator agent that spawned multiple leaf agents, but those leaf agents could not delegate further. 
+
+Now, agents can spawn their own sub-agents. This means you can build complex, multi-tiered architectures. For example, a main planner agent can spawn a research agent. The research agent can then spawn a scraper agent to extract data, analyze it, and return a summarized report back up the chain.
+
+<CtaCard title="Need help scaling your AI agents?" href="/contacts" />
+
+## How to Configure Max Spawn Depth
+
+To prevent infinite loops and manage API token costs, Claude Code enforces a default depth limit. You must explicitly raise this limit to enable nested delegation.
+
+You configure this in your project's `claude.json` or globally via the CLI config:
+
+```bash
+claude config set delegation.max_spawn_depth 2
+```
+
+A `max_spawn_depth` of 1 means flat orchestration (the default). Setting it to 2 allows orchestrators to spawn workers that can spawn their own workers. 
+
+Always keep this number low. Setting a depth of 3 or higher risks unpredictable token usage and makes debugging difficult if a leaf agent fails silently.
+
+## Use Case: The Orchestrator Pattern
+
+The best way to use nested delegation is the Orchestrator-Researcher-Scraper pattern. 
+
+1. **Top-Level Orchestrator**: Understands the user's goal and breaks it into major tasks.
+2. **Researcher Sub-Agent**: Takes a specific task (e.g., "Research competitor AI products") and realizes it needs live data.
+3. **Scraper Sub-Agent**: Spawns to fetch web pages, extract the text, and return the raw data.
+
+The Researcher processes the raw data into a clean summary. The Orchestrator only sees the final summary, saving massive amounts of context window space. This hierarchical approach keeps token usage efficient and focuses each agent on a single responsibility.
+
+## Pitfalls and Best Practices
+
+Nested delegation is powerful but requires strict boundaries. According to recent 2026 benchmarks, using hierarchical trees reduced API token costs by 40% compared to traditional flat architectures. You can read more about orchestration architectures in my [2026 AI framework comparison](/blog/openclaw-vs-langchain-autogpt-crewai).
+
+- **Watch context bloat**: Do not pass the entire project context down the tree. Send only the specific files or constraints a sub-agent needs.
+- **Enforce actionable returns**: Leaf agents often self-report success ("I checked the files and they look good") without providing the actual data. Require leaf agents to write their findings to a file or return verifiable JSON.
+- **Monitor API costs**: Hierarchical agents can easily run up bills if they retry failing tasks in a loop. Use Helicone or an Envoy egress proxy to set hard rate limits.
+
+
+## FAQ
+
+### What is nested delegation in Claude Code?
+Nested delegation allows an AI agent to spawn its own child agents. Instead of a single orchestrator (flat structure), you can build a tree where a manager delegates to a researcher, which delegates to a scraper.
+
+### How many claude code nested sub-agents can I spawn?
+By default, the maximum depth is 1. You can increase it by setting the `max_spawn_depth` parameter in your configuration, but going beyond level 3 is not recommended due to unpredictable API costs.
+
+### Do nested sub-agents share the same context?
+No. Each sub-agent operates in an isolated environment and only receives the context explicitly passed down by its parent, which drastically cuts down on token consumption.
+
+## Conclusion
+
+Nested sub-agents in Claude Code v2.1.172 finally allow us to build modular AI architectures. By isolating context and delegating focused tasks down a tree, you can handle significantly more complex software engineering problems without hitting token limits.
+
+Keep your spawn depth low, require verifiable outputs from leaf workers, and enjoy the new flexibility.
+
+Mastering agent hierarchies is the most important skill for an AI developer in 2026. As models become more capable, splitting work into narrow, focused sub-agents yields better results than relying on one massive context window.
+
+*Written by Matteo Giardino, a fractional CTO who builds custom AI solutions and open-source infrastructure for Italian SMEs.*
