@@ -1,0 +1,114 @@
+---
+title: 'OpenClaw Configuration Guide 2026: Mastering openclaw.json'
+createdAt: '2026-06-26T00:00:00Z'
+modifiedAt: '2026-06-26T00:00:00Z'
+summary: 'Complete OpenClaw configuration guide for 2026. Master your openclaw.json with copy-paste snippets for Ollama, Cloud providers, and Telegram channels.'
+image: '/images/blog/openclaw-configuration-guide-2026.png'
+authorId: matteo
+locale: 'en'
+tags: ['ai', 'openclaw', 'ai agents']
+translationSlug: 'guida-configurazione-openclaw-2026'
+---
+
+I recently spent two weeks debugging random agent disconnects, only to realize my OpenClaw configuration guide was severely outdated. Your `openclaw.json` is the central brain of your AI agent setup, controlling everything from local models to messaging channels. After running OpenClaw in production for months, here is the ultimate guide to configuring it correctly in 2026.
+
+## Where is openclaw.json?
+
+Your OpenClaw settings are stored in a single JSON file. OpenClaw relies heavily on this `openclaw.json` file to manage providers, channels, and security bindings.
+
+On macOS and Linux, you will find it at `~/.openclaw/openclaw.json`. On Windows, it is typically located in `%USERPROFILE%\.openclaw\openclaw.json`.
+
+<CtaCard
+    title="Need help with AI integration?"
+    description="Get in touch for a consultation on implementing AI tools and automations in your business."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Configuring AI Providers
+
+Setting up AI providers correctly is essential. You can mix and match cloud providers and local inference tools like Ollama.
+
+### Cloud APIs
+
+If you use cloud models, here is the standard structure. Remember to keep your keys secure. If you ever need to change them, check my guide to [update openclaw api key provider](/blog/update-api-key-provider-openclaw).
+
+```json
+{
+  "providers": {
+    "openai": {
+      "apiKey": "***",
+      "defaultModel": "gpt-4o"
+    },
+    "anthropic": {
+      "apiKey": "sk-ant...HERE",
+      "defaultModel": "claude-3-5-sonnet-20241022"
+    }
+  }
+}
+```
+
+### Local AI with Ollama
+
+For privacy-first local agents, Ollama is the best choice. Make sure Ollama is running locally before starting the agent.
+
+```json
+{
+  "providers": {
+    "ollama": {
+      "baseUrl": "http://localhost:11434",
+      "defaultModel": "llama3"
+    }
+  }
+}
+```
+
+## Setting up Channels
+
+Connecting your agent to external channels makes it truly autonomous. Telegram is the easiest way to chat with your agent on the go.
+
+```json
+{
+  "channels": {
+    "telegram": {
+      "botToken": "YOUR_BOT_TOKEN",
+      "allowedUsers": ["your_telegram_username"]
+    }
+  }
+}
+```
+
+## Security & Networking
+
+A common mistake is binding the agent's web server to `0.0.0.0` without authentication, exposing it to the local network or internet. Always bind to `127.0.0.1` unless you are actively reverse proxying.
+
+```json
+{
+  "server": {
+    "host": "127.0.0.1",
+    "port": 3000
+  }
+}
+```
+
+## FAQ
+
+### How do I restart OpenClaw after changing openclaw.json?
+
+Simply restart the main process. OpenClaw does not hot-reload its JSON configuration, so you must kill the terminal session or Docker container and start it again.
+
+### Can I use multiple models at the same time?
+
+Yes, OpenClaw supports defining multiple providers in the `providers` object. You can specify which model to use on a per-task basis.
+
+### What happens if my openclaw.json is invalid?
+
+The agent will crash on startup with a JSON parsing error. Always validate your JSON with a linter before saving.
+
+## Wrap-up
+
+Getting your `openclaw.json` right is the foundation of a stable autonomous agent. Start with a minimal setup, test your local models, and gradually add external channels.
+
+*Written by Matteo Giardino, CTO and founder. I build AI agents for SMEs in Italy. [My projects](/projects).*

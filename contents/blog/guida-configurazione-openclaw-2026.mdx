@@ -1,0 +1,114 @@
+---
+title: 'Guida Configurazione OpenClaw 2026: Padroneggiare openclaw.json'
+createdAt: '2026-06-26T00:00:00Z'
+modifiedAt: '2026-06-26T00:00:00Z'
+summary: 'La guida definitiva alla configurazione di OpenClaw nel 2026. Padroneggia il file openclaw.json con snippet pronti all uso per Ollama, Cloud e Telegram.'
+image: '/images/blog/guida-configurazione-openclaw-2026.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'ai agents']
+translationSlug: 'openclaw-configuration-guide-2026'
+---
+
+Ho passato due settimane a debuggare disconnessioni casuali, solo per rendermi conto che la mia guida configurazione OpenClaw era obsoleta. Il file `openclaw.json` è il vero cervello del tuo setup AI, controllando tutto, dai modelli locali ai canali di messaggistica. Dopo aver gestito OpenClaw in produzione per mesi, ecco la guida definitiva per configurarlo correttamente nel 2026.
+
+## Dove si trova openclaw.json?
+
+Le tue impostazioni di OpenClaw sono salvate in un singolo file JSON. OpenClaw si affida pesantemente a questo file `openclaw.json` per gestire provider, canali e binding di sicurezza.
+
+Su macOS e Linux, lo troverai in `~/.openclaw/openclaw.json`. Su Windows, si trova tipicamente in `%USERPROFILE%\.openclaw\openclaw.json`.
+
+<CtaCard
+    title="Hai bisogno di aiuto con l'integrazione AI?"
+    description="Contattami per una consulenza su come implementare strumenti e automazioni AI nella tua azienda."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    pattern="circles"
+    align="center"
+/>
+
+## Configurare i Provider AI
+
+Impostare correttamente i provider AI è fondamentale. Puoi mescolare modelli cloud e strumenti di inferenza locale come Ollama.
+
+### API Cloud
+
+Se usi modelli cloud, ecco la struttura standard. Ricordati di mantenere al sicuro le tue chiavi. Se hai bisogno di aggiornarle, leggi la mia guida su [aggiornare api key provider openclaw](/blog/aggiornare-api-key-provider-openclaw).
+
+```json
+{
+  "providers": {
+    "openai": {
+      "apiKey": "sk-LA_..._QUI",
+      "defaultModel": "gpt-4o"
+    },
+    "anthropic": {
+      "apiKey": "sk-ant..._QUI",
+      "defaultModel": "claude-3-5-sonnet-20241022"
+    }
+  }
+}
+```
+
+### AI Locale con Ollama
+
+Per agenti incentrati sulla privacy, Ollama è la scelta migliore. Assicurati che Ollama sia in esecuzione localmente prima di avviare l'agente. Se sei alle prime armi, consulta il mio post per [configurare openclaw ollama agenti ai locali](/blog/configurare-openclaw-ollama-agenti-ai-locali).
+
+```json
+{
+  "providers": {
+    "ollama": {
+      "baseUrl": "http://localhost:11434",
+      "defaultModel": "llama3"
+    }
+  }
+}
+```
+
+## Impostazione dei Canali
+
+Connettere il tuo agente a canali esterni lo rende veramente autonomo. Telegram è il modo più semplice per chattare con il tuo agente in mobilità.
+
+```json
+{
+  "channels": {
+    "telegram": {
+      "botToken": "IL_TUO_BOT_TOKEN",
+      "allowedUsers": ["tuo_username_telegram"]
+    }
+  }
+}
+```
+
+## Sicurezza e Rete
+
+Un errore comune è associare il server web dell'agente a `0.0.0.0` senza autenticazione, esponendolo alla rete locale o a internet. Usa sempre `127.0.0.1` a meno che tu non stia usando un reverse proxy.
+
+```json
+{
+  "server": {
+    "host": "127.0.0.1",
+    "port": 3000
+  }
+}
+```
+
+## Domande Frequenti
+
+### Come riavvio OpenClaw dopo aver modificato openclaw.json?
+
+Basta riavviare il processo principale. OpenClaw non supporta l'hot-reload della sua configurazione JSON, quindi devi terminare la sessione terminale o il container Docker e avviarlo di nuovo.
+
+### Posso usare più modelli contemporaneamente?
+
+Sì, OpenClaw supporta la definizione di più provider nell'oggetto `providers`. Puoi specificare quale modello utilizzare per ogni singolo task.
+
+### Cosa succede se il mio openclaw.json non è valido?
+
+L'agente andrà in crash all'avvio con un errore di parsing JSON. Valida sempre il tuo JSON con un linter prima di salvare.
+
+## Conclusione
+
+Ottenere un `openclaw.json` perfetto è il fondamento per un agente autonomo stabile. Inizia con un setup minimale, testa i tuoi modelli locali e aggiungi gradualmente canali esterni.
+
+*Scritto da Matteo Giardino, CTO e founder. Costruisco agenti AI per le PMI in Italia. [I miei progetti](/projects).*
