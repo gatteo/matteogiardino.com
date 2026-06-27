@@ -1,0 +1,125 @@
+---
+title: 'Setup Avanzato Ollama e OpenClaw: Guida per Agenti AI Locali'
+createdAt: '2026-06-28T00:00:00Z'
+modifiedAt: '2026-06-28T00:00:00Z'
+summary: 'Ottimizza il tuo setup avanzato Ollama e OpenClaw. Scopri come risolvere i limiti di contesto, configurare il keep-alive e gestire server remoti nel 2026.'
+image: '/images/blog/setup-avanzato-ollama-openclaw.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'ai agents', 'local ai']
+translationSlug: 'advanced-ollama-openclaw-setup'
+---
+
+Utilizzare Ollama con le impostazioni di base insieme a OpenClaw è un ottimo punto di partenza, ma se vuoi costruire veri agenti autonomi, il setup predefinito ti frenerà. È necessario ottimizzare il tuo **setup avanzato Ollama e OpenClaw** per gestire flussi di lavoro complessi senza perdere il contesto. Questa guida ti mostrerà come spingere al limite la tua infrastruttura AI locale nel 2026, evitando errori comuni e assicurando che i tuoi modelli rimangano sempre reattivi.
+
+Personalmente, uso un Mac Mini headless dedicato esclusivamente ai modelli LLM locali. Negli ultimi mesi, ho notato che mentre la configurazione base va bene per le singole richieste, gli agenti si imbattono presto in problemi di "context cutoff" (dimenticando le istruzioni iniziali) o in latenze insostenibili perché Ollama scarica il modello dalla VRAM tra un'operazione e l'altra. Quando usi API cloud, tutto questo è gestito per te, ma in locale tu sei l'amministratore di sistema.
+
+Ecco esattamente come ho modificato il mio `openclaw.json` e il demone Ollama per risolvere questi problemi. Se vuoi approfondire le basi, puoi leggere la [Guida all'installazione di Ollama](/blog/configurare-openclaw-ollama-agenti-ai-locali).
+
+## 1. Connettere OpenClaw a un Server Ollama Remoto
+
+Se sei come me, non fai girare i modelli pesanti sul tuo portatile, ma li esegui su un server dedicato (o un PC desktop potente) e ti connetti tramite la rete locale. Questo è il primo passo per un setup avanzato Ollama e OpenClaw, liberando le risorse della tua macchina di sviluppo.
+
+Di default, OpenClaw cerca Ollama su `localhost:11434`. Per cambiare questo comportamento, devi modificare la configurazione del provider in OpenClaw.
+
+Apri `~/.openclaw/openclaw.json` e aggiorna il blocco `models.providers.ollama`:
+
+```json
+{
+  "models": {
+    "providers": {
+      "ollama": {
+        "baseUrl": "http://ollama-server.local:11434/v1",
+        "apiKey": "ollama-local",
+        "api": "openai-responses"
+      }
+    }
+  }
+}
+```
+
+Assicurati che l'host di Ollama sia associato a `0.0.0.0` affinché accetti connessioni esterne. Puoi farlo impostando `OLLAMA_HOST=0.0.0.0` nelle variabili d'ambiente del tuo server. Leggi anche la guida sui [migliori modelli Ollama per OpenClaw](/blog/migliori-modelli-ollama-openclaw-agenti-2026) per scegliere l'LLM giusto.
+
+<CtaCard title="Vuoi padroneggiare OpenClaw?" link="https://discord.gg/matteogiardino" buttonText="Entra nel Discord" />
+
+## 2. Risolvere i Limiti di Contesto con num_ctx
+
+Il problema principale degli agenti AI locali è la finestra di contesto. Ollama imposta di default un contesto di 2048 token (`num_ctx`) per risparmiare memoria. Quando un agente OpenClaw esegue 5 o 6 chiamate a strumenti esterni (tool calls), accumula moltissimo JSON nella cronologia della chat. Una volta superati i 2048 token, l'agente dimentica il prompt di sistema originale e inizia ad avere allucinazioni.
+
+Per risolvere questo problema nel tuo setup avanzato Ollama e OpenClaw, devi passare esplicitamente una finestra di contesto più ampia. Questo è essenziale per non perdere il filo del ragionamento.
+
+Aggiungi questo alla definizione del tuo modello nel file `openclaw.json`:
+
+```json
+"defaults": {
+  "model": {
+    "primary": "ollama/qwen2.5-coder:14b",
+    "kwargs": {
+      "num_ctx": 16384
+    }
+  }
+}
+```
+
+Se hai 16GB di Unified Memory o VRAM, `16384` è il compromesso ideale. Dà all'agente abbastanza memoria per leggere file di log di grandi dimensioni senza andare in crash.
+
+## 3. Eliminare la Latenza con keep_alive
+
+I flussi di lavoro degli agenti prevedono delle pause. OpenClaw chiama il modello, il modello decide di eseguire un comando da terminale, il comando impiega 10 secondi per finire, e OpenClaw chiama di nuovo il modello.
+
+Di default, Ollama scarica i modelli dalla memoria dopo 5 minuti di inattività. Se una compilazione dura di più, la successiva chiamata LLM richiederà 15 secondi solo per ricaricare i pesi.
+
+Puoi sovrascrivere questo comportamento impostando `keep_alive` nel tuo setup avanzato Ollama e OpenClaw:
+
+```json
+"kwargs": {
+  "num_ctx": 16384,
+  "keep_alive": "1h"
+}
+```
+
+Impostandolo a `1h` (un'ora) ti assicuri che il modello rimanga in memoria durante l'intera sessione, riducendo drasticamente i tempi morti.
+
+## 4. Impostazioni Avanzate per il Context Caching
+
+Un altro pezzo fondamentale del puzzle è la cache del contesto. Quando un agente itera, la cronologia della chat cresce. La maggior parte di quella cronologia è identica al turno precedente, con l'aggiunta del nuovo output.
+
+Ollama ha recentemente introdotto il prompt caching, che permette di riutilizzare la KV cache per i token già analizzati. Non devi configurare nulla nei kwargs, ma devi assicurarti di avere una versione di Ollama aggiornata (almeno `0.5.0`). Con la cache attiva, un prompt da 8000 token viene valutato istantaneamente se i primi 7500 erano già presenti.
+
+Questo cambia completamente l'economia degli agenti locali, abbattendo i tempi di elaborazione.
+
+## 5. Multi-Model Routing per gli Agenti
+
+Non tutti i compiti richiedono un modello pesante da 32B di parametri. OpenClaw ti permette di indirizzare task specifici a modelli diversi. Io uso un modello leggero per riassunti veloci e un modello specifico per il codice per le modifiche reali ai file.
+
+Ecco un esempio di configurazione:
+
+```json
+"agents": {
+  "coder": {
+    "model": "ollama/qwen2.5-coder:32b"
+  },
+  "researcher": {
+    "model": "ollama/llama3-8b"
+  }
+}
+```
+
+In questo modo, il tuo workflow diventa incredibilmente efficiente. Per saperne di più sul routing, controlla [come configurare OpenClaw nel 2026](/blog/guida-configurazione-openclaw-2026).
+
+## FAQ sul setup avanzato Ollama e OpenClaw
+
+**Qual è la dimensione del contesto ideale?**
+In generale, 16384 token offre un buon bilanciamento tra memoria consumata e capacità di ragionamento dell'agente.
+
+**Come evito che Ollama scarichi il modello?**
+Utilizza il parametro `keep_alive` impostandolo su `1h` o più.
+
+**Ho bisogno di una chiave API?**
+No, con il setup avanzato Ollama e OpenClaw l'elaborazione avviene interamente in locale usando [OpenClaw](/blog/cos-e-openclaw-framework-agenti-ai).
+
+## Conclusione
+
+Un setup AI locale ottimizzato fa la differenza tra un agente che si arrende a metà e uno che porta a termine il lavoro. Modificando il tuo `openclaw.json` con un `baseUrl` remoto, espandendo `num_ctx`, mantenendo i modelli attivi con `keep_alive` e sfruttando il prompt caching, puoi ottenere prestazioni simili alle API cloud a costo zero.
+
+Scritto da [Matteo Giardino](/about)
