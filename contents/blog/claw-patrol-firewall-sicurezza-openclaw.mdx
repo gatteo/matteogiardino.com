@@ -1,0 +1,53 @@
+---
+title: 'Claw Patrol: Il Firewall di Sicurezza per Agenti OpenClaw'
+createdAt: '2026-06-10T00:00:00Z'
+modifiedAt: '2026-06-10T00:00:00Z'
+summary: 'Claw Patrol è un firewall di sicurezza essenziale per gli agenti OpenClaw. Scopri come prevenire data exfiltration e prompt injection.'
+image: '/images/blog/claw-patrol-firewall-sicurezza-openclaw.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'security', 'agenti ai']
+translationSlug: 'claw-patrol-openclaw-security-firewall'
+---
+
+Più gli agenti autonomi diventano capaci, più ci scontriamo con un problema enorme: la **sicurezza**. Dare agli strumenti AI accesso illimitato al nostro filesystem e alle API significa renderci vulnerabili alla prompt injection e all'esfiltrazione accidentale di dati.
+
+Nei miei setup recenti, ho iniziato a studiare **Claw Patrol**, un layer firewall di sicurezza progettato specificamente per OpenClaw. Intercetta i comandi rischiosi, limita le connessioni di rete in uscita e garantisce che gli agenti locali operino entro confini rigorosi e predefiniti. Ecco come funziona e come configurarlo.
+
+## Il Problema di Sicurezza degli Agenti Autonomi
+
+Quando si esegue OpenClaw, si sta praticamente consegnando una shell a un LLM. Nonostante Claude Code e altri modelli cerchino di auto-regolamentarsi per evitare azioni dannose, le protezioni basate sugli LLM sono facilmente aggirabili da prompt sofisticati o input corrotti.
+
+Il rischio non riguarda solo attori malintenzionati. Un agente che allucina potrebbe decidere di eliminare ricorsivamente i log o, peggio ancora, inviare le variabili d'ambiente a un webhook casuale.
+
+## Cos'è Claw Patrol?
+
+Claw Patrol è un firewall deterministico che si posiziona tra OpenClaw e il suo ambiente di esecuzione (come un container Docker o la shell locale). Invece di chiedere all'LLM di comportarsi bene, Claw Patrol intercetta in modo forzato ogni chiamata agli strumenti e la verifica rispetto a un rigido set di regole.
+
+Se un agente tenta di eseguire un comando distruttivo o di fare una richiesta `curl` a un IP non in lista, Claw Patrol blocca la chiamata e restituisce un errore deterministico all'agente, costringendolo a provare un altro approccio o a fermarsi.
+
+<CtaCard href="/openclaw" title="Pronto a padroneggiare OpenClaw?" description="Scopri la mia guida completa al setup di OpenClaw." buttonText="Leggi la Guida" />
+
+## Configurare Claw Patrol con OpenClaw
+
+L'installazione è piuttosto semplice. Si definiscono le policy in un file YAML, specificando i percorsi consentiti, i domini di rete e i comandi bloccati.
+
+```yaml
+# claw-patrol.yaml
+policies:
+  filesystem:
+    allowed_read: ["/app/src", "/var/log"]
+    denied_write: ["/"]
+  network:
+    allowed_domains: ["api.github.com", "api.anthropic.com"]
+  commands:
+    blocked: ["sudo", "chmod"]
+```
+
+Una volta configurato, basta avviare l'agente OpenClaw abilitando il firewall.
+
+## Il Futuro della Sicurezza degli Agenti
+
+L'auto-riflessione degli LLM è fantastica per la logica del codice, ma per la sicurezza, i firewall deterministici sono obbligatori. Claw Patrol offre a CTO e sviluppatori la sicurezza di implementare agenti completamente autonomi senza rischiare i dati di produzione.
+
+*Matteo è un fractional CTO che aiuta le startup a costruire agenti AI locali e sicuri senza esporre dati proprietari.*

@@ -1,0 +1,43 @@
+---
+title: "OpenClaw per i Team: Workflow Collaborativi e Setup Multi-Agente"
+description: "Come team, startup e famiglie possono condividere un'istanza OpenClaw, coordinare task tra più agenti e costruire workflow collaborativi reali."
+date: "2026-06-26"
+author: "Matteo Giardino"
+locale: "it"
+tags: ["OpenClaw", "AI Agents", "Automazione", "Workflow"]
+image: "/images/blog/openclaw-team-workflow-collaborativi-multi-agente.png"
+---
+
+OpenClaw è nato come assistente AI *personale*. Un agente, una persona, una macchina.
+
+Ma ecco la verità sugli strumenti potenti: le persone trovano sempre il modo di condividerli. Su Discord e Reddit, un numero crescente di utenti sta eseguendo OpenClaw come risorsa condivisa. I team di sviluppo instradano i task attraverso sessioni di agenti multipli, mentre le startup costruiscono interi workflow operativi sulla sua architettura.
+
+In questa guida, esploreremo come impostare correttamente OpenClaw per i team, dall'accesso condiviso di base al coordinamento avanzato tra più agenti.
+
+## L'Architettura Gateway: Perché la Condivisione Funziona
+
+A differenza degli assistenti AI basati su cloud (dove ogni utente ha bisogno del proprio account isolato), OpenClaw viene eseguito sul tuo hardware. Il **Gateway** è il processo centrale che gestisce tutta l'interazione AI, l'esecuzione degli strumenti e la gestione delle sessioni. Può funzionare su un Mac, un server Linux o persino un Raspberry Pi.
+
+L'intuizione chiave è questa: un singolo Gateway può servire **sessioni multiple** contemporaneamente. Ogni sessione è accessibile attraverso diversi canali di messaggistica: WhatsApp, Telegram, Slack, Discord, Microsoft Teams o WebChat.
+
+Questo significa che il tuo team non ha bisogno di installazioni separate. Tutti si collegano allo stesso Gateway tramite l'app di chat che già utilizzano.
+
+Ogni utente ottiene la propria sessione isolata con la propria memoria, i propri file di contesto e la cronologia delle conversazioni.
+
+## Come Configurare il Gateway per un Team
+
+Per iniziare, devi assicurarti che il tuo Gateway OpenClaw sia configurato per accettare connessioni da più client. Nel tuo file `openclaw.json`, dovrai configurare i plugin di canale necessari (es. Slack o Discord).
+
+### Isolamento vs Condivisione
+
+Mentre le sessioni di chat sono separate, tutti gli agenti eseguiti sullo stesso Gateway condividono lo stesso ambiente host. Questo ha importanti implicazioni per la sicurezza e la collaborazione:
+- Se dai a OpenClaw l'accesso al file system, tutti gli utenti del team avranno indirettamente lo stesso livello di accesso.
+- Puoi utilizzare server MCP (Model Context Protocol) per limitare i permessi o configurare *workspace* separati per ogni sessione.
+
+## Setup Multi-Agente
+
+La vera magia inizia quando si instradano compiti complessi a sub-agenti specializzati. Puoi configurare il tuo OpenClaw in modo che un "agente orchestratore" su Slack deleghi la scrittura del codice a un agente su un server dedicato e la ricerca a un altro.
+
+Per i team di sviluppo, questo trasforma OpenClaw da un semplice chatbot a un vero e proprio "collaboratore fantasma" che partecipa alle revisioni del codice, monitora i log e riassume i thread su Slack.
+
+L'era dell'IA personale sta rapidamente evolvendo nell'IA collaborativa. E con OpenClaw, hai il controllo totale su come costruire il tuo team ideale.
