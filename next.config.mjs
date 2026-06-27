@@ -28,6 +28,16 @@ const nextConfig = {
     async redirects() {
         return [
             {
+                source: '/blog/perche-startup-hanno-bisogno-fractional-cto-2026',
+                destination: '/blog/fractional-cto-guida-completa-ai-benefici-per-la-tua-azienda',
+                permanent: true,
+            },
+            {
+                source: '/en/blog/why-startups-need-fractional-cto-2026',
+                destination: '/en/blog/fractional-cto-strategy-en',
+                permanent: true,
+            },
+            {
                 source: '/en/blog/how-to-install-openclaw-ollama-2026-guide',
                 destination: '/en/blog/using-ollama-with-openclaw-en',
                 permanent: true,
