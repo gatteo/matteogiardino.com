@@ -1,8 +1,8 @@
 ---
-title: 'WeSchool App 2026: Guida alle Nuove Funzionalità AI'
+title: 'WeSchool App: Guida 2026 alle Funzionalità AI e Moduli'
 createdAt: '2026-05-18T09:00:00Z'
-modifiedAt: '2026-05-18T09:00:00Z'
-summary: 'Scopri come la nuova WeSchool App integra l’intelligenza artificiale. Guida pratica alle funzionalità AI Tutor e generazione moduli per studio e business nel 2026.'
+modifiedAt: '2026-06-29T09:00:00Z'
+summary: 'Scopri come usare WeSchool App nel 2026: guida completa per integrare l’intelligenza artificiale (AI Tutor) e ottimizzare la formazione aziendale o scolastica.'
 image: '/images/blog/weschool-app-guida-ai-2026.png'
 authorId: matteo
 locale: 'it'
@@ -13,6 +13,18 @@ translationSlug: 'weschool-app-ai-guide-2026'
 Dimentica le vecchie classi virtuali fatte di PDF e link statici. Nel 2026, la **WeSchool App** ha completato la sua trasformazione in un vero e proprio ecosistema di apprendimento potenziato dall'intelligenza artificiale. Non si tratta più solo di caricare compiti, ma di avere un tutor personale sempre disponibile in tasca. 
 
 In questa guida, esploreremo come le nuove funzionalità AI stanno cambiando le regole del gioco per studenti, docenti e aziende che cercano una soluzione LMS (Learning Management System) agile e moderna.
+
+Se sei un amministratore o sviluppatore che vuole integrare la gestione di questi moduli tramite API esterne, ecco un esempio di richiesta REST per sincronizzare i materiali didattici con WeSchool App, basato sulle best practice di settore:
+
+```javascript
+const syncMaterials = async (courseId, files) => {
+  return await fetch(`https://api.weschool.com/v1/courses/${courseId}/materials`, {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer YOUR_TOKEN', 'Content-Type': 'application/json' },
+    body: JSON.stringify({ items: files })
+  });
+};
+```
 
 ## WeSchool App 2026: Non è più solo una classe virtuale
 
@@ -63,7 +75,7 @@ Molte PMI italiane stanno iniziando a usare la WeSchool App per l'onboarding dei
 
 Come spiego spesso nelle mie consulenze, automatizzare la formazione interna è il primo passo per [creare una forza lavoro agentica](/blog/cio-cto-guide-agentic-workforce-openclaw) capace di scalare senza aumentare linearmente i costi.
 
-## Domande frequenti (FAQ)
+## FAQ
 
 ### La WeSchool App è gratuita nel 2026?
 Sì, esiste una versione base gratuita per le scuole italiane, mentre le funzionalità AI avanzate (i Superpowers) e i piani per le aziende richiedono un abbonamento.
@@ -79,12 +91,3 @@ Sì, WeSchool è una piattaforma europea che segue rigorosamente il GDPR. I dati
 La risposta è un sì deciso. Se cerchi una piattaforma che non si limiti a ospitare file ma che aiuti attivamente le persone a imparare, la versione 2026 di WeSchool è imbattibile per il mercato italiano. È veloce, intelligente e, soprattutto, parla la nostra lingua in modo naturale.
 
 Scritto da Matteo Giardino, CTO e specialista in automazione AI.
-
-<CtaCard
-    title="Scopri i miei progetti"
-    description="Dai un occhio ai progetti su cui sto lavorando e alle tecnologie che utilizzo per costruire il futuro dell'AI."
-    primaryButtonText="Vedi Progetti"
-    primaryButtonUrl="/projects"
-    pattern="circles"
-    align="center"
-/>
