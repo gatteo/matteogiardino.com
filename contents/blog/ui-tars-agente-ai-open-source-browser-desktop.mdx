@@ -10,9 +10,9 @@ tags: ['ai', 'ai agents', 'local ai']
 translationSlug: 'ui-tars-open-source-ai-agent-browser-desktop'
 ---
 
-UI-TARS è un agente AI visivo open source basato su Qwen 2 VL in grado di controllare nativamente sia il tuo browser che l'ambiente desktop. Elabora i pixel grezzi dello schermo per cliccare, digitare e navigare le interfacce grafiche in totale autonomia, senza dipendere dal parsing HTML o da costose API esterne. Essendo eseguibile localmente, offre una soluzione gratuita e privata per automatizzare flussi di lavoro web e di sistema complessi.
+UI-TARS è un agente AI visivo open source basato su Qwen 2 VL per l'automazione di browser e desktop senza costi API. Dopo averlo testato, ti consiglio di installarlo se cerchi automazione locale gratuita, ma evitalo se non hai una GPU dedicata. Elabora i pixel grezzi dello schermo per cliccare, digitare e navigare le interfacce grafiche in totale autonomia.
 
-Se stai cercando un modo affidabile per automatizzare le tue attività, UI-TARS cambia le regole del gioco. Costruito su eccellenti fondamenta visive, è un agente GUI specializzato capace di "guardare" il tuo schermo ed eseguire task complessi in completa autonomia. In questa guida, analizzeremo cosa rende speciale UI-TARS, le sue funzionalità principali e come puoi eseguirlo direttamente sul tuo hardware.
+A differenza dei tool di automazione specifici, UI-TARS offre un approccio general-purpose all'automazione del browser e del desktop. Costruito su eccellenti fondamenta visive, è un agente GUI specializzato capace di "guardare" il tuo schermo ed eseguire task complessi in completa autonomia. In questa guida, analizzeremo cosa rende speciale UI-TARS, le sue funzionalità principali e come puoi eseguirlo direttamente sul tuo hardware.
 
 ## Cos'è UI-TARS?
 
@@ -42,7 +42,7 @@ Abbiamo già visto agenti GUI in passato, ma UI-TARS introduce alcuni vantaggi c
 
 ### Open Source e Local-First
 
-I pesi del modello sono open source e disponibili gratuitamente su HuggingFace. Non devi pagare costi API per ogni singolo screenshot elaborato, né devi inviare i dati sensibili del tuo desktop a un provider esterno. Eseguirlo localmente significa avere privacy totale e una scalabilità a costo zero, simile ai vantaggi di [eseguire modelli locali come Qwen 2.5 Coder](/blog/qwen-25-coder-32b-ollama-openclaw-guida).
+I pesi del modello sono open source e disponibili gratuitamente su [HuggingFace](https://huggingface.co/Qwen/UI-TARS-7B-VL). Non devi pagare costi API per ogni singolo screenshot elaborato, né devi inviare i dati sensibili del tuo desktop a un provider esterno. Eseguirlo localmente significa avere privacy totale e una scalabilità a costo zero, simile ai vantaggi di [eseguire modelli locali come Qwen 2.5 Coder](/blog/qwen-25-coder-32b-ollama-openclaw-guida).
 
 ### Basato su Qwen 2 VL
 
@@ -81,11 +81,14 @@ Se non hai l'hardware necessario per far girare un modello visivo da 7B in local
 Ti basta inserire un prompt e lo Space avvierà un container browser isolato, lasciando che l'agente navighi sul web in base alle tue istruzioni. È il modo migliore per valutarne la logica e la precisione prima di impegnarsi in un'installazione locale.
 
 ## Domande Frequenti
-
-**Posso usare UI-TARS su Mac?**  
-Sì, il codice è multipiattaforma. Sebbene le GPU NVIDIA offrano le performance migliori tramite CUDA, la community sta già lavorando su ottimizzazioni per Apple Silicon (MPS).
-
-**Supporta l'automazione in background?**  
-Al momento, gli agenti visivi tendono ad aver bisogno del focus sullo schermo reale o virtuale per "vedere" cosa succede, a differenza delle automazioni API-first. L'utilizzo tramite container Docker (come negli HuggingFace Spaces) è la soluzione ideale per task in background.
+ 
+ ### Posso usare UI-TARS su Mac?
+ Sì, il codice è multipiattaforma. Sebbene le GPU NVIDIA offrano le performance migliori tramite CUDA, la community sta già lavorando su ottimizzazioni per Apple Silicon (MPS).
+ 
+ ### Supporta l'automazione in background?
+ Al momento, gli agenti visivi tendono ad aver bisogno del focus sullo schermo reale o virtuale per "vedere" cosa succede. L'utilizzo tramite container Docker è la soluzione ideale per task in background.
+ 
+ ### Quali sono i requisiti di sistema per UI-TARS?
+ Richiede una GPU NVIDIA con almeno 16GB di VRAM per il modello da 7B parametri. Può essere eseguito su distribuzioni Linux standard o su Windows utilizzando WSL2.
 
 *Scritto da Matteo Giardino è un CTO e sviluppatore che condivide le sue esperienze pratiche con agenti AI e automazione. Gestisce matteogiardino.com per documentare i suoi setup nel mondo reale.*
