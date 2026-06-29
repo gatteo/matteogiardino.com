@@ -1,0 +1,82 @@
+---
+title: 'Risolvere errore OpenClaw Gateway Timeout: Guida'
+createdAt: '2026-06-29T00:00:00Z'
+modifiedAt: '2026-06-29T00:00:00Z'
+summary: 'Scopri come risolvere l''errore 504 Gateway Timeout in OpenClaw. Una guida pratica per provider LLM, modelli locali e limiti del proxy Envoy.'
+image: '/images/blog/risolvere-errore-openclaw-gateway-timeout.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'openclaw', 'tutorial']
+translationSlug: 'fix-openclaw-gateway-timeout-error'
+---
+
+Quando utilizzi OpenClaw in produzione o sul tuo computer, imbatterti in un errore 504 Gateway Timeout è frustrante. Di solito significa che l'OpenClaw Gateway (il proxy Envoy che gestisce il traffico) ha aspettato troppo a lungo una risposta dal provider AI o dal LLM locale, e ha semplicemente interrotto la connessione.
+
+Dopo aver fatto il debug di questo problema su diverse configurazioni dei clienti e sul mio server Mac Mini, ho scoperto che la soluzione è spesso semplice se sai dove guardare. Ecco come risolvo i timeout del gateway in OpenClaw.
+
+## Cosa causa il Gateway Timeout in OpenClaw?
+
+OpenClaw usa un egress proxy Envoy per instradare le richieste dai tuoi sub-agent al LLM reale (come Anthropic, OpenAI o un'istanza locale di Ollama). Se il LLM impiega troppo tempo a rispondere - a causa di un carico elevato, finestre di contesto enormi o hardware lento - Envoy raggiunge il suo limite di timeout predefinito e chiude la connessione, restituendo un errore 504.
+
+Questo accade più frequentemente quando:
+- Invii un prompt massiccio (come l'analisi di un'intera codebase) che richiede al modello più di 60 secondi per essere elaborato.
+- Stai eseguendo modelli locali tramite Ollama su hardware non abbastanza potente.
+- L'API del provider esterno sta riscontrando problemi di performance.
+
+<CtaCard 
+  title="Costruisci Agenti AI per la produzione" 
+  description="Iscriviti alla mia newsletter per ricevere configurazioni reali e consigli pratici su OpenClaw e l'AI locale."
+  buttonText="Iscriviti ora"
+  href="/newsletter"
+/>
+
+## Step 1: Controlla la tua API Key e i limiti del provider
+
+Prima di mettere mano ai file di configurazione, verifica che il tuo provider API sia effettivamente raggiungibile. Spesso, un "timeout" è solo un errore mascherato per un rate limit o una richiesta bloccata.
+
+Se usi Anthropic o OpenAI, accedi alla loro dashboard e controlla i limiti di utilizzo. Assicurati che la chiave abbia i permessi corretti e che la fatturazione sia attiva.
+
+## Step 2: Verifica che i modelli locali (Ollama) stiano girando
+
+Se stai [usando OpenClaw con Ollama in locale](/blog/configurare-openclaw-ollama-agenti-ai-locali), un timeout di solito significa che Ollama sta faticando a generare la risposta in tempo, o il modello non è ancora stato caricato nella VRAM.
+
+1. Apri il terminale ed esegui `ollama ps` per vedere se il modello è attualmente caricato in memoria.
+2. Se non lo è, la prima richiesta richiederà più tempo perché Ollama deve caricare i pesi nella VRAM.
+3. Prova a inviare un prompt semplice direttamente a Ollama: `curl http://localhost:11434/api/generate -d '{"model": "qwen2.5", "prompt": "ciao"}'`. Se questo comando si blocca, il tuo hardware potrebbe essere in difficoltà.
+
+## Step 3: Ispeziona i log di OpenClaw e Envoy
+
+Per trovare la causa esatta, devi leggere i log. Poiché OpenClaw gira in container Docker, puoi ispezionare il gateway direttamente.
+
+```bash
+docker logs openclaw-gateway --tail 50
+```
+
+Cerca righe che contengono `upstream request timeout` o `connection refused`. Se vedi `connection refused`, il proxy non riesce a raggiungere affatto l'endpoint del LLM. Controlla il tuo `openclaw.json` per assicurarti che l'`provider_url` sia corretto.
+
+## Step 4: Aumenta il timeout in openclaw.json
+
+Se il modello è lento ma funzionante, devi dire al proxy Envoy di aspettare più a lungo. Puoi risolvere questo problema aumentando il valore di timeout nella tua configurazione.
+
+Apri il tuo `openclaw.json` (fai riferimento alla [Guida alla Configurazione di OpenClaw](/blog/guida-configurazione-openclaw-2026) se non sei sicuro di dove si trovi) e individua il blocco `gateway`.
+
+```json
+{
+  "gateway": {
+    "timeout_seconds": 120,
+    "max_retries": 3
+  }
+}
+```
+
+Di solito alzo `timeout_seconds` dal valore predefinito di 30 a 120 quando lavoro con modelli locali di grandi dimensioni. Salva il file e riavvia il gateway.
+
+## Domande frequenti
+
+**Perché OpenClaw va in timeout solo su grandi codebase?**
+Le grandi codebase richiedono che il LLM elabori decine di migliaia di token. Questo "time to first token" (TTFT) può facilmente superare il timeout predefinito di 30 secondi del proxy, specialmente su hardware locale.
+
+**Questo risolve l'errore Unauthorized Gateway Token?**
+No, quello è un problema diverso legato all'autenticazione tra la CLI e il gateway. Leggi come [risolvere l'errore Unauthorized Gateway Token](/blog/risolvere-errore-openclaw-unauthorized-gateway-token) per quella specifica correzione.
+
+Seguendo questi passaggi, puoi isolare se il problema è la tua rete, il tuo hardware o semplicemente una regola di timeout troppo severa, e rimettere al lavoro i tuoi agenti.
