@@ -1,0 +1,51 @@
+---
+title: "Varianti OpenClaw a Confronto: PicoClaw vs NullClaw vs ZeroClaw vs NanoBot vs TinyClaw"
+description: "Un confronto completo delle varianti leggere di OpenClaw. Scopri le differenze tra PicoClaw, NullClaw, ZeroClaw, NanoBot e TinyClaw per i tuoi agenti AI locali."
+date: "2026-06-29"
+createdAt: "2026-06-29T00:00:00Z"
+modifiedAt: "2026-06-29T00:00:00Z"
+summary: "Un confronto completo delle varianti leggere di OpenClaw. Scopri le differenze tra PicoClaw, NullClaw, ZeroClaw, NanoBot e TinyClaw per i tuoi agenti AI locali."
+image: "/images/blog/varianti-openclaw-confronto-picoclaw-nullclaw-zeroclaw-nanobot-tinyclaw.png"
+authorId: "matteo"
+locale: "it"
+translationSlug: "openclaw-variants-picoclaw-nullclaw-zeroclaw-nanobot-tinyclaw"
+tags: ["openclaw", "picoclaw", "nullclaw", "nanobot", "tinyclaw", "local ai"]
+---
+
+L'ecosistema OpenClaw è esploso con dozzine di varianti leggere progettate per hardware limitato. Se vuoi eseguire agenti AI locali ma trovi il framework OpenClaw troppo pesante, questo confronto analizza **PicoClaw, NullClaw, ZeroClaw, NanoBot e TinyClaw**. Il riassunto? Usa **PicoClaw** se ti serve un'impronta RAM sotto i 10MB, e **NanoBot** se preferisci programmare in Python.
+
+## L'Ecosistema OpenClaw: Perché Tutte Queste Varianti?
+
+OpenClaw è un framework enterprise potente, ma richiede molta RAM (spesso oltre 1GB). Gli sviluppatori hanno creato fork e riscritture per risolvere questo problema. Che tu stia usando un Raspberry Pi da 10$ o abbia bisogno di massima velocità di esecuzione, esiste una variante su misura per il tuo hardware.
+
+<CtaCard title="Ricevi tutorial pratici sull'AI direttamente via email" link="https://matteogiardino.com/newsletter" buttonText="Iscriviti Ora" />
+
+## NanoBot e TinyClaw: I Pionieri in Python
+
+**NanoBot** è stato il primo vero tentativo di alleggerire OpenClaw. Scritto in Python, ha ridotto il consumo di memoria da 1GB a circa 100MB. Mantiene i concetti base - integrazione LLM, esecuzione tool e memoria - ma rimuove la UI pesante e l'autenticazione enterprise. **TinyClaw** parte da qui e aggiunge il routing per sistemi multi-agente.
+
+## PicoClaw: Il Micro Agente in Go
+
+**PicoClaw** è una riscrittura in Go che porta l'ottimizzazione all'estremo. Gira in meno di 10MB di RAM e si avvia in 1 secondo. Essendo compilato in un singolo file binario, è super portatile su architetture RISC, ARM e x86. Se vuoi eseguire un agente insieme a Ollama su hardware molto limitato, PicoClaw è la scelta migliore.
+
+## NullClaw e ZeroClaw: Sicurezza e Velocità
+
+**NullClaw** si concentra su sicurezza e minimalismo, rimuovendo tutta la telemetria di rete e le dipendenze esterne. **ZeroClaw** è ottimizzato per la velocità di esecuzione, eliminando l'overhead per diventare il fork di OpenClaw più veloce disponibile, specialmente quando comunica con endpoint Ollama in locale.
+
+## Quale Variante OpenClaw Dovresti Scegliere?
+
+- **PicoClaw**: Il migliore per dispositivi IoT e vincoli di RAM estremi.
+- **NanoBot**: Il migliore per gli sviluppatori Python che vogliono scriptabilità.
+- **NullClaw**: Il migliore per deployment sicuri e privacy-first.
+- **ZeroClaw**: Il migliore per applicazioni sensibili alla latenza.
+- **TinyClaw**: Il migliore per flussi di lavoro multi-agente.
+
+## Domande Frequenti
+
+**Posso eseguirli con Ollama?**  
+Sì, tutte queste varianti supportano i modelli locali tramite Ollama. Devi solo puntare la configurazione al tuo endpoint `localhost:11434`.
+
+**Sono compatibili con i tool di OpenClaw?**  
+La maggior parte delle varianti Python (NanoBot, TinyClaw) mantiene la compatibilità con i tool, mentre PicoClaw, essendo in Go, richiede tool nativi o bridge HTTP webhook.
+
+*Scritto da Matteo Giardino, un fractional CTO che aiuta le aziende a integrare agenti AI in sicurezza. Ho testato in produzione quasi tutte queste varianti per ottimizzare i costi server.*
