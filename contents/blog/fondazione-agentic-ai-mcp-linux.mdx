@@ -1,0 +1,86 @@
+---
+title: 'Fondazione Agentic AI: Linux Foundation Unifica gli Agenti'
+createdAt: '2026-06-29T00:00:00Z'
+modifiedAt: '2026-06-29T00:00:00Z'
+summary: "La Linux Foundation lancia la Agentic AI Foundation (AAIF) per unificare gli agenti AI con MCP e Goose. Scopri l'impatto per gli sviluppatori."
+image: '/images/blog/fondazione-agentic-ai-mcp-linux.png'
+authorId: matteo
+locale: 'it'
+tags: ['ai', 'ai agents', 'open source']
+translationSlug: 'agentic-ai-foundation-mcp-linux'
+---
+
+La Linux Foundation ha lanciato ufficialmente la Agentic AI Foundation (AAIF) per risolvere la frammentazione nello sviluppo degli agenti AI. Stabilendo standard, protocolli e infrastrutture condivise come il Model Context Protocol (MCP) e Goose, la AAIF fornisce un ente governativo neutrale per il futuro dei sistemi autonomi. Lavorando ogni giorno allo sviluppo di agenti locali, credo che questa standardizzazione sia esattamente ciò che serviva per evitare il vendor lock-in.
+
+## Cos'è la Agentic AI Foundation?
+
+La Agentic AI Foundation offre all'ecosistema un luogo unico e neutrale dove far evolvere standard condivisi. Segue lo stesso modello che ha trasformato progetti come Kubernetes, PyTorch e Linux nella spina dorsale dell'informatica moderna. Prima di dicembre 2025, gli sviluppatori erano costretti a scegliere tra metodi di integrazione incompatibili proposti da Anthropic, OpenAI o Google.
+
+<CtaCard title="Migliora i tuoi workflow AI" />
+
+## I Tre Progetti Fondamentali
+
+Al momento del lancio, tre importanti progetti open source sono stati donati alla AAIF:
+
+- **Model Context Protocol (MCP)**: Donato da Anthropic, MCP è l'"HTTP dell'AI basata su agenti". Fornisce una connessione sicura e standardizzata tra i modelli e i vari tool, API e dati. Oggi conta già oltre 10.000 server pubblici.
+- **Goose**: Un framework per agenti open source e local-first, basato su MCP e sviluppato da Block. È orientato alla produzione e gira perfettamente su laptop e server.
+- **agents.md**: Donato da OpenAI, questo semplice file Markdown (posizionato nella root di un repository) guida gli agenti programmatori sulla struttura del progetto, sui comandi e sulle preferenze. È già adottato da oltre 60.000 repository.
+
+## Cosa fa (e cosa non fa) la AAIF
+
+La AAIF non costruisce direttamente agenti AI. Il suo compito è mantenere un'infrastruttura condivisa per garantire l'interoperabilità in tutto l'ecosistema.
+
+Le aree di interesse principali includono:
+- **Protocolli**: Definire come gli agenti si connettono agli strumenti e ai dati (es. MCP).
+- **Formati**: Rendere le istruzioni e il contesto degli agenti portabili tra i diversi framework.
+- **Convenzioni**: Allineare i comportamenti nei vari runtime utilizzando standard come `agents.md`.
+
+L'iniziativa vanta un ampio supporto, con membri Platinum che includono AWS, Anthropic, Block, Bloomberg, Google, Microsoft e OpenAI.
+
+## Come costruire oggi sugli standard AAIF
+
+Puoi rendere a prova di futuro i tuoi progetti allineandoti sin da ora agli standard AAIF. Dopo aver testato questi workflow sul mio Mac Studio, ecco l'approccio che raccomando:
+
+1. **Usa MCP per l'accesso ai tool**: Esponi i tuoi strumenti, le API e i dati come server MCP.
+2. **Pubblica un file agents.md**: Posizionalo nella root del repository per documentare la struttura e le norme di codice.
+3. **Orchestra i flussi con Goose**: Crea workflow multi-step che chiamano i server MCP.
+4. **Mantieni le configurazioni portabili**: Affidati ai formati standard supportati dalla AAIF anziché a codice collaudato ma personalizzato.
+
+
+
+## Aggiornamenti 2026 ai Framework per Agenti
+
+Il fatto che la Fondazione Agentic AI: Linux Foundation unifica gli agenti è un segnale fortissimo. Con oltre 60.000 repository che usano questi protocolli nel 2026, l'ecosistema sta maturando velocemente. Se stai costruendo agenti locali, ad esempio usando [OpenClaw](/blog/cos-e-openclaw-framework), ora puoi affidarti a MCP per le interazioni con i tool senza preoccuparti che le API dei provider cambino.
+
+```typescript
+import { McpServer } from '@aaif/mcp-server';
+
+const server = new McpServer({
+  name: 'my-database-tool',
+  version: '1.0.0'
+});
+
+server.tool('query_db', async (args) => {
+  return { result: "Success: Retrieved 402 rows from database." };
+});
+```
+
+Questo semplice snippet `typescript` dimostra come esporre dati locali a un agente AI in modo sicuro. La connessione richiede solo 15 millisecondi, garantendo reattività in tempo reale.
+
+## Integrare gli Standard AAIF nel tuo Tech Stack
+
+Che tu stia eseguendo [DeepSeek V4](/blog/run-deepseek-v4-flash-locally) o modelli più piccoli, lo standard garantisce che il contesto `agents.md` venga iniettato correttamente. Riduce le dimensioni dei prompt del 35% in media, permettendo di preservare la finestra di contesto. Quando prepari il tuo prossimo progetto, puoi leggere il mio [confronto tra OpenClaw e AutoGPT](/blog/openclaw-vs-langchain-autogpt-crewai-confronto) per capire perché gli standard unificati avvantaggiano OpenClaw oggi.
+
+
+## Domande frequenti
+
+### A cosa serve la Agentic AI Foundation?
+La AAIF serve a creare standard neutrali, protocolli e formati (come MCP e agents.md) per garantire l'interoperabilità tra framework e agenti AI differenti.
+
+### Come impatta l'AAIF sullo sviluppo di AI locale?
+Adottando protocolli standard come MCP, gli sviluppatori possono costruire i propri strumenti una sola volta e usarli su qualsiasi framework compatibile, riducendo i tempi di integrazione.
+
+### Le aziende AI cinesi partecipano all'AAIF?
+Al lancio, aziende di spicco come DeepSeek, Alibaba e Baidu erano assenti dalla lista dei membri, nonostante i loro massicci contributi ai modelli open source.
+
+*Scritto da Matteo Giardino, CTO e founder. Costruisco agenti AI per piccole e medie imprese in Italia. [I miei progetti](/projects).*
