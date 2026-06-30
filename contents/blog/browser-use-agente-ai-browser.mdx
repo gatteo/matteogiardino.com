@@ -1,0 +1,98 @@
+---
+title: "Guida a Browser Use: Automazione Web con Agenti AI Locali"
+summary: "Browser Use è un framework open-source che permette agli agenti AI di interagire con le pagine web. Ecco come usarlo in locale con OpenClaw e Ollama per un'automazione privata al 100%."
+createdAt: "2026-06-30"
+modifiedAt: "2026-06-30"
+image: "/images/blog/browser-use-agente-ai-browser.png"
+authorId: "matteo"
+locale: "it"
+translationSlug: "browser-use-ai-agent"
+category: "ai"
+tags: ["openclaw", "agenti ai", "automazione browser", "ollama", "python"]
+---
+
+Browser Use è un framework open-source che trasforma il tuo agente AI in un utente web attivo, capace di cliccare, digitare e navigare sulle pagine web in totale autonomia. Questo approccio basato sul **browser use ai agent** cambia completamente il modo in cui pensiamo all'automazione. Mentre la maggior parte dei tutorial mostra come usarlo con le API in cloud, eseguirlo in locale ti garantisce la massima privacy ed elimina i costi delle API nel 2026. Ecco una guida pratica su come integrare Browser Use con OpenClaw e LLM locali come Qwen o Llama tramite Ollama.
+
+Se hai mai desiderato automatizzare le candidature di lavoro, fare scraping di siti web dinamici o testare la tua web app usando l'intelligenza artificiale, questo strumento cambia completamente le regole del gioco. L'ho testato intensamente sul mio Mac Mini server e i risultati sono impressionanti quando viene abbinato a un buon modello con capacità visive.
+
+Rispetto a [MolmoWeb: Agenti Multimodali Open Source per il Controllo del Browser](/blog/molmoweb-agenti-multimodali-open-source-browser), l'architettura in questo caso è molto più diretta per gli sviluppatori Python.
+
+## Cos'è Browser Use?
+
+[Browser Use](https://github.com/browser-use/browser-use) è una libreria Python che fa da ponte tra i Large Language Models e il browser web. Invece di affidarsi a strumenti tradizionali di scraping del DOM come BeautifulSoup, utilizza Playwright per renderizzare la pagina e traduce il layout visivo in un formato interattivo che l'AI può comprendere. Un po' come [Automazione Browser con OpenClaw e Chrome DevTools MCP](/blog/browser-control-openclaw-chrome-devtools-mcp), pilota direttamente l'istanza del browser.
+
+L'agente letteralmente "vede" la pagina. Mappa gli elementi cliccabili, i campi di testo e i menu a tendina, permettendo all'LLM di decidere quale azione intraprendere in base al tuo prompt. Un enorme passo avanti rispetto all'[Automazione Classica con OpenClaw](/blog/automazione-browser-openclaw).
+
+<CtaCard title="Ti serve aiuto con l'AI locale?" description="Scrivo guide approfondite su come eseguire l'AI open-source in locale. Iscriviti alla newsletter per riceverle direttamente." buttonText="Iscriviti Ora" buttonLink="/newsletter" />
+
+## Perché l'AI Locale per l'Automazione del Browser?
+
+Gran parte degli esempi di Browser Use si basano su GPT-4o o Claude 3.5 Sonnet. Sebbene questi modelli siano incredibilmente capaci, affidare loro le credenziali bancarie o i portali aziendali proprietari rappresenta un enorme rischio per la sicurezza.
+
+Eseguire l'agente in locale con OpenClaw e Ollama offre tre vantaggi principali:
+1. **Privacy Totale:** I cookie di sessione, le password e la cronologia di navigazione non lasciano mai la tua macchina.
+2. **Zero Costi API:** L'automazione del browser richiede moltissimi token perché l'agente legge continuamente lo stato del DOM. Con i modelli locali, questo processo è gratis.
+3. **Personalizzazione:** Puoi ottimizzare il system prompt o utilizzare modelli specializzati come Qwen 2.5 VL, addestrati specificamente per la navigazione delle interfacce utente (UI).
+
+## Configurare Browser Use con OpenClaw
+
+Per iniziare, ti servono Python 3.11+ e Ollama installati sul sistema.
+
+Per prima cosa, crea un ambiente virtuale e installa la libreria:
+
+```bash
+python -m venv venv
+source venv/bin/activate
+pip install browser-use langchain-community
+playwright install
+```
+
+Dato che vogliamo usare OpenClaw per orchestrare l'agente localmente, configureremo il modello utilizzando le integrazioni locali di LangChain.
+
+## Scrivere il Tuo Primo Script
+
+Crea un file chiamato `agent.py`. In questo esempio, chiederemo all'agente di cercare una pagina su Wikipedia ed estrarre il primo paragrafo.
+
+```python
+import asyncio
+from browser_use import Agent
+from langchain_community.llms import Ollama
+
+async def main():
+    llm = Ollama(model="qwen2.5:14b")
+    
+    agente = Agent(
+        task="Vai su Wikipedia, cerca 'Open Source' ed estrai il primo paragrafo.",
+        llm=llm
+    )
+    
+    risultato = await agente.run()
+    print(risultato)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+Esegui lo script. Vedrai aprirsi una finestra di Chromium che navigherà su Wikipedia, digiterà la query e restituirà il risultato nel tuo terminale. È molto simile all'[Integrazione Playwright MCP in Claude Code](/blog/integrazione-claude-code-playwright-mcp) ma ottimizzato per l'uso generico del browser.
+
+## Casi d'Uso nel Mondo Reale
+
+Una volta apprese le basi, puoi scalare questo approccio per gestire compiti ripetitivi:
+- **Lead Generation:** Naviga su LinkedIn o elenchi aziendali, estraendo le informazioni di contatto in un file CSV.
+- **Automated Testing:** Dai all'agente un prompt come "Prova ad accedere con una password errata e conferma che il messaggio di errore appaia in rosso."
+- **Data Scraping:** Estrai dati sui prezzi da siti di e-commerce dinamici che bloccano i normali scraper.
+
+L'automazione del browser si sta evolvendo dai rigidi selettori CSS alla navigazione semantica guidata dall'AI. Mantenendo tutto in locale con OpenClaw, ottieni tutta la potenza necessaria senza mai sacrificare la privacy. Questo è solo l'inizio di ciò che può fare un agente browser open source. Per renderlo più robusto, puoi eseguire istanze multiple, aggiungere caching e iniettare cookie personalizzati per gestire le sessioni autenticate in modo sicuro. Ne parleremo nelle guide avanzate.
+
+## FAQ
+
+### Posso eseguire Browser Use su Windows?
+Sì, funziona nativamente su Windows, macOS e Linux purché tu abbia installato Python e Playwright.
+
+### Richiede un modello Vision?
+Sebbene i modelli solo testo possano funzionare tramite l'estrazione del DOM, un modello visivo (come Qwen2-VL o Llama-3.2-Vision) offre un'affidabilità nettamente superiore per layout complessi.
+
+### Come gestisce i CAPTCHA?
+Come ogni strumento di automazione del browser, i CAPTCHA possono essere impegnativi. Tuttavia, poiché pilota un'istanza reale del browser, puoi risolverli manualmente o integrare servizi di risoluzione di terze parti.
+
+*Scritto da Matteo Giardino, CTO e appassionato di automazione AI e tool locali.*
