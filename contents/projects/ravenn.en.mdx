@@ -1,0 +1,126 @@
+---
+name: ravenn
+title: 'Case Study: Ravenn.io - The white-label accommodation platform for large events'
+description: ravenn.io lets event organizers offer accommodation, travel packages and staff management through a white-label booking portal built into the event website.
+url: https://ravenn.io
+icon: /images/projects/ravenn/icon.webp
+image: /images/projects/ravenn/thumb.webp
+featured: true
+collab: false
+locale: en
+---
+
+Ravenn.io was born in Turin from a simple observation: people who run large events know how to sell tickets, but not where to put the people who bought them. The outcome is always the same - spreadsheets, email chains with hotels, prices inflated at the last minute, and thousands of attendees left to find a room on their own. I co-founded Ravenn to close that gap, and I built its entire technology stack.
+
+## What Ravenn.io is
+
+Ravenn.io is a **white-label platform for event accommodation**. The organizer gets a booking portal carrying their own brand and their own domain, built into the event website, where attendees find vetted hotels, negotiated rates and real distance from the venue.
+
+The platform covers three distinct scenarios that used to require three different vendors:
+
+- **B2C accommodation** - the public portal where attendees book their own room, with directly contracted hotel allotments alongside inventory from aggregators, optional extras and experiences, and invoicing ready for corporate expense claims.
+- **Automatic packages** - ticket and stay sold as a single product, with multi-ticket handling, medical and baggage insurance, and cancellation cover included.
+- **Staff accommodation** - the internal side: spending budgets defined per company profile, booking-change management, and rooming lists generated automatically.
+
+Sitting above all three is an admin dashboard with real-time reporting, used by the organizer to track sales, remaining allotment and margins while the event is running.
+
+<CtaCard
+    title="Building a product that has to survive a large event's traffic?"
+    description="I help design the right architecture before the spike arrives, not after. Let's talk."
+    primaryButtonText="Get in touch"
+    primaryButtonUrl="/contacts"
+    secondaryButtonText="See my services"
+    secondaryButtonUrl="/services"
+    align="center"
+    pattern="circles"
+/>
+
+## The Challenge
+
+Ravenn's problem isn't selling a room. It's selling **the right room, in a city that sells out in three days**, to an audience arriving from dozens of countries.
+
+That produces three technical constraints a generic booking engine never has to face:
+
+1. **Inventory is hybrid.** Some rooms come from allotment contracts negotiated directly with hotels - blocks reserved for the event, with availability and price shifting day by day. The rest arrives in real time from a global aggregator. The two sources have completely different data models, latencies and cancellation rules, yet to the user they have to look like one sortable, filterable list.
+2. **Every event is a different website.** A techno festival and a B2B trade fair cannot share a portal: brand, domain, language, copy, homepage sections and even the meaning of "close to the venue" all change. This needed genuine multi-tenancy, not a theme with the logo swapped out.
+3. **Traffic is not evenly distributed.** Sales cluster in the hours after a line-up announcement or a registration opening. The system goes from zero to peak in minutes, and during those minutes it cannot get availability wrong: two people booking the last room is a problem you pay for at the front desk.
+
+## Key Features
+
+- **White-label portal on a custom domain** - every event gets its own portal, with brand, palette, languages and sections configurable from the admin without touching code.
+- **Unified hybrid inventory** - direct allotments and aggregator rooms normalised into one model, with availability tracked day by day.
+- **Search by distance from the venue** - results are ranked against the event location rather than the city centre, with filters for price band, category and property type.
+- **Six languages** - Italian, English, Spanish, French, German and Portuguese, with localised routing and correct hreflang on every portal.
+- **Payments and payouts** - managed checkout, order reconciliation and payout tracking towards the properties.
+- **Embeddable listings widget** - a lightweight embed that brings available rooms straight into the event website, without pushing the user out of the flow.
+- **Admin dashboard** - management of events and editions, properties, rooms, orders and guests, with real-time reporting.
+
+## My Role
+
+At Ravenn I was **co-founder and head of technology**. I built the entire stack that took the product to production from scratch, and maintained it over time. Concretely, four areas.
+
+### Multi-tenant architecture
+
+The heart of the platform is the customer portal: a Next.js application where the domain is a dynamic route segment, not a configuration variable. Each request resolves to its tenant, which carries brand, active languages, section configuration and the catalogue of properties tied to the running event edition.
+
+That choice has one important practical consequence: adding a new event doesn't mean shipping a deploy. It means creating a record and pointing a domain. That's the difference between a platform that scales commercially and an agency rebuilding a website every time.
+
+### The domain model and the inventory engine
+
+I designed the data model around events, editions and daily availability: properties expose rooms, and every room carries availability and price tracked per single day. That's the layer that lets the system answer a three-night search correctly when the second night is nearly sold out, and lets negotiated allotments coexist with inventory arriving live from the aggregator.
+
+Around that model I built the search, booking and order-management APIs, the checkout and payment logic, and the flow connecting orders, guests and payouts to the properties.
+
+<CtaCard
+    title="Building a multi-tenant platform?"
+    description="I work as a fractional CTO on architectures that serve many customers from one codebase. If that's your situation, write to me."
+    primaryButtonText="Get in touch"
+    primaryButtonUrl="/contacts"
+    secondaryButtonText="See my services"
+    secondaryButtonUrl="/services"
+    align="left"
+    pattern="dots"
+/>
+
+### The stack and the go-live
+
+The whole platform is built on **Next.js with the App Router and TypeScript**, split into three applications: the customer portal, the admin dashboard and the embeddable listings widget. Data lives in **PostgreSQL** with Prisma as the ORM, authentication is handled at the application layer, payments run through **Stripe**, internationalisation through next-intl across six languages, and error monitoring through Sentry. Everything runs in production on **Vercel**.
+
+I took the system from first commit to go-live myself: stack selection, infrastructure, environments, integration with the hotel aggregator, deployment of customers' custom domains and hardening of the payment flow.
+
+### Maintenance and evolution
+
+The work didn't end at launch. Every edition of every event is a new cycle: new properties to load, new allotments, new dates, new peaks to absorb. I maintained the platform over time, supported customers through subsequent editions, and evolved the product based on what real usage surfaced - which in travel almost always means edge cases: booking changes, no-shows, room swaps, refunds.
+
+## Results and Impact
+
+### Kappa FuturFestival
+
+The most visible case is [Kappa FuturFestival](https://www.kappafuturfestival.it), the Turin electronic music festival that draws an international crowd from more than 150 countries to Parco Dora. The festival's official accommodation portal runs on Ravenn: festival branding, festival domain, six languages, vetted hotels ranked by real distance from the event area.
+
+The figures Ravenn publishes for this case study cite **+30% engagement**, **-55% booking errors** and **+60% returning attendees** compared with the previous setup.
+
+### A business model made possible by the technology
+
+The platform is free for the organizer on B2C portals and packages, and subscription-based for staff management. That's an aggressive position, and it only holds if the marginal cost of activating a new event is close to zero - which is exactly why multi-tenancy was never an implementation detail but a business decision.
+
+### From technical project to industry operator
+
+Ravenn didn't stay a piece of software sold to event organizers: it became a player in the supply chain, negotiating directly with properties and building the inventory it then resells. Taking a platform from "tool" to "operator" requires the technology to carry real responsibility - money, rooms, and people arriving in a city with a booking in hand.
+
+## Conclusion
+
+Ravenn.io is the project where I moved from building products to building infrastructure for other people. A white-label portal is invisible by design: when it works, the user thinks they're simply on the festival's website. It's a quiet kind of success, very different from a consumer app like [WeStudents](/en/projects/westudents) or a public tool like [LinkedIn Preview](/en/projects/linkedinpreview).
+
+It's also the project that taught me the most about one specific thing: **the difference between a system that works and a system that works during the spike**. In event travel there is no average traffic. There's the day sales open, and there's the rest of the year.
+
+<CtaCard
+    title="Need someone to take your platform from first commit to go-live?"
+    description="That's exactly what I do as a fractional CTO: architecture, team and shipping to production. Tell me about your project."
+    primaryButtonText="Get in touch"
+    primaryButtonUrl="/contacts"
+    secondaryButtonText="See my services"
+    secondaryButtonUrl="/services"
+    align="center"
+    pattern="circles"
+/>

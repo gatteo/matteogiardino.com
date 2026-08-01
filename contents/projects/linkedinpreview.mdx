@@ -1,0 +1,124 @@
+---
+name: linkedin preview
+title: 'Caso Studio: LinkedIn Preview - Il tool gratuito usato da oltre 20.000 creator al mese'
+description: linkedinpreview.com è il tool gratuito e open source per scrivere, formattare, vedere in anteprima, analizzare e pubblicare post LinkedIn migliori.
+url: https://linkedinpreview.com
+icon: /images/projects/linkedinpreview/icon.webp
+image: /images/projects/linkedinpreview/thumb.webp
+github: https://github.com/gatteo/linkedinpreview.com
+featured: true
+collab: false
+---
+
+LinkedIn Preview è nato da un problema che avevo io: l'editor nativo di LinkedIn non ti dà anteprima, né bozze, né formattazione, né feedback. Scrivi dentro una casella piccola, premi pubblica, e solo dopo scopri dove cade il taglio del "vedi altro" o che il tuo elenco puntato è diventato un muro di testo. Ho costruito il tool che volevo, l'ho messo online gratis, ed è diventato il prodotto su cui lavoro oggi.
+
+## Cos'è LinkedIn Preview
+
+[linkedinpreview.com](https://linkedinpreview.com) è una piattaforma gratuita e open source per i contenuti LinkedIn. Scrivi il tuo post in un editor rich text e lo vedi, in tempo reale, esattamente come apparirà nel feed di LinkedIn - su mobile, tablet e desktop, con il troncamento del "vedi altro" nel punto preciso in cui LinkedIn taglia.
+
+Questa era la versione uno. Oggi il prodotto copre tutto il percorso che va dall'idea alla pubblicazione:
+
+- **Editor e anteprima live** - grassetto, corsivo, sottolineato, barrato ed elenchi in Unicode; upload di immagini e video; anteprima realistica del feed; copia negli appunti già in formato LinkedIn; URL condivisibili delle bozze.
+- **Strumenti AI di scrittura** - genera un post da un argomento, dai tuoi appunti, dalla tua voce, da un file o da qualsiasi URL; assistente in chat, azioni rapide, generazione di hook e suggerimenti inline.
+- **Audit del profilo LinkedIn** - colleghi il tuo profilo e ottieni un'analisi reale dei tuoi ultimi post: mix di contenuti, hook, CTA, engagement per categoria, i temi che tratti e i vuoti che contano davvero per il tuo obiettivo.
+- **Dashboard e workflow** - gestione multi-bozza, programmazione, calendario editoriale, creatore di caroselli, pubblicazione con un click via LinkedIn OAuth.
+
+L'editor resta **gratuito e senza login, per sempre**. Gli account sono anonimi di default: il tuo lavoro viene salvato dalla prima visita, e colleghi un'email o LinkedIn solo quando ti servono davvero la sincronizzazione fra dispositivi, la programmazione e la pubblicazione.
+
+<CtaCard
+    title="Vuoi trasformare un bisogno personale in un prodotto vero?"
+    description="Contattami e vediamo come posso aiutarti a passare da un'idea a un prodotto che le persone usano ogni giorno."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    secondaryButtonText="Scopri i miei servizi"
+    secondaryButtonUrl="/services"
+    align="center"
+    pattern="circles"
+/>
+
+## La Sfida
+
+La parte difficile non è mai stata la formattazione. Trasformare del testo in grassetto Unicode è il lavoro di un pomeriggio. La parte difficile erano tre cose insieme.
+
+**Essere precisi al pixel.** Un'anteprima *quasi* giusta è peggio di nessuna anteprima: se il taglio del "vedi altro" cade tre parole più in là, l'utente pubblica un hook rotto e perde fiducia nel tool per sempre. Ogni interlinea, ogni regola di troncamento e ogni larghezza di viewport dovevano corrispondere al comportamento reale di LinkedIn.
+
+**Distribuire un tool gratuito senza budget.** Niente ads, niente lancio, nessun pubblico a cui spingerlo. L'unico canale percorribile era la ricerca organica - il che ha reso l'architettura SEO una decisione di prodotto, non un ripensamento di marketing.
+
+**Crescere senza tradire la promessa.** Il tool è diventato popolare *perché* era immediato e non chiedeva registrazione. Ogni nuova funzionalità - account, AI, programmazione - rischiava di trasformare un tool da 5 secondi nell'ennesimo SaaS con un muro di onboarding davanti.
+
+## Funzionalità Chiave
+
+- **Anteprima live precisa al pixel** - larghezze mobile, tablet e desktop, con il troncamento del "vedi altro" esattamente dove lo mette LinkedIn, e un'anteprima realistica del feed che mostra il post circondato da altri post.
+- **Formattazione Unicode** - grassetto, corsivo, sottolineato, barrato ed elenchi puntati e numerati che sopravvivono al copia-incolla nell'editor di LinkedIn.
+- **AI consapevole del tuo brand** - posizionamento, competenze, stile di scrittura, cosa fare e cosa evitare e knowledge base vengono iniettati in ogni generazione, così l'output suona come te e non come un modello linguistico.
+- **Audit onesto** - ogni numero dell'audit è misurato lato server da dati reali; l'AI si limita a etichettare e interpretare, non inventa mai una metrica.
+- **Creatore di caroselli** - editor di slide drag-and-drop con 14 template, 11 temi, generazione AI ed export PDF/PNG senza watermark.
+- **Programmazione e pubblicazione** - calendario editoriale, orario migliore per pubblicare e pubblicazione con un click tramite LinkedIn OAuth.
+- **Account anonimi di default** - una sessione anonima Supabase alla prima visita, che può diventare un account vero via OTP email o LinkedIn, senza mai salvare password.
+- **Widget incorporabile** - una variante minimale del tool che altri siti possono integrare.
+
+## Il Mio Ruolo
+
+LinkedIn Preview è un prodotto solo mio: l'ho progettato, costruito, lanciato e lo gestisco. In pratica significa indossare quattro cappelli.
+
+### Prodotto
+
+Decido cosa si costruisce e, soprattutto, cosa no. La regola che ha plasmato di più il prodotto è quella sul piano gratuito: editor e anteprima restano gratis e senza login, qualsiasi cosa succeda. Tutto il resto - AI, programmazione, caroselli - è costruito *attorno* a quella promessa, non davanti. La monetizzazione è arrivata solo con la versione 2.0, sotto forma di piani Pro opzionali sopra un prodotto che già funzionava gratis.
+
+### Sviluppo
+
+Tutto lo stack è mio: Next.js 16 App Router con React 19 e TypeScript in strict mode, Tailwind CSS 4 con shadcn/ui, un editor TipTap, Supabase per l'autenticazione anonima e Postgres con row-level security, il Vercel AI SDK per ogni endpoint AI, Stripe per il checkout e deploy su Vercel. Il progetto è open source con licenza MIT.
+
+### Growth e SEO
+
+La ricerca organica è il canale di distribuzione principale del prodotto, quindi la SEO è dentro l'architettura: rendering statico, dati strutturati, URL stabili, sitemap, RSS, `llms.txt` e un punteggio Lighthouse vicino a 100. Una lezione concreta: **le query transazionali vogliono una pagina-tool, non un articolo di blog**. Ogni tentativo di posizionare un articolo per "formattatore post LinkedIn" ha ottenuto zero impression; lo stesso intento servito da una pagina-tool reale e usabile si posiziona. Oggi il blog copre solo intenti informativi.
+
+### Dati
+
+Ogni decisione misurabile viene misurata. PostHog (EU, reverse-proxato) traccia eventi client e server, e il funnel di onboarding ha il suo dizionario di eventi tenuto in sync con il codice. Diversi dei cambiamenti di prodotto più importanti sono nati direttamente dai dati del funnel - per esempio scoprire che un intero step dell'onboarding non aveva via d'uscita, e che quindi rifiuto e blocco producevano lo stesso segnale.
+
+<CtaCard
+    title="Ti serve qualcuno che sappia costruire e far crescere un prodotto dall'inizio alla fine?"
+    description="Lavoro come fractional CTO e product advisor per founder che hanno bisogno di visione tecnica, esecuzione, o entrambe."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    secondaryButtonText="Scopri i miei servizi"
+    secondaryButtonUrl="/services"
+    align="left"
+    pattern="dots"
+/>
+
+## Risultati e Impatto
+
+### Oltre 20.000 persone al mese
+
+LinkedIn Preview è usato da **più di 20.000 visitatori unici ogni mese**, con una sessione media sopra i cinque minuti - tantissimo per un tool che in teoria si apre per trenta secondi. Quasi tutto questo traffico arriva dalla ricerca organica, con zero spesa in pubblicità.
+
+### Da tool di un weekend a piattaforma
+
+Il progetto è diventato pubblico a novembre 2025 come formattatore con anteprima. La **versione 2.0**, rilasciata a luglio 2026, l'ha trasformato in una piattaforma di contenuti completa: audit LinkedIn personalizzato, programmazione e pubblicazione, creatore di caroselli, AI consapevole del brand e analytics. L'editor originale non ha perso nulla lungo la strada.
+
+### Open source
+
+L'intero codice è [pubblico su GitHub](https://github.com/gatteo/linkedinpreview.com) con licenza MIT. È anche il pezzo di portfolio più onesto che ho: chiunque può leggere esattamente come è fatta un'app Next.js in produzione con AI, pagamenti, autenticazione anonima e SEO.
+
+### Un laboratorio vivo
+
+Tutto quello che faccio per le aziende che seguo - decisioni di prodotto, architettura di crescita, trade-off tecnici - lo testo prima qui, su un prodotto dove sono sia il CTO sia quello che ne subisce le conseguenze. È questo il vero ritorno di questo progetto.
+
+## Conclusione
+
+LinkedIn Preview è la prova che i prodotti migliori nascono ancora da un problema che vivi davvero. È partito come un formattatore costruito per me ed è diventato una piattaforma su cui contano decine di migliaia di persone ogni mese, senza un lancio, un budget o un team di marketing.
+
+Le cose che l'hanno fatto funzionare - l'attenzione ossessiva a un dettaglio che altri trattano come estetico, la distribuzione progettata dentro l'architettura, e la disciplina di proteggere l'esperienza gratuita mentre si cresce attorno - sono esattamente quelle che porto alle aziende e ai founder con cui lavoro.
+
+<CtaCard
+    title="Hai un'idea che merita di diventare un prodotto vero?"
+    description="Ti aiuto a portarla da concetto a qualcosa che le persone usano ogni giorno, con la stessa attenzione al dettaglio e alla distribuzione che ha funzionato qui."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    secondaryButtonText="Scopri i miei servizi"
+    secondaryButtonUrl="/services"
+    align="center"
+    pattern="circles"
+/>

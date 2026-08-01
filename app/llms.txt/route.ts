@@ -37,6 +37,10 @@ export const GET = async () => {
         [
             'Matteo Giardino is a developer and entrepreneur based in Turin. He co-founded **westudents** (an app used by nearly 500,000 Italian students), founded **devv** in 2022 (a programming-education platform followed by 130,000+ learners), and sold **wezard** — his development agency — in January 2024.',
             '',
+            'He currently builds and runs **[LinkedIn Preview](https://linkedinpreview.com)** — a free, open-source LinkedIn content platform (write, format, preview, audit, schedule and publish LinkedIn posts) used by more than 20,000 people every month.',
+            '',
+            'He also co-founded **[Ravenn.io](https://ravenn.io)** — a white-label event accommodation platform used by festivals, conferences and trade fairs (including Kappa FuturFestival) — where he built the entire technology stack and took it from first commit to production.',
+            '',
             'He works as a fractional CTO and product/growth advisor for early-stage companies, builds digital products end-to-end, and teaches programming through mentorship and video courses. Content on this site is primarily in Italian; selected pages and articles are also available in English under the `/en` prefix.',
         ].join('\n'),
         section('Main pages', [

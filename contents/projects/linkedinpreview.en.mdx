@@ -1,0 +1,125 @@
+---
+name: linkedin preview
+title: 'Case Study: LinkedIn Preview - The free tool used by 20,000+ creators every month'
+description: linkedinpreview.com is the free, open-source tool to write, format, preview, audit and publish better LinkedIn posts.
+url: https://linkedinpreview.com
+icon: /images/projects/linkedinpreview/icon.webp
+image: /images/projects/linkedinpreview/thumb.webp
+github: https://github.com/gatteo/linkedinpreview.com
+featured: true
+collab: false
+locale: en
+---
+
+LinkedIn Preview was born from a problem I had myself: LinkedIn's native editor gives you no preview, no drafts, no formatting and no feedback. You write into a small box, hit publish, and only then discover where the "see more" cut lands or that your bullet list collapsed into a wall of text. I built the tool I wanted, put it online for free, and it turned into the product I work on today.
+
+## What is LinkedIn Preview
+
+[linkedinpreview.com](https://linkedinpreview.com) is a free, open-source LinkedIn content platform. You write your post in a rich text editor and see it, in real time, exactly as it will appear in the LinkedIn feed - on mobile, tablet and desktop, with the "see more" truncation in the exact spot where LinkedIn cuts it.
+
+That was version one. Today the product covers the whole loop between having an idea and publishing it:
+
+- **Editor and live preview** - Unicode bold, italic, underline, strikethrough and lists; image and video upload; realistic feed preview; copy-to-clipboard in LinkedIn-ready format; shareable draft URLs.
+- **AI writing tools** - generate a post from a topic, your notes, your voice, a file or any URL; chat assistant, quick actions, hook generation and inline suggestions.
+- **LinkedIn audit** - connect your profile and get a real analysis of your recent posts: content mix, hooks, CTAs, engagement by category, the topics you cover and the gaps that matter for your goal.
+- **Dashboard and workflow** - multi-draft management, scheduling, content calendar, carousel creator, one-click publishing via LinkedIn OAuth.
+
+The core editor stays **free and login-free forever**. Accounts are anonymous by default: your work is saved from the first visit, and you only bind an email or connect LinkedIn when you actually want cross-device sync, scheduling and publishing.
+
+<CtaCard
+    title="Want to turn a personal need into a real product?"
+    description="Get in touch and let's see how I can help you go from an idea to a product people use every day."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    secondaryButtonText="See my services"
+    secondaryButtonUrl="/services"
+    align="center"
+    pattern="circles"
+/>
+
+## The Challenge
+
+The hard part was never the formatting. Turning text into Unicode bold is an afternoon of work. The hard part was three things at once.
+
+**Being pixel-accurate.** A preview that is *almost* right is worse than no preview: if the "see more" cut falls three words off, the user publishes a broken hook and loses trust in the tool forever. Every line height, every truncation rule and every viewport width had to match LinkedIn's real behaviour.
+
+**Distributing a free tool with no budget.** No ads, no launch, no audience to push it to. The only viable channel was organic search - which meant the SEO architecture was a product decision, not a marketing afterthought.
+
+**Growing without breaking the promise.** The tool got popular *because* it was instant and required no signup. Every new feature - accounts, AI, scheduling - risked turning a 5-second tool into yet another SaaS with an onboarding wall in front of it.
+
+## Key Features
+
+- **Pixel-accurate live preview** - mobile, tablet and desktop widths, with the "see more" truncation exactly where LinkedIn places it, and a realistic feed preview that shows the post surrounded by other posts.
+- **Unicode formatting** - bold, italic, underline, strikethrough, bullet and numbered lists that survive copy-paste into LinkedIn's editor.
+- **Branding-aware AI** - your positioning, expertise, writing style, dos and don'ts and knowledge base are injected into every generation, so the output sounds like you and not like a language model.
+- **Honest audit** - every number in the audit is measured server-side from real scraped data; the AI only labels and interprets, it never invents a metric.
+- **Carousel creator** - drag-and-drop slide editor with 14 templates, 11 themes, AI generation and watermark-free PDF/PNG export.
+- **Scheduling and publishing** - content calendar, best time to post, and one-click publishing through LinkedIn OAuth.
+- **Anonymous-first accounts** - a Supabase anonymous session on first visit, upgradable to a real account via email OTP or LinkedIn, with no passwords ever stored.
+- **Embeddable widget** - a minimal variant of the tool that third-party sites can embed.
+
+## My Role
+
+LinkedIn Preview is a solo product: I designed it, built it, shipped it and I run it. In practice that means wearing four hats.
+
+### Product
+
+I decide what gets built and, more importantly, what does not. The rule that shaped the product most is the one about the free tier: the editor and the preview stay free and login-free, no matter what. Everything else - AI, scheduling, carousels - is built *around* that promise rather than in front of it. Monetization arrived only in version 2.0, as optional Pro plans on top of a product that already worked for free.
+
+### Engineering
+
+The whole stack is mine: Next.js 16 App Router with React 19 and TypeScript in strict mode, Tailwind CSS 4 with shadcn/ui, a TipTap editor, Supabase for anonymous-first auth and Postgres with row-level security, the Vercel AI SDK for every AI endpoint, Stripe for checkout, and deployment on Vercel. The project is open source under the MIT licence.
+
+### Growth and SEO
+
+Organic search is the product's main distribution channel, so SEO is baked into the architecture: static rendering, structured data, stable URLs, sitemap, RSS, `llms.txt` and a Lighthouse score close to 100. One concrete lesson: **transactional queries need a tool page, not a blog post**. Every attempt to rank a blog article for "LinkedIn post formatter" earned zero impressions; the same intent served by a real, usable tool page ranks. The blog now only covers informational intent.
+
+### Data
+
+Every decision that can be measured is measured. PostHog (EU, reverse-proxied) tracks both client and server events, and the onboarding funnel has its own event dictionary kept in sync with the code. Several of the biggest product changes came straight from funnel data - for example discovering that a whole onboarding step had no exit, so refusal and getting stuck produced the same signal.
+
+<CtaCard
+    title="Need someone who can build and grow a product end to end?"
+    description="I work as a fractional CTO and product advisor for founders who need technical vision, execution, or both."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    secondaryButtonText="See my services"
+    secondaryButtonUrl="/services"
+    align="left"
+    pattern="dots"
+/>
+
+## Results and Impact
+
+### 20,000+ people a month
+
+LinkedIn Preview is used by **more than 20,000 unique visitors every month**, with an average session above five minutes - a long time for a tool people supposedly open for thirty seconds. Nearly all of that traffic comes from organic search, with zero advertising spend.
+
+### From a weekend tool to a platform
+
+The project went public in November 2025 as a formatter with a preview. **Version 2.0**, released in July 2026, turned it into a full content platform: personalized LinkedIn audit, scheduling and publishing, carousel creator, branding-aware AI and analytics. The core editor did not lose a single thing along the way.
+
+### Open source
+
+The entire codebase is [public on GitHub](https://github.com/gatteo/linkedinpreview.com) under the MIT licence. It is also the most honest portfolio piece I have: anyone can read exactly how a production Next.js app with AI, payments, anonymous auth and SEO is put together.
+
+### A live lab
+
+Everything I do for the companies I advise - product decisions, growth architecture, technical trade-offs - I get to test here first, on a product where I am both the CTO and the person who eats the consequences. That is the real return on this project.
+
+## Conclusion
+
+LinkedIn Preview is proof that the best products still come from a problem you actually live. It started as a formatter I built for myself and became a platform tens of thousands of people rely on every month, without a launch, a budget or a marketing team.
+
+The parts that made it work - obsessive attention to a detail others treat as cosmetic, distribution designed into the architecture, and the discipline to protect the free experience while growing around it - are exactly what I bring to the companies and founders I work with.
+
+<CtaCard
+    title="Have an idea that deserves to become a real product?"
+    description="I help you take it from concept to something people use every day, with the same attention to detail and distribution that worked here."
+    primaryButtonText="Contact Me"
+    primaryButtonUrl="/contacts"
+    secondaryButtonText="See my services"
+    secondaryButtonUrl="/services"
+    align="center"
+    pattern="circles"
+/>

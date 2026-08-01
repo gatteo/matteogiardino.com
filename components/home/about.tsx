@@ -11,9 +11,11 @@ import { useTranslations } from 'next-intl'
 import GoogleLogo from 'public/images/brands/google.svg'
 import WezardLogo from 'public/images/brands/wezard-icon.png'
 import DevvLogo from 'public/images/projects/devv/icon.webp'
+import LinkedInPreviewLogo from 'public/images/projects/linkedinpreview/icon.webp'
 import WestudentsLogo from 'public/images/projects/westudents/icon.webp'
 
 import { UtmMediums } from '@/types/links'
+import { LinkedInPreviewLinks } from '@/config/links'
 import { Routes } from '@/config/routes'
 
 import { Button } from '../ui/button'
@@ -85,6 +87,8 @@ export function About() {
                 opacity: 0.4,
                 delay: 1,
             })
+
+            .fromTo(quoteRef.current.querySelector('.about-8'), { opacity: 0.4 }, { opacity: 1 })
 
         const scrollTriggerInstance = ScrollTrigger.create({
             trigger: targetSection.current,
@@ -207,6 +211,32 @@ export function About() {
                                 ,
                             </strong>
                             {t('section7Description')}
+                        </h2>
+
+                        <h2 className='about-8 mt-24 leading-tight'>
+                            {t('section8')}{' '}
+                            <strong className='inline-block'>
+                                <Image
+                                    src={LinkedInPreviewLogo}
+                                    alt='LinkedIn Preview logo'
+                                    height={48}
+                                    width={48}
+                                    className='border-accent-3 -mt-1 mr-2 inline-block size-7 rounded border md:-mt-2 md:mr-3 md:size-12 md:rounded-xl'
+                                />
+                                <Link
+                                    href={UtmUrl(LinkedInPreviewLinks.homepage, {
+                                        source: 'matteogiardino.com',
+                                        medium: UtmMediums.Homepage,
+                                        content: 'about',
+                                    })}
+                                    className='bg-gradient-to-l from-sky-300 to-sky-500 bg-clip-text text-transparent decoration-sky-400 underline-offset-8 hover:underline'>
+                                    linkedin preview
+                                </Link>
+                            </strong>
+                            {t('section8Description')}
+                            <p className='ml-2 mt-6 text-base text-muted-foreground md:text-xl'>
+                                {t('section8Stats')}
+                            </p>
                         </h2>
 
                         <Button variant={'ghost'} className='group -ml-4 mt-6 text-muted-foreground md:text-xl' asChild>

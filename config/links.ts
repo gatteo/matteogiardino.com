@@ -128,3 +128,14 @@ export const DevvClubLinks = {
     homepage: 'https://devv.it/club',
     discordInviteUrl: 'https://go.devv.it/devv-club',
 }
+
+export const LinkedInPreviewLinks = {
+    homepage: 'https://linkedinpreview.com',
+    github: 'https://github.com/gatteo/linkedinpreview.com',
+    caseStudy: Routes.Project('linkedinpreview'),
+}
+
+export const RavennLinks = {
+    homepage: 'https://ravenn.io',
+    caseStudy: Routes.Project('ravenn'),
+}

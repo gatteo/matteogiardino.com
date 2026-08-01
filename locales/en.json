@@ -34,6 +34,10 @@
             "devv30CTA": {
                 "text": "Become a programmer in 30 days!",
                 "linkText": "start now"
+            },
+            "linkedinPreview": {
+                "text": "linkedin preview, my free LinkedIn tool, is used by 20,000+ people a month ✨",
+                "linkText": "try it free"
             }
         }
     },
@@ -54,6 +58,9 @@
         "section7": "in January 2024 I sold",
         "section7Description": ", a development agency that creates exceptional digital products",
         "section7Highlight": "exceptional digital products",
+        "section8": "today I build products people use every day, like",
+        "section8Description": ", the free and open-source tool to write better LinkedIn posts",
+        "section8Stats": "🎉 more than 20,000 people a month use linkedinpreview.com 🎉",
         "ctaText": "💡 want to build a project with me?",
         "ctaLink": "get in touch"
     },

@@ -10,10 +10,11 @@ import GridGifImage from 'public/images/home/1.gif'
 import GridIconThree from 'public/images/home/4.webp'
 import GridWideImage from 'public/images/home/wide-computer.webp'
 import DevvIcon from 'public/images/projects/devv/icon.webp'
+import LinkedInPreviewIcon from 'public/images/projects/linkedinpreview/icon.webp'
 import WestudentsIcon from 'public/images/projects/westudents/icon.webp'
 
 import { UtmMediums } from '@/types/links'
-import { Devv30Links } from '@/config/links'
+import { Devv30Links, LinkedInPreviewLinks } from '@/config/links'
 import { Button } from '@/components/ui/button'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
 
@@ -35,6 +36,11 @@ export function Hero() {
             text: t('announcements.devv30CTA.text'),
             link: Devv30Links.appStoreUrl,
             linkText: t('announcements.devv30CTA.linkText'),
+        },
+        {
+            text: t('announcements.linkedinPreview.text'),
+            link: LinkedInPreviewLinks.homepage,
+            linkText: t('announcements.linkedinPreview.linkText'),
         },
     ]
 
@@ -69,6 +75,23 @@ export function Hero() {
                                             className='mr-2 inline-block rounded-sm'
                                         />
                                         devv
+                                    </Link>
+                                </Button>
+                                <Button variant='secondary' size={'sm'} className='border bg-muted px-2' asChild>
+                                    <Link
+                                        href={UtmUrl(LinkedInPreviewLinks.homepage, {
+                                            source: 'matteogiardino.com',
+                                            medium: UtmMediums.Homepage,
+                                            content: 'hero',
+                                        })}>
+                                        <Image
+                                            src={LinkedInPreviewIcon}
+                                            alt='LinkedIn Preview logo'
+                                            width={24}
+                                            height={24}
+                                            className='mr-2 inline-block rounded-sm'
+                                        />
+                                        linkedin preview
                                     </Link>
                                 </Button>
                                 <Button variant='secondary' size={'sm'} className='border bg-muted px-2' asChild>

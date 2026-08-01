@@ -1,0 +1,125 @@
+---
+name: ravenn
+title: 'Caso Studio: Ravenn.io - La piattaforma white-label per le accommodation dei grandi eventi'
+description: ravenn.io è la piattaforma che permette agli organizzatori di eventi di offrire accommodation, pacchetti viaggio e gestione dello staff con un portale white-label integrato nel sito dell evento.
+url: https://ravenn.io
+icon: /images/projects/ravenn/icon.webp
+image: /images/projects/ravenn/thumb.webp
+featured: true
+collab: false
+---
+
+Ravenn.io è nata a Torino da una constatazione semplice: chi organizza un grande evento sa vendere biglietti, ma non sa dove far dormire le persone che quei biglietti li hanno comprati. Il risultato è sempre lo stesso - fogli Excel, catene di email con gli hotel, prezzi gonfiati all'ultimo minuto e migliaia di partecipanti lasciati a cercare una stanza da soli. Ho co-fondato Ravenn per chiudere quel buco, e ne ho costruito l'intera infrastruttura tecnologica.
+
+## Cos'è Ravenn.io
+
+Ravenn.io è una piattaforma **white-label per la gestione delle accommodation di eventi**. L'organizzatore ottiene un portale di prenotazione con il proprio brand e il proprio dominio, integrato nel sito dell'evento, dove i partecipanti trovano hotel selezionati, prezzi negoziati e distanza reale dalla venue.
+
+La piattaforma copre tre scenari distinti che prima richiedevano tre fornitori diversi:
+
+- **Accommodation B2C** - il portale pubblico dove i partecipanti prenotano la propria stanza, con hotel in allotment diretto e inventario proveniente dagli aggregatori, extra ed esperienze opzionali, e fatturazione pronta per i rimborsi aziendali.
+- **Pacchetti automatici** - biglietto e soggiorno venduti come un unico prodotto, con gestione multi-ticket, assicurazione medico-bagaglio e polizza annullamento incluse.
+- **Accommodation per lo staff** - il lato interno: budget di spesa definiti per profilo aziendale, gestione delle modifiche alle prenotazioni e rooming list generata automaticamente.
+
+Sopra i tre scenari c'è una dashboard amministrativa con reportistica in tempo reale, usata dall'organizzatore per seguire vendite, allotment residuo e marginalità mentre l'evento è in corso.
+
+<CtaCard
+    title="Hai un prodotto che deve reggere il traffico di un grande evento?"
+    description="Ti aiuto a progettare l'architettura giusta prima che il picco arrivi, non dopo. Parliamone."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    secondaryButtonText="Scopri i miei servizi"
+    secondaryButtonUrl="/services"
+    align="center"
+    pattern="circles"
+/>
+
+## La Sfida
+
+Il problema di Ravenn non è vendere una stanza. È vendere **la stanza giusta, in una città che va in sold-out in tre giorni**, a un pubblico che arriva da decine di paesi diversi.
+
+Questo produce tre vincoli tecnici che un booking engine generico non affronta:
+
+1. **L'inventario è ibrido.** Una parte delle camere arriva da contratti in allotment negoziati direttamente con gli hotel - blocchi di stanze riservati all'evento, con disponibilità e prezzo che variano giorno per giorno. L'altra parte arriva in tempo reale da un aggregatore globale. Le due sorgenti hanno modelli di dati, latenze e regole di cancellazione completamente diverse, ma per l'utente devono apparire come un'unica lista ordinabile e filtrabile.
+2. **Ogni evento è un sito diverso.** Un festival techno e una fiera B2B non possono condividere lo stesso portale: cambiano brand, dominio, lingua, copy, sezioni della homepage e persino il significato di "vicino alla venue". Serviva un'architettura multi-tenant vera, non un tema con il logo sostituito.
+3. **Il traffico non è distribuito.** Le vendite si concentrano nelle ore successive all'annuncio della line-up o all'apertura delle iscrizioni. Il sistema passa da zero a picco in pochi minuti, e in quei minuti non può sbagliare la disponibilità: due persone che prenotano l'ultima camera è un problema che si paga in reception.
+
+## Funzionalità Chiave
+
+- **Portale white-label su dominio custom** - ogni evento ha il proprio portale, con brand, palette, lingue e sezioni configurabili dall'admin senza toccare codice.
+- **Inventario ibrido unificato** - allotment diretti e camere da aggregatore normalizzati in un modello unico, con disponibilità tracciata giorno per giorno.
+- **Ricerca per distanza dalla venue** - i risultati sono ordinati rispetto al luogo dell'evento, non al centro città, con filtri per fascia di prezzo, categoria e tipo di struttura.
+- **Sei lingue** - italiano, inglese, spagnolo, francese, tedesco e portoghese, con routing localizzato e hreflang corretti per ogni portale.
+- **Pagamenti e payout** - checkout con pagamento gestito, riconciliazione degli ordini e tracciamento dei payout verso le strutture.
+- **Widget di listing integrabile** - un embed leggero che porta le camere disponibili direttamente dentro il sito dell'evento, senza far uscire l'utente dal flusso.
+- **Dashboard amministrativa** - gestione eventi ed edizioni, strutture, camere, ordini e ospiti, con report in tempo reale.
+
+## Il Mio Ruolo
+
+In Ravenn sono stato **co-fondatore e responsabile della tecnologia**. Ho costruito da zero l'intero stack che ha portato il prodotto in produzione, e l'ho mantenuto nel tempo. In concreto, quattro aree.
+
+### Architettura multi-tenant
+
+Il cuore della piattaforma è il portale cliente: un'applicazione Next.js in cui il dominio è un segmento dinamico della rotta, non una variabile di configurazione. Ogni richiesta viene risolta sul tenant corrispondente, che porta con sé brand, lingue attive, configurazione delle sezioni e catalogo di strutture collegate all'edizione dell'evento in corso.
+
+Questa scelta ha una conseguenza pratica importante: aggiungere un nuovo evento non significa fare un deploy. Significa creare un record e puntare un dominio. È la differenza fra una piattaforma che scala commercialmente e un'agenzia che rifà un sito ogni volta.
+
+### Il modello di dominio e il motore di inventario
+
+Ho disegnato il modello dati attorno alla nozione di evento, edizione e disponibilità giornaliera: le strutture espongono camere, e ogni camera ha disponibilità e prezzo tracciati per singolo giorno. È il livello che permette di rispondere correttamente a una ricerca su tre notti in cui la seconda notte è quasi esaurita, e di far convivere l'allotment negoziato con l'inventario che arriva in tempo reale dall'aggregatore.
+
+Attorno a questo modello ho costruito le API di ricerca, prenotazione e gestione ordini, la logica di checkout e pagamento, e il flusso che collega ordine, ospiti e payout verso le strutture.
+
+<CtaCard
+    title="Stai costruendo una piattaforma multi-tenant?"
+    description="Lavoro come fractional CTO su architetture che devono servire clienti diversi dallo stesso codice. Se è il tuo caso, scrivimi."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    secondaryButtonText="Scopri i miei servizi"
+    secondaryButtonUrl="/services"
+    align="left"
+    pattern="dots"
+/>
+
+### Lo stack e il go-live
+
+L'intera piattaforma è costruita su **Next.js con App Router e TypeScript**, con tre applicazioni distinte: il portale cliente, la dashboard amministrativa e il widget di listing integrabile. I dati vivono su **PostgreSQL** con Prisma come ORM, l'autenticazione è gestita a livello applicativo, i pagamenti passano da **Stripe**, l'internazionalizzazione da next-intl su sei lingue, e il monitoraggio degli errori da Sentry. Tutto è in produzione su **Vercel**.
+
+Ho portato io il sistema dal primo commit al go-live: scelta dello stack, infrastruttura, ambienti, integrazione con l'aggregatore alberghiero, deploy dei domini custom dei clienti e messa in sicurezza del flusso di pagamento.
+
+### Manutenzione ed evoluzione
+
+Il lavoro non è finito al lancio. Ogni edizione di ogni evento è un nuovo ciclo: nuove strutture da caricare, nuovi allotment, nuove date, nuovi picchi da reggere. Ho mantenuto la piattaforma nel tempo, seguito le edizioni successive dei clienti e fatto evolvere il prodotto sulla base di quello che emergeva dall'uso reale - che nel travel significa quasi sempre casi limite: modifiche di prenotazione, no-show, cambi di camera, rimborsi.
+
+## Risultati e Impatto
+
+### Kappa FuturFestival
+
+Il caso più visibile è [Kappa FuturFestival](https://www.kappafuturfestival.it), il festival di musica elettronica di Torino che porta a Parco Dora un pubblico internazionale da oltre 150 paesi. Il portale ufficiale delle accommodation del festival gira su Ravenn: brand del festival, dominio del festival, sei lingue, hotel selezionati e ordinati per distanza reale dall'area evento.
+
+I numeri pubblicati da Ravenn per questo caso studio parlano di **+30% di engagement**, **-55% di errori di prenotazione** e **+60% di partecipanti che tornano** rispetto alla gestione precedente.
+
+### Un modello di business reso possibile dalla tecnologia
+
+La piattaforma è gratuita per l'organizzatore sui portali B2C e sui pacchetti, e a canone per la gestione dello staff. È un posizionamento aggressivo che regge solo se il costo marginale di attivare un nuovo evento è vicino allo zero - ed è esattamente il motivo per cui l'architettura multi-tenant non era un dettaglio implementativo ma una scelta di business.
+
+### Da progetto tecnico a operatore del settore
+
+Ravenn non è rimasta un software venduto a chi organizza eventi: è diventata un attore della filiera, che negozia direttamente con le strutture e costruisce l'inventario che poi rivende. Portare una piattaforma da "strumento" a "operatore" richiede che la tecnologia regga responsabilità reali - soldi, camere, persone che arrivano in città con una prenotazione in mano.
+
+## Conclusione
+
+Ravenn.io è il progetto in cui ho fatto il salto da costruire prodotti a costruire infrastruttura per altri. Un portale white-label non si vede: se funziona, l'utente pensa di essere sul sito del festival e basta. È un tipo di successo silenzioso, molto diverso da quello di un'app consumer come [WeStudents](/projects/westudents) o di un tool pubblico come [LinkedIn Preview](/projects/linkedinpreview).
+
+È anche il progetto che mi ha insegnato di più su un tema specifico: **la differenza fra un sistema che funziona e un sistema che funziona durante il picco**. Nel travel legato agli eventi non esiste il traffico medio. Esiste il giorno in cui apre la vendita, e tutto il resto dell'anno.
+
+<CtaCard
+    title="Hai bisogno di qualcuno che porti la tua piattaforma dal primo commit al go-live?"
+    description="È esattamente quello che faccio come fractional CTO: architettura, team e messa in produzione. Raccontami il tuo progetto."
+    primaryButtonText="Contattami"
+    primaryButtonUrl="/contacts"
+    secondaryButtonText="Scopri i miei servizi"
+    secondaryButtonUrl="/services"
+    align="center"
+    pattern="circles"
+/>
