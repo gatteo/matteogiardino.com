@@ -1,6 +1,6 @@
 'use client'
 
-import React, { MutableRefObject, useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { Link } from '@/lib/navigation'
 import { UtmUrl } from '@/utils/urls'
@@ -20,116 +20,113 @@ import { Routes } from '@/config/routes'
 
 import { Button } from '../ui/button'
 
+gsap.registerPlugin(ScrollTrigger)
+
+const DIM_OPACITY = 0.4
+
 export function About() {
     const t = useTranslations('about')
-    gsap.registerPlugin(ScrollTrigger)
-    gsap.config({ nullTargetWarn: false })
 
-    const quoteRef: MutableRefObject<HTMLDivElement | null> = useRef<HTMLDivElement>(null)
-    const targetSection: MutableRefObject<HTMLDivElement | null> = useRef<HTMLDivElement>(null)
-
-    const initAboutAnimation = (
-        quoteRef: MutableRefObject<HTMLDivElement>,
-        targetSection: MutableRefObject<HTMLDivElement>,
-    ): ScrollTrigger => {
-        const timeline = gsap.timeline({
-            defaults: { ease: Linear.easeNone, duration: 0.3 },
-        })
-
-        timeline
-            .fromTo(quoteRef.current.querySelector('.about-1'), { opacity: 0.4 }, { opacity: 1 })
-            .fromTo(quoteRef.current.querySelector('.t1'), { opacity: 0.4, delay: 2 }, { opacity: 1 })
-            .to(quoteRef.current.querySelector('.about-1'), {
-                opacity: 0.4,
-                delay: 0.5,
-            })
-
-            .fromTo(quoteRef.current.querySelector('.about-2'), { opacity: 0.4 }, { opacity: 1 })
-            .to(quoteRef.current.querySelector('.t2'), {
-                backgroundPositionX: '100%',
-                duration: 1,
-            })
-            .to(quoteRef.current.querySelector('.about-2'), {
-                opacity: 0.4,
-                delay: 1,
-            })
-
-            .fromTo(quoteRef.current.querySelector('.about-3'), { opacity: 0.4 }, { opacity: 1 })
-            .to(quoteRef.current.querySelector('.t3'), {
-                backgroundPositionX: '100%',
-                duration: 1,
-            })
-            .to(quoteRef.current.querySelector('.about-3'), {
-                opacity: 0.4,
-                delay: 1,
-            })
-
-            .fromTo(quoteRef.current.querySelector('.about-4'), { opacity: 0.4 }, { opacity: 1 })
-            .to(quoteRef.current.querySelector('.about-4'), {
-                opacity: 0.4,
-                delay: 1,
-            })
-
-            .fromTo(quoteRef.current.querySelector('.about-5'), { opacity: 0.4 }, { opacity: 1 })
-            .to(quoteRef.current.querySelector('.about-5'), {
-                opacity: 0.4,
-                delay: 1,
-            })
-
-            .fromTo(quoteRef.current.querySelector('.about-6'), { opacity: 0.4 }, { opacity: 1 })
-            .to(quoteRef.current.querySelector('.about-6'), {
-                opacity: 0.4,
-                delay: 1,
-            })
-
-            .fromTo(quoteRef.current.querySelector('.about-7'), { opacity: 0.4 }, { opacity: 1 })
-            .to(quoteRef.current.querySelector('.about-7'), {
-                opacity: 0.4,
-                delay: 1,
-            })
-
-            .fromTo(quoteRef.current.querySelector('.about-8'), { opacity: 0.4 }, { opacity: 1 })
-
-        const scrollTriggerInstance = ScrollTrigger.create({
-            trigger: targetSection.current,
-            start: 'top 80%',
-            end: 'bottom 40%',
-            scrub: 0,
-            animation: timeline,
-        })
-
-        return scrollTriggerInstance
-    }
+    const quoteRef = useRef<HTMLDivElement | null>(null)
+    const targetSection = useRef<HTMLDivElement | null>(null)
 
     useEffect(() => {
-        if (quoteRef && targetSection) {
-            // @ts-ignore
-            const aboutScrollTriggerInstance = initAboutAnimation(quoteRef, targetSection)
-            return aboutScrollTriggerInstance.kill
+        const quote = quoteRef.current
+        const section = targetSection.current
+        if (!quote || !section) return
+
+        const lines = gsap.utils.toArray<HTMLElement>('[data-about-line]', quote)
+        if (!lines.length) return
+
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            gsap.set(lines, { opacity: 1 })
+            return
         }
-    }, [quoteRef, targetSection])
+
+        const ctx = gsap.context(() => {
+            gsap.set(lines, { opacity: DIM_OPACITY })
+
+            let activeIndex = -1
+            const activate = (index: number) => {
+                if (index === activeIndex) return
+                if (activeIndex > -1) {
+                    gsap.to(lines[activeIndex], { opacity: DIM_OPACITY, duration: 0.25, overwrite: 'auto' })
+                }
+                gsap.to(lines[index], { opacity: 1, duration: 0.25, overwrite: 'auto' })
+                activeIndex = index
+            }
+
+            // Light whichever line sits closest to the middle of the viewport. Measuring
+            // positions on scroll keeps the highlight on the line actually being read —
+            // a fixed timeline drifts, because the lines wrap to very different heights.
+            const syncHighlight = () => {
+                const viewportCenter = window.innerHeight / 2
+                let nearestIndex = 0
+                let nearestDistance = Infinity
+
+                lines.forEach((line, index) => {
+                    const rect = line.getBoundingClientRect()
+                    const distance = Math.abs(rect.top + rect.height / 2 - viewportCenter)
+                    if (distance < nearestDistance) {
+                        nearestDistance = distance
+                        nearestIndex = index
+                    }
+                })
+
+                activate(nearestIndex)
+            }
+
+            ScrollTrigger.create({
+                trigger: section,
+                start: 'top bottom',
+                end: 'bottom top',
+                onUpdate: syncHighlight,
+                onRefresh: syncHighlight,
+            })
+
+            // Sweep the accent gradient as its own line travels up into the middle.
+            lines.forEach((line) => {
+                const accent = line.querySelector('.text-highlight')
+                if (!accent) return
+
+                gsap.fromTo(
+                    accent,
+                    { backgroundPositionX: '0%' },
+                    {
+                        backgroundPositionX: '100%',
+                        ease: Linear.easeNone,
+                        scrollTrigger: { trigger: line, start: 'top 75%', end: 'center 45%', scrub: true },
+                    },
+                )
+            })
+
+            syncHighlight()
+        }, quote)
+
+        return () => ctx.revert()
+    }, [])
 
     return (
         <section id='about' className='about my-32 w-full select-none scroll-m-10 md:pt-24'>
             <div ref={targetSection}>
                 <div ref={quoteRef} className='space-y-24 text-2xl sm:text-4xl md:text-5xl'>
-                    <h2 className='about-1 leading-tight'>
+                    <h2 data-about-line className='leading-tight'>
                         {t('section1')}
                     </h2>
 
-                    <h2 className='about-2 leading-tight'>
+                    <h2 data-about-line className='leading-tight'>
                         {t('section2').split(t('section2Highlight'))[0]}
-                        <span className='t2 text-highlight font-bold'>{t('section2Highlight')}</span>
+                        <span className='text-highlight font-bold'>{t('section2Highlight')}</span>
                         {t('section2').split(t('section2Highlight'))[1]}
                     </h2>
 
-                    <h2 className='about-3 leading-tight'>
+                    <h2 data-about-line className='leading-tight'>
                         {t('section3').split(t('section3Highlight'))[0]}
-                        <span className='text-highlight t3 font-bold'>{t('section3Highlight')}</span>
+                        <span className='text-highlight font-bold'>{t('section3Highlight')}</span>
                         {t('section3').split(t('section3Highlight'))[1]}
                     </h2>
 
-                    <h2 className='about-4 leading-tight'>
+                    <h2 data-about-line className='leading-tight'>
                         {t('section4')}{' '}
                         <Image
                             className='inline-block h-12 md:h-16'
@@ -140,7 +137,7 @@ export function About() {
                         />
                     </h2>
 
-                    <h2 className='about-5 leading-tight'>
+                    <h2 data-about-line className='leading-tight'>
                         {t('section5')}{' '}
                         <strong className='inline-block'>
                             <Image
@@ -164,7 +161,7 @@ export function About() {
                         </p>
                     </h2>
 
-                    <h2 className='about-6 leading-tight'>
+                    <h2 data-about-line className='leading-tight'>
                         {t('section6')}{' '}
                         <strong className='inline-block'>
                             <Image
@@ -190,7 +187,7 @@ export function About() {
                     </h2>
 
                     <div>
-                        <h2 className={'about-7 leading-tight'}>
+                        <h2 data-about-line className='leading-tight'>
                             {t('section7')}{' '}
                             <strong className='inline-block'>
                                 <Image
@@ -213,7 +210,7 @@ export function About() {
                             {t('section7Description')}
                         </h2>
 
-                        <h2 className='about-8 mt-24 leading-tight'>
+                        <h2 data-about-line className='mt-24 leading-tight'>
                             {t('section8')}{' '}
                             <strong className='inline-block'>
                                 <Image
