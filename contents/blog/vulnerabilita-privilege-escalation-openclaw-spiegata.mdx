@@ -9,8 +9,6 @@ locale: "it"
 translationSlug: "openclaw-privilege-escalation-vulnerability-explained"
 tags: ["ai", "openclaw", "security"]
 ---
-<AuthorBlock />
-
 La recente scoperta di una **vulnerabilità di privilege escalation in OpenClaw** ha scosso la community dell'AI locale. Se esegui agenti autonomi sul tuo Mac Mini o server locale, questa falla potrebbe permettere a script malevoli di ottenere l'accesso root alla tua macchina.
 
 In questo articolo, ti spiego esattamente come funziona questa vulnerabilità, perché è importante e quali passaggi devi seguire per mettere in sicurezza il tuo setup nel 2026.
@@ -21,7 +19,7 @@ Gli agenti AI locali basati su [OpenClaw]() hanno spesso bisogno di accedere all
 
 Sfruttando un payload specifico, un utente malintenzionato può ingannare l'agente inducendolo a eseguire una catena di comandi che eleva i suoi privilegi. Invece di operare come utente limitato, l'agente si ritrova improvvisamente con la capacità di leggere chiavi private, modificare file di sistema o installare backdoor.
 
-<CtaCard title="Proteggi il tuo Setup" href="/blog/nanoclaw-alternativa-sicura-openclaw" />
+<CtaCard title="Proteggi il tuo Setup" primaryButtonText="Leggi la guida" primaryButtonUrl="/blog/nanoclaw-alternativa-sicura-openclaw" />
 
 ## Come Funziona l'Exploit
 
@@ -41,7 +39,7 @@ In primo luogo, aggiorna il framework OpenClaw all'ultima versione (2026.4.1 o s
 
 Infine, prendi in considerazione l'utilizzo di una rigorosa allowlist con Envoy egress proxy per impedire all'agente di comunicare con server esterni non autorizzati, anche qualora venisse compromesso.
 
-<CtaCard title="Scopri gli Egress Proxy" href="/blog/sicurezza-openclaw-mcp-envoy-egress-proxy-allowlist" />
+<CtaCard title="Scopri gli Egress Proxy" primaryButtonText="Leggi la guida" primaryButtonUrl="/blog/sicurezza-openclaw-mcp-envoy-egress-proxy-allowlist" />
 
 ## FAQ
 

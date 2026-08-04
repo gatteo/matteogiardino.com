@@ -13,8 +13,6 @@ Written by **Matteo Giardino**.
 
 If you are experiencing crashes, OOM errors, or token limits when installing DeepSeek R1 locally with Ollama, this **deepseek r1 error guide** will show you exactly how to fix them. In 2026, running local models requires managing VRAM and context windows carefully. I will walk you through solving Out of Memory errors, fixing the `<think>` token cutoff, and getting your hardware configured correctly.
 
-<CtaCard title="Stay Updated on Local AI" />
-
 ## OOM Error (Out of Memory) and VRAM Limits
 
 One of the most common errors is crashing due to Out of Memory (OOM). This happens when trying to load a massive model like the full 70B parameter version on a GPU with limited memory. I have seen many developers struggle with this issue, especially when trying to push their hardware to the limit.
@@ -75,7 +73,5 @@ Use the official command or download the latest release from the official [Ollam
 
 ### Why are my tokens cut off?
 Because reasoning models use hidden `<think>` tokens, consuming the context window faster than normal models.
-
-<CtaCard title="Boost your productivity" />
 
 Matteo Giardino is the CTO and founder. He writes about AI and local models.

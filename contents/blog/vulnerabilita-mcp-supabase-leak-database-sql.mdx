@@ -9,8 +9,6 @@ locale: "it"
 translationSlug: "supabase-mcp-vulnerability-sql-leak"
 tags: ["ai", "security", "openclaw"]
 ---
-<AuthorBlock />
-
 La recente vulnerabilità Supabase MCP ha esposto un vettore di attacco critico. In questo scenario, gli agenti AI locali possono inavvertitamente divulgare l'intero database SQL. Se utilizzi il Model Context Protocol (MCP) per collegare agenti AI come [OpenClaw](/blog/cos-e-openclaw-framework) o Claude Code alla tua istanza Supabase, i tuoi dati grezzi potrebbero essere a rischio a causa di semplici prompt injection.
 
 In questa guida, ti spiegherò esattamente come funziona questa vulnerabilità Supabase MCP. Ti mostrerò come avviene la fuga di dati SQL. Ti spiegherò cosa puoi fare oggi per mettere in sicurezza il tuo ambiente locale nel 2026.
@@ -21,7 +19,7 @@ Il Model Context Protocol (MCP) dà agli agenti AI un accesso standardizzato a s
 
 Quando un'istruzione malevola chiede all'agente di "riassumere tutte le tabelle utente", l'agente interroga legittimamente l'endpoint Supabase. Poiché la connessione MCP opera localmente con privilegi elevati, l'agente aggira le normali policy di Row Level Security (RLS) del frontend. Questo porta direttamente a un'esposizione del database SQL. È un rischio severo.
 
-<CtaCard title="Sicurezza degli Agenti AI" href="/blog/nanoclaw-alternativa-sicura-openclaw" />
+<CtaCard title="Sicurezza degli Agenti AI" primaryButtonText="Leggi la guida" primaryButtonUrl="/blog/nanoclaw-alternativa-sicura-openclaw" />
 
 ## Come Avviene la Fuga del Database SQL
 
@@ -75,7 +73,6 @@ Utilizza sempre credenziali con ambito limitato e di sola lettura per la conness
 
 ### OpenClaw è vulnerabile di default?
 OpenClaw in sé è sicuro. Gli strumenti a cui lo colleghi definiscono la sua superficie di attacco. Se installi un connettore Supabase MCP insicuro, l'agente eseguirà qualsiasi query SQL riceva.
-
 
 La vulnerabilità Supabase MCP rimane un problema critico per gli sviluppatori nel 2026. Mettere in sicurezza gli ambienti locali è importante quanto mettere in sicurezza gli ambienti di produzione. Quando si verifica una fuga di dati del database SQL, le conseguenze sono gravi. Valida sempre i controlli di accesso del tuo agente. Questo assicura che i tuoi dati restino al sicuro.
 

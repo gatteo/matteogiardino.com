@@ -30,7 +30,7 @@ export function localizedAlternates(path: string): {
 }
 
 export function UtmUrl(
-    url: string,
+    url: string | undefined | null,
     {
         source = UtmSource,
         medium,
@@ -41,6 +41,10 @@ export function UtmUrl(
         content?: string
     },
 ) {
+    // A missing url must never throw: these run during prerender, where a single
+    // bad MDX prop would otherwise abort the whole build.
+    if (!url) return '#'
+
     if (url.endsWith('?')) url = url.slice(0, -1)
 
     const params = new URLSearchParams({ utm_source: source })

@@ -13,9 +13,9 @@ import { Card, CardDescription, CardTitle } from '@/components/ui/card'
 
 type Props = {
     title: string
-    description: string
-    primaryButtonText: string
-    primaryButtonUrl: string
+    description?: string
+    primaryButtonText?: string
+    primaryButtonUrl?: string
     secondaryButtonText?: string
     secondaryButtonUrl?: string
     pattern?: string
@@ -61,7 +61,7 @@ export function CtaCard({
                     )}>
                     <div className={cn('text-balance', align === 'center' && 'text-center')}>
                         <CardTitle className='leading-tight'>{title}</CardTitle>
-                        <CardDescription className='mt-2'>{description}</CardDescription>
+                        {description && <CardDescription className='mt-2'>{description}</CardDescription>}
                     </div>
                     <div className='flex gap-4'>
                         {secondaryButtonText && secondaryButtonUrl && (
@@ -73,13 +73,15 @@ export function CtaCard({
                                 </Link>
                             </Button>
                         )}
-                        <Button asChild>
-                            <Link
-                                href={UtmUrl(primaryButtonUrl, { medium: UtmMediums.Blog, content: 'card_cta' })}
-                                onClick={() => captureClick(primaryButtonText, primaryButtonUrl)}>
-                                {primaryButtonText}
-                            </Link>
-                        </Button>
+                        {primaryButtonText && primaryButtonUrl && (
+                            <Button asChild>
+                                <Link
+                                    href={UtmUrl(primaryButtonUrl, { medium: UtmMediums.Blog, content: 'card_cta' })}
+                                    onClick={() => captureClick(primaryButtonText, primaryButtonUrl)}>
+                                    {primaryButtonText}
+                                </Link>
+                            </Button>
+                        )}
                     </div>
                 </div>
 
