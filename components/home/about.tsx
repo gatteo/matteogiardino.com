@@ -38,53 +38,49 @@ export function About() {
         const lines = gsap.utils.toArray<HTMLElement>('[data-about-line]', quote)
         if (!lines.length) return
 
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            gsap.set(lines, { opacity: 1 })
-            return
-        }
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
-        const ctx = gsap.context(() => {
-            gsap.set(lines, { opacity: DIM_OPACITY })
+        // Light whichever line sits closest to the middle of the viewport, so the
+        // highlight tracks the line actually being read. Opacity is written straight
+        // to each element on every pass rather than tweened from remembered state:
+        // a ScrollTrigger refresh (fonts, images, resize) can re-apply the initial
+        // values underneath us, and cached state would then never re-assert itself.
+        const syncHighlight = () => {
+            const viewportCenter = window.innerHeight / 2
+            let nearestIndex = 0
+            let nearestDistance = Infinity
 
-            let activeIndex = -1
-            const activate = (index: number) => {
-                if (index === activeIndex) return
-                if (activeIndex > -1) {
-                    gsap.to(lines[activeIndex], { opacity: DIM_OPACITY, duration: 0.25, overwrite: 'auto' })
+            lines.forEach((line, index) => {
+                const rect = line.getBoundingClientRect()
+                const distance = Math.abs(rect.top + rect.height / 2 - viewportCenter)
+                if (distance < nearestDistance) {
+                    nearestDistance = distance
+                    nearestIndex = index
                 }
-                gsap.to(lines[index], { opacity: 1, duration: 0.25, overwrite: 'auto' })
-                activeIndex = index
-            }
-
-            // Light whichever line sits closest to the middle of the viewport. Measuring
-            // positions on scroll keeps the highlight on the line actually being read —
-            // a fixed timeline drifts, because the lines wrap to very different heights.
-            const syncHighlight = () => {
-                const viewportCenter = window.innerHeight / 2
-                let nearestIndex = 0
-                let nearestDistance = Infinity
-
-                lines.forEach((line, index) => {
-                    const rect = line.getBoundingClientRect()
-                    const distance = Math.abs(rect.top + rect.height / 2 - viewportCenter)
-                    if (distance < nearestDistance) {
-                        nearestDistance = distance
-                        nearestIndex = index
-                    }
-                })
-
-                activate(nearestIndex)
-            }
-
-            ScrollTrigger.create({
-                trigger: section,
-                start: 'top bottom',
-                end: 'bottom top',
-                onUpdate: syncHighlight,
-                onRefresh: syncHighlight,
             })
 
-            // Sweep the accent gradient as its own line travels up into the middle.
+            lines.forEach((line, index) => {
+                line.style.opacity = index === nearestIndex ? '1' : String(DIM_OPACITY)
+            })
+        }
+
+        let frame = 0
+        const schedule = () => {
+            if (frame) return
+            frame = requestAnimationFrame(() => {
+                frame = 0
+                syncHighlight()
+            })
+        }
+
+        for (const line of lines) line.style.transition = 'opacity 250ms linear'
+        syncHighlight()
+
+        window.addEventListener('scroll', schedule, { passive: true })
+        window.addEventListener('resize', schedule)
+
+        // Sweep the accent gradient as its own line travels up into the middle.
+        const ctx = gsap.context(() => {
             lines.forEach((line) => {
                 const accent = line.querySelector('.text-highlight')
                 if (!accent) return
@@ -99,11 +95,18 @@ export function About() {
                     },
                 )
             })
-
-            syncHighlight()
         }, quote)
 
-        return () => ctx.revert()
+        return () => {
+            if (frame) cancelAnimationFrame(frame)
+            window.removeEventListener('scroll', schedule)
+            window.removeEventListener('resize', schedule)
+            ctx.revert()
+            for (const line of lines) {
+                line.style.opacity = ''
+                line.style.transition = ''
+            }
+        }
     }, [])
 
     return (
