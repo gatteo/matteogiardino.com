@@ -1,9 +1,0 @@
-allowBuilds:
-  '@swc/core': true
-  '@vercel/speed-insights': true
-  contentlayer2: true
-  core-js: true
-  esbuild: true
-  protobufjs: true
-  sharp: true
-  unrs-resolver: true
