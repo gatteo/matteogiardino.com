@@ -87,6 +87,11 @@ const nextConfig = {
                 destination: '/en/blog/orchestrating-ai-sub-agents-openclaw',
                 permanent: true,
             },
+            {
+                source: '/en/blog/what-is-cto-2026',
+                destination: '/en/blog/guide-cto-role',
+                permanent: true,
+            },
         ]
     },
     async rewrites() {
