@@ -1,8 +1,8 @@
 ---
-title: 'Free Models and APIs for OpenClaw: How to Run AI Agents at Zero Cost'
+title: 'Free OpenRouter Models for OpenClaw: 2026 Setup Guide'
 createdAt: '2026-03-12T00:00:00Z'
-modifiedAt: '2026-03-12T00:00:00Z'
-summary: 'Discover how to find and configure free AI models for OpenClaw using OpenRouter. Run powerful agents without API costs.'
+modifiedAt: '2026-09-09T00:00:00Z'
+summary: 'Set up free OpenRouter models for OpenClaw in 2026, handle limits, add fallbacks, and keep agent costs at zero while you test.'
 image: '/images/blog/free-models-apis-openclaw.png'
 authorId: matteo
 locale: 'en'
@@ -10,189 +10,164 @@ tags: ['openclaw', 'ai', 'llm', 'business']
 translationSlug: 'modelli-gratuiti-api-openclaw'
 ---
 
-Running OpenClaw can get expensive fast if you're hitting paid APIs with every request. But what if you could run a powerful AI agent at zero cost?
+**Free OpenRouter Models for OpenClaw: 2026 Setup Guide:** use OpenRouter's free router for experiments and low-priority jobs, then give it a paid or local fallback for anything that must finish. That is the setup I recommend after seeing free endpoints disappear or return 429s at the exact moment an agent has work to do.
 
-OpenRouter makes this possible by aggregating over 600 models, including dozens of free options. Some are surprisingly capable - good enough for daily automation, code assistance, and research tasks.
+The practical path is simple: add an OpenRouter key, select `openrouter/openrouter/free`, check the active model, and test with a small real task. Free models are useful for triage, summaries, and prompt experiments. They are not a production SLA, and treating them like one is how a zero-cost experiment becomes an unreliable automation.
 
-Let me show you how to find free models, configure them in OpenClaw, and test them effectively.
+If you need the provider mechanics first, read the official [OpenClaw OpenRouter provider guide](https://docs.openclaw.ai/providers/openrouter). For the wider model picture, my guide to [finding OpenClaw primary, default, and fallback models](/blog/find-openclaw-models-primary-default-fallback) explains what each choice actually controls.
 
-## Checking Your Current Setup
+## What free OpenRouter models for OpenClaw are good for
 
-Before switching models, verify what you're currently using. Ask your running OpenClaw agent:
+**Free OpenRouter models for OpenClaw are best for bounded work where a retry is acceptable.** In 2026, OpenRouter exposes a free-model router as `openrouter/free`; it selects an available free model instead of pinning your agent to a model that may be saturated.
 
-> "What provider and model are you using?"
+I use this tier for jobs with a clear failure boundary: classify an inbox, extract action items from a short document, turn a changelog into bullets, or generate a first pass at a non-urgent research brief. The output still needs a human or a stronger agent to make consequential decisions.
 
-<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-40.webp" alt="OpenClaw agent showing current model configuration" width={1200} height={630} />
+<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-40.webp" alt="OpenClaw terminal showing the current model configuration" width={1200} height={630} />
 
-Or run from the command line:
+Free capacity has two practical constraints:
+
+- **Availability changes.** A model tagged free today can be busy, removed, or routed differently tomorrow.
+- **Rate limits apply.** OpenRouter documents limits for free variants and recommends respecting `Retry-After` when a request receives HTTP 429.
+- **Quality varies by task.** A short extraction may work well while a long tool-using workflow fails halfway through.
+- **Privacy is still cloud privacy.** Free does not mean local. Do not send credentials, customer exports, or production logs unless your policy permits that provider path.
+
+For a private alternative, use the local setup from [OpenClaw and Ollama for privacy-first AI agents](/blog/how-to-use-openclaw-ollama-privacy-first-local-ai-agents). That removes API spend, but it moves the hardware and operations cost onto your machine.
+
+## Configure free OpenRouter models for OpenClaw
+
+**Free OpenRouter models for OpenClaw use the normal model CLI.** First, make sure your OpenRouter API key is configured through the supported provider flow. Do not paste a key into a post, shell history, or shared config repository.
+
+<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-70.webp" alt="OpenRouter model selection interface with free model options" width={1200} height={630} />
+
+Set the model with the documented reference:
 
 ```bash
-openclaw models list
+openclaw models set openrouter/openrouter/free
+openclaw models status
 ```
 
-This shows your primary model and any configured fallbacks. In my setup, I was running `google/gemini-2.5-flash-preview` through OpenRouter.
+`models status` matters. It confirms the model OpenClaw will try to use, rather than leaving you to infer it from a config file you edited hours ago. If your installation uses a direct configuration file, keep the model reference inside the defaults section described in the [OpenClaw models documentation](https://docs.openclaw.ai/concepts/models), not in a legacy top-level `provider` field.
 
-## Finding Free Models on OpenRouter
+A minimal JSON5-shaped configuration looks like this:
 
-Head to **openrouter.ai/models**. You'll see 621 models (and counting). The interface lets you filter by input/output modalities and cost.
-
-<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-70.webp" alt="OpenRouter models page showing 621 available models" width={1200} height={630} />
-
-To find free options, type **"free"** in the search box:
-
-<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-65.webp" alt="OpenRouter free models search results" width={1200} height={630} />
-
-You'll see models marked with $0.00 pricing. These are completely free to use, though they often have rate limits or lower priority in queues.
-
-<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-76.webp" alt="List of free models with zero cost pricing" width={1200} height={630} />
-
-<CtaCard
-    title="Need help with AI integration?"
-    description="Get in touch for a consultation on implementing AI tools in your business."
-    primaryButtonText="Contact Me"
-    primaryButtonUrl="/contacts"
-    pattern="circles"
-    align="center"
-/>
-
-## Filtering by Modalities
-
-Want to narrow down further? Use the modality filters.
-
-### Text-Only Models
-
-Select **Text** under both Input and Output for traditional text-based models:
-
-<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-110.webp" alt="Filtering for text input and text output models" width={1200} height={630} />
-
-These are your best options for coding assistance, writing, research, and general automation tasks.
-
-### Image-to-Text Models
-
-Select **Image** under Input and **Text** under Output for vision models:
-
-<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-134.webp" alt="Filtering for image input to text output models" width={1200} height={630} />
-
-Free vision models can scan documents, analyze screenshots, extract text from images, and describe visual content. Surprisingly useful for automation workflows.
-
-### Image Generation?
-
-Check **Image** under Output to see if any free image generation models exist:
-
-<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-150.webp" alt="No free image generation models currently available" width={1200} height={630} />
-
-At the time of writing, there are no free image generation models on OpenRouter. Text-based and image-to-text models are the only free options.
-
-## Configuring a Free Model in OpenClaw
-
-Once you've picked a model, note its **model ID** (shown in the card on OpenRouter). Then configure it as your primary model.
-
-Edit your OpenClaw config (usually `~/.config/openclaw/openclaw.json`):
-
-```json
+```json5
 {
-  "provider": "openrouter",
-  "model": "google/gemma-2-9b-it:free",
-  "models": {
-    "openrouter": {
-      "apiKey": "your-openrouter-key"
+  env: {
+    vars: {
+      OPENROUTER_API_KEY: "set-this-outside-version-control"
+    }
+  },
+  agents: {
+    defaults: {
+      model: {
+        primary: "openrouter/openrouter/free"
+      }
     }
   }
 }
 ```
 
-<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-165.webp" alt="OpenClaw configuration with free model set as primary" width={1200} height={630} />
+<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-165.webp" alt="OpenClaw configuration using an OpenRouter free model" width={1200} height={630} />
 
-Restart the gateway:
+The important detail is not the snippet. It is the model reference. Earlier OpenClaw examples often show a flat provider-and-model object. Current OpenClaw docs use `agents.defaults.model.primary`, so copy the current provider guide for your installed version instead of blindly reusing an old configuration.
 
-```bash
-openclaw gateway restart
-```
+<CtaCard
+  title="Need an AI setup that survives real workloads?"
+  description="I help teams design practical agent workflows with sensible security, model fallbacks, and cost controls."
+  primaryButtonText="Talk about your setup"
+  primaryButtonUrl="/contacts"
+  pattern="circles"
+  align="center"
+/>
 
-Verify the switch:
+## Pick free OpenRouter models for OpenClaw or pin one
+
+**The free router is safer than hard-coding a free model for a first test.** It lets OpenRouter choose among free capacity. That reduces maintenance, but it also means model behavior can change between runs.
+
+<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-65.webp" alt="OpenRouter search results filtered for free models" width={1200} height={630} />
+
+Choose your approach deliberately:
+
+| Choice | Best when | Trade-off |
+| --- | --- | --- |
+| `openrouter/openrouter/free` | You are testing or running disposable background work | The underlying model can change |
+| A specific `:free` model | You need repeatable prompt testing against one available model | Capacity can vanish or be rate-limited |
+| A paid OpenRouter model | A task has a deadline, customer impact, or tool sequence | You need a budget and usage monitoring |
+| A local Ollama model | Data must stay on your hardware | You need enough RAM and accept slower inference |
+
+OpenRouter's [Free Models Router documentation](https://openrouter.ai/docs/cookbook/get-started/free-models-router-playground) is the source of truth for the current router name and behavior. Its [rate-limit guide](https://openrouter.ai/docs/api_reference/limits) explains why retries and fallbacks are part of the design, not a nice-to-have.
+
+## Test free OpenRouter models for OpenClaw with a real job
+
+**A ten-minute test reveals more than a benchmark screenshot.** Start a disposable session and give the agent a request that resembles your workload but contains no sensitive data.
 
 ```bash
 openclaw models list
+openclaw agent run --session-id free-model-smoke-test
 ```
 
-The primary model should now show your selected free option.
+<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-110.webp" alt="OpenRouter filters for text input and text output models" width={1200} height={630} />
 
-<CtaCard
-    title="Explore My Projects"
-    description="Check out the projects I am working on and the technologies I use."
-    primaryButtonText="View Projects"
-    primaryButtonUrl="/projects"
-    pattern="dots"
-    align="center"
-/>
+I test four things before moving a free model beyond experimentation:
 
-## Testing Your Free Model
+1. **Basic response quality** - ask for a five-bullet summary of a public technical document.
+2. **Tool discipline** - ask the agent to explain which tool it would call before it acts.
+3. **Retry behavior** - repeat the same small task until you see a transient failure or confirm your fallback path.
+4. **Cost boundary** - verify the model reference in `openclaw models status` before and after the task.
 
-Send a quick prompt to test responses:
+Avoid the classic bad test: an open-ended autonomous loop. A free model can look fine in the first two turns and fail after it has accumulated context, hit a provider limit, or selected a weaker route. Use a bounded session first, then extend it only when the failures are understandable.
+
+## Add fallbacks to free OpenRouter models for OpenClaw
+
+**A free primary model needs a planned escape route.** A fallback can be a paid OpenRouter model for urgent jobs, or a local model for private jobs. The point is not to hide failures. It is to choose what happens after one.
+
+<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-134.webp" alt="OpenRouter filter settings for image input and text output models" width={1200} height={630} />
+
+For example, use the model commands to inspect and manage the configured fallback chain:
 
 ```bash
-openclaw agent run --session-id test
+openclaw models fallbacks list
+openclaw models fallbacks add <provider/model>
+openclaw models status
 ```
 
-Ask something practical:
-> "Summarize the key features of Next.js 15 in bullet points"
+Choose the fallback based on the job:
 
-Free models will be slower than premium options and may have lower quality responses, but for many tasks they're more than adequate.
+- **Background summaries:** retry once, then record the job for later.
+- **Coding or tool use:** route to a known capable paid model after a failed attempt.
+- **Sensitive documents:** stop cloud routing and use a local model instead.
+- **Customer-facing automation:** do not make a free tier the only route.
 
-### What Works Well with Free Models
+The same reliability rule applies to every provider. My [guide to restarting the OpenClaw gateway and checking status](/blog/restart-openclaw-gateway-verify-status) is useful when the problem is the gateway rather than the chosen model.
 
-- **Code snippets** - Basic syntax, common patterns
-- **Research summaries** - Condensing information
-- **Text processing** - Formatting, cleaning, extracting data
-- **Scheduling automation** - Simple logic, reminders
-- **Documentation parsing** - Reading and summarizing docs
+## Free models are not free of operational cost
 
-### What Doesn't Work Well
+**The invoice can be zero while the operational cost is not.** Rate-limit handling, model drift, review time, and failed automations all consume time. A model that fails twice per day can cost more than a modest paid fallback if it blocks a support queue or a deployment.
 
-- **Complex reasoning** - Multi-step logic, math
-- **Long-form writing** - Quality drops on longer outputs
-- **Nuanced judgment** - Understanding context, tone
-- **Real-time speed** - Rate limits mean slower responses
+<Image src="/images/blog/free-models-apis-openclaw/free-models-apis-openclaw-setup-150.webp" alt="OpenRouter model filters used to check available output modalities" width={1200} height={630} />
 
-## Local Alternatives
+My rule is straightforward: use free OpenRouter capacity to learn the task shape. Once the task affects revenue, a customer, a production system, or a deadline, make the primary and fallback choices explicit. That gives you a system you can reason about when the free route is unavailable.
 
-If you want to avoid external APIs entirely, consider running models locally with **Ollama**. OpenClaw has forks optimized for Ollama:
+## FAQ
 
-- **ZeroClaw** - Lightweight OpenClaw fork with Ollama support
-- **PicoClaw** - Minimal resource usage
-- **NullClaw** - Stripped-down version
+### Is OpenRouter free for OpenClaw?
 
-These run entirely on your hardware with zero external API calls. Slower than cloud models but completely private and free.
+OpenRouter offers free model variants and the `openrouter/free` router, so you can run some OpenClaw tasks without per-token charges. Free availability is limited and subject to rate limits. Treat it as a useful testing and low-priority tier, not an unlimited production API.
 
-<CtaCard
-    title="Want to integrate AI in your business?"
-    description="Contact me for a consultation on implementing AI tools tailored to your company."
-    primaryButtonText="Get in Touch"
-    primaryButtonUrl="/contacts"
-    pattern="zigzag"
-    align="center"
-/>
+### What is the best free model for OpenClaw?
 
-## Cost vs Capability Trade-offs
+The best choice depends on the task and on current availability. Start with `openrouter/openrouter/free` when you want OpenRouter to select available free capacity. Pin a specific free model only after testing that exact model on your prompt, tools, context length, and error handling.
 
-Free models make sense when:
-- You're testing OpenClaw for the first time
-- Running low-priority background tasks
-- Automating simple, repetitive work
-- Budget is a hard constraint
+### Why does a free OpenRouter model return 429?
 
-Paid models make sense when:
-- You need reliable, fast responses
-- Quality matters (writing, code generation)
-- Complex reasoning or long context required
-- Production use cases with real users
+A 429 response means a rate limit or capacity limit was reached. Follow OpenRouter's documented `Retry-After` guidance, retry with backoff, and configure a fallback. Re-sending the same request immediately usually makes a transient limit worse rather than fixing it.
 
-Most productive setups use **ClawRouter** to blend both - routing simple requests to free models and complex ones to paid models automatically.
+### Should I use free models for customer-facing agents?
 
-## Final Thoughts
+No, not as the only route. Customer-facing agents need a defined availability and quality plan. Use free models for experiments or non-urgent work, then set a tested paid or local fallback for any flow where a missed response has a real cost.
 
-OpenRouter's free tier gives you genuine access to capable models at zero cost. The quality won't match GPT-4 or Claude, but for automation workflows and experimentation, it's more than enough.
+## The practical 2026 setup
 
-Start with a free text model, test it on your actual use cases, and upgrade selectively to paid models where quality matters. You can save hundreds of dollars per month with smart routing.
+Free OpenRouter models are a legitimate way to start with OpenClaw, especially when you need to validate prompts and workflows before spending money. Set `openrouter/openrouter/free`, verify it with `openclaw models status`, test a bounded task, and decide the fallback before the agent handles anything important.
 
-And if privacy is a concern, go fully local with Ollama and the ZeroClaw fork. No external APIs, no usage logs, just your AI running on your hardware.
+*Written by Matteo Giardino, a CTO who builds and operates AI automation systems. I write about the trade-offs that show up after an agent leaves a demo and starts doing real work.*
