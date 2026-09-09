@@ -88,6 +88,11 @@ const nextConfig = {
                 permanent: true,
             },
             {
+                source: '/blog/what-is-cto-2026',
+                destination: '/en/blog/guide-cto-role',
+                permanent: true,
+            },
+            {
                 source: '/en/blog/what-is-cto-2026',
                 destination: '/en/blog/guide-cto-role',
                 permanent: true,
