@@ -1,8 +1,8 @@
 ---
-title: 'Securing OpenClaw MCP with Envoy Egress Proxy Allowlists'
+title: 'Envoy Egress Allowlist: CIDR Example for MCP Tools'
 createdAt: '2026-05-20T00:00:00Z'
-modifiedAt: '2026-05-20T00:00:00Z'
-summary: 'Learn about securing openclaw mcp with envoy egress proxy allowlists. Stop unauthorized models from accessing your tools in 2026.'
+modifiedAt: '2026-09-09T00:00:00Z'
+summary: 'Use this Envoy egress allowlist CIDR example to control MCP tool traffic, restrict proxy callers, and pair it with OpenClaw policies in 2026.'
 image: '/images/blog/openclaw-mcp-envoy-egress-proxy-allowlist-config.png'
 authorId: matteo
 locale: 'en'
@@ -10,13 +10,22 @@ tags: ['ai', 'openclaw', 'security']
 translationSlug: 'sicurezza-openclaw-mcp-envoy-egress-proxy-allowlist'
 ---
 
-When deploying OpenClaw in production, securing openclaw mcp with envoy egress proxy allowlists is critical. An Envoy egress proxy allowlist ensures that only authorized LLMs and sub-agents can trigger your tools. After migrating three clients to OpenClaw 1.4 this month, setting up an Envoy allowlist has become my mandatory first security step.
+An **Envoy egress allowlist CIDR example** has two jobs: limit which internal workloads can use the proxy, then limit where their MCP tools can connect. In Envoy RBAC, a CIDR match normally identifies the **downstream caller's source IP**. It does not, by itself, make a hostname-based outbound allowlist.
 
-## What is the Envoy Egress Proxy in OpenClaw MCP?
+In 2026, I treat these as two separate rules. First, only the agent network may call the proxy. Second, a permitted tool may reach only the named upstreams it needs. For OpenClaw, pair that network boundary with the sandbox and tool policies that decide which tools an agent can invoke. The [OpenClaw configuration guide](/blog/openclaw-configuration-guide-2026) is a useful starting point for that local policy.
 
-The Envoy egress proxy in OpenClaw MCP acts as an outbound traffic gatekeeper for your agentic tools. It intercepts every tool execution request made by an AI model and validates it against predefined rules. By default, OpenClaw MCP allows open outbound connections, which means a rogue or hallucinating model could potentially call internal APIs it shouldn't access.
+## What an Envoy egress allowlist actually controls
 
-Enabling the Envoy proxy changes this to a deny-by-default posture. Every external endpoint your MCP server talks to must be explicitly whitelisted. 
+An **Envoy egress allowlist** is a proxy policy that accepts only the destinations and request shapes you explicitly approve. It reduces the blast radius when a tool is prompt-injected or configured with the wrong endpoint.
+
+| Layer | Question it answers | Example control |
+| --- | --- | --- |
+| OpenClaw tool policy | Can this agent invoke a tool? | Deny `exec` for a read-only agent |
+| OpenClaw sandbox | Where does the tool run? | Run non-main sessions in a sandbox |
+| Envoy proxy | Where can permitted traffic go? | Permit an approved upstream only |
+| Credentials | What can the destination do? | Use a read-only API token |
+
+[OpenClaw documents tool policy and sandboxing as separate controls](https://docs.openclaw.ai/gateway/sandbox-vs-tool-policy-vs-elevated). I do not put shell tools in an agent just because a proxy exists. I also keep a [separate guide to local OpenClaw and Ollama agents](/blog/configurare-openclaw-ollama-agenti-ai-locali) for the model-side setup. Do not claim that an Envoy file is an OpenClaw setting. OpenClaw can limit a tool. Envoy limits a network path.
 
 <CtaCard
     title="Need help with AI integration?"
@@ -27,88 +36,88 @@ Enabling the Envoy proxy changes this to a deny-by-default posture. Every extern
     align="center"
 />
 
-## Why You Need an Allowlist for MCP
+## CIDR example: restrict who can use the proxy
 
-An allowlist is a declarative YAML file that maps which MCP tools are allowed to hit which domains. This is essential for:
-
-1. **Preventing data exfiltration:** If an agent gets prompt-injected, the proxy blocks it from sending sensitive internal context to an attacker's server.
-2. **Rate limiting and observability:** Envoy allows you to track exactly how many times an agent hits an external API.
-3. **Compliance:** Securing internal network borders when deploying autonomous agents.
-
-## Step-by-Step Envoy Configuration
-
-### 1. Enable the Proxy in OpenClaw
-
-First, you need to tell your OpenClaw agent runtime to route MCP traffic through Envoy. Update your `openclaw.json` or `.env` configuration:
-
-```bash
-export OPENCLAW_MCP_EGRESS_PROXY="http://localhost:10000"
-export OPENCLAW_ENVOY_STRICT_MODE="true"
-```
-
-### 2. Define the Allowlist YAML
-
-Create an `egress-allowlist.yaml` file in your OpenClaw server configuration directory. This file defines the exact domains and ports your tools are allowed to hit.
+A CIDR rule is useful when an Envoy listener should only accept requests from a known workload network. In this generic HTTP RBAC example, `10.42.0.0/16` is the internal subnet allowed to call the proxy. Replace it with your actual workload range, not a public or guessed CIDR.
 
 ```yaml
-version: "1.0"
-allowlist:
-  - domain: "api.github.com"
-    ports: [443]
-    methods: ["GET", "POST"]
-    reason: "GitHub Issue creation tool"
-  - domain: "api.stripe.com"
-    ports: [443]
-    methods: ["GET"]
-    reason: "Read-only Stripe reporting"
+http_filters:
+  - name: envoy.filters.http.rbac
+    typed_config:
+      "@type": type.googleapis.com/envoy.extensions.filters.http.rbac.v3.RBAC
+      rules:
+        action: ALLOW
+        policies:
+          mcp-workloads-only:
+            permissions:
+              - any: true
+            principals:
+              - direct_remote_ip:
+                  address_prefix: 10.42.0.0
+                  prefix_len: 16
 ```
 
-### 3. Start the Envoy Sidecar
+Envoy's [RBAC reference](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/rbac/v3/rbac.proto) defines `ALLOW` as allowing a request only when a policy matches. Put the filter on the listener that receives proxy traffic, and verify the real source address Envoy sees. A sidecar, a load balancer, or an address translation layer can change that address.
 
-If you are running OpenClaw in a Docker Compose environment, you can drop in the standard Envoy image and mount your configuration. OpenClaw provides a helper CLI to generate the Envoy bootstrap configuration from your allowlist:
+**Do not mistake this for destination filtering.** The CIDR rule above answers "which workload may use this listener?" It does not answer "may this workload reach `api.github.com`?" Destination restrictions need a deliberately configured proxy route, cluster, or egress-gateway policy for the approved upstreams.
+
+## Build an Envoy egress allowlist from tool dependencies
+
+An **Envoy egress allowlist** should come from a short tool inventory. I list each external call first. I allow only the hosts the tool needs. Then I test it before I trust it.
+
+| MCP capability | Approved destination | Port | Method scope | Review trigger |
+| --- | --- | --- | --- | --- |
+| Read GitHub issues | `api.github.com` | 443 | `GET` | New API endpoint |
+| Send a support event | named internal API | 443 | `POST` | Payload schema changes |
+| Local model request | local gateway address | local port | required methods | Gateway move |
+
+Keep the policy close to the infrastructure that owns routing. For TLS traffic, validate hostname and certificate handling rather than trusting an application-provided `Host` header. Avoid wildcard domains unless you can explain every subdomain that becomes reachable.
+
+## Test a deny case before calling it protected
+
+A policy that has never blocked a request is not proven. Test one permitted endpoint and one intentionally unapproved endpoint using the same network path your MCP process uses. Capture the Envoy access log, the proxy response status, and the tool name that made the attempt.
 
 ```bash
-openclaw mcp envoy-bootstrap --allowlist egress-allowlist.yaml > envoy-config.yaml
-docker run -d -p 10000:10000 -v $(pwd)/envoy-config.yaml:/etc/envoy/envoy.yaml envoyproxy/envoy:v1.29.0
+docker logs <envoy-container> --since 10m
 ```
 
-## Testing and Validating the Allowlist
+The exact log fields and status depend on your Envoy configuration. Do not hard-code an expected `403` or an `RBAC: access denied` line unless your own proxy emits it. What matters is evidence that the unapproved request did not reach its destination and that the event is observable.
 
-Once the proxy is running, any tool execution that tries to reach an unlisted domain will be blocked. To verify this, check the Envoy logs when your agent tries to make a request:
+Record these four facts for each test:
 
-```bash
-docker logs <envoy_container_id> | grep "RBAC: access denied"
-```
+- **Caller:** the workload or pod that made the request.
+- **Target:** the exact host and port it tried to reach.
+- **Decision:** allowed or denied by the proxy policy.
+- **Evidence:** the timestamp, request ID, and matching access-log entry.
 
-You should see 403 Forbidden errors if the proxy is doing its job. This gives you complete peace of mind when running autonomous loops.
+After the network test, run `openclaw security audit --deep`. OpenClaw's [security guidance](https://docs.openclaw.ai/gateway/security) recommends the audit after configuration changes. It also says a gateway is for one trusted operator or team. If users do not share a trust boundary, separate gateways and credentials are safer than a larger allowlist. For a concrete MCP threat model, review the [OpenClaw OSINT MCP safety guide](/blog/openclaw-mcp-osint-investigations-chat) before adding tools that handle sensitive data.
+
+## Common mistakes with MCP egress controls
+
+**Treating a CIDR as a domain allowlist.** CIDR matches IP address ranges. It is useful for a caller network or a fixed IP destination, but it is not a safe substitute for hostname-aware TLS routing.
+
+**Allowing broad proxy access.** A proxy that accepts traffic from every container or every developer laptop becomes an SSRF relay. Limit the listener to the workloads that need it and protect its administrative interface separately.
+
+**Skipping OpenClaw's tool policy.** Envoy limits a network path. It does not decide whether an agent should be allowed to run a shell, browser, or MCP tool. Use both layers and keep high-risk tools out of agents that do not need them.
+
+**Expanding on the first denial.** Denials are a review queue, not an automatic permission request. Confirm the tool, endpoint, protocol, and business need before changing the policy.
 
 ## FAQ
 
-### Does Envoy add latency to OpenClaw MCP calls?
+### Does OpenClaw include an Envoy egress allowlist setting?
 
-Yes, but it's negligible. Envoy typically adds less than 2ms of overhead per request. Given that LLM generation takes seconds, the security benefits far outweigh the millisecond latency cost.
+OpenClaw documents sandbox and tool-policy controls, not a standard `OPENCLAW_MCP_EGRESS_PROXY` or Envoy-bootstrap command in its current security documentation. Treat Envoy as infrastructure you operate separately. Keep the network policy and the OpenClaw configuration independently documented so an upgrade does not silently remove either boundary.
 
-### Can I use wildcards in the Envoy egress allowlist?
+### Is a CIDR rule enough to restrict MCP egress?
 
-Yes, OpenClaw's allowlist schema supports domain wildcards (like `*.internal.api`) for subdomains, but it is highly recommended to use explicit domains whenever possible to reduce the attack surface.
+No. A CIDR rule can restrict which IP range reaches an Envoy listener, or it can be part of a destination rule where fixed IPs are appropriate. It does not safely express a hostname allowlist for changing SaaS endpoints. Use a proxy design that validates the intended upstream host and TLS behavior.
 
-### Do I need this if I run OpenClaw locally?
+### Should local OpenClaw agents use an egress proxy?
 
-If you are only running OpenClaw locally for development with Ollama, you can skip the Envoy proxy. However, for any internet-facing deployment or production environment, it is strongly recommended.
-
-
-## Advanced Strategies for Securing OpenClaw MCP with Envoy Egress Proxy Allowlists
-
-As we navigate through 2026, the landscape of AI security continues to evolve. Securing OpenClaw MCP with Envoy egress proxy allowlists is not just a best practice; it is an absolute necessity for enterprise deployments. When you configure your systems, you must consider how [OpenClaw](/blog/openclaw-vs-apple-intelligence) interacts with external APIs. For example, if you are integrating [Ollama models](/blog/configurare-openclaw-ollama-agenti-ai-locali), the egress traffic must be strictly controlled to prevent unauthorized data exfiltration.
-
-Furthermore, implementing these strategies aligns with the guidelines provided by authoritative sources like the [OWASP Top 10 for LLM](https://owasp.org/www-project-top-10-for-large-language-model-applications/). By continuously monitoring the Envoy logs, you ensure that your [local AI agents](/blog/localgpt-ai-assistant-rust-memoria-persistente) remain secure.
-
-In 2026, many organizations have realized that a simple firewall is insufficient. The granular control provided by securing openclaw mcp with envoy egress proxy allowlists allows administrators to define exactly which tools can communicate with which endpoints. This is particularly crucial when dealing with sensitive data or when multiple agents share the same MCP server.
-
-To fully master this, consider exploring our comprehensive [guide on OpenClaw configuration](/blog/openclaw-configuration-guide-2026). Securing OpenClaw MCP with Envoy egress proxy allowlists ensures that even if a sub-agent is compromised, the blast radius is contained.
+Use one when the local agent has credentials, private data, or network access that a compromised tool should not freely use. A small personal setup may begin with OpenClaw sandboxing, tool restrictions, and loopback-only services. Add the proxy once tool egress crosses a meaningful trust boundary.
 
 ## Wrap-up
 
-Securing your OpenClaw MCP endpoints with an Envoy egress proxy allowlist is a straightforward process that drastically reduces the security risks of deploying autonomous agents. Start small by profiling your tools' outbound traffic, build your YAML allowlist, and turn on strict mode.
+An Envoy egress allowlist is valuable only when it is specific: known callers, known upstreams, verified TLS behavior, and a tested denial path. Pair it with OpenClaw sandbox and tool policies, keep the list short, and review every exception as a security change.
 
 *Written by Matteo Giardino, CTO and founder. I build AI agents for SMEs in Italy. [My projects](/projects).*
