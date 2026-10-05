@@ -39,7 +39,7 @@ switch (command) {
 
 async function scaffold(args: string[]) {
     const slug = args.find((a) => !a.startsWith('--'))
-    if (!slug || !/^[a-z0-9-]+$/.test(slug)) fail('client slug: lowercase letters, digits and dashes (e.g. vocal-law)')
+    if (!slug || !/^[a-z0-9-]+$/.test(slug)) fail('client slug: lowercase letters, digits and dashes (e.g. acme-srl)')
     const locale = args.includes('--locale') ? args[args.indexOf('--locale') + 1] : 'it'
     if (locale !== 'it' && locale !== 'en') fail('--locale must be it or en')
 
