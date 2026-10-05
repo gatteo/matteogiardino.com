@@ -13,6 +13,7 @@
         "lint:fix": "next lint --fix",
         "type-check": "tsc --noEmit",
         "format": "prettier --write .",
+        "proposal": "node --no-warnings scripts/proposals.ts",
         "check-updates": "pnpm dlx npm-check-updates --interactive --format group"
     },
     "dependencies": {

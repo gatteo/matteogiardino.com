@@ -99,6 +99,18 @@ const nextConfig = {
             },
         ]
     },
+    async headers() {
+        // Private proposal pages (/p/<token>): never indexed, never leak the token via Referer.
+        const privateHeaders = [
+            { key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive' },
+            { key: 'Referrer-Policy', value: 'no-referrer' },
+            { key: 'Cache-Control', value: 'private, no-store' },
+        ]
+        return [
+            { source: '/p/:token', headers: privateHeaders },
+            { source: '/:locale(en|it)/p/:token', headers: privateHeaders },
+        ]
+    },
     async rewrites() {
         return [
             {

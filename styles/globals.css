@@ -109,3 +109,11 @@ pre:not(.shiki) {
     padding-left: theme(spacing.4);
     padding-right: theme(spacing.4);
 }
+
+/* Proposal pages: fade-in blocks must be fully visible when printed / saved as PDF. */
+@media print {
+    [data-reveal] {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+}

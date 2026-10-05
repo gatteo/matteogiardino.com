@@ -50,3 +50,6 @@ dev
 .cursor
 # local pnpm build-script allowlist (schema differs across pnpm majors)
 pnpm-workspace.yaml
+
+# private client content, never committed
+/private/

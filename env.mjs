@@ -10,6 +10,10 @@ export const env = createEnv({
         SPOTIFY_CLIENT_ID: z.string().min(1),
         SPOTIFY_CLIENT_SECRET: z.string().min(1),
         SPOTIFY_REFRESH_TOKEN: z.string().min(1),
+        // Private proposal pages (/p/<token>) — see docs/proposals.md
+        PROPOSALS_DIR: z.string().optional(),
+        PROPOSALS_GITHUB_REPO: z.string().optional(),
+        PROPOSALS_GITHUB_TOKEN: z.string().optional(),
     },
     client: {
         NEXT_PUBLIC_PAYPAL_CLIENT_ID: z.string().min(1),
@@ -33,5 +37,8 @@ export const env = createEnv({
         SPOTIFY_CLIENT_ID: process.env.SPOTIFY_CLIENT_ID,
         SPOTIFY_CLIENT_SECRET: process.env.SPOTIFY_CLIENT_SECRET,
         SPOTIFY_REFRESH_TOKEN: process.env.SPOTIFY_REFRESH_TOKEN,
+        PROPOSALS_DIR: process.env.PROPOSALS_DIR,
+        PROPOSALS_GITHUB_REPO: process.env.PROPOSALS_GITHUB_REPO,
+        PROPOSALS_GITHUB_TOKEN: process.env.PROPOSALS_GITHUB_TOKEN,
     },
 })
